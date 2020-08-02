@@ -1,0 +1,279 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Redis持久化 | J.A.R.V.I.S | life is not just live</title>
+
+  
+  <meta name="author" content="Liu NaiJie">
+  
+
+  
+  <meta name="description" content="some article">
+  
+
+  
+  <meta name="keywords" content="blog">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Redis持久化"/>
+
+  <meta property="og:site_name" content="J.A.R.V.I.S"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">J.A.R.V.I.S</a>
+    </h1>
+    <p class="site-description">life is not just live</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">首页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/atom.xml">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Redis持久化</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/04/14/NoSQL/Redis持久化/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-04-14T05:25:33.000Z">
+          2020-04-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="为什么要持久化数据"><a href="#为什么要持久化数据" class="headerlink" title="为什么要持久化数据"></a>为什么要持久化数据</h1><p>由于Redis是在内存中进行存储的，当机器重启后内存里面的数据就会丢失。我们不希望这些数据是临时数据，希望它能在重启之后仍然存在，或者我们能将数据导出在其他机器上直接进行导入。这时候都需要进行持久化，将数据落盘。</p>
+<h1 id="持久化的方式"><a href="#持久化的方式" class="headerlink" title="持久化的方式"></a>持久化的方式</h1><p><strong>持久化的方式在<code>Redis 4.x</code>版本后有了一些区别！</strong></p>
+<p>持久化方式主要有两种：</p>
+<ul>
+<li>RDB</li>
+<li>AOF</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p>在指定的时间间隔内生成数据集的时间点快照。</p>
+<p>假如我们设定每两个小时保存一次，那么它就会每两个小时将当时的数据保存到文件中，文件是以二进制的格式保存的。</p>
+<p>为了保证性能，在进行RDB持久化的时候，父进程在保存RDB文件时<code>fork</code>出一个子进程，然后子进程处理保存工作。并且为了保证数据安全，子进程先生成一个临时RDB文件，全部执行完成后再替换之前的RDB文件。</p>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ol>
+<li>文件体积小，使用二进制存储，减少了文件的体积</li>
+<li>使用用于备份，容灾。</li>
+<li>性能高，<code>fork()</code>一个子进程来进行处理</li>
+<li>恢复数据速度比AOF快。</li>
+</ol>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><ol>
+<li><p>由于是定时存储，假设是两小时，如果在这期间宕机，那么中间的数据就没有保存，丢失了数据。</p>
+</li>
+<li><p>由于保存文件时<code>fork()</code>了一个子进程，如果当时数据量很大，<code>fork()</code>可能会非常耗时，造成服务器在一段时间内停止响应。</p>
+</li>
+</ol>
+<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>AOF是将对数据有修改的命令保存到文件中。</p>
+<p>记录服务器执行的所有写操作命令，并在服务器启动时，通过重新执行这些命令来还原数据集。<code>AOF</code>文件中的命令全部以Redis协议的格式来保存，新命令会被追加到文件的末尾。还可以在后台对AOF文件进行重写，使得AOF文件的体积减小。</p>
+<h4 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h4><ol>
+<li><p>持久化时间间隔默认为每秒钟一次，这样就算发生故障也只会丢失非常少的数据。一共有三种保存策略：不保存，每秒一次，每次执行命令写入。</p>
+</li>
+<li><p>AOF文件是一个只进行追加操作的日志文件(append only log)，所以对文件写入不需要再进行寻址操作。并且即便因为某些原因未写入完整的命令，通过<code>redis-check-aof</code>也可以对文件进行恢复。</p>
+</li>
+<li><p>Redis可以在AOF文件体积变得过大时，自动的在后台对AOF进行重写：重写后的新AOF文件包含了恢复当前数据集的最小命令集合（假如我们有一个计数器，执行了100次加1，我们可以将它重写为1次加100）。重写过程是安全的，开始重写后命令仍然可以写到现有的AOF文件中，即便重写过程中发生错误，现有的AOF文件也不会丢失，只是新文件未生成。而当新文件生成后，Redis就会从旧AOF文件切换到新AOF文件，并开始对新AOF文件进行追加操作。</p>
+<p> <em>在创建新文件过程中可能会继续执行命令，Redis在开始重写后会开启一个缓冲区，将执行命令写到现有AOF文件和缓存区中。当新文件创建完成后，会先将缓冲区内数据写入到新AOF文件中，然后再进行替换</em></p>
+<p> – 此过程仍有疑问</p>
+</li>
+<li><p>AOF文件有序的保存了对数据库执行的命令，这些命令以Redis协议的格式保存，因此AOF文件的内容非常容易被人读懂。当我们错误的执行一条命令后，我们可以找到未被重写的AOF文件，手动删除这条命令，然后重启后，就可以恢复到之前的状态。</p>
+</li>
+</ol>
+<h4 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h4><ol>
+<li><p>对于相同的数据集，AOF文件的体积会大于RDB文件的体积。</p>
+</li>
+<li><p>根据不同的保存策略，AOF的速度可能会慢与RDB。</p>
+</li>
+</ol>
+<h2 id="如何开启两种持久化以及配置"><a href="#如何开启两种持久化以及配置" class="headerlink" title="如何开启两种持久化以及配置"></a>如何开启两种持久化以及配置</h2><h2 id="RDB-1"><a href="#RDB-1" class="headerlink" title="RDB"></a>RDB</h2><p>手动触发：</p>
+<ul>
+<li><code>SAVE</code>：阻塞Redis的服务器线程，直到RDB文件被创建完成</li>
+<li><code>BGSAVE</code>：fork出一个子进程来创建RDB文件，不阻塞服务器进程，写时复制。可以通过<code>lastsave</code>命令来查看最近备份时间。</li>
+</ul>
+<p>自动触发：</p>
+<ul>
+<li><p>根据<code>redis.conf</code>中的配置定时触发，用的是<code>bgsave</code></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 备份策略</span><br><span class="line"># save &quot;&quot;</span><br><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"># 备份进程出错主进程是否停止写入操作</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line"></span><br><span class="line"># 是否压缩rdb文件</span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"># 导入时是否检查</span><br><span class="line">rdbchecksum yes</span><br><span class="line"></span><br><span class="line"># 存储的文件名称</span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"></span><br><span class="line"># 文件存储地址</span><br><span class="line">dir .&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>  关于RDB的配置项主要有几个：</p>
+<ul>
+<li><p>备份策略</p>
+<p>  如果需要关闭RDB备份，则使用<code>save &quot;&quot; </code>即可，否则使用<code>save m n</code>方式表示当m秒内有n条数据变动，则触发产生一次快照，即进行一次备份。</p>
+<p>  其实从上面可以看出使用了多条<code>save</code>策略，当900秒内有1条数据变动就进行备份，当300秒内有10条数据变动就备份。为什么要使用多条规则呢？因为Redis中每个时段的读写请求不均衡，所以为了更好的使用，可以定制多种备份策略。</p>
+</li>
+<li><p>子进程出错后父进程是否停止</p>
+<p>  当备份进程出错后，主进程就停止接收新的写入操作，可以保护持久化的数据一致性问题。</p>
+</li>
+<li><p>文件名称，文件路径</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="AOF-1"><a href="#AOF-1" class="headerlink" title="AOF"></a>AOF</h2><p>手动触发：</p>
+<pre><code>    - 调用`BGREWRITEAOF`命令</code></pre>
+<p>自动触发</p>
+<ul>
+<li>在配置文件中开启AOF：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 是否开启AOF</span></span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> AOF文件保存的名称</span></span><br><span class="line">appendfilename &quot;appendonly.aof&quot;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 持久化的选项，分别是每次操作都进行aof操作；每秒一次；不主动执行，30秒一次，默认就是每秒1次</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta">#</span><span class="bash"> appendfsync no</span></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的配置开启AOF持久化，并且指定文件名称，持久化策略。</p>
+<p>关于AOF还有一些其他的配置项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 重写方式</span></span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重写阈值</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复数据遇到错误时是否抛弃错误项</span></span><br><span class="line">aof-load-truncated yes</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重要的区别！混合持久化</span></span><br><span class="line">aof-use-rdb-preamble yes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>什么时候重写</p>
+<p>  从上面可以了解到AOF是写入的执行命令，当文件太大时就执行重写命令。那么如何定义文件太大呢？可以通过<code>auto-aof-rewrite-percentage</code>和<code>auto-aof-rewrite-min-size</code>两个配置项定义。</p>
+<p>  <code>auto-aof-rewrite-min-size</code>表示文件重写最小的文件大小，只有当aof文件超过这个值后才会进行触发重写，后面的重写就跟这个配置项没有关系了，这个配置项只能生效一次。</p>
+<p>  <code>auto-aof-rewrite-percentage</code>文件增长比例，当前文件比上次重写的增长比例大小。即当前文件是上一次重写完成后的两倍。</p>
+</li>
+<li><p>重写是否阻塞</p>
+<p>  文件进行重写时，可能会有新的执行命令过来，此时是否需要阻塞服务器来等待重写完成，这个通过<code>no-appendfsync-on-rewrite</code>配置完成。当配置项为<code>no</code>是表示服务器需要阻塞，此时不能再执行更改数据的命令，直到重写完成。当数据量大了之后，重写的时间就会变长，那么此时可能会影响系统的响应时间。我们也可以将配置项设置为<code>yes</code>，此时的流程有不同的说法，我也还有些疑惑，后面了解清楚再更新，如果您了解这个过程，期待您的见解。</p>
+</li>
+<li><p>恢复数据</p>
+<p>  aof文件写入时如果命令只写入一半，此时aof文件就出现错误，当开启<code>aof-load-truncated</code>后如果遇到错误会抛弃这个错误继续执行，否则会抛出错误停止运行。</p>
+</li>
+<li><p>混合持久化</p>
+<p>  使用<code>aof-use-rdb-preamble</code>开启混合持久化，开启后aof文件会在重写时将此时的数据写成RDB格式，将从开始后到下一次重写之间的命令以命令格式保存到aof文件中</p>
+</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://redisdoc.com/topic/persistence.html">http://redisdoc.com/topic/persistence.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fanBlog/p/9707422.html#commentform">https://www.cnblogs.com/fanBlog/p/9707422.html#commentform</a></li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/NoSQL/">NoSQL</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/redis/">redis</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+	<section id="comment" class="comment">
+		<div id="vcomments"></div>
+	</section>
+	<!-- LeanCloud -->
+	<script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.10.0/dist/av-min.js"></script>
+	<!-- Valine -->
+	<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+	<script>
+		new Valine({
+			el: '#vcomments',
+			appId: 'NDkvUjIj6j0I0dC8Y4h9j9eb-MdYXbMMI',
+			appKey: 'KTkph3xn5SF2fw0wgpapS63n'
+		})
+	</script>
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/images/beian.png">
+    <a target="_blank" rel="noopener" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=37132102371384">鲁ICP备17052931号-1</a>
+    <br>
+    
+    &copy; 2020 Liu NaiJie
+    
+  </p>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '139152590', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+<script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>

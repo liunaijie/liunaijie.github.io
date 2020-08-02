@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>J.A.R.V.I.S</title>
+  
+  <subtitle>life is not just live</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://www.liunaijie.top/"/>
+  <updated>2020-08-01T09:40:22.714Z</updated>
+  <id>https://www.liunaijie.top/</id>
+  
+  <author>
+    <name>Liu NaiJie</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>我目前的git工作流程</title>
+    <link href="https://www.liunaijie.top/2020/06/20/%E5%B7%A5%E5%85%B7/%E6%88%91%E7%9B%AE%E5%89%8D%E7%9A%84git%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/"/>
+    <id>https://www.liunaijie.top/2020/06/20/%E5%B7%A5%E5%85%B7/%E6%88%91%E7%9B%AE%E5%89%8D%E7%9A%84git%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/</id>
+    <published>2020-06-20T11:33:15.000Z</published>
+    <updated>2020-08-01T09:40:22.714Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好久没写博客了。。。&lt;/p&gt;
+&lt;p&gt;记录一下我在现在公司的一个git工作流程。&lt;/p&gt;
+&lt;p&gt;我之前使用git是不同用户在同一个git仓库下进行操作，而现在是使用fork出自己的仓库，通过提pr的方式来进行提交代码。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="工具" scheme="https://www.liunaijie.top/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    
+      <category term="git" scheme="https://www.liunaijie.top/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>git fork后如何与原仓库同步</title>
+    <link href="https://www.liunaijie.top/2020/05/08/%E5%B7%A5%E5%85%B7/git%20fork%E5%90%8E%E5%A6%82%E4%BD%95%E4%B8%8E%E5%8E%9F%E4%BB%93%E5%BA%93%E5%90%8C%E6%AD%A5/"/>
+    <id>https://www.liunaijie.top/2020/05/08/%E5%B7%A5%E5%85%B7/git%20fork%E5%90%8E%E5%A6%82%E4%BD%95%E4%B8%8E%E5%8E%9F%E4%BB%93%E5%BA%93%E5%90%8C%E6%AD%A5/</id>
+    <published>2020-05-08T13:08:39.000Z</published>
+    <updated>2020-08-01T09:40:22.713Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;当参与到开源项目开发后，我们需要先将代码fork到自己的仓库，对代码进行修改后再提交pr。&lt;/p&gt;
+&lt;p&gt;如果在这中间原仓库有提交过代码，我们这边是无法得知的，所以我们需要在提pr前先进行merge操作，先将原仓库的内容更新下来再进行提交。&lt;/p&gt;
+&lt;p&gt;大体流程如下所示：&lt;br&gt;&lt;img src=&quot;https://raw.githubusercontent.com/liunaijie/images/master/git%20fork.png&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="工具" scheme="https://www.liunaijie.top/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    
+      <category term="git" scheme="https://www.liunaijie.top/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis持久化</title>
+    <link href="https://www.liunaijie.top/2020/04/14/NoSQL/Redis%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+    <id>https://www.liunaijie.top/2020/04/14/NoSQL/Redis%E6%8C%81%E4%B9%85%E5%8C%96/</id>
+    <published>2020-04-14T05:25:33.000Z</published>
+    <updated>2020-08-01T09:40:22.701Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;为什么要持久化数据&quot;&gt;&lt;a href=&quot;#为什么要持久化数据&quot; class=&quot;headerlink&quot; title=&quot;为什么要持久化数据&quot;&gt;&lt;/a&gt;为什么要持久化数据&lt;/h1&gt;&lt;p&gt;由于Redis是在内存中进行存储的，当机器重启后内存里面的数据就会丢失。我们不希望这些数据是临时数据，希望它能在重启之后仍然存在，或者我们能将数据导出在其他机器上直接进行导入。这时候都需要进行持久化，将数据落盘。&lt;/p&gt;
+&lt;h1 id=&quot;持久化的方式&quot;&gt;&lt;a href=&quot;#持久化的方式&quot; class=&quot;headerlink&quot; title=&quot;持久化的方式&quot;&gt;&lt;/a&gt;持久化的方式&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;持久化的方式在&lt;code&gt;Redis 4.x&lt;/code&gt;版本后有了一些区别！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;持久化方式主要有两种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RDB&lt;/li&gt;
+&lt;li&gt;AOF&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="NoSQL" scheme="https://www.liunaijie.top/categories/NoSQL/"/>
+    
+    
+      <category term="redis" scheme="https://www.liunaijie.top/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>最小的k个数-LeetCodeM40</title>
+    <link href="https://www.liunaijie.top/2020/04/13/LeetCode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-LeetCodeM40/"/>
+    <id>https://www.liunaijie.top/2020/04/13/LeetCode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-LeetCodeM40/</id>
+    <published>2020-04-13T04:29:33.000Z</published>
+    <updated>2020-08-01T09:40:22.693Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。 &lt;/p&gt;
+&lt;p&gt;示例 1：&lt;/p&gt;
+&lt;p&gt;输入：arr = [3,2,1], k = 2&lt;br&gt;输出：[1,2] 或者 [2,1]&lt;br&gt;示例 2：&lt;/p&gt;
+&lt;p&gt;输入：arr = [0,1,2,1], k = 1&lt;br&gt;输出：[0]&lt;/p&gt;
+&lt;p&gt;限制：&lt;/p&gt;
+&lt;p&gt;0 &amp;lt;= k &amp;lt;= arr.length &amp;lt;= 10000&lt;br&gt;0 &amp;lt;= arr[i] &amp;lt;= 10000&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;给定一个数组，找出最小的k个数，对这k个数的大小顺序没有要求。&lt;/p&gt;
+&lt;h1 id=&quot;解题思路&quot;&gt;&lt;a href=&quot;#解题思路&quot; class=&quot;headerlink&quot; title=&quot;解题思路&quot;&gt;&lt;/a&gt;解题思路&lt;/h1&gt;&lt;p&gt;这个题目我最开始的想法是用堆来解决的，但我解答完成看题解的时候发现了一种做法：&lt;/p&gt;
+&lt;p&gt;排序后取前k个元素&lt;/p&gt;
+&lt;p&gt;在评论区中有很多人在讨论这一种解法，虽然的他复杂度比较高，实现方式很简单，有一些专业人士在鄙视这种做法，也有一些人说这个题目的难度是简单，所以用这个也没什么问题。我的看法是支持这种做法，并不因为他的难度级别，而是解决问题的思路。在解决问题的时候每一种思路都是可取的。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="leetcode" scheme="https://www.liunaijie.top/categories/leetcode/"/>
+    
+    
+      <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
+    
+      <category term="leetcode" scheme="https://www.liunaijie.top/tags/leetcode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>堆以及堆排序</title>
+    <link href="https://www.liunaijie.top/2020/04/12/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/"/>
+    <id>https://www.liunaijie.top/2020/04/12/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/</id>
+    <published>2020-04-12T01:56:34.000Z</published>
+    <updated>2020-08-01T09:40:22.721Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;什么是堆&quot;&gt;&lt;a href=&quot;#什么是堆&quot; class=&quot;headerlink&quot; title=&quot;什么是堆&quot;&gt;&lt;/a&gt;什么是堆&lt;/h1&gt;&lt;p&gt;堆是一种特殊的树，它满足以下两点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;堆是一个完全二叉树&lt;/p&gt;
+&lt;p&gt;  完全二叉树要求，除最后一层，其他层的节点个数都是满的，最后一次的节点都靠左排列。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值&lt;/p&gt;
+&lt;p&gt;  当前节点的值是子树中的最大或最小值。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们将每个节点的值都大于等于子树中每个节点值的堆，叫做“大顶堆”。对于每个节点的值都小于等于子树中每个节点值的堆，我们叫做“小顶堆”&lt;/p&gt;
+&lt;p&gt;我们来看一下例子：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/liunaijie/images/master/20200413141220.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在上面的四个实例中，我们根据以上两条规则，可以判断出：&lt;/p&gt;
+&lt;p&gt;第一个、第二个是大顶堆，第三个是小顶堆，第四个由于不是完全二叉树所以不是堆。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="算法与数据结构" scheme="https://www.liunaijie.top/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+    
+      <category term="算法与数据结构" scheme="https://www.liunaijie.top/tags/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>什么是fail-fast与fail-safe</title>
+    <link href="https://www.liunaijie.top/2020/04/01/java/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast%E4%B8%8Efail-safe/"/>
+    <id>https://www.liunaijie.top/2020/04/01/java/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast%E4%B8%8Efail-safe/</id>
+    <published>2020-04-01T02:23:53.000Z</published>
+    <updated>2020-08-01T09:40:22.709Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;fail-fast与fail-safe&quot;&gt;&lt;a href=&quot;#fail-fast与fail-safe&quot; class=&quot;headerlink&quot; title=&quot;fail-fast与fail-safe&quot;&gt;&lt;/a&gt;fail-fast与fail-safe&lt;/h1&gt;&lt;p&gt;在Collection集合的各个类中，有线程安全和线程不安全这2大类的版本。&lt;/p&gt;
+&lt;p&gt;对于线程不安全的类，并发情况下可能会出现fail-fast情况；而线程安全的类，可能出现fail-safe的情况。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;快速失败（fail—fast）&lt;/strong&gt;是java集合中的一种机制， 在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出Concurrent Modification Exception。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;安全失败（fail-sage）&lt;/strong&gt;保存了该集合对象的一个快照副本。你可以并发读取，不会抛出异常，但是不保证你遍历读取的值和当前集合对象的状态是一致的！&lt;/p&gt;
+&lt;h1 id=&quot;fail-fast&quot;&gt;&lt;a href=&quot;#fail-fast&quot; class=&quot;headerlink&quot; title=&quot;fail-fast&quot;&gt;&lt;/a&gt;fail-fast&lt;/h1&gt;&lt;p&gt;来看一下线程不安全的类&lt;code&gt;ArrayList&lt;/code&gt;，它实现&lt;code&gt;fail-fast&lt;/code&gt;主要靠一个字段&lt;code&gt;modCount&lt;/code&gt;。来从头认识一下它。&lt;/p&gt;
+&lt;p&gt;首先找到引用它的地方：&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(E e)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ensureCapacityInternal(size + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);  &lt;span class=&quot;comment&quot;&gt;// Increments modCount!!&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  elementData[size++] = e;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;true&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ensureCapacityInternal&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; minCapacity)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ensureExplicitCapacity&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; minCapacity)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  modCount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// overflow-conscious code&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (minCapacity - elementData.length &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    grow(minCapacity);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; E &lt;span class=&quot;title&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; index)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  rangeCheck(index);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  modCount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  E oldValue = elementData(index);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; numMoved = size - index - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (numMoved &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    System.arraycopy(elementData, index+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, elementData, index,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                     numMoved);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  elementData[--size] = &lt;span class=&quot;keyword&quot;&gt;null&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;// clear to let GC do its work&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; oldValue;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;可以看出，在增加元素，删除元素时都会对&lt;code&gt;modCount&lt;/code&gt;值加一。当我们查看更新，查找的代码时并没有找到对&lt;code&gt;modCount&lt;/code&gt;的修改。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;modCount&lt;/code&gt;字段翻译过来就是&lt;code&gt;修改次数&lt;/code&gt;，再结合上面的代码可以了解到只有在结构发生变化，数量增减的时候才会修改。查找不会对结构发生变化也不用修改，至于更新操作，虽然它修改了值，但是在结构上总体的数量没有改变，结构上指的是：是谁不重要，有就行。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="java" scheme="https://www.liunaijie.top/categories/java/"/>
+    
+    
+      <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>二叉树的锯齿形层次遍历-LeetCode103</title>
+    <link href="https://www.liunaijie.top/2020/03/31/LeetCode/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%94%AF%E9%BD%BF%E5%BD%A2%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86-LeetCode103/"/>
+    <id>https://www.liunaijie.top/2020/03/31/LeetCode/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%94%AF%E9%BD%BF%E5%BD%A2%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86-LeetCode103/</id>
+    <published>2020-03-31T01:34:50.000Z</published>
+    <updated>2020-08-01T09:40:22.687Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。&lt;/p&gt;
+&lt;p&gt;例如：&lt;br&gt;给定二叉树 [3,9,20,null,null,15,7],&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;  3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#x2F; \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9  20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#x2F;  \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; 15   7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;返回锯齿形层次遍历如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [3],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [20,9],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [15,7]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所谓的锯齿形遍历，即是在第一层从左向右遍历，在第二层从右向左遍历，依次遍历完成。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="leetcode" scheme="https://www.liunaijie.top/categories/leetcode/"/>
+    
+    
+      <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
+    
+      <category term="leetcode" scheme="https://www.liunaijie.top/tags/leetcode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>自己动手实现一个RPC框架(七)</title>
+    <link href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%83%EF%BC%89/"/>
+    <id>https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%83%EF%BC%89/</id>
+    <published>2020-03-25T10:52:10.000Z</published>
+    <updated>2020-08-01T09:40:22.716Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;rpc-client&quot;&gt;&lt;a href=&quot;#rpc-client&quot; class=&quot;headerlink&quot; title=&quot;rpc-client&quot;&gt;&lt;/a&gt;rpc-client&lt;/h1&gt;&lt;p&gt;消费者端，通过代理来进行调用。&lt;/p&gt;
+&lt;p&gt;与生产者端类型，首先定义配置类：&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ClientConfig&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends Encoder&amp;gt; encoder = FastJsonEncoder.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends Decoder&amp;gt; decoder = FastJsonDecoder.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends TransportClient&amp;gt; transportClient = NettyClient.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends RpcRegister&amp;gt; rpcRegister = ZookeeperRegistry.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://www.liunaijie.top/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="rpc" scheme="https://www.liunaijie.top/tags/rpc/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>自己动手实现一个RPC框架(六)</title>
+    <link href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%85%AD%EF%BC%89/"/>
+    <id>https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%85%AD%EF%BC%89/</id>
+    <published>2020-03-25T10:38:28.000Z</published>
+    <updated>2020-08-01T09:40:22.717Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;rpc-server&quot;&gt;&lt;a href=&quot;#rpc-server&quot; class=&quot;headerlink&quot; title=&quot;rpc-server&quot;&gt;&lt;/a&gt;rpc-server&lt;/h1&gt;&lt;p&gt;消费者的部分，这里使用配置类，将各种实现的部分在配置类中进行定义。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ServerConfig&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     * 监听端口&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; port = &lt;span class=&quot;number&quot;&gt;9090&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     * 网络传输&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends TransportServer&amp;gt; transportClass = NettyServer.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     * 注册中心&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends RpcRegister&amp;gt; rpcRegister = ZookeeperRegistry.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     * 编码&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends Encoder&amp;gt; encoder = FastJsonEncoder.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;/**&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     * 解码&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;     */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; Class&amp;lt;? extends Decoder&amp;gt; decoder = FastJsonDecoder.class;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这这个配置中，定义了服务启动的端口，网络传输，注册中心，编解码的各种实现，当我们需要更换实现时只需要在这里修改即可。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://www.liunaijie.top/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="rpc" scheme="https://www.liunaijie.top/tags/rpc/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>自己动手实现一个RPC框架(五)</title>
+    <link href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%BA%94%EF%BC%89/"/>
+    <id>https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%BA%94%EF%BC%89/</id>
+    <published>2020-03-25T09:30:17.000Z</published>
+    <updated>2020-08-01T09:40:22.717Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;rpc-transport&quot;&gt;&lt;a href=&quot;#rpc-transport&quot; class=&quot;headerlink&quot; title=&quot;rpc-transport&quot;&gt;&lt;/a&gt;rpc-transport&lt;/h1&gt;&lt;p&gt;这个模块是有在观看&lt;a href=&quot;https://time.geekbang.org/column/intro/100032301&quot;&gt;消息队列高手课&lt;/a&gt;中的rpc示例完成的。&lt;/p&gt;
+&lt;p&gt;网络传输模块，这里使用&lt;code&gt;netty&lt;/code&gt;来进行实现。&lt;/p&gt;
+&lt;p&gt;生产者调用来指定端口启动服务。&lt;/p&gt;
+&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;TransportServer&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; port)&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;throws&lt;/span&gt; InterruptedException&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://www.liunaijie.top/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="rpc" scheme="https://www.liunaijie.top/tags/rpc/"/>
+    
+  </entry>
+  
+</feed>
