@@ -67,13 +67,168 @@
 
   
     
-    <h3 class="article-title"><a href="/2020/06/20/工具/我目前的git工作流程/"><span>我目前的git工作流程</span></a></h3>
+    <h3 class="article-title"><a href="/2020/07/19/大数据/大数据分析工具之-kylin/"><span>大数据分析工具之-kylin</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2020/06/20/工具/我目前的git工作流程/" rel="bookmark">
+      <a href="/2020/07/19/大数据/大数据分析工具之-kylin/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-07-19T01:04:19.000Z">
+          2020-07-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="kylin是什么"><a href="#kylin是什么" class="headerlink" title="kylin是什么"></a>kylin是什么</h1><p>在进行数据分析时，随着数据量的提升，处理时间基本也是线性增长。kylin是一个预处理框架，它将一些预先定义的复杂分析预先完成并进行存储，预处理完成后，再次进行请求时，kylin可以进行亚秒级别的响应。</p>
+<p>它是一个分析型数据仓库（也是OLAP引擎），为Hadoop提供标准SQL支持大部分查询功能</p>
+<p>可以接入kafka等实时流处理数据，从而可以在妙极延迟下进行实时数据等多维分析。</p>
+<p>处理引擎可以选用MapReduce和Spark。</p>
+<p>于BI工具无缝整合，可以接入Tableau，PowerBI/Excel，SuperSet等可视化分析工具。</p>
+<p>我总结出来的观点呢就是：当我们的数据量非常大之后，每次查询都需要花费很多时间，这时我们将查询结果缓存起来，后面查询从这个缓存里面查询速度就会非常快。在kylin中，将结果缓存到hbase表中。</p>
+<p>这里需要预先设置一些维度和度量，所以说适合一些固定报表等一些维度固定的场景，如果说维度的组合太多或者变化很频繁，可能不是很适用。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/big-data/">big data</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kylin/">kylin</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2020/07/19/大数据/大数据分析工具之-kylin/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/07/02/LeetCode/Z 字形变换-LeetCode6/"><span>Z字形变换—LeetCode6</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/07/02/LeetCode/Z 字形变换-LeetCode6/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-07-02T14:03:47.000Z">
+          2020-07-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。</p>
+<p>比如输入字符串为 “LEETCODEISHIRING” 行数为 3 时，排列如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">L   C   I   R</span><br><span class="line">E T O E S I I G</span><br><span class="line">E   D   H   N</span><br></pre></td></tr></table></figure>
+
+<p>之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如：”LCIRETOESIIGEDHN”。</p>
+<p>请你实现这个将字符串进行指定行数变换的函数：</p>
+<p>string convert(string s, int numRows);<br>示例 1:</p>
+<p>输入: s = “LEETCODEISHIRING”, numRows = 3<br>输出: “LCIRETOESIIGEDHN”<br>示例 2:</p>
+<p>输入: s = “LEETCODEISHIRING”, numRows = 4<br>输出: “LDREOEIIECIHNTSG”<br>解释:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">L     D     R</span><br><span class="line">E   O E   I I</span><br><span class="line">E C   I H   N</span><br><span class="line">T     S     G</span><br></pre></td></tr></table></figure>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/leetcode/">leetcode</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2020/07/02/LeetCode/Z 字形变换-LeetCode6/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/06/20/git/我目前的git工作流程/"><span>我目前的git工作流程</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/20/git/我目前的git工作流程/" rel="bookmark">
         <time class="entry-date published" datetime="2020-06-20T11:33:15.000Z">
           2020-06-20
         </time>
@@ -124,7 +279,7 @@
       <span>
         <i class="icon-comments"></i>
         <span>
-          <a href="/2020/06/20/工具/我目前的git工作流程/#comment">评论</a>
+          <a href="/2020/06/20/git/我目前的git工作流程/#comment">评论</a>
         </span>
       </span>
     </div>
@@ -138,13 +293,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2020/05/08/工具/git fork后如何与原仓库同步/"><span>git fork后如何与原仓库同步</span></a></h3>
+    <h3 class="article-title"><a href="/2020/05/08/git/git fork后如何与原仓库同步/"><span>git fork后如何与原仓库同步</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2020/05/08/工具/git fork后如何与原仓库同步/" rel="bookmark">
+      <a href="/2020/05/08/git/git fork后如何与原仓库同步/" rel="bookmark">
         <time class="entry-date published" datetime="2020-05-08T13:08:39.000Z">
           2020-05-08
         </time>
@@ -195,7 +350,7 @@
       <span>
         <i class="icon-comments"></i>
         <span>
-          <a href="/2020/05/08/工具/git fork后如何与原仓库同步/#comment">评论</a>
+          <a href="/2020/05/08/git/git fork后如何与原仓库同步/#comment">评论</a>
         </span>
       </span>
     </div>
@@ -601,15 +756,15 @@
 
   
     
-    <h3 class="article-title"><a href="/2020/03/25/微服务/自己动手实现一个RPC框架（七）/"><span>自己动手实现一个RPC框架(七)</span></a></h3>
+    <h3 class="article-title"><a href="/2020/03/29/LeetCode/多数元素-Leetcode169/"><span>多数元素-LeetCode169</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2020/03/25/微服务/自己动手实现一个RPC框架（七）/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-03-25T10:52:10.000Z">
-          2020-03-25
+      <a href="/2020/03/29/LeetCode/多数元素-Leetcode169/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-03-29T06:03:52.000Z">
+          2020-03-29
         </time>
       </a>
     </span>
@@ -621,9 +776,13 @@
   <div class="article-content">
     <div class="entry">
       
-        <h1 id="rpc-client"><a href="#rpc-client" class="headerlink" title="rpc-client"></a>rpc-client</h1><p>消费者端，通过代理来进行调用。</p>
-<p>与生产者端类型，首先定义配置类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends Encoder&gt; encoder = FastJsonEncoder.class;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends Decoder&gt; decoder = FastJsonDecoder.class;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends TransportClient&gt; transportClient = NettyClient.class;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends RpcRegister&gt; rpcRegister = ZookeeperRegistry.class;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。</p>
+<p>你可以假设数组是非空的，并且给定的数组总是存在多数元素。</p>
+<p>示例 1:</p>
+<p>输入: [3,2,3]<br>输出: 3<br>示例 2:</p>
+<p>输入: [2,2,1,1,1,2,2]<br>输出: 2</p>
+</blockquote>
         
       
     </div>
@@ -638,7 +797,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/微服务/">微服务</a>
+        <a href="/categories/leetcode/">leetcode</a>
     </span>
     
 
@@ -647,7 +806,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/rpc/">rpc</a>
+        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
     </span>
     
 
@@ -658,151 +817,7 @@
       <span>
         <i class="icon-comments"></i>
         <span>
-          <a href="/2020/03/25/微服务/自己动手实现一个RPC框架（七）/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/03/25/微服务/自己动手实现一个RPC框架（六）/"><span>自己动手实现一个RPC框架(六)</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/03/25/微服务/自己动手实现一个RPC框架（六）/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-03-25T10:38:28.000Z">
-          2020-03-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="rpc-server"><a href="#rpc-server" class="headerlink" title="rpc-server"></a>rpc-server</h1><p>消费者的部分，这里使用配置类，将各种实现的部分在配置类中进行定义。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerConfig</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 监听端口</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> port = <span class="number">9090</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 网络传输</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends TransportServer&gt; transportClass = NettyServer.class;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册中心</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends RpcRegister&gt; rpcRegister = ZookeeperRegistry.class;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 编码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends Encoder&gt; encoder = FastJsonEncoder.class;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends Decoder&gt; decoder = FastJsonDecoder.class;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这这个配置中，定义了服务启动的端口，网络传输，注册中心，编解码的各种实现，当我们需要更换实现时只需要在这里修改即可。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/微服务/">微服务</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/rpc/">rpc</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2020/03/25/微服务/自己动手实现一个RPC框架（六）/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/03/25/微服务/自己动手实现一个RPC框架（五）/"><span>自己动手实现一个RPC框架(五)</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/03/25/微服务/自己动手实现一个RPC框架（五）/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-03-25T09:30:17.000Z">
-          2020-03-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="rpc-transport"><a href="#rpc-transport" class="headerlink" title="rpc-transport"></a>rpc-transport</h1><p>这个模块是有在观看<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/100032301">消息队列高手课</a>中的rpc示例完成的。</p>
-<p>网络传输模块，这里使用<code>netty</code>来进行实现。</p>
-<p>生产者调用来指定端口启动服务。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TransportServer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">(<span class="keyword">int</span> port)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/微服务/">微服务</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/rpc/">rpc</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2020/03/25/微服务/自己动手实现一个RPC框架（五）/#comment">评论</a>
+          <a href="/2020/03/29/LeetCode/多数元素-Leetcode169/#comment">评论</a>
         </span>
       </span>
     </div>

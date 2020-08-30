@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>我目前的git工作流程 | J.A.R.V.I.S | life is not just live</title>
+  <title>第 15 页 | J.A.R.V.I.S | life is not just live</title>
 
   
   <meta name="author" content="Liu NaiJie">
@@ -21,7 +21,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <meta property="og:title" content="我目前的git工作流程"/>
+  
 
   <meta property="og:site_name" content="J.A.R.V.I.S"/>
 
@@ -62,19 +62,20 @@
 </header>
 
     <main class="site-main posts-loop">
-    <article>
+    
+  <article>
 
   
     
-    <h3 class="article-title"><span>我目前的git工作流程</span></h3>
+    <h3 class="article-title"><a href="/2017/09/25/java/list循环添加相同的map/"><span>list循环添加相同的map</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2020/06/20/工具/我目前的git工作流程/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-06-20T11:33:15.000Z">
-          2020-06-20
+      <a href="/2017/09/25/java/list循环添加相同的map/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-09-25T02:55:04.000Z">
+          2017-09-25
         </time>
       </a>
     </span>
@@ -86,37 +87,14 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>好久没写博客了。。。</p>
-<p>记录一下我在现在公司的一个git工作流程。</p>
-<p>我之前使用git是不同用户在同一个git仓库下进行操作，而现在是使用fork出自己的仓库，通过提pr的方式来进行提交代码。</p>
-<a id="more"></a>
+        <p>list里面嵌套map，如果map相同，后面的map信息会替代前面的map信息，所以要将map的new放在循环里</p>
+<p>如果将map放在循环外，list的信息将全为最后一个map的信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Map map&#x3D;new HashMap();</span><br><span class="line">List list&#x3D;new ArrayList();</span><br><span class="line">for (int i&#x3D;0;i&lt;10;i++)&#123;</span><br><span class="line">   map.put(&quot;first&quot;,i);</span><br><span class="line">   map.put(&quot;second&quot;,i+1);</span><br><span class="line">   list.add(map);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(list);</span><br></pre></td></tr></table></figure>
+<p>结果为[{first=9,second=10}]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List list&#x3D;new ArrayList();</span><br><span class="line">for (int i&#x3D;0;i&lt;10;i++)&#123;</span><br><span class="line">  Map map&#x3D;new HashMap();</span><br><span class="line">  map.put(&quot;first&quot;,i);</span><br><span class="line">  map.put(&quot;second&quot;,i+1);</span><br><span class="line">  list.add(map);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(list);</span><br></pre></td></tr></table></figure>
 
-<p>通过<code>git fork</code>操作后，自己的账号下就有了一个仓库，本地下载后又会出现一个本地仓库，这时一个有：</p>
-<ul>
-<li>原仓库</li>
-<li>远程仓库</li>
-<li>本地仓库</li>
-</ul>
-<p>我在这里分别给它们以代号，原仓库为（upstream），远程仓库为（origin），本地仓库为（local）</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://raw.githubusercontent.com/liunaijie/images/master/1592655787033.jpg"></p>
-<ol>
-<li><p>在本地开发时，从<code>upstream</code>的<code>master</code>分支中切出一个分支，在这个基础上进行开发。</p>
-</li>
-<li><p>开发完成需要进行测试时，本地切换到<code>stg</code>分支，从<code>upstream</code>的<code>stg</code>分支中拉取最新的代码，然后再<code>merge</code>本地的其他分支，这一步就将冲突全部放在本地进行解决，避免在提交pr时与原仓库存在冲突。</p>
-</li>
-<li><p>将本地的<code>stg</code>分支提交到远程仓库<code>origin</code>的<code>stg</code>分支上。</p>
-</li>
-<li><p>提交pr，<code>merge</code>后就可以拿<code>upsteam</code>的<code>stg</code>分支进行测试。</p>
-</li>
-</ol>
-<pre><code>当测试完成后，基本按照刚才的流程进行`master`的提交操作。</code></pre>
-<ol>
-<li>本地切换到<code>master</code>分支，从<code>upsteam</code>中拉取最新的代码</li>
-<li><code>merge</code>开发完成的<code>feature</code>分支，如果有冲突本地解决。</li>
-<li>提交到<code>origin</code>的<code>master</code>分支</li>
-<li>提交pr，完成merge后，任务开发完成。</li>
-</ol>
-<p>在这个流程中，<code>origin</code>的仓库只是起到一个中间的作用，并且在本地处理冲突，可以避免在GitHub上处理冲突时，造成</p>
+<p>结果为[{first=0,second=1},…..,{first=9,second=10}]</p>
+<p>因为map添加相同的键，后面的值会覆盖前面的值，所以我们在循环的时候需要重新new这个map</p>
 
       
     </div>
@@ -131,7 +109,7 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/工具/">工具</a>
+        <a href="/categories/java/">java</a>
     </span>
     
 
@@ -140,38 +118,34 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/git/">git</a>
+        <a href="/tags/java/">java</a>
     </span>
     
 
     </div>
 
     
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2017/09/25/java/list循环添加相同的map/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
   </div>
 </article>
 
+
+
+
+<nav class="pagination">
   
-
-	<section id="comment" class="comment">
-		<div id="vcomments"></div>
-	</section>
-	<!-- LeanCloud -->
-	<script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.10.0/dist/av-min.js"></script>
-	<!-- Valine -->
-	<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-	<script>
-		new Valine({
-			el: '#vcomments',
-			appId: 'NDkvUjIj6j0I0dC8Y4h9j9eb-MdYXbMMI',
-			appKey: 'KTkph3xn5SF2fw0wgpapS63n'
-		})
-	</script>
-
-
-
-
-
-
+  <a href="/page/14/" class="pagination-prev">上一页</a>
+  
+  
+</nav>
     </main>
 
     <footer class="site-footer">

@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>大数据分析工具之-kylin | J.A.R.V.I.S | life is not just live</title>
+
+  
+  <meta name="author" content="Liu NaiJie">
+  
+
+  
+  <meta name="description" content="some article">
+  
+
+  
+  <meta name="keywords" content="blog">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="大数据分析工具之-kylin"/>
+
+  <meta property="og:site_name" content="J.A.R.V.I.S"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">J.A.R.V.I.S</a>
+    </h1>
+    <p class="site-description">life is not just live</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">首页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/atom.xml">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>大数据分析工具之-kylin</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/07/19/大数据/大数据分析工具之-kylin/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-07-19T01:04:19.000Z">
+          2020-07-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="kylin是什么"><a href="#kylin是什么" class="headerlink" title="kylin是什么"></a>kylin是什么</h1><p>在进行数据分析时，随着数据量的提升，处理时间基本也是线性增长。kylin是一个预处理框架，它将一些预先定义的复杂分析预先完成并进行存储，预处理完成后，再次进行请求时，kylin可以进行亚秒级别的响应。</p>
+<p>它是一个分析型数据仓库（也是OLAP引擎），为Hadoop提供标准SQL支持大部分查询功能</p>
+<p>可以接入kafka等实时流处理数据，从而可以在妙极延迟下进行实时数据等多维分析。</p>
+<p>处理引擎可以选用MapReduce和Spark。</p>
+<p>于BI工具无缝整合，可以接入Tableau，PowerBI/Excel，SuperSet等可视化分析工具。</p>
+<p>我总结出来的观点呢就是：当我们的数据量非常大之后，每次查询都需要花费很多时间，这时我们将查询结果缓存起来，后面查询从这个缓存里面查询速度就会非常快。在kylin中，将结果缓存到hbase表中。</p>
+<p>这里需要预先设置一些维度和度量，所以说适合一些固定报表等一些维度固定的场景，如果说维度的组合太多或者变化很频繁，可能不是很适用。</p>
+<a id="more"></a>
+
+<h1 id="kylin中的一些概念"><a href="#kylin中的一些概念" class="headerlink" title="kylin中的一些概念"></a>kylin中的一些概念</h1><p>kylin中需要设置维度和度量</p>
+<p>维度和度量这些名词在我之前没有接触到，所以这里我解释一下这两个名词的意思：</p>
+<p>维度：我们对数据进行分析时要从各个角度来进行分析，这个时候每一个角度，在sql中的<code>group by</code>字段就是一个维度。</p>
+<p>度量：当我们有了维度之后，我们肯定是要分析某一个值的，在sql中 select 的这个字段，这个值就是度量。</p>
+<p>举个例子：分析这个班级下男生女生的平均身高是多少，这个时候的sql语句大致是这样写：<code>SELECT avg(height),sex FROM student WHERE class = ? GROUP BY sex  </code>。这条sql语句得到的结果就是，这个班级下男生女生的平均身高。这里的维度就是性别，度量就是身高。</p>
+<h2 id="datasource-model-cube"><a href="#datasource-model-cube" class="headerlink" title="datasource,model,cube"></a>datasource,model,cube</h2><p>datasource: 顾名思义，就是数据源，由于kylin是部署在hadoop之上的，所以我们存储的hive表，在这里都能查询到，我们选择一个表导入即可。</p>
+<p>model: 分析的一个模型，选择事实表，维度表。以及设置它们的关联关系，选择要分析的维度和度量。</p>
+<p>​    还可以添加filter条件，只拿到我们想要的数据</p>
+<p>​    这里还有一个设置：data partition field，这个字段是后面cube 构建时查询源数据的时间字段。</p>
+<p>cube：从model中出来的一个更加具体的内容，这个是最终会进行构建的模块，cube中有一些设置</p>
+<ul>
+<li><p>更新设置</p>
+<p>  这里经常会更改的值有两个：Auto Merge Thresholds 和 Volatile Range。</p>
+<p>  首先来说明一下kylin中cube构建的一些限制：例如当我们构建了一个起止时间为[7.1-7.4)这一个时间的cube之后，我们无法进行构建[7.2-7.5)这个区间的cube。因为中间有重叠区域。但是这种情况下我们可以构建[7.1-7.5)这个时间范围内的cube。</p>
+<p>  构建出来的数据会存储到hive中，它将每一个时间范围存储为一张表，当我们构建的区间多了之后，用于存储的表也会变多，而我们每个时间范围可能会很小，kylin为了节省存储空间，所以将它们整合成一张表。</p>
+<p>  <strong>auto merge thresholds</strong></p>
+<p>  用于设置当我们的小表超过多少后会合并成一张大表。</p>
+<p>  例如我们每天构建一个cube，每次的时间范围都是[今天，明天)，auto merge thresholds设置为7,28.</p>
+<p>  则当7天之后，之前的cube会合并成一周大小的间隔，当28天之后会合并成一个更大的时间范围，合并检测是从大到小来进行检测的，如果检测到有满足28天的则会先进行合并，之后在进行检测7天。</p>
+<p>  <strong>volatile range</strong></p>
+<p>  这个是意思是，设置一个offset，这个时间内的数据不会被计算到auto merge范围内，auto merge setting以上面的为例，如果 volatile range设置为2，则9天后会将 9～2这一周的数据合并成一周大小。</p>
+</li>
+<li><p>高级设置</p>
+<p>  这个部分是对cube进行优化</p>
+<p>  当我们有很多的维度，维度组合之后就会有2^n^中组合方式，很容易产生组合爆炸的情况。我们需要对其进行剪枝。</p>
+<p>  这里拿一个选项来举例：</p>
+<p>  <code>Hierarchy Dimensions</code>: 层级维度，例如 “国家” -&gt; “省” -&gt; “市” 是一个层级；不符合此层级关系的 cuboid 可以被跳过计算。</p>
+</li>
+</ul>
+<h1 id="job"><a href="#job" class="headerlink" title="job"></a>job</h1><p>构建job才会真正的去数据源拉取数据。构建完成后会将结果存储到hive表中。</p>
+<p>可以在ui页面上的<code>Monitor</code>栏上看到我们之前构建的cube。</p>
+<h1 id="API"><a href="#API" class="headerlink" title="API"></a>API</h1><p>kylin对外暴漏了一些api，我们可以通过调用api来完成一些自动化的构建流程。</p>
+<p>有一个需要注意的点是，通过api构建cube时，这个cube的状态必须时ready的，也就是说我们必须在ui上提前构建一次。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>kylin是一个大数据量分析时进行一些固定维度的提前预计算，对于一些维度不固定的情况还是不太适用。</p>
+<p>它的原理是将数据进行计算后缓存，后面再需要这个数据时，可以不再去源数据进行分析，而是从kylin里面获取，这样就可以节省时间。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/big-data/">big data</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kylin/">kylin</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+	<section id="comment" class="comment">
+		<div id="vcomments"></div>
+	</section>
+	<!-- LeanCloud -->
+	<script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.10.0/dist/av-min.js"></script>
+	<!-- Valine -->
+	<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+	<script>
+		new Valine({
+			el: '#vcomments',
+			appId: 'NDkvUjIj6j0I0dC8Y4h9j9eb-MdYXbMMI',
+			appKey: 'KTkph3xn5SF2fw0wgpapS63n'
+		})
+	</script>
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/images/beian.png">
+    <a target="_blank" rel="noopener" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=37132102371384">鲁ICP备17052931号-1</a>
+    <br>
+    
+    &copy; 2020 Liu NaiJie
+    
+  </p>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '139152590', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+<script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
