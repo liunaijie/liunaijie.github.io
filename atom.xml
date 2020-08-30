@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.liunaijie.top/"/>
-  <updated>2020-08-30T09:14:30.050Z</updated>
+  <updated>2020-08-30T13:03:31.925Z</updated>
   <id>https://www.liunaijie.top/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kubetnetes的一些概念和术语</title>
+    <link href="https://www.liunaijie.top/2020/08/30/docker%E4%B8%8EKubernetes/Kubernetes%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/"/>
+    <id>https://www.liunaijie.top/2020/08/30/docker%E4%B8%8EKubernetes/Kubernetes%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD/</id>
+    <published>2020-08-30T02:05:39.000Z</published>
+    <updated>2020-08-30T13:03:31.925Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;此篇文章来自《Kubernetes权威指南：从Docker到Kubernetes实践全接触（第4版） 》&lt;/p&gt;
+&lt;p&gt;会对以下的内容在原有的基础上添加自己的修改和思考。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Master&lt;/li&gt;
+&lt;li&gt;Node&lt;/li&gt;
+&lt;li&gt;Pod&lt;/li&gt;
+&lt;li&gt;Replication Controller&lt;/li&gt;
+&lt;li&gt;Service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;k8s里面的大部分资源都可以被看作一种资源对象，这些对象大部分也都可以通过&lt;code&gt;kubectl&lt;/code&gt;工具（或者是API调用）执行增删改查等操作，并将其状态保存在etcd中持久化存储。&lt;/p&gt;
+&lt;p&gt;在这些调用中，有一个版本的概念：&lt;code&gt;apiVersion&lt;/code&gt;。对于一个接口有时候会进行升级，从而会有不同的版本存在，我们调用不同版本的接口从而对应不同版本的实现。在&lt;code&gt;k8s&lt;/code&gt;里面也是如此，需要在调用时指明现在调用的版本号。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="编程" scheme="https://www.liunaijie.top/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="kubetnetes" scheme="https://www.liunaijie.top/tags/kubetnetes/"/>
+    
+  </entry>
   
   <entry>
     <title>大数据分析工具之-kylin</title>
@@ -266,35 +297,6 @@
 &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [3],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [20,9],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [15,7]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;所谓的锯齿形遍历，即是在第一层从左向右遍历，在第二层从右向左遍历，依次遍历完成。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="leetcode" scheme="https://www.liunaijie.top/categories/leetcode/"/>
-    
-    
-      <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
-    
-      <category term="leetcode" scheme="https://www.liunaijie.top/tags/leetcode/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>多数元素-LeetCode169</title>
-    <link href="https://www.liunaijie.top/2020/03/29/LeetCode/%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0-Leetcode169/"/>
-    <id>https://www.liunaijie.top/2020/03/29/LeetCode/%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0-Leetcode169/</id>
-    <published>2020-03-29T06:03:52.000Z</published>
-    <updated>2020-08-30T09:14:30.024Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。&lt;/p&gt;
-&lt;p&gt;你可以假设数组是非空的，并且给定的数组总是存在多数元素。&lt;/p&gt;
-&lt;p&gt;示例 1:&lt;/p&gt;
-&lt;p&gt;输入: [3,2,3]&lt;br&gt;输出: 3&lt;br&gt;示例 2:&lt;/p&gt;
-&lt;p&gt;输入: [2,2,1,1,1,2,2]&lt;br&gt;输出: 2&lt;/p&gt;
-&lt;/blockquote&gt;
     
     </summary>
     

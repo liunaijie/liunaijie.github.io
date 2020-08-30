@@ -67,6 +67,83 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/10/14/设计模式/设计模式-单例模式/"><span>设计模式-单例模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/10/14/设计模式/设计模式-单例模式/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-10-14T01:08:39.000Z">
+          2019-10-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>一个类只允许创建一个对象（或者实例），那这个类就是一个单例类</p>
+<h2 id="为什么要使用单例"><a href="#为什么要使用单例" class="headerlink" title="为什么要使用单例"></a>为什么要使用单例</h2><p>有些数据在系统中只应该保存一份，当使用多个对象时会造成一些错误。有一些资源访问冲突时也可以使用单例模式来解决。</p>
+<h1 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h1><p>由于对象只能有一个，所以构造函数的权限必须是<code>private</code>私有的，这样外部就无法通过<code>new</code>来创建实例</p>
+<p>还有一些需要关注的点</p>
+<ul>
+<li>创建对象的线程安全问题</li>
+<li>是否支持延迟加载</li>
+<li>获取实例方法的性能是否高</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/code/">code</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2019/10/14/设计模式/设计模式-单例模式/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/09/22/java/JAVA线程/"><span>JAVA线程</span></a></h3>
     
   
@@ -553,85 +630,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2019/08/31/java/JAVA容器/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/08/30/docker与Kubernetes/Kubernetes的一些概念和术语/"><span>Kubetnetes的一些概念和术语</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/08/30/docker与Kubernetes/Kubernetes的一些概念和术语/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-08-30T02:05:39.000Z">
-          2019-08-30
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>此篇文章来自《Kubernetes权威指南：从Docker到Kubernetes实践全接触（第4版） 》</p>
-<p>会对以下的内容在原有的基础上添加自己的修改和思考。</p>
-<ul>
-<li>Master</li>
-<li>Node</li>
-<li>Pod</li>
-<li>Replication Controller</li>
-<li>Service</li>
-</ul>
-<p>k8s里面的大部分资源都可以被看作一种资源对象，这些对象大部分也都可以通过<code>kubectl</code>工具（或者是API调用）执行增删改查等操作，并将其状态保存在etcd中持久化存储。</p>
-<p>在这些调用中，有一个版本的概念：<code>apiVersion</code>。对于一个接口有时候会进行升级，从而会有不同的版本存在，我们调用不同版本的接口从而对应不同版本的实现。在<code>k8s</code>里面也是如此，需要在调用时指明现在调用的版本号。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/kubetnetes/">kubetnetes</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2019/08/30/docker与Kubernetes/Kubernetes的一些概念和术语/#comment">评论</a>
         </span>
       </span>
     </div>

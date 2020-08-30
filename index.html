@@ -67,6 +67,85 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/08/30/docker与Kubernetes/Kubernetes的一些概念和术语/"><span>Kubetnetes的一些概念和术语</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/08/30/docker与Kubernetes/Kubernetes的一些概念和术语/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-30T02:05:39.000Z">
+          2020-08-30
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>此篇文章来自《Kubernetes权威指南：从Docker到Kubernetes实践全接触（第4版） 》</p>
+<p>会对以下的内容在原有的基础上添加自己的修改和思考。</p>
+<ul>
+<li>Master</li>
+<li>Node</li>
+<li>Pod</li>
+<li>Replication Controller</li>
+<li>Service</li>
+</ul>
+<p>k8s里面的大部分资源都可以被看作一种资源对象，这些对象大部分也都可以通过<code>kubectl</code>工具（或者是API调用）执行增删改查等操作，并将其状态保存在etcd中持久化存储。</p>
+<p>在这些调用中，有一个版本的概念：<code>apiVersion</code>。对于一个接口有时候会进行升级，从而会有不同的版本存在，我们调用不同版本的接口从而对应不同版本的实现。在<code>k8s</code>里面也是如此，需要在调用时指明现在调用的版本号。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubetnetes/">kubetnetes</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2020/08/30/docker与Kubernetes/Kubernetes的一些概念和术语/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/07/19/大数据/大数据分析工具之-kylin/"><span>大数据分析工具之-kylin</span></a></h3>
     
   
@@ -743,81 +822,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2020/03/31/LeetCode/二叉树的锯齿形层次遍历-LeetCode103/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/03/29/LeetCode/多数元素-Leetcode169/"><span>多数元素-LeetCode169</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/03/29/LeetCode/多数元素-Leetcode169/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-03-29T06:03:52.000Z">
-          2020-03-29
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
-<p>给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。</p>
-<p>你可以假设数组是非空的，并且给定的数组总是存在多数元素。</p>
-<p>示例 1:</p>
-<p>输入: [3,2,3]<br>输出: 3<br>示例 2:</p>
-<p>输入: [2,2,1,1,1,2,2]<br>输出: 2</p>
-</blockquote>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/leetcode/">leetcode</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2020/03/29/LeetCode/多数元素-Leetcode169/#comment">评论</a>
         </span>
       </span>
     </div>
