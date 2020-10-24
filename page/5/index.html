@@ -67,6 +67,82 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/12/15/算法与数据结构/将链表转换为树/"><span>将链表转换为树</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/12/15/算法与数据结构/将链表转换为树/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-12-15T08:19:33.000Z">
+          2019-12-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="题目来源"><a href="#题目来源" class="headerlink" title="题目来源"></a>题目来源</h1><p>今天做了个题：</p>
+<blockquote>
+<p>将一个链表里的数据组装树形结构，链表里的数据已经满足树形结构要求</p>
+</blockquote>
+<p>这道题描述的很简单，但是有很多种情况。他只说了链表数据满足树形结构要求，并没有说明数据到底是什么样的，也就是题目参数具有多样性，这样其实我们给出一种解决方案就可以。而且也只要求将链表转换为树，并没有说是什么树。所以这道题说难也难，说简单也简单。</p>
+<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h1><p>最近也将平衡二叉树的原理看了一下，正好借着这道题将代码手写一下。</p>
+<p>我写了一个平衡二叉树的插入方法。我们不管链表里面的数据是如何排序的，我们只要调用树的插入方法即可。在插入方法内部实现树的平衡。</p>
+<p>所以我们这道题也就转换成了手写平衡二叉树的插入过程。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/java/">java</a><a href="/tags/数据结构/">数据结构</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2019/12/15/算法与数据结构/将链表转换为树/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/12/14/LeetCode/移除元素-LeetCode27/"><span>移除元素-LeetCode27</span></a></h3>
     
   
@@ -751,80 +827,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2019/11/21/LeetCode/两两交换链表中的节点-LeetCode24/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/11/17/java/StringBuilder为什么线程不安全/"><span>StringBuilder为什么线程不安全?</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/11/17/java/StringBuilder为什么线程不安全/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-11-17T08:55:30.000Z">
-          2019-11-17
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。</p>
-<p>之前问string 相关问题，只了解了 string 不可变，stringbuffer 线程安全，stringbuilder 线程不安全。但却没有搞清楚为什么是不安全的，今天就去看了一下 stringbuilder 的源码，来了解一下原因。</p>
-<p>首先来测试一下多线程下的不安全问题：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; stringBuilder.append(<span class="string">&quot;a&quot;</span>)).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(stringBuilder.length());</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个方法最终的理想结果应该是 100000，但是当我们多运行几次，发现他的结果出错了！结果变成了99999或者更小的数值。有时候甚至还抛出了数组越界异常（概率极小）。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/java/">java</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2019/11/17/java/StringBuilder为什么线程不安全/#comment">评论</a>
         </span>
       </span>
     </div>

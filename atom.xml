@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.liunaijie.top/"/>
-  <updated>2020-09-12T09:51:26.156Z</updated>
+  <updated>2020-10-24T08:49:53.695Z</updated>
   <id>https://www.liunaijie.top/</id>
   
   <author>
@@ -15,6 +15,43 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Clickhouse入门</title>
+    <link href="https://www.liunaijie.top/2020/09/29/%E5%A4%A7%E6%95%B0%E6%8D%AE/Clickhouse%E5%85%A5%E9%97%A8/"/>
+    <id>https://www.liunaijie.top/2020/09/29/%E5%A4%A7%E6%95%B0%E6%8D%AE/Clickhouse%E5%85%A5%E9%97%A8/</id>
+    <published>2020-09-29T06:15:53.000Z</published>
+    <updated>2020-10-24T08:49:53.695Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;ClickHouse是什么&quot;&gt;&lt;a href=&quot;#ClickHouse是什么&quot; class=&quot;headerlink&quot; title=&quot;ClickHouse是什么&quot;&gt;&lt;/a&gt;ClickHouse是什么&lt;/h1&gt;&lt;p&gt;ClickHouse是一款数据库，在大数据量下的数据查询有很好的查询性能。&lt;/p&gt;
+&lt;h2 id=&quot;适用场景：&quot;&gt;&lt;a href=&quot;#适用场景：&quot; class=&quot;headerlink&quot; title=&quot;适用场景：&quot;&gt;&lt;/a&gt;适用场景：&lt;/h2&gt;&lt;p&gt;在存储数据超过20万亿行的情况下，ClickHouse做到了90%的查询都能够在1秒内返回，所以ClickHouse基本能够胜任各种数据分析类的场景，并且随着数据体量的增大，它的优势也会变得越为明显。&lt;/p&gt;
+&lt;h2 id=&quot;不适用场景&quot;&gt;&lt;a href=&quot;#不适用场景&quot; class=&quot;headerlink&quot; title=&quot;不适用场景&quot;&gt;&lt;/a&gt;不适用场景&lt;/h2&gt;&lt;p&gt;ClickHouse作为一款高性能OLAP数据库，在OLTP事务性操作的场景下，有以下几点不足：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不支持事务&lt;/li&gt;
+&lt;li&gt;不擅长根据主键按行力度进行查询（虽然支持）&lt;/li&gt;
+&lt;li&gt;不擅长按行删除数据（虽然支持）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;与Kylin的对比&quot;&gt;&lt;a href=&quot;#与Kylin的对比&quot; class=&quot;headerlink&quot; title=&quot;与Kylin的对比&quot;&gt;&lt;/a&gt;与Kylin的对比&lt;/h2&gt;&lt;p&gt;Kylin是选定固定维度和指标后，通过预计算的方式，把结果存储起来，后续的查询通过查询这个预计算结果，可以更快的拿到结果。&lt;/p&gt;
+&lt;p&gt;ClickHouse是一款数据库产品，它的每一次查询都需要一次计算产生，所以在维度固定的情况下，使用Kylin更好，因为每次查询ClickHouse都会消耗计算资源，而Kylin的查询消耗的资源基本可以忽略。&lt;/p&gt;
+&lt;p&gt;ClickHouse在做关联查询时，效果不是很好。所以在ClickHouse中存储的表基本上都是大宽表。&lt;/p&gt;
+&lt;p&gt;在查询维度和指标不确定的情况下，使用ClickHouse会更好。因为这个结果在Kylin中可能没有预先设置。&lt;/p&gt;
+&lt;p&gt;个人感觉，在一些给老板看的固定报表场景下使用Kylin更好一些。在开发，数据分析的场景下，使用ClickHouse会更好一些。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="编程" scheme="https://www.liunaijie.top/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="big data" scheme="https://www.liunaijie.top/tags/big-data/"/>
+    
+      <category term="clickhouse" scheme="https://www.liunaijie.top/tags/clickhouse/"/>
+    
+      <category term="kubernetes" scheme="https://www.liunaijie.top/tags/kubernetes/"/>
+    
+  </entry>
   
   <entry>
     <title>Kubetnetes的一些概念和术语</title>
@@ -286,37 +323,6 @@
     
     
       <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>二叉树的锯齿形层次遍历-LeetCode103</title>
-    <link href="https://www.liunaijie.top/2020/03/31/LeetCode/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%94%AF%E9%BD%BF%E5%BD%A2%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86-LeetCode103/"/>
-    <id>https://www.liunaijie.top/2020/03/31/LeetCode/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%94%AF%E9%BD%BF%E5%BD%A2%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86-LeetCode103/</id>
-    <published>2020-03-31T01:34:50.000Z</published>
-    <updated>2020-09-13T23:19:25.538Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;题目描述&quot;&gt;&lt;a href=&quot;#题目描述&quot; class=&quot;headerlink&quot; title=&quot;题目描述&quot;&gt;&lt;/a&gt;题目描述&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。&lt;/p&gt;
-&lt;p&gt;例如：&lt;br&gt;给定二叉树 [3,9,20,null,null,15,7],&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;  3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; &amp;#x2F; \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9  20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#x2F;  \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; 15   7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-
-&lt;p&gt;返回锯齿形层次遍历如下：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [3],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [20,9],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [15,7]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;所谓的锯齿形遍历，即是在第一层从左向右遍历，在第二层从右向左遍历，依次遍历完成。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="编程" scheme="https://www.liunaijie.top/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
-    
-      <category term="leetcode" scheme="https://www.liunaijie.top/tags/leetcode/"/>
     
   </entry>
   

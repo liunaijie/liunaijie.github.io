@@ -67,6 +67,83 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/03/31/LeetCode/二叉树的锯齿形层次遍历-LeetCode103/"><span>二叉树的锯齿形层次遍历-LeetCode103</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/03/31/LeetCode/二叉树的锯齿形层次遍历-LeetCode103/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-03-31T01:34:50.000Z">
+          2020-03-31
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。</p>
+<p>例如：<br>给定二叉树 [3,9,20,null,null,15,7],</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  3</span><br><span class="line"> &#x2F; \</span><br><span class="line">9  20</span><br><span class="line">  &#x2F;  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
+
+<p>返回锯齿形层次遍历如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [3],</span><br><span class="line">  [20,9],</span><br><span class="line">  [15,7]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>所谓的锯齿形遍历，即是在第一层从左向右遍历，在第二层从右向左遍历，依次遍历完成。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2020/03/31/LeetCode/二叉树的锯齿形层次遍历-LeetCode103/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/03/29/LeetCode/多数元素-Leetcode169/"><span>多数元素-LeetCode169</span></a></h3>
     
   
@@ -716,88 +793,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2020/03/21/LeetCode/有序链表转换为二叉搜索树-LeetCode109/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/03/12/微服务/自己动手实现一个RPC框架（一）/"><span>自己动手实现一个RPC框架（一）</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/03/12/微服务/自己动手实现一个RPC框架（一）/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-03-12T01:08:48.000Z">
-          2020-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>现在微服务体系流行，而RPC框架作为微服务中重要的一环，为了弄明白RPC的整体过程，决定要自己动手实现一个RPC框架。</p>
-<p>我们先了解一下什么是RPC，RPC全程是Remote Procedure Call，翻译过来就是远程过程调用，我们先思考一下没有使用rpc的项目的调用流程：</p>
-<ol>
-<li>通过<code>@Autoware</code>注解注入另外的类</li>
-<li>在需要调用的地方直接调用即可</li>
-</ol>
-<p>当需要调用其他功能的接口时，比如调用其他公司的接口，或者调用自己公司内部的其他业务或功能接口。这时一般需要使用<code>http</code>来进行网络调用。</p>
-<p>那么使用http调用其他的功能接口算不算是rpc调用呢？我感觉也是算的，因为这也是一种通过网络从计算机程序上请求服务的过程。</p>
-<p>只不过由于调用的功能不严格意义上属于一个大项目，所以不算一个程序直接的内部调用，所以这里只讨论 一个大项目拆分成不同模块后，不同模块直接调用的过程。</p>
-<p>RPC是原来一个程序分为多个不同的程序，分别运行在不同的jvm上。部署在多台机器上后，就涉及到网络通信，需要将调用的信息发送到被调用的机器上，调用完成后再进行返回。</p>
-<p>rpc的流程图如下所示，</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://raw.githubusercontent.com/liunaijie/images/master/RPC%E8%B0%83%E7%94%A8.png" alt="RPC调用流程"></p>
-<p>牵扯到网络请求，那么就可以使用之前的<code>http</code>请求，但是由于<code>http</code>请求需要封装一些对于我们而言无用的信息，所以使用<code>http</code>的方式可以采用，比如<code>springcloud</code>就采用了<code>http</code>来进行通信的方式，而这次我准备使用其他的网络通信方式，这一篇中先使用<code>bio</code>来实现网络通信。</p>
-<p>还有一个序列化过程，它主要是将信息进行编解码，然后通过网络传输，因为网络传输中都是传输的二进制字节码文件，所以我们需要定义规则，将信息进行转换，消费者发送出去的信息生产者能明白其调用的内容，消费者也能明白生产者返回的信息。这一篇文章中也不去使用复杂的序列化方式，直接实现java中的<code>Serializable</code>接口。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/rpc/">rpc</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2020/03/12/微服务/自己动手实现一个RPC框架（一）/#comment">评论</a>
         </span>
       </span>
     </div>
