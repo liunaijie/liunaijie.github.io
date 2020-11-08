@@ -67,6 +67,86 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/03/21/LeetCode/有序链表转换为二叉搜索树-LeetCode109/"><span>有序链表转换为二叉搜索树—LeetCode109</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/03/21/LeetCode/有序链表转换为二叉搜索树-LeetCode109/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-03-21T09:13:30.000Z">
+          2020-03-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。</p>
+<p>本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。</p>
+<p>示例:</p>
+<p>给定的有序链表： [-10, -3, 0, 5, 9],</p>
+<p>一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    0</span><br><span class="line">-3    9</span><br><span class="line">-10     5</span><br></pre></td></tr></table></figure>
+
+<p>答案不唯一，只要满足平常二叉树的特性即可。</p>
+</blockquote>
+<p>题目中给出的数组已经按升序排序，我们需要将其转换为平衡二叉树。</p>
+<p>之前写过一篇<a href="https://www.liunaijie.top/2019/12/15/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B0%86%E9%93%BE%E8%A1%A8%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%A0%91#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">平衡二叉树的插入</a>，可以直接调用平衡二叉树的插入方法即可。但是这一次并不是使用插入方法，而是根据升序的特性来做。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2020/03/21/LeetCode/有序链表转换为二叉搜索树-LeetCode109/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/03/12/微服务/自己动手实现一个RPC框架（一）/"><span>自己动手实现一个RPC框架（一）</span></a></h3>
     
   
@@ -744,80 +824,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2020/02/14/LeetCode/猜数字-LeetCodeLCP1/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/02/08/LeetCode/链表中的倒数第k个节点-LeetCodeM22/"><span>链表中的倒数第K个节点-LeetCodeM22</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/02/08/LeetCode/链表中的倒数第k个节点-LeetCodeM22/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-02-08T03:42:28.000Z">
-          2020-02-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
-<p>输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。 </p>
-<p>示例：</p>
-<p>给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 k = 2.</p>
-<p>返回链表 4-&gt;5.</p>
-</blockquote>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2020/02/08/LeetCode/链表中的倒数第k个节点-LeetCodeM22/#comment">评论</a>
         </span>
       </span>
     </div>

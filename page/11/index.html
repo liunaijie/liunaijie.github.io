@@ -67,6 +67,81 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/06/02/LeetCode/唯一摩尔斯密码词—LeetCode804/"><span>唯一摩尔斯密码词—LeetCode804</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/02/LeetCode/唯一摩尔斯密码词—LeetCode804/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-02T03:21:09.000Z">
+          2019-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><blockquote>
+<p>国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: “a” 对应 “.-“, “b” 对应 “-…”, “c” 对应 “-.-.”, 等等。<br>为了方便，所有26个英文字母对应摩尔斯密码表如下：<br>[“.-“,”-…”,”-.-.”,”-..”,”.”,”..-.”,”–.”,”….”,”..”,”.—“,”-.-“,”.-..”,”–”,”-.”,”—“,”.–.”,”–.-“,”.-.”,”…”,”-“,”..-“,”…-“,”.–”,”-..-“,”-.–”,”–..”]<br>给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，”cab” 可以写成 “-.-..–…”，(即 “-.-.” + “-…” + “.-“字符串的结合)。我们将这样一个连接过程称作单词翻译。<br>返回我们可以获得所有词不同单词翻译的数量。<br>例如:<br>输入: words = [“gin”, “zen”, “gig”, “msg”]<br>输出: 2<br>解释:<br>各单词翻译如下:<br>“gin” -&gt; “–…-.”<br>“zen” -&gt; “–…-.”<br>“gig” -&gt; “–…–.”<br>“msg” -&gt; “–…–.”<br>共有 2 种不同翻译, “–…-.” 和 “–…–.”.<br>注意:<br>单词列表words 的长度不会超过 100。<br>每个单词 words[i]的长度范围为 [1, 12]。<br>每个单词 words[i]只包含小写字母。</p>
+</blockquote>
+<h1 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h1><p>我们首先要根据给出的单词转换成摩尔斯密码  </p>
+<p>利用一个数组按照字母顺序存储对应的密码值  </p>
+<p>将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接  </p>
+<p>这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。   </p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2019/06/02/LeetCode/唯一摩尔斯密码词—LeetCode804/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/06/01/LeetCode/Nim游戏—LeetCode292/"><span>Nim游戏—LeetCode292</span></a></h3>
     
   
@@ -736,84 +811,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2019/03/20/树莓派/内网穿透并绑定自己的域名/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/03/18/LeetCode/买卖股票的最佳时机II-LeetCode122/"><span>买卖股票的最佳时机II-LeetCode122</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/03/18/LeetCode/买卖股票的最佳时机II-LeetCode122/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-03-18T02:50:08.000Z">
-          2019-03-18
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
-<p>给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。</p>
-<p>设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。</p>
-<p>注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。</p>
-<p>示例 1:</p>
-<p>输入: [7,1,5,3,6,4]<br>输出: 7<br>解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。<br>     随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。<br>示例 2:</p>
-<p>输入: [1,2,3,4,5]<br>输出: 4<br>解释: 在第 1 天（股票价格 = 1）的时候买入，在第 5 天 （股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。<br>     注意你不能在第 1 天和第 2 天接连购买股票，之后再将它们卖出。<br>     因为这样属于同时参与了多笔交易，你必须在再次购买前出售掉之前的股票。<br>示例 3:</p>
-<p>输入: [7,6,4,3,1]<br>输出: 0<br>解释: 在这种情况下, 没有交易完成, 所以最大利润为 0</p>
-</blockquote>
-<p>题目中给出数组，第i个元素表示第i天的价格，我们要做的是求出能获取的最大利润，并且没有限制购买次数，我们可以第一天买入，最后一天卖出。也可以当天买入，第二天就卖出，然后再买入，再卖出。但是我们只能同时有一笔交易。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2019/03/18/LeetCode/买卖股票的最佳时机II-LeetCode122/#comment">评论</a>
         </span>
       </span>
     </div>

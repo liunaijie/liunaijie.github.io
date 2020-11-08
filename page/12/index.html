@@ -67,6 +67,84 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/03/18/LeetCode/买卖股票的最佳时机II-LeetCode122/"><span>买卖股票的最佳时机II-LeetCode122</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/03/18/LeetCode/买卖股票的最佳时机II-LeetCode122/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-18T02:50:08.000Z">
+          2019-03-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。</p>
+<p>设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。</p>
+<p>注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。</p>
+<p>示例 1:</p>
+<p>输入: [7,1,5,3,6,4]<br>输出: 7<br>解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。<br>     随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。<br>示例 2:</p>
+<p>输入: [1,2,3,4,5]<br>输出: 4<br>解释: 在第 1 天（股票价格 = 1）的时候买入，在第 5 天 （股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。<br>     注意你不能在第 1 天和第 2 天接连购买股票，之后再将它们卖出。<br>     因为这样属于同时参与了多笔交易，你必须在再次购买前出售掉之前的股票。<br>示例 3:</p>
+<p>输入: [7,6,4,3,1]<br>输出: 0<br>解释: 在这种情况下, 没有交易完成, 所以最大利润为 0</p>
+</blockquote>
+<p>题目中给出数组，第i个元素表示第i天的价格，我们要做的是求出能获取的最大利润，并且没有限制购买次数，我们可以第一天买入，最后一天卖出。也可以当天买入，第二天就卖出，然后再买入，再卖出。但是我们只能同时有一笔交易。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2019/03/18/LeetCode/买卖股票的最佳时机II-LeetCode122/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/03/16/LeetCode/爬楼梯-LeetCode70/"><span>爬楼梯-LeetCode70</span></a></h3>
     
   
@@ -813,121 +891,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2019/01/22/工具/openwrt/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/01/17/工具/Hexo使用/"><span>Hexo使用</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/01/17/工具/Hexo使用/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-01-17T08:51:39.000Z">
-          2019-01-17
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>其实根据官网文档就很容易进行安装了，<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">官网文档链接</a>，所以也不写安装和启动的流程了。</p>
-<h1 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h1><h1 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h1><ol>
-<li>项目配置</li>
-<li>主题配置</li>
-</ol>
-<h1 id="部署、发布"><a href="#部署、发布" class="headerlink" title="部署、发布"></a>部署、发布</h1><p>修改<code>_config.yml</code>配置文件，支持多个配置信息，如果多个需要如下填写</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 单个配置</span></span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line"><span class="meta">#</span><span class="bash"> 多个配置</span></span><br><span class="line">deploy:</span><br><span class="line">- type: git</span><br><span class="line">  repo:</span><br><span class="line">- type: sftp</span><br><span class="line">  repo:</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p>发布到github</p>
-<p>先进行安装<code>npm install hexo-deployer-git --save</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: # 仓库地址，最好使用http的协议，使用ssh协议时有可能会报错</span><br><span class="line">  branch: #发布的分支，默认是 master</span><br><span class="line">  message: # 提交的信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发布到个人服务器（sftp）</p>
-<p>先进行安装<code>npm install hexo-deployer-sftp --save</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: sftp</span><br><span class="line">  host: &lt;host&gt; # 远程主机的地址</span><br><span class="line">  user: &lt;user&gt; # 用户名</span><br><span class="line">  pass: &lt;password&gt; # 密码</span><br><span class="line">  remotePath: [remote path] # 发布到的路径</span><br><span class="line">  port: [port] # 端口 默认为22</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>经过如上配置后，执行<code>hexo -d</code>后就会将生产的静态文件发布到git和服务器上。</p>
-<h1 id="草稿"><a href="#草稿" class="headerlink" title="草稿"></a>草稿</h1><p>有时候建立一些草稿，还没写完不需要发布的时候我们可以使用以下的方式来实现。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 新建草稿</span></span><br><span class="line">hexo new draft &#x27;md_name&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>执行这个命令后会在<code>source/_drafts</code>文件夹下新建一个<code>md_name.md</code>文件，所以我们不需要加文件后缀。  </p>
-<p>然后我们启动hexo后并不能看到草稿，如果需要看到草稿可以使用以下方案</p>
-<ul>
-<li><p>修改配置文件</p>
-<p>将配置文件中的<code>render_drafts</code>改为<code>true</code></p>
-</li>
-<li><p>启动hexo时加参数</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server --drafts</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>当我们写完草稿后将其变成正式文章，执行以下命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish &#x27;md_name&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>这里也不需要加后缀名，如果文件名称是中文，在shell中无法输入中文可以执行以下操作  </p>
-<p>先对<code>~/.bash_profile</code>配置文件进行修改，添加或修改这一行信息：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export LANG=en_US.UTF-8</span><br></pre></td></tr></table></figure>
-
-<p>然后执行<code>source ~/.bash_profile</code>，让配置生效。</p>
-<p>最后重新打开终端就可以输入中文了。</p>
-<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/j754379117/article/details/53897115">https://blog.csdn.net/j754379117/article/details/53897115</a></p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/hexo/">hexo</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2019/01/17/工具/Hexo使用/#comment">评论</a>
         </span>
       </span>
     </div>

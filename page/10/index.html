@@ -67,6 +67,78 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/06/28/工具/利用github和picgo创建图床/"><span>利用github和picgo创建图床</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/28/工具/利用github和picgo创建图床/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-28T09:28:39.000Z">
+          2019-06-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在写博客的时候需要存储一些图片，网上有一些图床工具，有免费的也有收费的。免费的肯定没有保障，我就看到很多人使用一些免费的图床，然后提供方不再提供后图床就挂了。所以我准备使用github作为图床存储，有一定的网络延迟，但也可以接受。</p>
+<h1 id="前期准备："><a href="#前期准备：" class="headerlink" title="前期准备："></a>前期准备：</h1><p>下载并安装<a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo">picgo</a>，选择自己系统对应的版本下载安装即可。</p>
+<h1 id="注册github"><a href="#注册github" class="headerlink" title="注册github"></a>注册github</h1><h2 id="创建存储图片的项目"><a href="#创建存储图片的项目" class="headerlink" title="创建存储图片的项目"></a>创建存储图片的项目</h2><p>这里要注意的是把项目设置成<em>公开</em>的，不用设置私有，不然我们图片是无法访问的。  </p>
+<p>这里的图片其他人都是可以查看的，注意不要放一些与自己隐私相关的东西哦。。。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/github/">github</a><a href="/tags/picgo/">picgo</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2019/06/28/工具/利用github和picgo创建图床/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/06/23/微服务/dubbo笔记/"><span>dubbo笔记</span></a></h3>
     
   
@@ -721,81 +793,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2019/06/03/LeetCode/机器人能否返回终点—LeetCode657/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/06/02/LeetCode/唯一摩尔斯密码词—LeetCode804/"><span>唯一摩尔斯密码词—LeetCode804</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/06/02/LeetCode/唯一摩尔斯密码词—LeetCode804/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-06-02T03:21:09.000Z">
-          2019-06-02
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><blockquote>
-<p>国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: “a” 对应 “.-“, “b” 对应 “-…”, “c” 对应 “-.-.”, 等等。<br>为了方便，所有26个英文字母对应摩尔斯密码表如下：<br>[“.-“,”-…”,”-.-.”,”-..”,”.”,”..-.”,”–.”,”….”,”..”,”.—“,”-.-“,”.-..”,”–”,”-.”,”—“,”.–.”,”–.-“,”.-.”,”…”,”-“,”..-“,”…-“,”.–”,”-..-“,”-.–”,”–..”]<br>给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，”cab” 可以写成 “-.-..–…”，(即 “-.-.” + “-…” + “.-“字符串的结合)。我们将这样一个连接过程称作单词翻译。<br>返回我们可以获得所有词不同单词翻译的数量。<br>例如:<br>输入: words = [“gin”, “zen”, “gig”, “msg”]<br>输出: 2<br>解释:<br>各单词翻译如下:<br>“gin” -&gt; “–…-.”<br>“zen” -&gt; “–…-.”<br>“gig” -&gt; “–…–.”<br>“msg” -&gt; “–…–.”<br>共有 2 种不同翻译, “–…-.” 和 “–…–.”.<br>注意:<br>单词列表words 的长度不会超过 100。<br>每个单词 words[i]的长度范围为 [1, 12]。<br>每个单词 words[i]只包含小写字母。</p>
-</blockquote>
-<h1 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h1><p>我们首先要根据给出的单词转换成摩尔斯密码  </p>
-<p>利用一个数组按照字母顺序存储对应的密码值  </p>
-<p>将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接  </p>
-<p>这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。   </p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/java/">java</a><a href="/tags/leetcode/">leetcode</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2019/06/02/LeetCode/唯一摩尔斯密码词—LeetCode804/#comment">评论</a>
         </span>
       </span>
     </div>

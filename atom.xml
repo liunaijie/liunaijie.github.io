@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.liunaijie.top/"/>
-  <updated>2020-10-24T08:49:53.695Z</updated>
+  <updated>2020-11-01T06:28:14.507Z</updated>
   <id>https://www.liunaijie.top/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Clickhouse在kubernetes上的集群搭建</title>
+    <link href="https://www.liunaijie.top/2020/11/01/%E5%A4%A7%E6%95%B0%E6%8D%AE/Clickhouse%E5%9C%A8kubernetes%E4%B8%8A%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"/>
+    <id>https://www.liunaijie.top/2020/11/01/%E5%A4%A7%E6%95%B0%E6%8D%AE/Clickhouse%E5%9C%A8kubernetes%E4%B8%8A%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</id>
+    <published>2020-11-01T05:49:41.000Z</published>
+    <updated>2020-11-01T06:28:14.507Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这篇博客记录一下在&lt;code&gt;Kubernetes&lt;/code&gt;上搭建&lt;code&gt;ClickHouse&lt;/code&gt;集群的思路，过程等。&lt;/p&gt;
+&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;由于搭建一个完整的ClickHouse需要多个配置文件，所以我在这里使用Helm来进行管理和安装，我们先编写模板文件，后续的配置根据配置文件来进行填充，这样也很容易实现不同版本的管理。&lt;/p&gt;
+&lt;p&gt;最终实现的效果是：搭建一个切片数量可定义，一个副本的集群。这样总共启动的pod数量为2倍的切片数量（如切片数量为2，则总共有4个pod），每个pod需要挂载不同的pvc。集群中的配置通过configmap来实现通用部分的挂载，对于每个pod都不相同的配置文件则通过initContainer来进行初始化。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="编程" scheme="https://www.liunaijie.top/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="big data" scheme="https://www.liunaijie.top/tags/big-data/"/>
+    
+      <category term="clickhouse" scheme="https://www.liunaijie.top/tags/clickhouse/"/>
+    
+      <category term="kubernetes" scheme="https://www.liunaijie.top/tags/kubernetes/"/>
+    
+  </entry>
   
   <entry>
     <title>Clickhouse入门</title>
@@ -293,36 +320,6 @@
     
     
       <category term="算法与数据结构" scheme="https://www.liunaijie.top/tags/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>什么是fail-fast与fail-safe</title>
-    <link href="https://www.liunaijie.top/2020/04/01/java/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast%E4%B8%8Efail-safe/"/>
-    <id>https://www.liunaijie.top/2020/04/01/java/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast%E4%B8%8Efail-safe/</id>
-    <published>2020-04-01T02:23:53.000Z</published>
-    <updated>2020-09-13T23:16:38.030Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;fail-fast与fail-safe&quot;&gt;&lt;a href=&quot;#fail-fast与fail-safe&quot; class=&quot;headerlink&quot; title=&quot;fail-fast与fail-safe&quot;&gt;&lt;/a&gt;fail-fast与fail-safe&lt;/h1&gt;&lt;p&gt;在Collection集合的各个类中，有线程安全和线程不安全这2大类的版本。&lt;/p&gt;
-&lt;p&gt;对于线程不安全的类，并发情况下可能会出现fail-fast情况；而线程安全的类，可能出现fail-safe的情况。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;快速失败（fail—fast）&lt;/strong&gt;是java集合中的一种机制， 在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出Concurrent Modification Exception。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;安全失败（fail-sage）&lt;/strong&gt;保存了该集合对象的一个快照副本。你可以并发读取，不会抛出异常，但是不保证你遍历读取的值和当前集合对象的状态是一致的！&lt;/p&gt;
-&lt;h1 id=&quot;fail-fast&quot;&gt;&lt;a href=&quot;#fail-fast&quot; class=&quot;headerlink&quot; title=&quot;fail-fast&quot;&gt;&lt;/a&gt;fail-fast&lt;/h1&gt;&lt;p&gt;来看一下线程不安全的类&lt;code&gt;ArrayList&lt;/code&gt;，它实现&lt;code&gt;fail-fast&lt;/code&gt;主要靠一个字段&lt;code&gt;modCount&lt;/code&gt;。来从头认识一下它。&lt;/p&gt;
-&lt;p&gt;首先找到引用它的地方：&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(E e)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ensureCapacityInternal(size + &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;);  &lt;span class=&quot;comment&quot;&gt;// Increments modCount!!&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  elementData[size++] = e;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;true&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ensureCapacityInternal&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; minCapacity)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ensureExplicitCapacity&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; minCapacity)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  modCount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// overflow-conscious code&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (minCapacity - elementData.length &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    grow(minCapacity);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; E &lt;span class=&quot;title&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; index)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  rangeCheck(index);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  modCount++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  E oldValue = elementData(index);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt; numMoved = size - index - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (numMoved &amp;gt; &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    System.arraycopy(elementData, index+&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, elementData, index,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                     numMoved);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  elementData[--size] = &lt;span class=&quot;keyword&quot;&gt;null&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;// clear to let GC do its work&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; oldValue;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-
-&lt;p&gt;可以看出，在增加元素，删除元素时都会对&lt;code&gt;modCount&lt;/code&gt;值加一。当我们查看更新，查找的代码时并没有找到对&lt;code&gt;modCount&lt;/code&gt;的修改。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;modCount&lt;/code&gt;字段翻译过来就是&lt;code&gt;修改次数&lt;/code&gt;，再结合上面的代码可以了解到只有在结构发生变化，数量增减的时候才会修改。查找不会对结构发生变化也不用修改，至于更新操作，虽然它修改了值，但是在结构上总体的数量没有改变，结构上指的是：是谁不重要，有就行。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="编程" scheme="https://www.liunaijie.top/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="java" scheme="https://www.liunaijie.top/tags/java/"/>
     
   </entry>
   

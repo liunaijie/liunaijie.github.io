@@ -67,6 +67,121 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/01/17/工具/Hexo使用/"><span>Hexo使用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/01/17/工具/Hexo使用/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-01-17T08:51:39.000Z">
+          2019-01-17
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>其实根据官网文档就很容易进行安装了，<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">官网文档链接</a>，所以也不写安装和启动的流程了。</p>
+<h1 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h1><h1 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h1><ol>
+<li>项目配置</li>
+<li>主题配置</li>
+</ol>
+<h1 id="部署、发布"><a href="#部署、发布" class="headerlink" title="部署、发布"></a>部署、发布</h1><p>修改<code>_config.yml</code>配置文件，支持多个配置信息，如果多个需要如下填写</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 单个配置</span></span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo:</span><br><span class="line"><span class="meta">#</span><span class="bash"> 多个配置</span></span><br><span class="line">deploy:</span><br><span class="line">- type: git</span><br><span class="line">  repo:</span><br><span class="line">- type: sftp</span><br><span class="line">  repo:</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>发布到github</p>
+<p>先进行安装<code>npm install hexo-deployer-git --save</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: # 仓库地址，最好使用http的协议，使用ssh协议时有可能会报错</span><br><span class="line">  branch: #发布的分支，默认是 master</span><br><span class="line">  message: # 提交的信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发布到个人服务器（sftp）</p>
+<p>先进行安装<code>npm install hexo-deployer-sftp --save</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: sftp</span><br><span class="line">  host: &lt;host&gt; # 远程主机的地址</span><br><span class="line">  user: &lt;user&gt; # 用户名</span><br><span class="line">  pass: &lt;password&gt; # 密码</span><br><span class="line">  remotePath: [remote path] # 发布到的路径</span><br><span class="line">  port: [port] # 端口 默认为22</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>经过如上配置后，执行<code>hexo -d</code>后就会将生产的静态文件发布到git和服务器上。</p>
+<h1 id="草稿"><a href="#草稿" class="headerlink" title="草稿"></a>草稿</h1><p>有时候建立一些草稿，还没写完不需要发布的时候我们可以使用以下的方式来实现。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 新建草稿</span></span><br><span class="line">hexo new draft &#x27;md_name&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>执行这个命令后会在<code>source/_drafts</code>文件夹下新建一个<code>md_name.md</code>文件，所以我们不需要加文件后缀。  </p>
+<p>然后我们启动hexo后并不能看到草稿，如果需要看到草稿可以使用以下方案</p>
+<ul>
+<li><p>修改配置文件</p>
+<p>将配置文件中的<code>render_drafts</code>改为<code>true</code></p>
+</li>
+<li><p>启动hexo时加参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server --drafts</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>当我们写完草稿后将其变成正式文章，执行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish &#x27;md_name&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这里也不需要加后缀名，如果文件名称是中文，在shell中无法输入中文可以执行以下操作  </p>
+<p>先对<code>~/.bash_profile</code>配置文件进行修改，添加或修改这一行信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export LANG=en_US.UTF-8</span><br></pre></td></tr></table></figure>
+
+<p>然后执行<code>source ~/.bash_profile</code>，让配置生效。</p>
+<p>最后重新打开终端就可以输入中文了。</p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/j754379117/article/details/53897115">https://blog.csdn.net/j754379117/article/details/53897115</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/编程/">编程</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/hexo/">hexo</a>
+    </span>
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/2019/01/17/工具/Hexo使用/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/01/09/LeetCode/有序数组的平方-LeetCode977/"><span>有序数组的平方—LeetCode977</span></a></h3>
     
   
@@ -747,77 +862,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/2018/12/19/LeetCode/宝石与石头-LeetCode771/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/12/15/Nginx/利用goaccess实时监控nginx的访问日志/"><span>利用goaccess实时监控nginx的访问日志</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/12/15/Nginx/利用goaccess实时监控nginx的访问日志/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-12-15T12:15:40.000Z">
-          2018-12-15
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>这篇文章主要写一下我在利用goaccess查看nginx生成的访问日志时的经历。</p>
-<p>​    最终会生成一个下面类似的网页：</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://raw.githubusercontent.com/liunaijie/images/master/image-20181220155818036.png" alt="goaccess网页"></p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/编程/">编程</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/nginx/">nginx</a><a href="/tags/goaccess/">goaccess</a>
-    </span>
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/2018/12/15/Nginx/利用goaccess实时监控nginx的访问日志/#comment">评论</a>
         </span>
       </span>
     </div>
