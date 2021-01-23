@@ -16,7 +16,7 @@ tags:
 
 1. 电脑生成私钥公钥，公钥已经设置到Github上。
 2. GitHub上有`user-name.github.io`仓库
-3. 设置私钥到`user-name.github.io`仓库下，打开该仓库，找到`setting/secrets/New repository secret`将本地`~/.ssh/id_ras`文件复制进来，名称可以随便取，不过在下面使用的时候需要对应起来，比如我用了`ACTION_DEPLOY_KEY`这个名称。
+3. 设置私钥到`user-name.github.io`仓库下，打开该仓库，找到`setting/secrets/New repository secret`将本地`~/.ssh/id_ras`文件复制进来，名称可以随便取，不过在下面使用的时候需要对应起来，比如我用了`ACTION_DEPLOY_KEY`这个名称。需要勾选 `Allow write access` 。
 
 ![](https://raw.githubusercontent.com/liunaijie/images/master/20210123154250.png)
 
