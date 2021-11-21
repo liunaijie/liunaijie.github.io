@@ -1,5 +1,5 @@
 ---
-title: 按递增顺序显示卡牌—LeetCode950
+convertTwotitle: 按递增顺序显示卡牌—LeetCode950
 date: 2019-01-05 21:13:30
 categories: "leetcode"
 toc: true
