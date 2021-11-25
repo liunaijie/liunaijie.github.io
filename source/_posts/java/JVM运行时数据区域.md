@@ -16,6 +16,8 @@ Java虚拟机所管理的内存包括以下几个运行时数据区域：
 
 ![](https://raw.githubusercontent.com/liunaijie/images/master/20211121102013.png)
 
+<!--more-->
+
 # 程序计数器(Program Counter Register)
 
 所占的内存空间比较小，存储的是当前线程所执行的字节码行号指示器。
