@@ -64,7 +64,7 @@ jobs:
       - name: Hexo deploy # 部署
         run: |
           hexo clean
-          hexo d
+          hexo g -d
 ```
 
 
