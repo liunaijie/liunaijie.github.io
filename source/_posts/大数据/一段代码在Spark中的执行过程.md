@@ -41,7 +41,7 @@ group by 1,2
 
 - cluster
 
-这种模式会在Yarn集群中选择一个集群来作为Driver
+这种模式会在Yarn集群中选择一个机器来作为Driver
 
 在生产环境下我们一般都会使用Cluster模式来提交任务
 
