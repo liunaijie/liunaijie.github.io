@@ -2,7 +2,8 @@
 title: 我目前的git工作流程
 date: 2020-06-20 19:33:15
 toc: true
-categories: "工具"
+categories: 
+	- [code, tool]
 tags: 
 	- git
 ---

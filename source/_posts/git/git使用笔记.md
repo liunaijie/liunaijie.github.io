@@ -2,7 +2,8 @@
 title: git使用笔记
 date: 2019-05-29 10:18:45
 toc: true
-categories: "工具"
+categories: 
+	- [code, tool]
 tags: 
 	- git
 ---

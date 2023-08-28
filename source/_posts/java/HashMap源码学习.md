@@ -1,7 +1,8 @@
 ---
 title: HashMap源码学习
 date: 2019-08-22 10:12:23
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

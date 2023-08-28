@@ -1,7 +1,8 @@
 ---
 convertTwotitle: IPV4与Int的转换
 date: 2021-01-05 21:13:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

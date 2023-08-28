@@ -1,7 +1,8 @@
 ---
 title: 两个数组的交集II-LeetCode350
 date: 2019-08-07 20:17:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

@@ -1,7 +1,8 @@
 ---
 title: 反转一个单链表-LeetCode206
 date: 2019-11-24 11:18:35
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

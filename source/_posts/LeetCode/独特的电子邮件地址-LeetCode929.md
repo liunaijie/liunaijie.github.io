@@ -1,7 +1,8 @@
 ---
 title: 独特的电子邮件地址-LeetCode929
 date: 2018-12-21 20:55:48
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

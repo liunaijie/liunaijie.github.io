@@ -1,7 +1,8 @@
 ---
 title: 删除排序数组中的重复项—LeetCode26
 date: 2018-09-10 13:52:40
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

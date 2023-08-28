@@ -1,7 +1,8 @@
 ---
 title: Nim游戏—LeetCode292
 date: 2019-06-01 13:52:40
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

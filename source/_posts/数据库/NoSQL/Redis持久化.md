@@ -1,7 +1,8 @@
 ---
 title: Redis持久化
 date: 2020-04-14 13:25:33
-categories: "NoSQL"
+categories: 
+	- [code, database]
 toc: true
 tags: 
 	- redis

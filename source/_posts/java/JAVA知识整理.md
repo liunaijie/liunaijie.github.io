@@ -2,7 +2,8 @@
 title: JAVA知识整理
 date: 2019-09-10 20:33:24
 toc: true
-categories: "java"
+categories: 
+	- [code, java]
 tags: 
 	- java
 ---

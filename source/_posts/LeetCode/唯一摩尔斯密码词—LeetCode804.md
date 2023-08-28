@@ -1,7 +1,8 @@
 ---
 title: 唯一摩尔斯密码词—LeetCode804
 date: 2019-06-02 11:21:09
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

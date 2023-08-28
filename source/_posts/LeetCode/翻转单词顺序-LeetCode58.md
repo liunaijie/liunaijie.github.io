@@ -1,6 +1,7 @@
 ---
 title: 翻转单词顺序-LeetCode58
-categories: leetcode
+categories: 
+	- [code, leetcode]
 toc: true
 date: 2022-04-13 09:20:49
 tags:

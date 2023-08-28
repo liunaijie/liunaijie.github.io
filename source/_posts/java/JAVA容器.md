@@ -1,7 +1,8 @@
 ---
 title: JAVA容器
 date: 2019-08-31 19:12:23
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

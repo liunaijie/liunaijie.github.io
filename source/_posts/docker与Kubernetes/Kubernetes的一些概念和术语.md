@@ -1,7 +1,8 @@
 ---
 title: Kubetnetes的一些概念和术语
 date: 2019-08-30 10:05:39
-categories: "编程"
+categories: 
+	- [code, k8s]
 toc: true
 tags: 
 	- kubetnetes

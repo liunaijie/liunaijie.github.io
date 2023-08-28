@@ -1,7 +1,8 @@
 ---
 title: Java类加载机制
 date: 2021-10-10 22:45:21
-categories: "java"
+categories: 
+	- [code, java, class_loader]
 toc: true
 tags: 
 	- java

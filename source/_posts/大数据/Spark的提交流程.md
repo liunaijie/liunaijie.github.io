@@ -1,9 +1,11 @@
 ---
 title: Spark中的提交流程
 date: 2023-07-22 11:10:23
-categories: "big data"
+categories: 
+	- [code,big_data]
 toc: true
 tags: 
+	- big_data
 	- Spark
 ---
 

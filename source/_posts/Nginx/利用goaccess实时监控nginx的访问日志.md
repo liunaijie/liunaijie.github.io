@@ -1,8 +1,9 @@
 ---
 title: 利用goaccess实时监控nginx的访问日志
 date: 2018-12-15 20:15:40
-toc: true #是否显示文章目录
-categories: nginx
+toc: true 
+categories: 
+	- [code, tool]
 tags: 
 	- nginx
 	- goaccess

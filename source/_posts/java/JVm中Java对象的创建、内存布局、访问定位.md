@@ -1,7 +1,8 @@
 ---
 title: JVM中Java对象的创建、内存布局、访问定位
 date: 2021-09-01 10:18:39
-categories: "java"
+categories: 
+	- [code, java, jvm]
 toc: true
 tags: 
 	- java

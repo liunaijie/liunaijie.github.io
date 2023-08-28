@@ -1,7 +1,8 @@
 ---
 title: 移除元素-LeetCode27
 date: 2019-12-14 21:02:38
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

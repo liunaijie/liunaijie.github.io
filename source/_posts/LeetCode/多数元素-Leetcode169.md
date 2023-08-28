@@ -1,7 +1,8 @@
 ---
 title: 多数元素-LeetCode169
 date: 2020-03-29 14:03:52
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

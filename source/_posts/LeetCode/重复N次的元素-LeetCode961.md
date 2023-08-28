@@ -1,7 +1,8 @@
 ---
 title: 重复N次的元素-LeetCode961
 date: 2019-08-08 21:01:56
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

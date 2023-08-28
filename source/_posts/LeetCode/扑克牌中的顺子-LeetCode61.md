@@ -1,7 +1,8 @@
 ---
 title: 扑克牌中的顺子-剑指Offer LeetCode61
 date: 2022-03-23 20:14:19
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

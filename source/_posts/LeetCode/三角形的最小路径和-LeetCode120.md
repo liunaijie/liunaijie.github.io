@@ -1,7 +1,8 @@
 ---
 title: 三角形最小路径和—LeetCode120
 date: 2019-06-16 22:18:23
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

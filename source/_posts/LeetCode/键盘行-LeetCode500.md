@@ -1,7 +1,8 @@
 ---
 title: 键盘行-LeetCode500
 date: 2019-07-15 20:06:56
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

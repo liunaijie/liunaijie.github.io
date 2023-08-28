@@ -1,7 +1,8 @@
 ---
 title: Hexo使用
 date: 2019-01-17 16:51:39
-categories: "工具"
+categories: 
+	- [tools]
 toc: true
 tags: 
 	- hexo

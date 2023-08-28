@@ -1,7 +1,8 @@
 ---
 title: 反转图像—LeetCode832
 date: 2019-06-10 21:34:39
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

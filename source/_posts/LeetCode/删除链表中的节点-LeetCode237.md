@@ -1,7 +1,8 @@
 ---
 title: 删除链表中的节点—LeetCode237
 date: 2019-04-07 20:13:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

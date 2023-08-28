@@ -1,7 +1,8 @@
 ---
 title: GC-垃圾收集器
 date: 2021-09-15 21:33:39
-categories: "java"
+categories: 
+	- [code, java, jvm, gc]
 toc: true
 tags: 
 	- java

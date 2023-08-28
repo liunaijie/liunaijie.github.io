@@ -2,7 +2,8 @@
 title: nginx源码编译安装
 date: 2019-04-11 12:29:40
 toc: true
-categories: "nginx"
+categories: 
+	- [code, tool]
 tags: 
 	- nginx
 ---

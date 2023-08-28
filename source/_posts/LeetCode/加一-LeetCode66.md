@@ -1,7 +1,8 @@
 ---
 title: 加一—LeetCode66
 date: 2018-08-27 21:05:12
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

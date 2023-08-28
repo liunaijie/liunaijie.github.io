@@ -1,7 +1,8 @@
 ---
 title: 搜索插入位置-LeetCode35
 date: 2019-03-06 19:59:48
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

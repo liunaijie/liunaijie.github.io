@@ -1,10 +1,11 @@
 ---
 title: Flink学习(一)
 date: 2022-12-04 10:08:12
-categories: "大数据"
+categories: 
+	- [code,big_data]
 toc: true
 tags: 
-	- 大数据
+	- big_data
 	- Flink
 ---
 # 时间语义

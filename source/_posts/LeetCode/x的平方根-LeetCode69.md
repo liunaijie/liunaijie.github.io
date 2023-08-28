@@ -1,7 +1,8 @@
 ---
 title: x的平方根—LeetCode69
 date: 2019-01-05 21:13:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

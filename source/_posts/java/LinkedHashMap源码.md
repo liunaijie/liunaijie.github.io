@@ -3,7 +3,8 @@ title: LinkedHashMap源码
 date: 2019-08-22 20:12:23
 tags:
   - java
-categories: java
+categories: 
+	- [code, java]
 toc: true
 ---
 

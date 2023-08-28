@@ -1,7 +1,8 @@
 ---
 title: 统计位数为偶数的数字—LeetCode1295
 date: 2020-02-21 21:13:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

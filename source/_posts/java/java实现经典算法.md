@@ -1,6 +1,8 @@
 ---
 title: java解决经典问题
 date: 2017-11-27 15:52:41
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

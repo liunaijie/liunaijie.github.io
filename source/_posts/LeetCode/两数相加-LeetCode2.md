@@ -1,7 +1,8 @@
 ---
 title: 两数相加-LeetCode2
 date: 2019-08-20 16:17:51
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

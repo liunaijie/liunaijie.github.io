@@ -1,7 +1,8 @@
 ---
 title: 高度检查器—LeetCode1051
 date: 2019-06-18 21:15:59
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

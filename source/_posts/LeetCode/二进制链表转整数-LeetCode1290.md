@@ -1,7 +1,8 @@
 ---
 title: 二进制链表转整数-LeetCode1290
 date: 2019-02-21 20:17:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

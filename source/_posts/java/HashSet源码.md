@@ -1,7 +1,8 @@
 ---
 title: HashSet源码
 date: 2019-08-26 21:12:23
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

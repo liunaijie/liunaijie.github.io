@@ -1,7 +1,8 @@
 ---
 title: 最小的k个数-LeetCodeM40
 date: 2020-04-13 12:29:33
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

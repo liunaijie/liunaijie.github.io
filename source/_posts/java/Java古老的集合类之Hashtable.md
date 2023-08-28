@@ -1,7 +1,8 @@
 ---
 title: Java古老的集合类之Hashtable
 date: 2019-12-20 10:12:23
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

@@ -1,7 +1,8 @@
 ---
 title: 手写rpc简单实现
 date: 2019-07-26 21:08:12
-categories: "java"
+categories: 
+	- [code, java, rpc]
 toc: true
 tags: 
 	- java

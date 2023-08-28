@@ -1,11 +1,11 @@
 ---
 title: Docker使用笔记
 date: 2019-07-03 17:08:39
-categories: "docker"
+categories: 
+	- [code, docker]
 toc: true
 tags: 
 	- docker
-
 ---
 
 在日常开发中，可能用到一些软件没有安装到自己的电脑上，或者突然想了解一项技术，以后不经常用到。可以使用 docker 进行安装。

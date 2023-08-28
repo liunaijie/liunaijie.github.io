@@ -1,7 +1,8 @@
 ---
 title: 矩阵中的路径-剑指Offer LeetCode12
 date: 2022-03-25 00:02:19
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

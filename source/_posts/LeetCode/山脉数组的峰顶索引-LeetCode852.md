@@ -1,7 +1,8 @@
 ---
 title: 山脉数组的峰顶索引-LeetCode852
 date: 2019-07-18 23:01:56
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

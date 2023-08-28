@@ -1,7 +1,8 @@
 ---
 title: Java古老的集合类之Vector
 date: 2019-12-23 11:51:46
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

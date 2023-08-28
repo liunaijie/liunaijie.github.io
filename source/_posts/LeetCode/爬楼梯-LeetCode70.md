@@ -1,7 +1,8 @@
 ---
 title: 爬楼梯-LeetCode70
 date: 2019-03-16 19:56:08
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

@@ -2,7 +2,8 @@
 title: LinkedList源码学习
 date: 2019-08-21 09:44:49
 toc: true
-categories: "java"
+categories: 
+	- [code, java]
 tags: 
 	- java
 ---

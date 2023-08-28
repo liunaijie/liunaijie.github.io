@@ -1,7 +1,8 @@
 ---
 title: 利用github和picgo创建图床
 date: 2019-06-28 17:28:39
-categories: "工具"
+categories: 
+	- [tools]
 toc: true
 tags: 
 	- github

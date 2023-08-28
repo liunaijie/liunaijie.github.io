@@ -1,9 +1,12 @@
 ---
 title: ClickHouse(1)-写入过程
 date: 2021-02-14 10:10:23
-categories: "big data"
+categories: 
+	- [code,big_data,olap]
 toc: true
 tags: 
+	- big_data
+	- olap
 	- ClickHouse
 ---
 

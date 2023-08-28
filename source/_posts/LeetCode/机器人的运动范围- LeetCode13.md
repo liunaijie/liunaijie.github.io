@@ -1,7 +1,8 @@
 ---
 title: 机器人的运动路径- 剑指Offer LeetCode13
 date: 2022-03-24 23:10:46
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

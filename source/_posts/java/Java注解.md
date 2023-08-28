@@ -1,7 +1,8 @@
 ---
 title: Java注解
 date: 2019-12-06 09:28:00
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

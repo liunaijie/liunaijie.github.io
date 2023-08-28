@@ -1,7 +1,8 @@
 ---
 title: Spring笔记
 date: 2019-09-04 16:01:11
-categories: "spring"
+categories: 
+	- [code, java, spring]
 toc: true
 tags: 
 	- spring

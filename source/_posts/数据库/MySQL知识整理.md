@@ -2,7 +2,8 @@
 title: MySQL知识整理
 date: 2019-09-19 10:33:24
 toc: true
-categories: "mysql"
+categories: 
+	- [code,database]
 tags: 
 	- mysql
 ---

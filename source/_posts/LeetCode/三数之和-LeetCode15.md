@@ -1,7 +1,8 @@
 ---
 title: 三数之和—LeetCode15
 date: 2019-10-25 21:36:20
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

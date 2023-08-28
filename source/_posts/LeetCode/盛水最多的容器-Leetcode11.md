@@ -1,7 +1,8 @@
 ---
 title: 盛水最多的容器—LeetCode11
 date: 2020-03-26 09:52:11
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode
@@ -17,11 +18,11 @@ tags:
 >
 > ![](https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg)
 >
-> 图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
+> 图中垂直线代表输入数组 \[1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
 >
 > 示例：
 >
-> 输入：[1,8,6,2,5,4,8,3,7]
+> 输入：\[1,8,6,2,5,4,8,3,7]
 > 输出：49
 
 <!--more-->

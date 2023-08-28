@@ -1,7 +1,8 @@
 ---
 title: 只出现一次的数字—LeetCode136
 date: 2019-04-11 13:52:40
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

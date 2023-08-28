@@ -1,7 +1,8 @@
 ---
 title: 机器人能否返回终点—LeetCode657
 date: 2019-06-03 14:32:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

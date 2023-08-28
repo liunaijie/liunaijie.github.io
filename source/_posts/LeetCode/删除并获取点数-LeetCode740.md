@@ -1,6 +1,7 @@
 ---
 title: 删除并获取点数-LeetCode740
-categories: leetcode
+categories: 
+	- [code, leetcode]
 toc: true
 date: 2022-04-13 22:30:48
 tags:

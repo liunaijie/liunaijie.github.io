@@ -1,7 +1,8 @@
 ---
 title: 宝石与石头-LeetCode771
 date: 2018-12-19 18:55:48
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

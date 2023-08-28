@@ -1,7 +1,8 @@
 ---
 title: 最后一个单词的长度-LeetCode58
 date: 2018-12-20 21:40:08
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

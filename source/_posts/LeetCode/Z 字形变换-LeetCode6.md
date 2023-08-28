@@ -1,7 +1,8 @@
 ---
 title: Z字形变换—LeetCode6
 date: 2020-07-02 22:03:47
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

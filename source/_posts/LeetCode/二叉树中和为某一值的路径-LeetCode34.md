@@ -1,7 +1,8 @@
 ---
 title: 二叉树中和为某一值的路径- 剑指Offer LeetCode34
 date: 2022-03-24 22:21:46
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

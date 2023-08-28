@@ -2,7 +2,8 @@
 title: 微服务之SpringCloud-注册中心eureka
 date: 2019-12-18 11:33:18
 toc: true
-categories: "springcloud"
+categories: 
+	- [code, java]
 tags: 
 	- 微服务
 	- java

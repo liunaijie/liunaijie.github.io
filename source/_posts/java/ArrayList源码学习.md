@@ -1,7 +1,8 @@
 ---
 title: ArrayList源码学习
 date: 2019-08-20 19:28:12
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

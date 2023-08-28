@@ -1,7 +1,8 @@
 ---
 title: 两数之和—LeetCode1
 date: 2018-08-25 20:52:40
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

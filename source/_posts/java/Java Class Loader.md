@@ -1,7 +1,8 @@
 ---
 title: Java Class Loader
 date: 2021-10-14 20:13:29
-categories: "java"
+categories: 
+	- [code, java, class_loader]
 toc: true
 tags: 
 	- java

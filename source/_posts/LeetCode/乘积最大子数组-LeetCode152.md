@@ -1,6 +1,7 @@
 ---
 title: 乘积最大子数组-LeetCode152
-categories: leetcode
+categories: 
+	- [code, leetcode]
 toc: true
 date: 2022-04-15 20:31:27
 tags:

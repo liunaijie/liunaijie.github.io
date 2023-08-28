@@ -1,7 +1,8 @@
 ---
 title: 链表中的倒数第K个节点-LeetCodeM22
 date: 2020-02-08 11:42:28
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

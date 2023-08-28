@@ -1,7 +1,8 @@
 ---
 title: 环形链表—LeetCode141
 date: 2019-12-21 13:13:30
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

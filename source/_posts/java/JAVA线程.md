@@ -1,7 +1,8 @@
 ---
 title: JAVA线程
 date: 2019-09-22 20:33:39
-categories: "java"
+categories: 
+	- [code, java, thread]
 toc: true
 tags: 
 	- java

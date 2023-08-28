@@ -1,7 +1,8 @@
 ---
 title: 最长公共前缀-LeetCode14
 date: 2018-12-12 20:50:52
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

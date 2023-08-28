@@ -1,7 +1,8 @@
 ---
 title: 什么是fail-fast与fail-safe
 date: 2020-04-01 10:23:53
-categories: "java"
+categories: 
+	- [code, java]
 toc: true
 tags: 
 	- java

@@ -1,7 +1,8 @@
 ---
 title: 有序数组的平方—LeetCode977
 date: 2019-01-09 13:52:40
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

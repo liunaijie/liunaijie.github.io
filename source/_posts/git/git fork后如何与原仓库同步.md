@@ -2,7 +2,8 @@
 title: git fork后如何与原仓库同步
 date: 2020-05-08 21:08:39
 toc: true
-categories: "工具"
+categories: 
+	- [code, tool]
 tags: 
 	- git
 ---

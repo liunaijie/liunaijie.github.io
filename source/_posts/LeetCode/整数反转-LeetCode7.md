@@ -1,7 +1,8 @@
 ---
 title: 整数反转—LeetCode7
 date: 2019-11-15 20:18:39
-categories: "leetcode"
+categories: 
+	- [code, leetcode]
 toc: true
 tags: 
 	- leetcode

@@ -1,6 +1,7 @@
 ---
 title: 跳跃游戏-LeetCode55
-categories: leetcode
+categories: 
+	- [code, leetcode]
 toc: true
 date: 2022-04-14 07:35:38
 tags:

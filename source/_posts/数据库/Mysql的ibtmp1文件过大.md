@@ -1,7 +1,8 @@
 ---
 title: Mysql的ibtmp1文件过大
 date: 2019-08-21 21:08:39
-categories: "mysql"
+categories: 
+	- [code,databases]
 toc: true
 tags: 
 	- mysql

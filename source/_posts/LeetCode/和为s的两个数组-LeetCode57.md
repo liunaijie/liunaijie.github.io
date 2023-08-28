@@ -1,6 +1,7 @@
 ---
 title: 和为s的两个数组-LeetCode57
-categories: leetcode
+categories: 
+	- [code, leetcode]
 toc: true
 date: 2022-04-13 09:55:53
 tags:
