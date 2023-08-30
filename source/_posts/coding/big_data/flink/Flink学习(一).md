@@ -1,9 +1,6 @@
 ---
 title: Flink学习(一)
 date: 2022-12-04 10:08:12
-categories: 
-	- [code,big_data]
-toc: true
 tags: 
 	- big_data
 	- Flink

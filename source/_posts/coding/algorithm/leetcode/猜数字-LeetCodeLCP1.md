@@ -1,9 +1,6 @@
 ---
 title: 猜数字-LeetCodeLCP1
 date: 2020-02-14 11:42:28
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

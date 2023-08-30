@@ -1,9 +1,6 @@
 ---
 title: 打家劫舍—LeetCode198
 date: 2022-04-13 21:12:29
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

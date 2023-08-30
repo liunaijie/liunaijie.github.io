@@ -1,9 +1,6 @@
 ---
 title: 反转字符串中的单词III-LeetCode557
 date: 2019-07-12 20:01:56
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

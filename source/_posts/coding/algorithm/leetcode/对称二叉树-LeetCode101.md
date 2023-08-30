@@ -1,9 +1,6 @@
 ---
 title: 对称二叉树—LeetCode101
 date: 2019-02-25 11:21:16
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

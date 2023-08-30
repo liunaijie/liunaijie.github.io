@@ -1,9 +1,6 @@
 ---
 title: 翻转二叉树—LeetCode226
 date: 2019-11-01 10:13:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

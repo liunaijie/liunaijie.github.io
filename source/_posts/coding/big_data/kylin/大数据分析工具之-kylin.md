@@ -1,9 +1,6 @@
 ---
 title: 大数据分析工具之-kylin
 date: 2020-07-19 09:04:19
-categories: 
-	- [code,big_data,olap]
-toc: true
 tags: 
 	- big_data
 	- olap

@@ -1,9 +1,6 @@
 ---
 title: 二叉搜索树的范围和-LeetCode938
 date: 2019-10-31 20:53:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

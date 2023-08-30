@@ -1,8 +1,5 @@
 ---
 title: 最大子数组和-LeetCode53
-categories: 
-	- [code, leetcode]
-toc: true
 date: 2022-04-14 08:02:56
 tags:
 	- leetcode

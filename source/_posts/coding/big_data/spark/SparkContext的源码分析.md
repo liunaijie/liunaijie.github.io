@@ -1,9 +1,6 @@
 ---
 title: SparkContext的源码分析
 date: 2023-07-30 13:20:43
-categories: 
-	- [code,big_data]
-toc: true
 tags: 
 	- big_data
 	- Spark

@@ -1,9 +1,6 @@
 ---
 title: 买卖股票的最佳时机II-LeetCode122
 date: 2019-03-18 10:50:08
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

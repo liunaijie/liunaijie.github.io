@@ -1,9 +1,6 @@
 ---
 title: 用队列实现栈-LeetCode225
 date: 2019-11-24 10:07:41
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

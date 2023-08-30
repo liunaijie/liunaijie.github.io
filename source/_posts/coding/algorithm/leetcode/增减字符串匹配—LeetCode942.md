@@ -1,9 +1,6 @@
 ---
 title: 增减字符串匹配—LeetCode942
 date: 2019-06-20 20:36:23
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

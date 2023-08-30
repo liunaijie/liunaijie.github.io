@@ -1,8 +1,6 @@
 ---
 title: AVL，红黑树学习
 date: 2019-12-09 09:34:08
-categories: "算法与数据结构"
-toc: true
 tags: 
 	- 算法与数据结构
 	- java

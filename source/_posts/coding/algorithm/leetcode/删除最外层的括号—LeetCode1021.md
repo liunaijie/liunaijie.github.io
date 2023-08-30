@@ -1,9 +1,6 @@
 ---
 title: 删除最外层的括号—LeetCode1021
 date: 2019-06-22 11:10:42
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

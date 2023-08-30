@@ -1,9 +1,6 @@
 ---
 title: 最大二叉树—LeetCode654
 date: 2019-01-08 20:52:40
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

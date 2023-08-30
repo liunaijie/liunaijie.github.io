@@ -1,9 +1,6 @@
 ---
 title: 键盘行-LeetCode500
 date: 2019-07-15 20:06:56
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java
@@ -17,8 +14,8 @@ tags:
 >
 > 示例：
 >
-> 输入: ["Hello", "Alaska", "Dad", "Peace"]
-> 输出: ["Alaska", "Dad"]
+> 输入: \["Hello", "Alaska", "Dad", "Peace"]
+> 输出: \["Alaska", "Dad"]
 >
 >
 > 注意：

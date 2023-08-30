@@ -1,9 +1,6 @@
 ---
 title: IPV4与Int的转换
 date: 2021-08-25 20:45:27
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

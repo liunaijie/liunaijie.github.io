@@ -1,9 +1,6 @@
 ---
 title: 回文数—LeetCode9
 date: 2019-11-07 19:58:29
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

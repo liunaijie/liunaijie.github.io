@@ -1,9 +1,6 @@
 ---
 title: 二叉树的锯齿形层次遍历-LeetCode103
 date: 2020-03-31 09:34:50
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

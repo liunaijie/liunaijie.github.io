@@ -1,9 +1,6 @@
 ---
 title: 整数的各位积和之差—LeetCode1281
 date: 2020-02-19 11:52:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

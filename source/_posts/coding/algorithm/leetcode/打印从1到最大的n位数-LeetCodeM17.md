@@ -1,9 +1,6 @@
 ---
 title: 打印从1到最大的n位数—LeetCodeM17
 date: 2019-02-21 13:45:16
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

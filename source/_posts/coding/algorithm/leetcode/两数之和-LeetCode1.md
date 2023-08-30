@@ -1,9 +1,6 @@
 ---
 title: 两数之和—LeetCode1
 date: 2018-08-25 20:52:40
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java
@@ -17,10 +14,10 @@ tags:
 >
 > 示例:
 >
-> 给定 nums = [2, 7, 11, 15], target = 9
+> 给定 nums = \[2, 7, 11, 15], target = 9
 >
-> 因为 nums[0] + nums[1] = 2 + 7 = 9
-> 所以返回 [0, 1]
+> 因为 nums\[0] + nums\[1] = 2 + 7 = 9
+> 所以返回 \[0, 1]
 
 <!--more-->
 

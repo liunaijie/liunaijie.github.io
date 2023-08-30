@@ -1,9 +1,6 @@
 ---
 title: 一段代码在Spark中的执行过程
 date: 2022-04-01 23:10:23
-categories: 
-	- [code,big_data]	
-toc: true
 tags: 
 	- big_data
 	- Spark

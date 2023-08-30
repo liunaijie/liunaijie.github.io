@@ -1,9 +1,6 @@
 ---
 title: 矩阵中的路径-剑指Offer LeetCode12
 date: 2022-03-25 00:02:19
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java
@@ -23,13 +20,13 @@ tags:
 >
 > 示例1:
 >
-> 输入: borad = [ ["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"], ["A", "D", "E", "E"]], word = "ABCCED"
+> 输入: borad = \[ \["A", "B", "C", "E"], \["S", "F", "C", "S"], \["A", "D", "E", "E"], \["A", "D", "E", "E"]], word = "ABCCED"
 >
 > 输出: true
 >
 > 示例2:
 >
-> 输入：board = [["a","b"],["c","d"]], word = "abcd"
+> 输入：board = \[\["a","b"],\["c","d"]], word = "abcd"
 > 		输出：false
 
 <!--more-->

@@ -1,9 +1,6 @@
 ---
 title: 罗马数字转整数-LeetCode13
 date: 2018-12-10 19:59:29
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

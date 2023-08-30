@@ -1,9 +1,6 @@
 ---
 title: 把数组排成最小的数-剑指Offer LeetCode45
 date: 2022-03-23 19:55:48
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

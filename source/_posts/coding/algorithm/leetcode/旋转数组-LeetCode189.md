@@ -1,9 +1,6 @@
 ---
 title: 旋转数组—LeetCode189
 date: 2018-08-29 20:28:32
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

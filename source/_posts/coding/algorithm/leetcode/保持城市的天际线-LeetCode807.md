@@ -1,9 +1,6 @@
 ---
 title: 保持城市的天际线-LeetCode807
 date: 2019-08-06 23:13:34
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

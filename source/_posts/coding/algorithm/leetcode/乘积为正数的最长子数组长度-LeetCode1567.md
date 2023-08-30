@@ -1,8 +1,5 @@
 ---
 title: 乘积为正数的最长子数组长度-LeetCode1567
-categories: 
-	- [code, leetcode]
-toc: true
 date: 2022-04-15 20:58:16
 tags:
 	- leetcode

@@ -1,8 +1,5 @@
 ---
 title: 跳跃游戏2-LeetCode45
-categories: 
-	- [code, leetcode]
-toc: true
 date: 2022-04-14 07:51:29
 tags:
 	- leetcode

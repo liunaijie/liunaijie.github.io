@@ -1,9 +1,6 @@
 ---
 title: 存在重复元素-LeetCode217
 date: 2019-03-10 21:50:48
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

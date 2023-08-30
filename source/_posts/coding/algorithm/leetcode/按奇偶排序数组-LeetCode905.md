@@ -1,9 +1,6 @@
 ---
 title: 按奇偶排序数组-LeetCode905
 date: 2019-01-02 10:45:28
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

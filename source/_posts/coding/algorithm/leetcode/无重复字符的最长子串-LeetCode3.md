@@ -1,9 +1,6 @@
 ---
 title: 无重复字符的最长子串-LeetCode3
 date: 2019-03-12 18:50:08
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

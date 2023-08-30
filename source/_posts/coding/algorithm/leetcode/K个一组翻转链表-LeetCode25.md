@@ -1,9 +1,6 @@
 ---
 title: K个一组翻转链表-LeetCode25
 date: 2019-11-27 18:50:08
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

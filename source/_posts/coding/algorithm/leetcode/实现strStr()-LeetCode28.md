@@ -1,9 +1,6 @@
 ---
 title: 实现strStr()—LeetCode28
 date: 2019-09-06 15:23:34
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

@@ -1,9 +1,6 @@
 ---
 title: 二叉搜索树的第K大节点-剑指Offer LeetCode54
 date: 2022-03-23 20:14:19
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

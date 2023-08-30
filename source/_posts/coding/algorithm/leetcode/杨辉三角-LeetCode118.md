@@ -1,9 +1,6 @@
 ---
 title: 杨辉三角—LeetCode118
 date: 2019-05-05 20:13:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

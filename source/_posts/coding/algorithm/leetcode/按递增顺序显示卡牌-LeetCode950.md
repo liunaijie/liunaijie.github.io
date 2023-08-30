@@ -1,9 +1,6 @@
 ---
-convertTwotitle: 按递增顺序显示卡牌—LeetCode950
+title: 按递增顺序显示卡牌—LeetCode950
 date: 2019-01-05 21:13:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

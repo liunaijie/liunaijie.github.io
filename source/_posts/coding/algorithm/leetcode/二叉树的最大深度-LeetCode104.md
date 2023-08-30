@@ -1,9 +1,6 @@
 ---
 title: 二叉树的最大深度-LeetCode104
 date: 2020-02-20 20:53:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

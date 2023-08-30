@@ -1,9 +1,6 @@
 ---
 title: 有序链表转换为二叉搜索树—LeetCode109
 date: 2020-03-21 17:13:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

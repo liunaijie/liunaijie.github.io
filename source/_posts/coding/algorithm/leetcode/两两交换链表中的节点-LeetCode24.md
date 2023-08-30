@@ -1,9 +1,6 @@
 ---
 title: 两两交换链表中的节点—LeetCode24
 date: 2019-11-21 14:13:30
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java

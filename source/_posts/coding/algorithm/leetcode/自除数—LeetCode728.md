@@ -1,9 +1,6 @@
 ---
 title: 自除数—LeetCode728
 date: 2019-06-04 15:20:09
-categories: 
-	- [code, leetcode]
-toc: true
 tags: 
 	- leetcode
 	- java
