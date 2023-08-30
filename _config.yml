@@ -116,3 +116,10 @@ feed:
   limit: 10
   content: false
   content_limit: 200
+
+# Generate categories from directory-tree
+# Dependencies: https://github.com/xu-song/hexo-auto-category
+auto_category:
+ enable: true
+ multiple: false
+ depth: 
