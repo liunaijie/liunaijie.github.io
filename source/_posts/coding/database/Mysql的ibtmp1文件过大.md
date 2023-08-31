@@ -2,7 +2,7 @@
 title: Mysql的ibtmp1文件过大
 date: 2019-08-21 21:08:39
 tags: 
-	- mysql
+- database/mysql
 ---
 
 今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。  

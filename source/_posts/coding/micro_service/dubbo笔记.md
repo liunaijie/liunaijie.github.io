@@ -2,9 +2,7 @@
 title: dubbo笔记
 date: 2019-06-23 17:58:16
 tags: 
-	- dubbo
-	- rpc
-	- java
+- java/rpc/dubbo
 ---
 
 ## 建立基础项目

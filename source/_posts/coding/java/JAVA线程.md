@@ -2,7 +2,7 @@
 title: JAVA线程
 date: 2019-09-22 20:33:39
 tags: 
-	- java
+- java/thread
 ---
 
 # 基础概念

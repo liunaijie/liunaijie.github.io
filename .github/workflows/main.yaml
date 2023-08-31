@@ -29,9 +29,10 @@ jobs:
           git config --global user.name "Jarvis"
           npm install hexo-cli -g
           npm install
+          npm install hexo-auto-category --save
+          npm install hexo-obsidian-backlink --save
       - name: Hexo deploy
         run: |
-          npm install hexo-auto-category --save
           hexo clean
           hexo g
           hexo d

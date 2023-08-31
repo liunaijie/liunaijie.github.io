@@ -2,8 +2,8 @@
 title: 删除最外层的括号—LeetCode1021
 date: 2019-06-22 11:10:42
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述：

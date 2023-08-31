@@ -2,7 +2,7 @@
 title: StringBuilder为什么线程不安全?
 date: 2019-11-17 16:55:30
 tags: 
-	- java
+- java
 ---
 
 在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。

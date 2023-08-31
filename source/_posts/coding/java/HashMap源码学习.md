@@ -2,8 +2,7 @@
 title: HashMap源码学习
 date: 2019-08-22 10:12:23
 tags: 
-	- java
-
+- java/collection
 ---
 
 ![HashMap结构](https://raw.githubusercontent.com/liunaijie/images/master/HashMap.jpg)

@@ -2,9 +2,8 @@
 title: 利用GitHub Action自动部署Hexo博客
 date: 2021-01-23 15:24:51
 tags: 
-	- tools
-	- Github
-	- Hexo
+- github
+- Hexo
 ---
 
 # 前言

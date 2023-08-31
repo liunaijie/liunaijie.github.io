@@ -2,8 +2,9 @@
 title: 用队列实现栈-LeetCode225
 date: 2019-11-24 10:07:41
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/队列
+- 算法与数据结构/栈
+- Leetcode
 ---
 
 # 题目描述

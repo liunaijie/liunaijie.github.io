@@ -2,8 +2,7 @@
 title: JVM运行时数据区域
 date: 2021-08-28 14:18:39
 tags: 
-	- java
-    - jvm
+- java/jvm
 ---
 
 

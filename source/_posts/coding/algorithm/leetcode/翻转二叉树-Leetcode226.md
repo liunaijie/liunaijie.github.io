@@ -2,9 +2,8 @@
 title: 翻转二叉树—LeetCode226
 date: 2019-11-01 10:13:30
 tags: 
-	- leetcode
-	- java
-
+- 算法与数据结构/二叉树
+- Leetcode
 ---
 
 # 题目描述

@@ -2,9 +2,8 @@
 title: 爬楼梯-LeetCode70
 date: 2019-03-16 19:56:08
 tags: 
-	- leetcode
-	- java
-	- 动态规划
+- 算法与数据结构/动态规划
+- Leetcode
 ---
 
 # 题目描述

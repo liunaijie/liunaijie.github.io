@@ -2,7 +2,7 @@
 title: 基于Docker的MySQL主从复制环境搭建
 date: 2020-01-30 12:27:27
 tags: 
-	- mysql
+- database/mysql
 ---
 
 # 1. 前言

@@ -2,8 +2,7 @@
 title: Flink学习(一)
 date: 2022-12-04 10:08:12
 tags: 
-	- big_data
-	- Flink
+- big_data/flink
 ---
 # 时间语义
 Flink中的时间有三种:

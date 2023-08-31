@@ -2,8 +2,7 @@
 title: JVM中Java对象的创建、内存布局、访问定位
 date: 2021-09-01 10:18:39
 tags: 
-	- java
-    - jvm
+- java/jvm
 ---
 
 # Java对象创建

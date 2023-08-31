@@ -2,8 +2,8 @@
 title: K个一组翻转链表-LeetCode25
 date: 2019-11-27 18:50:08
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/链表
+- Leetcode
 ---
 
 # 题目描述

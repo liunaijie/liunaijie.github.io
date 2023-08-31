@@ -2,8 +2,8 @@
 title: 链表中的倒数第K个节点-LeetCodeM22
 date: 2020-02-08 11:42:28
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/链表
+- Leetcode
 ---
 
 #  题目描述

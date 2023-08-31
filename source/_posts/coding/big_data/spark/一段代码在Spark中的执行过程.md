@@ -2,8 +2,7 @@
 title: 一段代码在Spark中的执行过程
 date: 2022-04-01 23:10:23
 tags: 
-	- big_data
-	- Spark
+- big_data/spark
 ---
 
 # 一段代码在Spark中的执行过程

@@ -2,8 +2,8 @@
 title: 整数的各位积和之差—LeetCode1281
 date: 2020-02-19 11:52:30
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

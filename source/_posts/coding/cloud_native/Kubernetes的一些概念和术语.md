@@ -2,7 +2,7 @@
 title: Kubetnetes的一些概念和术语
 date: 2019-08-30 10:05:39
 tags: 
-	- kubetnetes
+- cloud_native/kubetnetes
 ---
 
 此篇文章来自《Kubernetes权威指南：从Docker到Kubernetes实践全接触（第4版） 》
@@ -77,4 +77,116 @@ kubectl describe node <node-name>
 
 # Pod
 
-pod是kubernetes里最小的单位，也是一个最重要的概念。
+Pod是k8s中管理的最小单元, 一个pod中有一个与业务并且不容易死亡的Pause容器, 可以根据Pause容器的状态来判断整个容器组的状态.
+
+对于同一个Pod中的多个container, 它们之间共享Pause容器的IP，共享Pause容器挂载的Volume. k8s为每个Pod都分配来一个唯一的IP地址, 称为Pod IP.
+
+在K8s中, 一个Pod里的容器与另外主机上的Pod容器能够直接通信.
+
+![](https://raw.githubusercontent.com/liunaijie/images/master/202308082017748.png)
+
+## 分类
+
+Pod有两种类型: 普通的Pod以及静态Pod(Static Pod). 静态Pod一般作为系统级别的定义来实现一些系统级别的功能.
+
+## 访问
+
+对于Pod中的容器, 可以通过(Pod IP + Container port)来进行访问.
+
+![](https://raw.githubusercontent.com/liunaijie/images/master/202308082018230.png)
+
+# Label
+
+Label(标签)是K8s系统中的一个核心概念, 很多东西的实现都依赖于Label. 一个Label是一个key=value的键值对, 其中的key与value都可以由用户自己指定. Label可以被添加到任意的资源对象上, 例如Node, Pod, Service等等. 一个资源对象可以定义任意数量的Label.
+
+我们可以对任意对象上添加和修改任意数量的label, label的名称和值都是我们自己定义的.
+
+当我们打上标签后, 可以通过Label Selector(标签选择器)查询和筛选这些资源对象.
+
+```bash
+kubectl get pod -l 'name=name1,project=projectA'
+
+kubectl get pods -l 'environment in (production),tier in (frontend)'
+```
+
+```yaml
+selector:
+	name: name1
+	project: projectA
+```
+
+```yaml
+selector:
+	matchLabels:
+		name: name1
+	matchExpressions:
+		- {key: project, operator: In, values: [projectrA]}
+```
+
+matchExpression用于定义一组基于集合的筛选条件, 支持的操作符有: `In, NotIn, Exists, DoesNotExist`
+
+matchLabels用于定义一组Label, 与直接写在Selector中的作用相同.
+
+如果同时设置了`matchLabels`和`matchExpressions`, 则两组条件为`AND`关系.
+![](https://raw.githubusercontent.com/liunaijie/images/master/202308082022097.png)
+
+![](https://raw.githubusercontent.com/liunaijie/images/master/202308082024519.png)
+
+# Annotation
+annotation(注解)与Label类似, 也是使用key=value的形式进行定义. 但是key, value值必须是字符串, 不可以是其他类型的值
+
+annotation不属于k8s管理的元数据信息, 但是可以通过添加某个注解来实现某项功能.
+
+# ConfigMap
+
+存放配置文件, 当我们更新配置文件后, Pod可以拿到最新的配置文件.
+
+![](https://raw.githubusercontent.com/liunaijie/images/master/202308082024769.png)
+
+所有的配置项都当作key-value字符串, 其中的value可以是一整个配置文件. 也可以是一个具体值.
+
+```yaml
+site.xml: |
+	<xml>
+		<a>a</a>
+	</xml>
+val: 123
+```
+
+## 创建
+
+```yaml
+# 将folder文件夹下所有文件以文件名为key, 值为value的方式创建出configmap
+kubectl create configmap <NAME> --from-file=<folder_name> 
+```
+
+## 使用
+
+可以使用四种方式来使用ConfigMap配置Pod中的容器
+
+1.  在容器命令和参数内
+2.  容器的环境变量
+3.  将ConfigMap挂载成文件, 让应用来读取
+4.  使用代码访问Kubernetes API来读取ConfigMap
+
+如果在ConfigMap中的key使用`.`作为前缀, 在挂载成文件后, 文件将为隐藏格式
+
+# Secret
+
+存放密码等需要加密的信息, 功能与Configmap类似, 只不过在secret中的值需要进行Base64加密
+
+# ReplicaSet-RS
+
+ReplicaSet的前身是Replication Controller. 它是k8s系统中的一个核心概念, 由它来控制Pod的副本数量在任意时刻都符合某个期望值. 但是我们现在基本不主动使用RS来管理Pod, 而是使用更高级的对象Deployment来管理.
+
+主要的组成部分为:
+
+-   期望的Pod副本数量
+-   用于筛选目标Pod的Label Selector
+-   当Pod的副本数量小于期望值时, 用于创建新Pod的模板(template)
+
+需要注意的是, 删除RC, RS并不会影响通过该RC,RS已创建好的Pod. 如果需要删除所有的Pod, 可以设置replicas的值为0先将Pod数量减至0后再进行删除.
+
+RS与RC的区别
+
+RS支持基于集合的Label Selector, 而RC只支持基于等式的Label Selector

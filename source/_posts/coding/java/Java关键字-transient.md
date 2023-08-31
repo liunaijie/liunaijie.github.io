@@ -2,7 +2,7 @@
 title: Java关键字-transient
 date: 2019-12-22 12:11:10
 tags: 
-	- java
+- java
 ---
 
 最近在看源码的时候看到一个关键字`transient`，之前对这个字没有印象，所以就去看了一下它的作用。

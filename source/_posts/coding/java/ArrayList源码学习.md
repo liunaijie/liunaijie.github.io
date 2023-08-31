@@ -2,7 +2,7 @@
 title: ArrayList源码学习
 date: 2019-08-20 19:28:12
 tags: 
-	- java
+- java/collection
 ---
 
 # 变量

@@ -2,8 +2,7 @@
 title: Java类加载机制
 date: 2021-10-10 22:45:21
 tags: 
-	- java
-    - jvm
+- java/class_loader
 ---
 
 

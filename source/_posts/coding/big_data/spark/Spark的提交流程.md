@@ -2,8 +2,7 @@
 title: Spark中的提交流程
 date: 2023-07-22 11:10:23
 tags: 
-	- big_data
-	- Spark
+- big_data/spark
 ---
 
 本文以Spark3.4版本，提交任务方式为Yarn Cluster，以`JavaWordCount`这个应用程序为例来分析一下一个Spark任务的提交过程。

@@ -2,8 +2,8 @@
 title: 删除排序数组中的重复项—LeetCode26
 date: 2018-09-10 13:52:40
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

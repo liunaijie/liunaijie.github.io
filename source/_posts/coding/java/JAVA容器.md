@@ -2,7 +2,7 @@
 title: JAVA容器
 date: 2019-08-31 19:12:23
 tags: 
-	- java
+- java/collection
 ---
 
 # 概述

@@ -2,10 +2,10 @@
 title: Docker使用笔记
 date: 2019-07-03 17:08:39
 tags: 
-	- docker
+- cloud_native/docker
 ---
 
-在日常开发中，可能用到一些软件没有安装到自己的电脑上，或者突然想了解一项技术，以后不经常用到。可以使用 docker 进行安装。
+Docker是一个使用了Linux Namespace和Cgroups的虚拟化工具
 
 # 安装
 
@@ -57,51 +57,37 @@ tags:
 
   重新连接后运行`docker run hello-world`就可以运行hello-world的镜像了。
 
+
 # 常用命令
 
-1. 查找镜像
+- 查找镜像
+`docker search [OPTIONS] TERM`
+比如我们需要查找一个MySQL镜像，我们可以`docker search mysql`
 
-    ```bash
-    docker search [OPTIONS] TERM
-    ```
+- 获取镜像
+`docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]`
+当我们对地址和标签缺省时，默认为当前仓库最新的镜像
 
-    比如我们需要查找一个MySQL镜像，我们可以`docker search mysql`
+- 列出本地镜像
+`docker image`
+将列出下载到本地的所有镜像
 
-3. 获取镜像
+- 列出本地历史运行镜像
+`docker ps -a`
 
-    ```bash
-    docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]
-    ```
+- 删除本地镜像
+`docker image rm [选项] <镜像1> [<镜像2> ...]`
 
-    当我们对地址和标签缺省时，默认为当前仓库最新的镜像
+- 进入镜像内部
+`docker exec -it id|name  /bin/bash`
+可以选定镜像的id或者名称来进入镜像内部
+## DockerFile
 
-4. 列出本地镜像
+设置时区：
 
-    ```bash
-    docker image
-    ```
-
-    将列出下载到本地的所有镜
-
-4. 列出本地历史运行镜像
-
-    ```shell
-    docker ps -a
-    ```
-
-5. 删除本地镜像
-
-    ```bash
-    docker image rm [选项] <镜像1> [<镜像2> ...]
-    ```
-
-6. 进入镜像内部
-
-    ```shell
-    docker exec -it id|name  /bin/bash
-    ```
-
-    可以选定镜像的id或者名称来进入镜像内部
+```xml
+TZ=Etc/GMT+7
+```
 
 # 参考
 

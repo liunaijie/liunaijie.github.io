@@ -2,8 +2,8 @@
 title: Nim游戏—LeetCode292
 date: 2019-06-01 13:52:40
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述：

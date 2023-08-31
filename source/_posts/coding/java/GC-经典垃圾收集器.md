@@ -2,9 +2,7 @@
 title: GC-经典垃圾收集器
 date: 2021-09-25 22:33:39
 tags: 
-	- java
-    - jvm
-    - gc
+- java/jvm/gc
 ---
 
 

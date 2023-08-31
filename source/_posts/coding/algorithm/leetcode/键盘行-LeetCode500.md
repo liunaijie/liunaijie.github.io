@@ -2,8 +2,8 @@
 title: 键盘行-LeetCode500
 date: 2019-07-15 20:06:56
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

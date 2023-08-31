@@ -2,8 +2,8 @@
 title: 翻转单词顺序-LeetCode58
 date: 2022-04-13 09:20:49
 tags:
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

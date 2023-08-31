@@ -2,8 +2,7 @@
 title: java解决经典问题
 date: 2017-11-27 15:52:41
 tags: 
-	- java
-	- 算法
+- java
 ---
 
 # 反转排序

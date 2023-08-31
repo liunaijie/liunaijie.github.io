@@ -2,8 +2,8 @@
 title: 实现strStr()—LeetCode28
 date: 2019-09-06 15:23:34
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

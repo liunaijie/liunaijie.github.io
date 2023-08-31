@@ -2,8 +2,8 @@
 title: 对称二叉树—LeetCode101
 date: 2019-02-25 11:21:16
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/二叉树
+- Leetcode
 ---
 
 # 题目描述

@@ -2,8 +2,7 @@
 title: Airflow调度系统
 date: 2022-04-09 10:08:12
 tags: 
-	- scheduler
-	- airflow
+- big_data/scheduler/airflow
 ---
 
 # 前言

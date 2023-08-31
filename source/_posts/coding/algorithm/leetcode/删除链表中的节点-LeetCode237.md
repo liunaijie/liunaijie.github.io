@@ -2,8 +2,8 @@
 title: 删除链表中的节点—LeetCode237
 date: 2019-04-07 20:13:30
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

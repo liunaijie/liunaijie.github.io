@@ -2,9 +2,8 @@
 title: 删除并获取点数-LeetCode740
 date: 2022-04-13 22:30:48
 tags:
-	- leetcode
-	- java
-	- 动态规划
+- 算法与数据结构/动态规划
+- Leetcode
 ---
 
 # 题目描述

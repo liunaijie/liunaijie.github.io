@@ -2,8 +2,8 @@
 title: 两两交换链表中的节点—LeetCode24
 date: 2019-11-21 14:13:30
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/链表
+- Leetcode
 ---
 
 # 题目描述

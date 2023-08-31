@@ -2,9 +2,7 @@
 title: GC-垃圾回收算法
 date: 2021-09-20 22:12:39
 tags: 
-	- java
-    - jvm
-    - gc
+- java/jvm/gc
 ---
 
 

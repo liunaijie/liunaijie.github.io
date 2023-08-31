@@ -2,9 +2,8 @@
 title: Z字形变换—LeetCode6
 date: 2020-07-02 22:03:47
 tags: 
-	- leetcode
-	- java
-
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

@@ -2,7 +2,7 @@
 title: Java古老的集合类之Hashtable
 date: 2019-12-20 10:12:23
 tags: 
-	- java
+- java/collection
 ---
 
 Hashtable虽然现在不经常被用到，但是它作为Java最早的集合类，今天来看一下它的源码。

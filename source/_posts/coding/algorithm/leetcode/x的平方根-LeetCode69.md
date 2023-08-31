@@ -2,8 +2,8 @@
 title: x的平方根—LeetCode69
 date: 2019-01-05 21:13:30
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

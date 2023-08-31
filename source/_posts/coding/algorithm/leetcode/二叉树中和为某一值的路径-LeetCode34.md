@@ -2,8 +2,8 @@
 title: 二叉树中和为某一值的路径- 剑指Offer LeetCode34
 date: 2022-03-24 22:21:46
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/二叉树
+- Leetcode
 ---
 
 # 题目描述
@@ -18,8 +18,8 @@ tags:
 >
 > ![](https://assets.leetcode.com/uploads/2021/01/18/pathsumii1.jpg)
 >
-> 输入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
-> 		输出：[[5,4,11,2], [5,8,4,5]]
+> 输入：root = \[5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
+> 		输出：\[\[5,4,11,2], \[5,8,4,5]]
 >
 > 有两条路径加起来之和等于22
 >
@@ -27,8 +27,8 @@ tags:
 >
 > ![img](https://assets.leetcode.com/uploads/2021/01/18/pathsum2.jpg)
 >
-> 输入：root = [1,2,3], targetSum = 5
-> 		输出：[] 
+> 输入：root = \[1,2,3], targetSum = 5
+> 		输出：\[] 
 >
 > 没有符合条件的路径
 

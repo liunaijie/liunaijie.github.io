@@ -2,9 +2,8 @@
 title: 利用aop和注解实现redis对数据库的缓存
 date: 2019-07-24 20:08:26
 tags: 
-	- redis
-	- aop
-	- java
+- spring/aop
+- redis
 ---
 
 **利用[AOP](https://www.liunaijie.top/2019/09/04/spring/Spring笔记/#AOP)和注解的方式实现redis的数据缓存**

@@ -2,8 +2,7 @@
 title: Java Socket基础
 date: 2019-05-09 11:55:18
 tags: 
-	- java
-	- socket
+- java/socket
 ---
 
 # socket简介

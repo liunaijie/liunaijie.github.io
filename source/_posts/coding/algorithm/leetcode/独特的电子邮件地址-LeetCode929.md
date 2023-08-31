@@ -2,8 +2,8 @@
 title: 独特的电子邮件地址-LeetCode929
 date: 2018-12-21 20:55:48
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述
@@ -24,16 +24,16 @@ tags:
 >
 > 示例：
 >
-> 输入：["test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"]
+> 输入：\["test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"]
 > 输出：2
 > 解释：实际收到邮件的是 "testemail@leetcode.com" 和 "testemail@lee.tcode.com"。
 >
 >
 > 提示：
 >
-> 1 <= emails[i].length <= 100
+> 1 <= `emails[i]`.length <= 100
 > 1 <= emails.length <= 100
-> 每封 emails[i] 都包含有且仅有一个 '@' 字符。
+> 每封 `emails[i]` 都包含有且仅有一个 '@' 字符。
 
 <!--more-->
 

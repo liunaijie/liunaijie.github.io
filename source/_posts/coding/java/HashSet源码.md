@@ -2,7 +2,7 @@
 title: HashSet源码
 date: 2019-08-26 21:12:23
 tags: 
-	- java
+- java/collection
 ---
 
 # 变量

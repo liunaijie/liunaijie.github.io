@@ -2,8 +2,8 @@
 title: 两数之和—LeetCode1
 date: 2018-08-25 20:52:40
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

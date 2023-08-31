@@ -2,8 +2,8 @@
 title: 最长公共前缀-LeetCode14
 date: 2018-12-12 20:50:52
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述
@@ -15,14 +15,14 @@ tags:
 >**示例 1:**
 >
 >```
->输入: ["flower","flow","flight"]
+>输入: \["flower","flow","flight"]
 >输出: "fl"
 >```
 >
 >**示例 2:**
 >
 >```
->输入: ["dog","racecar","car"]
+>输入: \["dog","racecar","car"]
 >输出: ""
 >解释: 输入不存在公共前缀。
 >```

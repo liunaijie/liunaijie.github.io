@@ -2,7 +2,7 @@
 title: MySQL知识整理
 date: 2019-09-19 10:33:24
 tags: 
-	- mysql
+- database/mysql
 ---
 
 推荐看一下极客时间上面的一篇教程，《[MySQL实战 45 讲](https://time.geekbang.org/column/intro/100020801)》。

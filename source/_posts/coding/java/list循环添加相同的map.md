@@ -2,7 +2,7 @@
 title: list循环添加相同的map
 date: 2017-09-25 10:55:04
 tags: 
-	- java
+- java
 ---
 
 list里面嵌套map，如果map相同，后面的map信息会替代前面的map信息，所以要将map的new放在循环里

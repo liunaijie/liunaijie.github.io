@@ -2,8 +2,8 @@
 title: 回文数—LeetCode9
 date: 2019-11-07 19:58:29
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

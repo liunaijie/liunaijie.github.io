@@ -2,8 +2,8 @@
 title: 反转一个单链表-LeetCode206
 date: 2019-11-24 11:18:35
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构/链表
+- Leetcode
 ---
 
 # 题目描述
@@ -67,4 +67,5 @@ public ListNode reverseHelp(ListNode prev, ListNode cur) {
 
 # 相关题目
 
-- [K个一组反转链表](https://www.liunaijie.top/2019/11/27/LeetCode/K个一组翻转链表-LeetCode25/)
+- [K个一组翻转链表-LeetCode25](K个一组翻转链表-LeetCode25.md)
+- [两两交换链表中的节点-LeetCode24](两两交换链表中的节点-LeetCode24.md)

@@ -2,8 +2,8 @@
 title: 宝石与石头-LeetCode771
 date: 2018-12-19 18:55:48
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

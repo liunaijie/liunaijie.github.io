@@ -2,9 +2,8 @@
 title: 三角形最小路径和—LeetCode120
 date: 2019-06-16 22:18:23
 tags: 
-	- leetcode
-	- java
-
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

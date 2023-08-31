@@ -2,8 +2,7 @@
 title: SpringBoot使用@ControllerAdvice处理异常
 date: 2019-11-24 16:39:13
 tags: 
-	- java
-	- springboot
+- spring
 ---
 
 # 背景

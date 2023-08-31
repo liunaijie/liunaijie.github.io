@@ -2,9 +2,7 @@
 title: 大数据分析工具之-kylin
 date: 2020-07-19 09:04:19
 tags: 
-	- big_data
-	- olap
-	- kylin
+- big_data/olap/kylin
 ---
 
 # kylin是什么

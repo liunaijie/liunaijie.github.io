@@ -2,8 +2,8 @@
 title: 加一—LeetCode66
 date: 2018-08-27 21:05:12
 tags: 
-	- leetcode
-	- java
+- 算法与数据结构
+- Leetcode
 ---
 
 # 题目描述

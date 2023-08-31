@@ -2,7 +2,7 @@
 title: LinkedList源码学习
 date: 2019-08-21 09:44:49
 tags: 
-	- java
+- java/collection
 ---
 
 `LinkedList`使用了链表实现，相比`ArrayList`来说，插入更快，查看较慢。   
