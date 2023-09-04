@@ -1,1 +1,4 @@
+---
+categorys: life
+---
 hello world!
