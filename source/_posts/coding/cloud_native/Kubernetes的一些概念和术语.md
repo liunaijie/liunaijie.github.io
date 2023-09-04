@@ -2,7 +2,7 @@
 title: Kubetnetes的一些概念和术语
 date: 2019-08-30 10:05:39
 categories:
-- [cloud_native, kubetnetes]
+- [coding, cloud_native, kubetnetes]
 tags: 
 - kubetnetes
 ---

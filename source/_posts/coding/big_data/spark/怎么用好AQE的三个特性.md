@@ -2,7 +2,7 @@
 title: Spark-怎么用好AQE的三个特性
 date: 2022-04-01 23:10:23
 categories:
-- [big_data, spark]
+- [coding, big_data, spark]
 tags: 
 - spark
 ---

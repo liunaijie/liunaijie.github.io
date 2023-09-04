@@ -2,7 +2,7 @@
 title: ClickHouse-SummingMergeTree
 date: 2022-10-09 20:25:23
 categories:
-- [big_data, olap, clickhouse]
+- [coding, big_data, olap, clickhouse]
 tags: 
 - clickHouse
 ---

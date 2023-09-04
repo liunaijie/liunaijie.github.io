@@ -2,7 +2,7 @@
 title: Spark-如何选择Join策略
 date: 2022-04-01 23:10:23
 categories:
-- [big_data, spark]
+- [coding, big_data, spark]
 tags: 
 - spark
 ---

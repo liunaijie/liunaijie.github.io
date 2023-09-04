@@ -2,7 +2,7 @@
 title: ClickHouse(1)-写入过程
 date: 2021-02-14 10:10:23
 categories:
-- [big_data, olap, clickhouse]
+- [coding, big_data, olap, clickhouse]
 tags: 
 - clickHouse
 ---
