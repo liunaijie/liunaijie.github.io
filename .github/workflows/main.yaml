@@ -30,6 +30,7 @@ jobs:
           npm install hexo-cli -g
           npm install
           npm install hexo-auto-category --save
+          git status
       - name: Hexo deploy
         run: |
           hexo clean
