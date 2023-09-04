@@ -1,6 +1,8 @@
 ---
 title: 如何将多个git commit合并成一个
 date: 2021-07-04 11:18:23
+categories:
+- [coding, devops]
 tags: 
 - devops/git
 ---

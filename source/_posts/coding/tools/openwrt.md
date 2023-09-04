@@ -1,6 +1,8 @@
 ---
 title: Ubuntu16编译openwrt
 date: 2019-01-22 09:08:39
+categories:
+- [coding, tools]
 tag:
 - openwrt
 ---

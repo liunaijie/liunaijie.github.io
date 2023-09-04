@@ -1,8 +1,11 @@
 ---
 title: Java注解
 date: 2019-12-06 09:28:00
+categories:
+- [coding, java]
 tags: 
-- java/annotation
+- java
+- annotation
 ---
 
 注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？

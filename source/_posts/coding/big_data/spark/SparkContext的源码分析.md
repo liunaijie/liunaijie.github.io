@@ -1,8 +1,10 @@
 ---
 title: SparkContext的源码分析
 date: 2023-07-30 13:20:43
+categories:
+- [big_data, spark]
 tags: 
-- big_data/spark
+- spark
 ---
 继上一篇分析完Spark的提交流程之后, 这次继续分析下SparkContext的源码.
 # 创建

@@ -1,8 +1,11 @@
 ---
 title: 手写rpc简单实现
 date: 2019-07-26 21:08:12
+categories:
+- [coding, micro_service]
 tags: 
-- java/rpc
+- java
+- rpc
 ---
 
 # 背景

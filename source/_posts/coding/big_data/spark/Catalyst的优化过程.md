@@ -1,8 +1,10 @@
 ---
 title: Spark-Catalyst的优化过程
 date: 2022-04-01 23:10:23
+categories:
+- [big_data, spark, catalyst]
 tags: 
-- big_data/spark
+- spark
 ---
 ![](https://raw.githubusercontent.com/liunaijie/images/master/202308121612524.png)
 Spark SQL完整优化流程主要包含两个阶段: Catalyst优化器和Tungsten. 其中Catalyst优化器包含逻辑优化和物理优化两个阶段.

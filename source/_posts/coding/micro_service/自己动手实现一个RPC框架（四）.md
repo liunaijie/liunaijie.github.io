@@ -1,8 +1,11 @@
 ---
 title: 自己动手实现一个RPC框架(四)
 date: 2020-03-25 17:13:51
+categories:
+- [coding, micro_service]
 tags:
-- java/rpc
+- java
+- rpc
 ---
 
 # rpc-register

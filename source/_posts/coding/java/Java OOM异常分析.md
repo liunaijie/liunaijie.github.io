@@ -1,8 +1,11 @@
 ---
 title: Java OOM异常分析
 date: 2021-09-10 20:33:39
+categories:
+- [coding, java]
 tags: 
-- java/jvm
+- java
+- jvm
 ---
 
 

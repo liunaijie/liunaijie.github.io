@@ -1,8 +1,11 @@
 ---
 title: LinkedHashMap源码
 date: 2019-08-22 20:12:23
+categories:
+- [coding, java]
 tags:
-  - java/collection
+  - java
+  - collection
 ---
 
 

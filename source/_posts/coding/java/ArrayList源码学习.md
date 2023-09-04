@@ -1,8 +1,11 @@
 ---
 title: ArrayList源码学习
 date: 2019-08-20 19:28:12
+categories:
+- [coding, java]
 tags: 
-- java/collection
+- java
+- collection
 ---
 
 # 变量

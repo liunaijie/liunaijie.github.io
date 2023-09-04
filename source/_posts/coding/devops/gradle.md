@@ -1,6 +1,8 @@
 ---
 title: gradle笔记
 date: 2020-06-20 19:33:15
+categories:
+- [coding, devops]
 tags: 
 - devops/gradle
 ---

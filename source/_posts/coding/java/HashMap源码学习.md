@@ -1,8 +1,11 @@
 ---
 title: HashMap源码学习
 date: 2019-08-22 10:12:23
+categories:
+- [coding, java]
 tags: 
-- java/collection
+- java
+- collection
 ---
 
 ![HashMap结构](https://raw.githubusercontent.com/liunaijie/images/master/HashMap.jpg)

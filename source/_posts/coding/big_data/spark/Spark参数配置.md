@@ -1,8 +1,10 @@
 ---
 title: Spark-参数配置
 date: 2022-04-01 23:10:23
+categories:
+- [big_data, spark]
 tags: 
-- big_data/spark
+- spark
 ---
 
 https://spark.apache.org/docs/latest/configuration.html

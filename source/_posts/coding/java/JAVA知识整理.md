@@ -1,6 +1,8 @@
 ---
 title: JAVA知识整理
 date: 2019-09-10 20:33:24
+categories:
+- [coding, java]
 tags: 
 - java
 ---

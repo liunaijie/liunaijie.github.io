@@ -1,8 +1,10 @@
 ---
 title: Spark-避免Cache滥用
 date: 2022-04-01 23:10:23
+categories:
+- [big_data, spark]
 tags: 
-- big_data/spark
+- spark
 ---
 # 不同的缓存级别
 

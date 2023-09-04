@@ -1,6 +1,8 @@
 ---
 title: SBT加速
 date: 2021-01-23 08:24:39
+categories:
+- [coding, devops]
 tags: 
 - devops/sbt
 ---

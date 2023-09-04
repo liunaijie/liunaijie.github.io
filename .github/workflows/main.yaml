@@ -28,12 +28,7 @@ jobs:
           git config --global user.email "liunaijie1996@163.com"
           git config --global user.name "Jarvis"
           npm install hexo-cli -g
-          npm install
-          npm install hexo-auto-category --save
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: hexo       
+          npm install  
       - name: Hexo deploy
         run: |
           hexo clean

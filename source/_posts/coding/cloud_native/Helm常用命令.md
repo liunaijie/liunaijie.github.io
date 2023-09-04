@@ -1,8 +1,11 @@
 ---
 title: Helm常用命令
 date: 2020-06-20 19:33:15
+categories:
+- [cloud_native, kubetnetes, helm]
 tags: 
-- cloud_native/k8s/helm
+- kubetnetes
+- helm
 ---
 安装：
 

@@ -1,6 +1,8 @@
 ---
 title: GitTag
 date: 2022-03-09 20:25:23
+categories:
+- [coding, devops]
 tags: 
 - devops/git
 ---

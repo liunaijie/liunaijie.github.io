@@ -1,6 +1,8 @@
 ---
 title: Java位运算符详解
 date: 2019-12-24 12:18:07
+categories:
+- [coding, java]
 tags: 
 - java
 ---

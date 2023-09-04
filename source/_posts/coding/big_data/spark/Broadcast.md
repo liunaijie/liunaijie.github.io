@@ -1,8 +1,10 @@
 ---
 title: Spark-Broadcast
 date: 2022-04-01 23:10:23
+categories:
+- [big_data, spark]
 tags: 
-- big_data/spark
+- spark
 ---
 # 广播变量
 

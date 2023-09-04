@@ -1,8 +1,11 @@
 ---
 title: Java古老的集合类之Vector
 date: 2019-12-23 11:51:46
+categories:
+- [coding, java]
 tags: 
-- java/collection
+- java
+- collection
 ---
 
 今天继续来看一下Java中古老的集合类-Vector

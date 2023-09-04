@@ -1,8 +1,11 @@
 ---
 title: Java Class Loader
 date: 2021-10-14 20:13:29
+categories:
+- [coding, java]
 tags: 
-- java/class_loader 
+- java
+- class_loader 
 ---
 
 # Class Loader

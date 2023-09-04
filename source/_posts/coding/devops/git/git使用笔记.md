@@ -1,6 +1,8 @@
 ---
 title: git使用笔记
 date: 2019-05-29 10:18:45
+categories:
+- [coding, devops]
 tags: 
 - devops/git
 ---

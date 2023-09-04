@@ -1,8 +1,10 @@
 ---
 title: Spark-AQE
 date: 2022-04-01 23:10:23
+categories:
+- [big_data, spark]
 tags: 
-- big_data/spark
+- spark
 ---
 AQE(Adaptive query execution, 自适应查询引擎)引入了3个重要的特性:
 

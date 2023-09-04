@@ -1,8 +1,11 @@
 ---
 title: 利用aop和注解实现redis对数据库的缓存
 date: 2019-07-24 20:08:26
+categories:
+- [coding, spring]
 tags: 
-- spring/aop
+- spring
+- aop
 - redis
 ---
 

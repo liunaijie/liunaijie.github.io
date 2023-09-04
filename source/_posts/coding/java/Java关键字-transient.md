@@ -1,6 +1,8 @@
 ---
 title: Java关键字-transient
 date: 2019-12-22 12:11:10
+categories:
+- [coding, java]
 tags: 
 - java
 ---

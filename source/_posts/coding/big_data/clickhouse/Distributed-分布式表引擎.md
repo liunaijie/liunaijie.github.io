@@ -1,8 +1,10 @@
 ---
 title: Clickhouse分布式表引擎
 date: 2022-10-09 20:25:08
+categories:
+- [big_data, olap, clickhouse]
 tags: 
-- big_data/olap/clickhouse
+- clickHouse
 ---
 ## 定义
 

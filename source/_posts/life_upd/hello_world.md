@@ -1,4 +1,0 @@
----
-categories: life
----
-hello world!

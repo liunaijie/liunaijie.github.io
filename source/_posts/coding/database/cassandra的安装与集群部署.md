@@ -1,8 +1,10 @@
 ---
 title: cassandra的安装与集群部署
 date: 2017-11-22 15:18:45
+categories:
+- [coding, database]
 tags: 
-- database/cassandra
+- cassandra
 ---
 
 # 前提

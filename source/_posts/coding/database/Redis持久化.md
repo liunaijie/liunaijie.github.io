@@ -1,8 +1,10 @@
 ---
 title: Redis持久化
 date: 2020-04-14 13:25:33
+categories:
+- [coding, database]
 tags: 
-- database/redis
+- redis
 ---
 
 # 为什么要持久化数据
