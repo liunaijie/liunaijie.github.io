@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           ref: hexo
       - name: Use Node.js ${{ matrix.node_version }}
@@ -30,16 +30,10 @@ jobs:
           npm install hexo-cli -g
           npm install
           npm install hexo-auto-category --save
-      - name: Push update
-        run : |
-          remote_repo="https://${GITHUB_ACTOR}:${{secrets.GITHUB_TOKEN}}@github.com/${GITHUB_REPOSITORY}.git"
-          if [ -z "$(git status --porcelain)" ]
-          then
-              echo "nothing to update."
-          else
-              git commit -m "triggle by commit ${{ github.sha }}. created by ${{ github.workflow }}." -a
-              git push "${remote_repo}" HEAD:master
-          fi          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: hexo       
       - name: Hexo deploy
         run: |
           hexo clean
