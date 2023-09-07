@@ -1,8 +1,11 @@
 ---
 title: 设计一个有getMin功能的栈
 date: 2019-10-15 16:51:42
+categories:
+- [coding, algorithm]
 tags: 
-- 算法与数据结构/栈
+- 算法与数据结构
+- 栈
 ---
 # 题目：
 

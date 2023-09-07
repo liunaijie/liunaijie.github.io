@@ -1,8 +1,11 @@
 ---
 title: AVL，红黑树学习
 date: 2019-12-09 09:34:08
+categories:
+- [coding, algorithm]
 tags: 
-- 算法与数据结构/树
+- 算法与数据结构
+- 树
 ---
 
 # 二叉树
