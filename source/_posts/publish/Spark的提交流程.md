@@ -2,7 +2,7 @@
 title: Spark中的提交流程
 date: 2023-07-22 11:10:23
 categories:
-- [coding, big_data, spark]
+- [publish, coding, big_data, spark]
 tags: 
 - spark
 ---

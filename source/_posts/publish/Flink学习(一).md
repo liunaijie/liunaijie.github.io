@@ -2,7 +2,7 @@
 title: Flink学习(一)
 date: 2022-12-04 10:08:12
 categories:
-- [coding, big_data, flink]
+- [publish, coding, big_data, flink]
 tags: 
 - flink
 ---
