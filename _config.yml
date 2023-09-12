@@ -4,7 +4,7 @@
 
 # Site
 title: J.A.R.V.I.S
-subtitle: life is not just live
+subtitle: Life is not just Live
 description: some article
 keywords: blog
 author: Liu NaiJie
@@ -95,8 +95,7 @@ ignore:
 plugins:
     hexo-generator-feed
 ## Themes: https://hexo.io/themes/
-theme: Hacker
-#theme: icarus
+theme: maple
 
 lazyload:
   enable: true 
@@ -116,10 +115,3 @@ feed:
   limit: 10
   content: false
   content_limit: 200
-
-# Generate categories from directory-tree
-# Dependencies: https://github.com/xu-song/hexo-auto-category
-auto_category:
- enable: true
- multiple: false
- depth: 

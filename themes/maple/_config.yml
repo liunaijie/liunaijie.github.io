@@ -1,0 +1,56 @@
+# Header
+nav:
+  Home: /
+  Publish: /categories/publish/
+  About: /about
+  Rss: /atom.xml
+
+
+# favicon
+favicon: /images/jarvis.png
+
+# logo
+logo: /images/jarvis.png
+
+# links
+links:
+  Github: https://github.com/liunaijie
+
+# analytics
+google_analytics: 139152590
+
+# mathjax
+fancybox: true
+
+# mathjax
+mathjax: true
+
+# echarts
+echarts: true
+
+# busuanzi
+busuanzi: true
+
+# mermaid
+mermaid:
+  enable: true
+  # Available themes: default | dark | forest | neutral
+  theme: default
+
+# giscus
+giscus:
+  enable: false
+  repo:
+  repo_id:
+  category:
+  category_id:
+  mapping:
+
+# maple
+maple:
+  enable: false
+  # fall leaf count
+  count: 10
+  # 0-1
+  speed: 0.5
+
