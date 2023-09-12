@@ -35,10 +35,3 @@ googleTrackId: 139152590
 read_more: true
 
 
-math:
-  mathjax:
-    enable: true
-    # Next v6.3.0 后的版本 tags 要设置成 ams
-    # Available values: none | ams | all
-    tags: ams
-
