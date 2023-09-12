@@ -29,8 +29,8 @@ jobs:
           git config --global user.name "Jarvis"
           npm install hexo-cli -g
           npm install 
-		  npm uninstall hexo-renderer-marked --save
-		  npm install hexo-renderer-pandoc --save
+          npm uninstall hexo-renderer-marked --save
+          npm install hexo-renderer-pandoc --save
       - name: Hexo deploy
         run: |
           hexo clean
