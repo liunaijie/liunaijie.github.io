@@ -29,7 +29,6 @@ public static void main(String[] args) throws Exception {
 ```
 在这里是手动创建了SparkSession, SparkContext由SparkSession间接完成创建.
 
-<!-- more -->
 # 主要代码分析
 `SparkContext`维护了`DAGScheduler`和`TaskScheduler`, 在创建`SparkContext`时会完成这两个类的创建及初始化.
 

@@ -29,7 +29,6 @@ IOC:控制反转，DI：依赖注入。
 
 ![bean的生命周期](https://raw.githubusercontent.com/liunaijie/images/master/spring的bean生命周期.png)
 
-<!--more-->
 
 ## 反转
 

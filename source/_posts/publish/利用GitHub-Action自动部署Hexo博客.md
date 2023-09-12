@@ -20,8 +20,6 @@ tags:
 
 ![](https://raw.githubusercontent.com/liunaijie/images/master/20210123154250.png)
 
-<!--more-->
-
 # 开始操作
 
 1. 下载`user-name.github.io`

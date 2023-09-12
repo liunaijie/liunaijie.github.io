@@ -51,7 +51,6 @@ public ResultBean getUserNoCache(Long id) {
 }
 ```
 
-<!-- more -->
 
 该实现主要是利用了aop原理，通过对`EnableRedisCache`注解进行拦截，如果有该注解就进入到拦截方法中。
 

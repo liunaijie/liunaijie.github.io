@@ -22,8 +22,6 @@ tags:
 
 这里的图片其他人都是可以查看的，注意不要放一些与自己隐私相关的东西哦。。。
 
-<!--more-->
-
 ## 生成github的token  
 
 打开`github`->`setting`->`developer settings`->`personal access tokens`

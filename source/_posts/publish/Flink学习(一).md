@@ -24,7 +24,6 @@ env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
 env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
 ```
 
-<!--more-->
 
 ## Processing Time & Ingestion Time
 这两个时间都由Flink系统自己生成.

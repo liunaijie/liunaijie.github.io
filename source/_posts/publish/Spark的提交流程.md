@@ -11,7 +11,6 @@ tags:
 过程中会对代码做一些删减，主要目的是了解从用户提交任务开始到一个任务如何开始运行.
 本文主要记录两种提交任务的方式，`spark-submit.sh`与`SparkLauncher`.  
  
-<!--more-->
 
 # Spark-submit.sh
 以需要执行JavaWordCount为例，启动命令为：
