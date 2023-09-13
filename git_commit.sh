@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+cd /volume3/self_data_backup/Blog
+
 now=$(date +%Y-%m-%d)
-echo $now
 if [ -n "git status -s" ];then
     git add .
     git commit -m  "update files on $now"
