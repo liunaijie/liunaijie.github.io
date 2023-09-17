@@ -11,4 +11,4 @@ InfraDocument
 others
 @eaDir
 _remotely-save-metadata-on-remote.json
-*.excalidraw
+*.excalidraw.md
