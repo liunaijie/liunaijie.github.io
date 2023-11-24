@@ -7,9 +7,10 @@ tags:
   - iceberg
 ---
 # 引言
-本文基于Apache Iceberg 1.4.2, 记录一下Iceberg的文件组织形式, 查询过程. 并尝试与Hive Table进行对比.
+本文基于Apache Iceberg 1.4.2, 记录一下Iceberg的文件组织形式, 查询过程. 并尝试与Hive 
+Table进行对比.
 
-![](Pasted%20image%2020231123214806.png)
+![](https://iceberg.apache.org/img/iceberg-metadata.png)
 
 
 
