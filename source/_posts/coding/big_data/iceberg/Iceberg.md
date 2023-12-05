@@ -6,18 +6,17 @@ categories:
 tags:
   - iceberg
 ---
-# Introduction
-本文将记录一下iceberg表的文件存储jie go
+# 前言
+本文将记录一下iceberg表的文件存储结构, 数据写入流程, 查询流程的等. 基于Spark引擎.
 <!-- more -->
-
-# Prepare
-1. java8 (when i use java 17, i has got some error)
+# 准备工作
+1. java8
 2. spark binary
-3. iceberg library and move into spark binary's `jars` folder.
+3. iceberg jar, 并放到spark binary的`jars`文件夹下
 
-# 
-As we already put the iceberg library into spark `jars` folder, so we can start with this command:
-in this command we special a catalog `local`, and it's warehouse dir is `$PWD/warehouse`, we will observe the data change in this folder.
+# 启动
+在spark binary下, 使用如下命令启动. 在这个命令中, 我们创建了一个`local`的catalog, 并指定warehouse的位置在当前文件夹下的`warehouse`文件夹下.
+我们后续所有的操作都基于这个catalog, 以及需要观察这个文件夹下的文件变动.
 ```
 ./bin/spark-sql \
 --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
@@ -32,17 +31,21 @@ in this command we special a catalog `local`, and it's warehouse dir is `$PWD/wa
 ```sql
 create table local.test_db.test_table01 (id bigint not null, name string) using iceberg;
 ```
-In warehouse folder, will create a `test_db/test_table01` folder. This folder will save all information about this table.
-After create table, there will has `metadata/v1.metadata.json`, `version-hint.text` files. 
-**version-hint.text** record the current used metadata file. For now, it's 1. It will always point to the current active metadata file.
-**v1.metadata.json** it record the table schema, table path information.
+表创建完成之后, 在warehouse文件夹下,会根据我们创建的数据库, 表名创建同名的文件夹.
+`test_db/test_table01`
+在这个表的文件夹下, 有一个`metadata`的子文件夹, 里面有`v1.metadata.json`, `version-hint.text` 两个文件
+**version-hint.text** 这个文件永远会指向当前使用到的metadata文件, 目前为`1`
+**v1.metadata.json** 这个文件记录了当前表的表结构, 路径信息.
 
 2. Insert data
 ```
 INSERT INTO local.test_db.test_table01 VALUES (1,'name1'), ... , (100,'name100')
 ```
 在写入这100条数据后, 出现了`data`文件夹,里面文件为parquet格式.
-在`metadata`文件夹下, 出现了`v2.matadata.json`, 并且`version-hint.text`内容也变成了2. 同时出现了两个avro文件
+在`metadata`文件夹下, 出现了`v2.matadata.json`, 并且`version-hint.text`内容也变成了2. 同时出现了两个avro文件.
+
+
+
 
 
 
