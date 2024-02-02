@@ -38,7 +38,7 @@ http://www.jasongj.com/spark/skew/
 ## Spark的容错机制
 在大数据, 分布式的处理中, 出错是很常见的事情, spark通过以下几点来做容错
 - 调度层
-stage失败, 通过调度器来重启启动
+stage失败, 通过调度器来重新启动
 - 血缘层
 任务重新计算时, 不需要计算全部的数据, 只需要计算失败job所依赖的部分数据
 - checkpoint机制
