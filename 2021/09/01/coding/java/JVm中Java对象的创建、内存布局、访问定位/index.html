@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=139152590"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '139152590');
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Liu NaiJie">
+
+
+  <meta name="subtitle" content="Life is not just Live">
+
+
+  <meta name="description" content="some article">
+
+
+  <meta name="keywords" content="blog">
+
+
+<title>JVM中Java对象的创建、内存布局、访问定位 | J.A.R.V.I.S</title>
+
+
+
+<link rel="icon" href="/images/jarvis.png">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/images/jarvis.png" alt="J.A.R.V.I.S" />
+          J.A.R.V.I.S
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        JVM中Java对象的创建、内存布局、访问定位
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/">Home</a>
+        
+          <a class="hidden sm:flex" href="/categories/publish/">Publish</a>
+        
+          <a class="hidden sm:flex" href="/about">About</a>
+        
+          <a class="hidden sm:flex" href="/atom.xml">Rss</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" href="https://github.com/liunaijie" target="_blank" rel="noopener">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/" class="flex h-12 sm:h-auto items-center">Home</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/categories/publish/" class="flex h-12 sm:h-auto items-center">Publish</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/about" class="flex h-12 sm:h-auto items-center">About</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/atom.xml" class="flex h-12 sm:h-auto items-center">Rss</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        JVM中Java对象的创建、内存布局、访问定位
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2024-03-20</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>7 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.2k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/categories/coding/">coding</a>/<a class="article-category-link" href="/categories/coding/java/">java</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <h1 id="Java对象创建"><a href="#Java对象创建" class="headerlink" title="Java对象创建"></a>Java对象创建</h1><p>当Java虚拟机遇到一条字节码new指令时, 首先将去检查这个指令的参数能否在常量池中定位到一个类的符号引用, 并且检查这个符号引用代表的类是否被加载, 解析和初始化. 如果没有则会先执行相应的类加载过程.</p>
+<p>对象的创建过程大致分为以下四步:</p>
+<ol>
+<li>为新生对象分配内存</li>
+<li>虚拟机将分配到的内存空间(不包括对象头)都初始化为零值</li>
+<li>对对象进行必要的设置, 例如这个对象是哪个类的实例, 如果找到这个类的元数据信息, 对象的GC分代年龄等, 这些信息存放在对象的对象头之上</li>
+<li>执行Class文件额init方法</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="为新生对象分配内存"><a href="#为新生对象分配内存" class="headerlink" title="为新生对象分配内存"></a>为新生对象分配内存</h2><p>在类加载检查通过后, 虚拟机将为新生对象分配内存. 对象所需内存的大小在类加载完成后便可完全确定, 为对象分配空间的任务实际上便等同于把一块确定大小的内存块从Java堆中划分出来. </p>
+<p>如何对内存进行划分也有两种方式:</p>
+<ul>
+<li><p>指针碰撞(Bump The Pointer)</p>
+<p>  Java堆中内存是绝对规整的,所有被使用过的内存都被放在一边, 空闲的内存被放在另一边, 中间放着一个指针作为分界点的指示器, 分配内存时就可以将指针向空闲方向挪动一段与对象大小相等的距离. 这种内存分配方式称为指针碰撞</p>
+</li>
+<li><p>空闲列表(Free List)</p>
+<p>  Java堆中的内存并不是规整的, 已被使用的内存和空闲的内存相互交错在一起, 这种情况下无法使用指针碰撞来进行分配内存. 虚拟机维护一个列表, 记录哪些内存块是可用的, 在分配时从列表中找到一块足够大的空间划分给对象实例, 并更新列表上的记录, 这种分配方式称为空闲列表.</p>
+</li>
+</ul>
+<p>选择哪种分配方式由Java堆是否规整决定, 而Java堆是否规整又由所采用的垃圾收集器是否带有空间压缩整理(Compact)的能力决定.  — 当使用Serial, ParNew等带压缩整理过程的收集器时, 系统采用的分配算法是指针碰撞, 既简单又高效; 而当使用CMS这种基于清除(Sweep)算法的收集器时, 理论上就只能采用较为复杂的空闲列表来分配内存</p>
+<p>对象创建是一个非常频繁的行为, 所以修改指针位置在并发情况下不是线程安全的. 有两种方式来解决这个问题:</p>
+<ul>
+<li>对分配内存空间的动作进行同步处理 — 实际上虚拟机是采用CAS加重试的方式来保证更新操作的原子性</li>
+<li>把内存分配的动作按照线程划分在不同空间之中进行, 即每个线程在Java堆中预先分配一小块内存, 称为本地线程分配缓冲(Thread Local Allocation Buffer TLAB), 哪个线程要分配内存, 就在哪个线程的本地缓冲区中分配. 当本地缓冲区用完后, 分配新的缓存区时才需要同步锁定. — 虚拟机是否使用TLAB, 可以通过<code>-XX:+UseTLAB</code>参数来开启, <code>-XX:-UseTLAB</code> 来关闭</li>
+</ul>
+<h2 id="将内存空间-不包含对象头-都初始化零值"><a href="#将内存空间-不包含对象头-都初始化零值" class="headerlink" title="将内存空间(不包含对象头)都初始化零值"></a>将内存空间(不包含对象头)都初始化零值</h2><p>内存分配完成后, 虚拟机将分配到的内存空间(不包含对象头)都初始化为零值, 如果使用了TLAB, 这项工作也可以提前至TLAB分配时顺便运行.这一步的操作保证了对象的实例字段在Java代码中可以不赋初始值就直接使用, 使程序能访问到这些字段的数据类型对应的零值.</p>
+<h2 id="对对象进行必要的设置"><a href="#对对象进行必要的设置" class="headerlink" title="对对象进行必要的设置"></a>对对象进行必要的设置</h2><p>Java虚拟机还要对对象进行必要的设置, 例如这个对象是哪个类的实例, 如果找到类的元数据信息, 对象的GC分代年龄等信息. 这些信息存放到对象的对象头(Object Header)之中.</p>
+<h2 id="执行Class文件的init方法"><a href="#执行Class文件的init方法" class="headerlink" title="执行Class文件的init方法"></a>执行Class文件的init方法</h2><p>上面工作都完成之后, 从虚拟机的视角来看, 一个新的对象以及产生类. 但是从Java程序看来, 对象创建才刚刚开始. Class文件的init方法还没有执行. 所有的字段都是默认的零值, 对象的其它资源和状态信息也还没有构造. 当执行完init方法后, 一个真正可用的对象才算完全被构造出来.</p>
+<p>init方法在使用Java编译器时会自动生成, 如果由一些其它方式产生则不一定会有init方法.</p>
+<h1 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h1><p>对象在堆内存中的存储布局可以划分为三个部分: 对象头(Header), 实例数据(Instance Data)和对齐填充(Padding).</p>
+<h2 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h2><p>对象头部分包含两类信息:</p>
+<ul>
+<li><p>对象自身的运行时数据, 如哈希码, GC分代年龄, 锁状态信息, 线程持有的锁, 偏向线程ID, 偏向时间戳等.</p>
+</li>
+<li><p>类型指针</p>
+<p>  即对象指向它的类型元数据指针, Java虚拟机通过这个指针来确定该对象是哪个类的实例, 并不是所有虚拟机都在对象数据上保留类型指针, 也就是说查找对象的元数据并不一定经过对象本身.</p>
+</li>
+<li><p>如果对象是Java数组, 对象头上还必须有一块用来记录数组长度的数据</p>
+<p>  因为虚拟机可以通过普通Java对象的元数据信息确定Java对象的大小, 但是如果数组的长度是不确定的, 将无法通过元数据的信息推断出数组的大小.</p>
+</li>
+</ul>
+<h2 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h2><p>实例数据是对象真正存储的有效信息, 即我们在程序代码里面所定义的各种类型的字段内容. 这部分的存储顺序会受到虚拟机分配策略参数(-XX:FieldsAllocationStyle)和字段在Java源码中定义顺序的影响. HotSpot虚拟机默认的分配顺序longs/doubles、ints、shorts/chars、bytes/booleans、oops(Ordinary Object Pointers，OOPs)，从以上默认的分配策略中可以看到, 相同宽度的字段总是被分配到一起存放. 在满足这个前提条件的情况下, 在父类中定义的变量会出现在子类之前. 如果HotSpot虚拟机的 +XX:CompactFields参数值为true(默认就为true), 那子类之中较窄的变量也允许插入父类变量的空隙之中, 以节省出一点点空间.</p>
+<h2 id="对齐填充"><a href="#对齐填充" class="headerlink" title="对齐填充"></a>对齐填充</h2><p>这并不是必然存在的, 没有特别的含义, 仅仅起着占位符的作用. 由于HotSpot虚拟机的自动内存管理系统要求对象起始地址必须是8字节的整数倍, 换句话说就是任何对象的大小都必须是8字节的整数倍. 对象头部分已经被精心设计成正好是8字节的倍数(1倍或者 2倍), 因此, 如果对象实例数据部分没有对齐的话, 就需要通过对齐填充来补全.</p>
+<h1 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h1><p>Java程序会通过栈上的reference数据来操作堆上的具体对象. 对象访问方式由虚拟机实现而定, 主流的访问方式有使用句柄和直接指针两种:</p>
+<ol>
+<li><p>使用句柄访问, Java堆中划分出一块内存来作为句柄池, reference中存储的就是对象的句柄地址, 而句柄中包含来对象实例数据与类型数据各自具体的地址信息</p>
+<p> 访问对象时需要多一次间接访问到句柄池的开销, 但是在对象被移动时只会改变句柄中的实例数据指针, reference本身不需要被修改.</p>
+<p> Shenandoah收集器采用句柄访问的方式</p>
+</li>
+<li><p>使用直接指针访问, reference中对象的直接就是对象地址. 当访问对象本身时, 不需要多一次间接访问的开销</p>
+<p> 这时Java堆中对象的内存布局就必须考虑如何放置访问类型数据的相关信息</p>
+<p> HotSpot虚拟机中主要使用直接访问的方式</p>
+</li>
+</ol>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/java/">java</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/jvm/">jvm</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/2021/09/10/coding/java/Java%20OOM%E5%BC%82%E5%B8%B8%E5%88%86%E6%9E%90/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Java OOM异常分析
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/2021/08/28/coding/java/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          JVM运行时数据区域
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>

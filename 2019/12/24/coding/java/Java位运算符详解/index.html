@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=139152590"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '139152590');
+</script>
+<!-- End Google Analytics -->
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Liu NaiJie">
+
+
+  <meta name="subtitle" content="Life is not just Live">
+
+
+  <meta name="description" content="some article">
+
+
+  <meta name="keywords" content="blog">
+
+
+<title>Java位运算符详解 | J.A.R.V.I.S</title>
+
+
+
+<link rel="icon" href="/images/jarvis.png">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/images/jarvis.png" alt="J.A.R.V.I.S" />
+          J.A.R.V.I.S
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        Java位运算符详解
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/">Home</a>
+        
+          <a class="hidden sm:flex" href="/categories/publish/">Publish</a>
+        
+          <a class="hidden sm:flex" href="/about">About</a>
+        
+          <a class="hidden sm:flex" href="/atom.xml">Rss</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" href="https://github.com/liunaijie" target="_blank" rel="noopener">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/" class="flex h-12 sm:h-auto items-center">Home</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/categories/publish/" class="flex h-12 sm:h-auto items-center">Publish</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/about" class="flex h-12 sm:h-auto items-center">About</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/atom.xml" class="flex h-12 sm:h-auto items-center">Rss</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        Java位运算符详解
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2024-03-20</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>10 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.8k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/categories/coding/">coding</a>/<a class="article-category-link" href="/categories/coding/java/">java</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前了解过位运算符，左移<code>&lt;&lt;</code>等于乘以2，右移<code>&gt;&gt;</code>等于除以2。但是我在看jdk源码的时候发现了一个<code>&gt;&gt;&gt;</code>三个符号的，不明白这是什么意思，就去搜了一下，发现还挺多的知识点的，就整理了一下。</p>
+<p>首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。</p>
+<p>先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>字节数</th>
+<th>位数</th>
+<th>大小范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>1</td>
+<td>8</td>
+<td>-2^8^~2^8^-1</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+<td>16</td>
+<td>-2^16^~2^16^-1</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td>32</td>
+<td>-2^32^~2^32^-1</td>
+</tr>
+<tr>
+<td>long</td>
+<td>8</td>
+<td>64</td>
+<td>-2^64^~2^64^-1</td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>char</td>
+<td>2</td>
+<td>16</td>
+<td>一个char类型可以存储一个汉字</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>1</td>
+<td></td>
+<td>true or false</td>
+</tr>
+</tbody></table>
+<p>移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：<code>&lt;&lt;</code>左移运算符，<code>&gt;&gt;</code>带符号右移运算符，<code>&gt;&gt;&gt;</code>无符号右移运算符。这三种操作符都只能作用于<code>long</code>,<code>int</code>,<code>short</code>,<code>byte</code>这四种基本整形类型上和<code>char</code>类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。</p>
+<p>在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：<code>0000 0000</code>表示0，<code>0111 1111</code>这个表示最大值(2^8^-1)，再进行加一后就变成了<code>1000 0000</code>这时就变成了最小值(-2^8^)。再加一后变成<code>1000 0001</code>这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。</p>
+<a id="more"></a>
+
+<h1 id="左移操作符-lt-lt"><a href="#左移操作符-lt-lt" class="headerlink" title="左移操作符&lt;&lt;"></a>左移操作符<code>&lt;&lt;</code></h1><p>左移操作符<code>&lt;&lt;</code>是将数据转换为二进制后，<strong>向左移动若干位，高位丢弃，低位补零</strong>。</p>
+<p>首先我们可以利用java中的方法获取一个数的二进制：<code>Integer.toBinaryString(int val)</code>。</p>
+<p>然后我们看下面这个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">		System.out.println(<span class="string">"左移前的二进制:"</span>+Integer.toBinaryString(a));</span><br><span class="line">		a &lt;&lt;= <span class="number">2</span>;</span><br><span class="line">		System.out.println(<span class="string">"左移后的二进制:"</span>+Integer.toBinaryString(a));</span><br><span class="line">		System.out.println(<span class="string">"左移后的十进制:"</span>+a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先定义一个数，值为10，打印它的二进制(1010)，然后进行左移操作2位。打印移位后的结果和二进制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">左移前的二进制:<span class="number">1010</span></span><br><span class="line">左移后的二进制:<span class="number">101000</span></span><br><span class="line">左移后的十进制:<span class="number">40</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出，将原来的二进制向左移动了两位，后面进行了补零。40=10 * 2 * 2。所以一次左移等于将这个数扩大了两倍。再来看一个负数的左移：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> b = -<span class="number">8</span>;</span><br><span class="line">System.out.println(<span class="string">"左移前的二进制："</span> + Integer.toBinaryString(b));</span><br><span class="line">b &lt;&lt;= <span class="number">2</span>;</span><br><span class="line">System.out.println(<span class="string">"左移后的二进制："</span> + Integer.toBinaryString(b));</span><br><span class="line">System.out.println(<span class="string">"左移后的十进制："</span> + b);</span><br></pre></td></tr></table></figure>
+
+<p>我们定义了一个负数（-8），打印出它的二进制，进行左移2位，左移后打印它的二进制，再将10进制打印出来查看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">左移前的二进制：<span class="number">11111111111111111111111111111000</span></span><br><span class="line">左移后的二进制：<span class="number">11111111111111111111111111100000</span></span><br><span class="line">左移后的十进制：-<span class="number">32</span></span><br></pre></td></tr></table></figure>
+
+<p>可以明显的看出二进制向左移动了两位，前面的位置丢弃，后面的位置补零。转换为10进制也符合我们之前的运算：-32 = -8 * 2 *2。</p>
+<h1 id="带符号右移操作符-gt-gt"><a href="#带符号右移操作符-gt-gt" class="headerlink" title="带符号右移操作符&gt;&gt;"></a>带符号右移操作符<code>&gt;&gt;</code></h1><p>刚才的左移中，它向左移动，高位进行了丢弃，低位进行补零。但是右移操作时有一个符号位，操作不当将造成答案与预期结果不同。</p>
+<p>带符号右移就是在<strong>向右移动若干位，低位进行丢弃，高位按照符号位进行填补。</strong>对于正数做右移操作时，高位补充<code>0</code>；负数进行右移时，高位补充<code>1</code>。</p>
+<p>再来用例子证明一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">1024</span>;</span><br><span class="line">   System.out.println(<span class="string">"a右移前的二进制："</span> + Integer.toBinaryString(a));</span><br><span class="line">   a &gt;&gt;= <span class="number">4</span>;</span><br><span class="line">   System.out.println(<span class="string">"a右移后的二进制："</span> + Integer.toBinaryString(a));</span><br><span class="line">   System.out.println(<span class="string">"a右移后的十进制:"</span>+a);</span><br><span class="line">   <span class="keyword">int</span> b = -<span class="number">70336</span>;</span><br><span class="line">   System.out.println(<span class="string">"b右移前的二进制："</span> + Integer.toBinaryString(b));</span><br><span class="line">   b &gt;&gt;= <span class="number">4</span>;</span><br><span class="line">   System.out.println(<span class="string">"b右移后的二进制："</span> + Integer.toBinaryString(b));</span><br><span class="line">   System.out.println(<span class="string">"b右移后的十进制:"</span>+b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义了两个变量，a=1024，然后向右移动4位。b=-70336也向右移动4位。分别将它们的移动前后二进制和十进制打印出来查看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a右移前的二进制：<span class="number">10000000000</span></span><br><span class="line">a右移后的二进制：<span class="number">1000000</span></span><br><span class="line">a右移后的十进制:<span class="number">64</span></span><br><span class="line">b右移前的二进制：<span class="number">11111111111111101110110101000000</span></span><br><span class="line">b右移后的二进制：<span class="number">11111111111111111110111011010100</span></span><br><span class="line">b右移后的十进制:-<span class="number">4396</span></span><br></pre></td></tr></table></figure>
+
+<p>a原来的二进制向右移动后，低位被丢弃，高位补充符号位也就是0。b原来的二进制向右移动后，低位被丢弃，高位补充符号位1。这也符号我们之前的运算规律：<br>1024 / 2^4^ =16 ；-70336/ 2^4^ = -4396。</p>
+<h1 id="无符号右移操作符-gt-gt-gt"><a href="#无符号右移操作符-gt-gt-gt" class="headerlink" title="无符号右移操作符&gt;&gt;&gt;"></a>无符号右移操作符<code>&gt;&gt;&gt;</code></h1><p>刚才的带符号右移操作符，我们在向右移动时带着高位的符号，正数填充0，负数填充0。现在不带符号的右移操作符大体与右移操作符一致，只不过不再区分正负数，结果都是<strong>高位补零，低位丢弃。</strong></p>
+<p>再用例子来证明一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">1024</span>;</span><br><span class="line">   System.out.println(<span class="string">"a右移前的二进制："</span> + Integer.toBinaryString(a));</span><br><span class="line">   a &gt;&gt;&gt;= <span class="number">4</span>;</span><br><span class="line">   System.out.println(<span class="string">"a右移后的二进制："</span> + Integer.toBinaryString(a));</span><br><span class="line">   System.out.println(<span class="string">"a右移后的十进制:"</span>+a);</span><br><span class="line">   <span class="keyword">int</span> b = -<span class="number">70336</span>;</span><br><span class="line">   System.out.println(<span class="string">"b右移前的二进制："</span> + Integer.toBinaryString(b));</span><br><span class="line">   b &gt;&gt;&gt;= <span class="number">4</span>;</span><br><span class="line">   System.out.println(<span class="string">"b右移后的二进制："</span> + Integer.toBinaryString(b));</span><br><span class="line">   System.out.println(<span class="string">"b右移后的十进制:"</span>+b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还是刚才带符号右移的例子：这次我们仅仅把操作符换成无符号的右移操作符。</p>
+<p>按照定义，其实在正数时不会有变化，因为在带符号的右移中正数也是高位补零。只不过当值为负数时会有变化，让我们看一下输出是不是符合猜想。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a右移前的二进制：<span class="number">10000000000</span></span><br><span class="line">a右移后的二进制：<span class="number">1000000</span></span><br><span class="line">a右移后的十进制:<span class="number">64</span></span><br><span class="line">b右移前的二进制：<span class="number">11111111111111101110110101000000</span></span><br><span class="line">b右移后的二进制：<span class="number">1111111111111110111011010100</span></span><br><span class="line">b右移后的十进制:<span class="number">268431060</span></span><br></pre></td></tr></table></figure>
+
+<p>确实正数没有变化，验证了我们的猜想。然后是负数，这次向右移动时高位进行了补零，低位丢弃。改变后的数值不再符合我们之前的规律。</p>
+<p>在无符号右移中，当值为正数时，依然符合之前的规律移动一位相当于除以2。但是当值为负数时不再符合规律。</p>
+<h1 id="当移位的位数超过数值所占用的位数会怎么样？"><a href="#当移位的位数超过数值所占用的位数会怎么样？" class="headerlink" title="当移位的位数超过数值所占用的位数会怎么样？"></a>当移位的位数超过数值所占用的位数会怎么样？</h1><p>这个问题很有意思，我们刚刚都仅仅移动了2位或者4位，如果我们超过了int的位数也就是32位后会怎么样？我们如果对一个正数左移32位，低位补零补充了32次就变成0了，就如同下面代码所写的一样，最终a的结果会是什么。会变成0吗？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">  a &lt;&lt;= <span class="number">32</span>;</span><br><span class="line">  System.out.println(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过我们运行后发现a的结果最终没变还是10。我们如果改成左移33位，它的结果会变成<code>20</code>。那么它的运算规律会不会是当超过位数后仅仅移动对位数的余数呢？比如对int做操作，它实际是运算 <code>位数%32</code>次。</p>
+<p>经过多次试验发现答案确实就是这个猜想，当对int类型处理时，右移<code>x</code>位的运算为<code>x%32</code>位。</p>
+<h1 id="对其他类型也是一样吗？"><a href="#对其他类型也是一样吗？" class="headerlink" title="对其他类型也是一样吗？"></a>对其他类型也是一样吗？</h1><p>我们刚才都是用的int类型，那么对于<code>byte</code>,<code>short</code>,<code>char</code>,<code>long</code>都一样吗？</p>
+<p>先看一下byte类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">byte</span> b = -<span class="number">1</span>;</span><br><span class="line">	 System.out.println(<span class="string">"操作前："</span>+b);</span><br><span class="line">	 b &gt;&gt;&gt;= <span class="number">6</span>;</span><br><span class="line">	 System.out.println(<span class="string">"操作后："</span>+b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义了byte的值为-1，即<code>1111 1111</code>，然后无符号右移6位，高位补零，低位丢弃，那么应该变成<code>0000 0011</code>也就是是3。让我们运行一下这段代码看一下打印出来的信息是不是3呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">操作前：-<span class="number">1</span></span><br><span class="line">操作后：-<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>运行结果与我们预期的结果不一致！</p>
+<p>我们将它的二进制也一起打印出来看一下究竟：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">byte</span> b = -<span class="number">1</span>;</span><br><span class="line">   System.out.println(<span class="string">"操作前十进制："</span>+b);</span><br><span class="line">   System.out.println(<span class="string">"操作前二进制："</span>+Integer.toBinaryString(b));</span><br><span class="line">   b &gt;&gt;&gt;= <span class="number">6</span>;</span><br><span class="line">   System.out.println(<span class="string">"操作后二进制："</span>+Integer.toBinaryString(b));</span><br><span class="line">   System.out.println(<span class="string">"操作后十进制："</span>+b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时再看一下运行结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">操作前十进制：-<span class="number">1</span></span><br><span class="line">操作前二进制：<span class="number">11111111111111111111111111111111</span></span><br><span class="line">操作后二进制：<span class="number">11111111111111111111111111111111</span></span><br><span class="line">操作后十进制：-<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>原来，<strong>Java在对<code>byte</code>,<code>short</code>,<code>char</code>这三种类型进行移位操作前，会将其先转型为<code>int</code>类型，然后再进行位操作</strong>。由于我们有进行了重新赋值将其赋值为原来的<code>byte</code>类型，所以又进行了从<code>int</code>到<code>byte</code>的先下转型，也就是截断。我们对上面的例子进行一下修改可以更直观的发现运行过程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">byte</span> b = -<span class="number">1</span>;</span><br><span class="line">   System.out.println(<span class="string">"操作前十进制："</span>+b);</span><br><span class="line">   System.out.println(<span class="string">"操作前二进制："</span>+Integer.toBinaryString(b));</span><br><span class="line">   System.out.println(<span class="string">"进行无符号右移6位后的十进制："</span>+(b&gt;&gt;&gt;<span class="number">6</span>));</span><br><span class="line">   System.out.println(<span class="string">"操作后二进制："</span>+Integer.toBinaryString(b&gt;&gt;&gt;<span class="number">6</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我没有使用<code>=</code>进行重新赋值，而是计算完成后直接打印十进制和二进制的结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">操作前十进制：-<span class="number">1</span></span><br><span class="line">操作前二进制：<span class="number">11111111111111111111111111111111</span></span><br><span class="line">进行无符号右移<span class="number">6</span>位后的十进制：<span class="number">67108863</span></span><br><span class="line">操作后二进制：<span class="number">11111111111111111111111111</span></span><br></pre></td></tr></table></figure>
+
+<p>从打印结果中可以明显的看出是先转换为int类型，然后进行位运算，位运算结束后由于重新赋值所以进行的截断。</p>
+<p>对于<code>long</code>类型，它是64位，不用先转换。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>移位符是Java中的基本操作符，实际支持的类型只有<code>int</code>和<code>long</code>。在对<code>byte</code>,<code>short</code>,<code>char</code>类型进行移位操作时，都会先将其转换为<code>int</code>类型再进行操作。左移<code>&lt;&lt;</code>操作符相当于乘以2。带符号右移操作符<code>&gt;&gt;</code>相当于除以2。在Java中使用位运算符会比乘<code>*</code>,除<code>/</code>运算符更高效一些。而无符号右移符<code>&gt;&gt;&gt;</code>在移动时高位补零，低位丢弃，在正数时仍然相当于除以2，但是在负数时结果却是变大了(由负数变为正数)。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://juejin.im/post/5dff47416fb9a0162f62271c" target="_blank" rel="noopener">https://juejin.im/post/5dff47416fb9a0162f62271c</a></p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/java/">java</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/2020/01/06/coding/java/Mybatis%E6%98%AF%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2SQL%E6%B3%A8%E5%85%A5%E7%9A%84-%E4%B8%8D%E7%94%A8Mybatis%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0SQL%E6%B3%A8%E5%85%A5/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Mybatis是如何防止SQL注入的,不用Mybatis如何实现SQL注入
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/2019/12/24/coding/algorithm/%E6%A0%91/%E6%89%8B%E5%86%99%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          手写红黑树的简单实现
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).bottom&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script></body>
+
+</html>
