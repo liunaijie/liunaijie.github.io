@@ -95,8 +95,8 @@ ignore:
 plugins:
     hexo-generator-feed
 ## Themes: https://hexo.io/themes/
-theme: maple
-#theme: minima
+#theme: maple
+theme: minima
 
 lazyload:
   enable: true 
