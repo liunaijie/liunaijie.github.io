@@ -1,0 +1,50 @@
+#title in header
+title: "Jarvis's Blog"
+
+#main info
+#owner
+email: jarvis@apache.org
+
+#menu
+menu:
+  Home: /
+  Publish: /categories/publish/
+  About: /about
+  Rss: /atom.xml
+
+#index/main page max show posts (in number)
+max_post: 10
+
+# Colors use hex color without #
+# Theme color
+tcolor: 0FA0CE
+
+# Define path to user css
+#(could be also located outside of theme)
+# Relative to source/ directory
+# usercss: css/user.css
+
+# social profile at the footer/bottom
+footer: true
+placename: Earth
+github: https://github.com/liunaijie
+
+# Misc
+nanobar: /js/nanobar.min.js
+# switch_light: ☀️
+# switch_dark: 🌑
+
+# Picture enlargement
+picjs: /js/pic.min.js
+
+# favicon
+favicon: /images/jarvis.png
+# thumbnail
+thumbnail: /images/thumbnail.jpg
+
+article:
+  thumbnail: true
+
+# DISQUS comments (sign up to Disqus to get disqus_shortname)
+disqus_enabled: false
+# disqus_shortname: https-adisaktijrs-github-io
