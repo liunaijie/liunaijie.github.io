@@ -7,16 +7,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source
-        uses: actions/checkout@v2
-        with:
+        uses: actions/checkout@v4
+        with:   
           ref: hexo
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - name: Setup Node.js
+        uses: actions/setup - node@v4
         with:
-          version: ${{ matrix.node_version }}
+          node - version: stable
+      - name: Verify Node.js version
+        run: node - v   
       - name: Setup hexo
         env:
           ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
@@ -34,3 +35,4 @@ jobs:
           hexo clean
           hexo g
           hexo d
+
