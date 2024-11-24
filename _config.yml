@@ -7,7 +7,7 @@ title: J.A.R.V.I.S
 subtitle: Life is not just Live
 description: some article
 keywords: blog
-author: Liu NaiJie
+author: Jarvis
 language: zh-CN
 timezone: Asia/Shanghai
 
@@ -95,7 +95,8 @@ ignore:
 plugins:
     hexo-generator-feed
 ## Themes: https://hexo.io/themes/
-theme: maple
+#theme: maple
+theme: minima
 
 lazyload:
   enable: true 

@@ -1,7 +1,7 @@
 # Header
 nav:
-  Home: /
-  Publish: /categories/publish/
+  Home: /categories/publish/
+  All: /
   About: /about
   Rss: /atom.xml
 
