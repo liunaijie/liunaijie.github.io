@@ -13,7 +13,7 @@ jobs:
         with:   
           ref: hexo
       - name: Setup Node.js
-        uses: actions/setup - node@v3
+        uses: actions/setup-node@v3
         with:
           node - version: stable
       - name: Verify Node.js version
@@ -35,4 +35,3 @@ jobs:
           hexo clean
           hexo g
           hexo d
-
