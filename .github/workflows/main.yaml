@@ -16,8 +16,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node - version: stable
-      - name: Install git lib 
-        run: npm install hexo-deployer-git --save          
+      - name: Install required libs
+        run: |
+          npm install hexo-deployer-git --save          
+          npm install hexo-generator-feed --save
       - name: Verify Node.js version
         run: node - v   
       - name: Setup hexo
