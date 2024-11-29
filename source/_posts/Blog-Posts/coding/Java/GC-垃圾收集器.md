@@ -148,7 +148,7 @@ Java堆里面存放这几乎所有的对象实例, 垃圾收集器在对Java堆�
 
 # 如何回收(垃圾收集算法)
 
-[GC-垃圾回收算法](Blog%20Posts/coding/Java/GC-垃圾回收算法.md)
+[GC-垃圾回收算法](Blog-Posts/coding/Java/GC-垃圾回收算法.md)
 
-[GC-经典垃圾收集器](Blog%20Posts/coding/Java/GC-经典垃圾收集器.md)
+[GC-经典垃圾收集器](Blog-Posts/coding/Java/GC-经典垃圾收集器.md)
 

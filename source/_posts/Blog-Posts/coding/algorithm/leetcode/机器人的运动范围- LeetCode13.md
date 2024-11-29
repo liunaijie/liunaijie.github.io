@@ -3,7 +3,7 @@ title: 机器人的运动路径- 剑指Offer LeetCode13
 date: 2022-03-24 23:10:46
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

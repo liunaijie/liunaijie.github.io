@@ -4,7 +4,7 @@ date: 2019-10-31 20:53:30
 tags:
   - 算法与数据结构/二叉树
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

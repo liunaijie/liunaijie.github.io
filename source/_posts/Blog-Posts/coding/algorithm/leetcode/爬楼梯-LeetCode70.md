@@ -4,7 +4,7 @@ date: 2019-03-16 19:56:08
 tags:
   - 算法与数据结构/动态规划
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

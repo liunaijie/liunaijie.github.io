@@ -4,7 +4,7 @@ date: 2019-11-24 11:18:35
 tags:
   - 算法与数据结构/链表
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述
@@ -68,5 +68,5 @@ public ListNode reverseHelp(ListNode prev, ListNode cur) {
 
 # 相关题目
 
-- [K个一组翻转链表-LeetCode25](K个一组翻转链表-LeetCode25.md)
-- [两两交换链表中的节点-LeetCode24](两两交换链表中的节点-LeetCode24.md)
+- [K个一组翻转链表-LeetCode25](Blog-Posts/coding/algorithm/leetcode/K个一组翻转链表-LeetCode25.md)
+- [两两交换链表中的节点-LeetCode24](Blog-Posts/coding/algorithm/leetcode/两两交换链表中的节点-LeetCode24.md)

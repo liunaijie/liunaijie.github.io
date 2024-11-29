@@ -3,7 +3,7 @@ title: 独特的电子邮件地址-LeetCode929
 date: 2018-12-21 20:55:48
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

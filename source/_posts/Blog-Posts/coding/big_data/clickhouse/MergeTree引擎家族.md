@@ -105,9 +105,9 @@ clicks这个字段也会按照相同的规则来生成文件夹和mrk2文件，�
 
 这些引擎都是在相同分区的文件夹Merge过程中，增加了一些操作。
 
-[ReplacingMergeTree](ReplacingMergeTree.md)
+[ReplacingMergeTree](Blog-Posts/coding/big_data/clickhouse/ReplacingMergeTree.md)
 
-[SummingMergeTree](SummingMergeTree.md)
+[SummingMergeTree](Blog-Posts/coding/big_data/clickhouse/SummingMergeTree.md)
 
 # 数据备份
-[ReplicatedMergeTree](ReplicatedMergeTree.md)
+[ReplicatedMergeTree](Blog-Posts/coding/big_data/clickhouse/ReplicatedMergeTree.md)

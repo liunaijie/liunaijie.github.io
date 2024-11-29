@@ -3,7 +3,7 @@ title: 实现strStr()—LeetCode28
 date: 2019-09-06 15:23:34
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

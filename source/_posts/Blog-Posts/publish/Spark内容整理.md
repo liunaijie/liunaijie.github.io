@@ -20,12 +20,12 @@ Spark内的数据抽象为弹性分布式数据集(Resilient Distributed Dataset
 对于数据处理, 数据分析. 我主要通过高层API - DataFrame. DataFrame中添加了对数据集的结构描述, 让我们来更加方便的处理结构化数据.
 
 # Spark的Job提交过程
-[Spark的提交流程](Spark的提交流程.md)
+[Spark的提交流程](Blog-Posts/publish/Spark的提交流程.md)
 我在这篇之前的文章中整理了Spark以Yarn为资源管理器的提交过程.
 在此总结一下: 使用策略模式/工厂模式, 根据传递的参数, 来调用不同的调度器实现类, 将程序部署到不同的资源管理器上. 然后通过代理模式调用用户的代码, 对执行逻辑进行分析, 生成最终的执行计划. 后续通过配置信息以及执行计划来申请资源去做真正的数据运算操作.
 
 # Spark执行计划的生成
-[SparkContext的源码分析](SparkContext的源码分析.md)
+[SparkContext的源码分析](Blog-Posts/publish/SparkContext的源码分析.md)
 通过SparkContext我们可以了解spark是如何对我们的任务进行划分, 调度等.
 
 # 一些常见的问题

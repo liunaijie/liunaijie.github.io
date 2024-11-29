@@ -3,7 +3,7 @@ title: 山脉数组的峰顶索引-LeetCode852
 date: 2019-07-18 23:01:56
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

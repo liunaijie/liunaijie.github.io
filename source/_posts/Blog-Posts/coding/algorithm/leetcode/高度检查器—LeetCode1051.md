@@ -3,7 +3,7 @@ title: 高度检查器—LeetCode1051
 date: 2019-06-18 21:15:59
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述：

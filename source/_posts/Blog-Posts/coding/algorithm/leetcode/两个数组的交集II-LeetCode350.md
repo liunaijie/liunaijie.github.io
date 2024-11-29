@@ -3,7 +3,7 @@ title: 两个数组的交集II-LeetCode350
 date: 2019-08-07 20:17:30
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

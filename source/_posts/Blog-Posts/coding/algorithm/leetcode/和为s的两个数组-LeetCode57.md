@@ -3,7 +3,7 @@ title: 和为s的两个数组-LeetCode57
 date: 2022-04-13 09:55:53
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

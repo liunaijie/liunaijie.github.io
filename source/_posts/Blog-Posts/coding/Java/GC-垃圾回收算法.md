@@ -92,4 +92,4 @@ HotSpot虚拟机默认Eden和Survivor的大小比例为8:1. 每次新生代中�
 
 # 经典垃圾收集器
 
-[GC-经典垃圾收集器](Blog%20Posts/coding/Java/GC-经典垃圾收集器.md)
+[GC-经典垃圾收集器](Blog-Posts/coding/Java/GC-经典垃圾收集器.md)

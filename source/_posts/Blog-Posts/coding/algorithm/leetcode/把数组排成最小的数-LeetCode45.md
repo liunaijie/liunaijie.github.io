@@ -3,7 +3,7 @@ title: 把数组排成最小的数-剑指Offer LeetCode45
 date: 2022-03-23 19:55:48
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

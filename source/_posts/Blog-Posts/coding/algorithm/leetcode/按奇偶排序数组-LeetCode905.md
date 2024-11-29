@@ -3,7 +3,7 @@ title: 按奇偶排序数组-LeetCode905
 date: 2019-01-02 10:45:28
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

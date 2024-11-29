@@ -1,0 +1,44 @@
+---
+title: 链表
+date: 2019-10-15 16:51:42
+categories:
+  - - coding
+    - algorithm
+tags:
+  - 算法与数据结构/链表
+related-project: "[[Blog Posts/coding/algorithm/算法与数据结构|算法与数据结构]]"
+---
+
+# 链表
+
+与数组一样也是一种线性数据结构
+
+查找的速度：O(n)，要查找一个元素需要从头结点进行遍历
+
+![链表](https://raw.githubusercontent.com/liunaijie/images/master/链表.png)
+
+插入的速度：O(1)，删除的速度：O(1)
+
+![](https://raw.githubusercontent.com/liunaijie/images/master/链表新增和删除元素.png)
+
+删除和插入的情况多，或者不知道元素的数量时应该要考虑使用链表的数据结构。
+
+1. 单向链表
+
+    每个结点有一个`next`属性，指向下一个节点
+
+2. 双向链表
+
+    每个结点除了有`next`属性指向下一个节点外，还有一个`pre`属性指向上一个节点
+
+3. 环
+
+    当最后一个元素的 next 结点指向第一个结点，就构成了一个环。
+
+## 习题
+
+- [反转一个单链表](https://www.liunaijie.top/2019/11/24/LeetCode/反转一个单链表-LeetCode206/)
+- [K个一组反转链表](https://www.liunaijie.top/2019/11/27/LeetCode/K个一组翻转链表-LeetCode25/)
+
+- [用单链表简单实现LRU算法](https://www.liunaijie.top/2020/02/26/算法与数据结构/用单链表简单实现LRU算法)
+- [两数相加](https://www.liunaijie.top/2019/08/20/LeetCode/两数相加-LeetCode2/)

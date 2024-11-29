@@ -4,7 +4,7 @@ date: 2019-03-18 10:50:08
 tags:
   - 算法与数据结构/贪心
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

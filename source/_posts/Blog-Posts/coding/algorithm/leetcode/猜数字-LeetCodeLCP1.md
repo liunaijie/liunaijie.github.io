@@ -3,7 +3,7 @@ title: 猜数字-LeetCodeLCP1
 date: 2020-02-14 11:42:28
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述

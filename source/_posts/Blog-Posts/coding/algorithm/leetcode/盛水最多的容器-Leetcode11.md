@@ -3,7 +3,7 @@ title: 盛水最多的容器—LeetCode11
 date: 2020-03-26 09:52:11
 tags:
   - 算法与数据结构/Leetcode
-related-project: "[[Blog Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
 # 题目描述
