@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>最小的k个数-LeetCodeM40</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2020/04/13/coding/algorithm/leetcode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-LeetCodeM40/">
+  
+  <meta name="description" content="题目描述 输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。  示例 1： 输入：arr &amp;#x3D; [3,2,1], k &amp;#x3D; 2输出：[1,2] 或者 [2,1]示例 2： 输入：arr &amp;#x3D;">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="最小的k个数-LeetCodeM40" />
+  
+  <meta property="og:description" content="题目描述 输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。  示例 1： 输入：arr &amp;#x3D; [3,2,1], k &amp;#x3D; 2输出：[1,2] 或者 [2,1]示例 2： 输入：arr &amp;#x3D;">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2020/04/13/coding/algorithm/leetcode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-LeetCodeM40/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="最小的k个数-LeetCodeM40">
+  
+  <meta name="twitter:description" content="题目描述 输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。  示例 1： 输入：arr &amp;#x3D; [3,2,1], k &amp;#x3D; 2输出：[1,2] 或者 [2,1]示例 2： 输入：arr &amp;#x3D;">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2020/04/13/coding/algorithm/leetcode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-LeetCodeM40/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>最小的k个数-LeetCodeM40</h2>
+
+  <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。 </p>
+<p>示例 1：</p>
+<p>输入：arr &#x3D; [3,2,1], k &#x3D; 2<br>输出：[1,2] 或者 [2,1]<br>示例 2：</p>
+<p>输入：arr &#x3D; [0,1,2,1], k &#x3D; 1<br>输出：[0]</p>
+<p>限制：</p>
+<p>0 &lt;&#x3D; k &lt;&#x3D; arr.length &lt;&#x3D; 10000<br>0 &lt;&#x3D; <code>arr[i]</code> &lt;&#x3D; 10000</p>
+</blockquote>
+<p>给定一个数组，找出最小的k个数，对这k个数的大小顺序没有要求。</p>
+<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h1><p>这个题目我最开始的想法是用堆来解决的，但我解答完成看题解的时候发现了一种做法：</p>
+<p>排序后取前k个元素</p>
+<p>在评论区中有很多人在讨论这一种解法，虽然的他复杂度比较高，实现方式很简单，有一些专业人士在鄙视这种做法，也有一些人说这个题目的难度是简单，所以用这个也没什么问题。我的看法是支持这种做法，并不因为他的难度级别，而是解决问题的思路。在解决问题的时候每一种思路都是可取的。</p>
+<span id="more"></span>
+
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] getLeastNumbersSort(<span class="type">int</span>[] arr, <span class="type">int</span> k) &#123;</span><br><span class="line">  Arrays.sort(arr);</span><br><span class="line">  <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[k];</span><br><span class="line">  System.arraycopy(arr, <span class="number">0</span>, result, <span class="number">0</span>, k);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于数据先进行排序，然后取前k个元素返回即可。这个解决思路简单，代码简洁易懂，但复杂度高。</p>
+<h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><p>由于我们要获取的是最小的k个值，使用堆的时候构建一个大顶堆，至于为什么不构建一个小顶堆在后面实现的部分会进行描述。</p>
+<p>我们来分析一下这个堆要做的一些事情：</p>
+<ol>
+<li><p>我们建立一个<code>k</code>大小的堆</p>
+</li>
+<li><p>前<code>k</code>个元素按照堆的定义直接插入。</p>
+</li>
+<li><p>数量超过k时，先与堆顶元素进行比较，由于是大顶堆，所以堆顶元素是堆内的最大值。如果当前值比堆顶值小，则说明此元素需要保留，将堆顶元素删除。如果比堆顶值大，说明这个值不是我们要查找的值进行丢弃。</p>
+</li>
+<li><p>将值插入到堆中</p>
+</li>
+<li><p>数组全部插入完成后，将堆返回</p>
+</li>
+</ol>
+<p>用代码来实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">M40HeapHelp</span> &#123;</span><br><span class="line">  <span class="comment">//存储堆的数组</span></span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span>[] heap;</span><br><span class="line">  <span class="comment">//数组中存储的元素数量</span></span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span> count;</span><br><span class="line">  <span class="comment">//堆的数量，即元素最大存储数量</span></span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span> length;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">M40HeapHelp</span><span class="params">(<span class="type">int</span> capacity)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.heap = <span class="keyword">new</span> <span class="title class_">int</span>[capacity + <span class="number">1</span>];</span><br><span class="line">    count = <span class="number">0</span>;</span><br><span class="line">    length = capacity;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">     <span class="comment">//需要判断是否超过最大存储数量</span></span><br><span class="line">     <span class="comment">//超过数量后判断val是否需要插入到堆中</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeTop</span><span class="params">()</span> &#123;</span><br><span class="line">		...</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span>[] getHeap() &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的删除堆顶元素和获取堆数组方法我在堆的那一篇文章中写过，在此处没有什么区别，直接拿过来。</p>
+<p>这里需要改动的地方是添加元素的方法。要判断容量，容量超过后判断插入条件。</p>
+<p>我这里将代码写出来，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (count &gt;= length) &#123;</span><br><span class="line">    <span class="comment">//当堆内元素超过最大值后进行判断</span></span><br><span class="line">    <span class="keyword">if</span> (val &lt; heap[<span class="number">1</span>]) &#123;</span><br><span class="line">      <span class="comment">//如果要插入的元素比堆内的最大值小，则将最大值删除，后面将值进行插入</span></span><br><span class="line">      removeTop();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">//否则直接返回</span></span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  addVal(val);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">addVal</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">  <span class="comment">//数量加一</span></span><br><span class="line">  ++count;</span><br><span class="line">  <span class="comment">//将值添加到最后一个位置</span></span><br><span class="line">  heap[count] = val;</span><br><span class="line">  <span class="comment">//此时可能破坏了堆的规则，所以需要重新建堆</span></span><br><span class="line">  <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> count;</span><br><span class="line">  <span class="comment">//判断是否需要与父节点进行替换</span></span><br><span class="line">  <span class="keyword">while</span> (i / <span class="number">2</span> &gt; <span class="number">0</span> &amp;&amp; heap[i] &gt; heap[i / <span class="number">2</span>]) &#123;</span><br><span class="line">    <span class="comment">//首先是数组越界判断，然后判断当前节点是否比父节点大，如果大则需要替换</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">temp</span> <span class="operator">=</span> heap[i / <span class="number">2</span>];</span><br><span class="line">    heap[i / <span class="number">2</span>] = heap[i];</span><br><span class="line">    heap[i] = temp;</span><br><span class="line">    <span class="comment">//然后向上继续判断</span></span><br><span class="line">    i = i / <span class="number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用堆来实现的完整代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] getLeastNumbersHeap(<span class="type">int</span>[] arr, <span class="type">int</span> k) &#123;</span><br><span class="line">  <span class="keyword">if</span> (k == <span class="number">0</span> || arr.length == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">M40HeapHelp</span> <span class="variable">heap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">M40HeapHelp</span>(k);</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i : arr) &#123;</span><br><span class="line">    heap.add(i);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> heap.getHeap();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">M40HeapHelp</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span>[] heap;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span> count;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span> length;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">M40HeapHelp</span><span class="params">(<span class="type">int</span> capacity)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.heap = <span class="keyword">new</span> <span class="title class_">int</span>[capacity + <span class="number">1</span>];</span><br><span class="line">    count = <span class="number">0</span>;</span><br><span class="line">    length = capacity;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (count &gt;= length) &#123;</span><br><span class="line">      <span class="comment">//当堆内元素超过最大值后进行判断</span></span><br><span class="line">      <span class="keyword">if</span> (val &lt; heap[<span class="number">1</span>]) &#123;</span><br><span class="line">        <span class="comment">//如果要插入的元素比堆内的最大值小，则将最大值删除，后面将值进行插入</span></span><br><span class="line">        removeTop();</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//否则直接返回</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    addVal(val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">addVal</span><span class="params">(<span class="type">int</span> val)</span> &#123;</span><br><span class="line">    <span class="comment">//数量加一</span></span><br><span class="line">    ++count;</span><br><span class="line">    <span class="comment">//将值添加到最后一个位置</span></span><br><span class="line">    heap[count] = val;</span><br><span class="line">    <span class="comment">//此时可能破坏了堆的规则，所以需要重新建堆</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> count;</span><br><span class="line">    <span class="comment">//判断是否需要与父节点进行替换</span></span><br><span class="line">    <span class="keyword">while</span> (i / <span class="number">2</span> &gt; <span class="number">0</span> &amp;&amp; heap[i] &gt; heap[i / <span class="number">2</span>]) &#123;</span><br><span class="line">      <span class="comment">//首先是数组越界判断，然后判断当前节点是否比父节点大，如果大则需要替换</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">temp</span> <span class="operator">=</span> heap[i / <span class="number">2</span>];</span><br><span class="line">      heap[i / <span class="number">2</span>] = heap[i];</span><br><span class="line">      heap[i] = temp;</span><br><span class="line">      <span class="comment">//然后向上继续判断</span></span><br><span class="line">      i = i / <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeTop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">//堆内没有元素</span></span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//将堆内的最后一个元素放到最大值位置上，</span></span><br><span class="line">    heap[<span class="number">1</span>] = heap[count];</span><br><span class="line">    <span class="comment">//数量减一</span></span><br><span class="line">    --count;</span><br><span class="line">    <span class="comment">//这时堆可能不满足堆的规则，需要进行重新建堆</span></span><br><span class="line">    rebuildHeap(heap, count, <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">rebuildHeap</span><span class="params">(<span class="type">int</span>[] a, <span class="type">int</span> n, <span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="comment">//当前节点的数据可能比子节点的数据大，所以与两个子节点对比，找到最大值后进行替换</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">maxPos</span> <span class="operator">=</span> i;</span><br><span class="line">      <span class="comment">//需要注意不能下标越界</span></span><br><span class="line">      <span class="keyword">if</span> (i * <span class="number">2</span> &lt;= n &amp;&amp; a[i] &lt; a[i * <span class="number">2</span>]) &#123;</span><br><span class="line">        maxPos = i * <span class="number">2</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//先判断左子节点，然后判断左子节点与右子节点的大小</span></span><br><span class="line">      <span class="keyword">if</span> (i * <span class="number">2</span> + <span class="number">1</span> &lt;= n &amp;&amp; a[maxPos] &lt; a[i * <span class="number">2</span> + <span class="number">1</span>]) &#123;</span><br><span class="line">        maxPos = i * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (maxPos == i) &#123;</span><br><span class="line">        <span class="comment">//如果父节点比两个子节点都大，则不需要替换满足条件，直接返回</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//将父节点与最大子节点进行替换</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">temp</span> <span class="operator">=</span> a[i];</span><br><span class="line">      a[i] = a[maxPos];</span><br><span class="line">      a[maxPos] = temp;</span><br><span class="line">      <span class="comment">//然后递归判断子节点是否满足条件，直到满足条件后退出</span></span><br><span class="line">      i = maxPos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * 返回堆的内容，由于堆是从1开始存放，所以将结果重新放到新数组中，从0开始放。</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span>[] getHeap() &#123;</span><br><span class="line">    <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[count];</span><br><span class="line">    System.arraycopy(heap, <span class="number">1</span>, result, <span class="number">0</span>, count);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用大顶堆而不是小顶堆的元素是：大顶堆的堆顶元素是堆内的最大值，我们要保留小的元素，所以直接与最大值比较即可，如果比最大值大则丢弃，小则保留。</p>
+<p>而如果使用小顶堆，堆顶元素是最小值，当我们判断元素是否需要保留时无法使用堆顶元素，在不排序的情况下也无法保证最后一个元素是最大值。如果采用小顶堆还需要将小顶堆排序取堆内最大值然后比较。实现和复杂度都比大顶堆复杂。</p>
+<h2 id="快排思想"><a href="#快排思想" class="headerlink" title="快排思想"></a>快排思想</h2><p>这个题目还可以利用快排的思想来解决。首先我们来复习一下快排的过程：</p>
+<ol>
+<li>对于全部数组找到一个分区点，将小于分区点的元素移动到左侧，大于分区的元素移动到右侧。</li>
+<li>从分区点开始，分为两个数组，左侧和右侧在递归调用</li>
+<li>当数组不能再拆分后退出，此时已经完成排序</li>
+</ol>
+<p>我们看一下第一步的结果是不是与这道题的要求比较相似。如果分区点左侧的元素有k个。那么我们就可以将分区点左侧的元素进行返回。</p>
+<p>如果左侧元素小于k个，我们就需要向右侧移动。否则向左侧移动。</p>
+<p>在实际编码过程中，分区点返回的是下标，那么我们只要满足<code>index=k-1</code>就表示找到了结果。</p>
+<p>用代码实现以下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] getLeastNumbersQuickSort(<span class="type">int</span>[] arr, <span class="type">int</span> k) &#123;</span><br><span class="line">  <span class="keyword">if</span> (k == <span class="number">0</span> || arr.length == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//由于返回的是元素下标，所以为长度-1</span></span><br><span class="line">  <span class="keyword">return</span> quickSortHelp(arr, <span class="number">0</span>, arr.length - <span class="number">1</span>, k - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span>[] quickSortHelp(<span class="type">int</span>[] arr, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> k) &#123;</span><br><span class="line">  <span class="comment">//快排是用到了分区点这个概念，会将小于分区点的元素放到左边，大于分区点的元素放到右边。</span></span><br><span class="line">  <span class="comment">//如果分区点左边的元素是k个或k-1个，那么我们就获取到了最小的k个元素</span></span><br><span class="line">  <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[k];</span><br><span class="line">  <span class="type">int</span> <span class="variable">partition</span> <span class="operator">=</span> partition(arr, left, right);</span><br><span class="line">  <span class="keyword">if</span> (partition == k) &#123;</span><br><span class="line">    System.arraycopy(arr, <span class="number">0</span>, result, <span class="number">0</span>, k);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//当元素数量小于k时，我们需要向右分，当数量大于k时需要向左分，直到获取到k个元素</span></span><br><span class="line">  <span class="keyword">return</span> partition &gt; k ? quickSortHelp(arr, left, partition - <span class="number">1</span>, k) : quickSortHelp(arr, partition + <span class="number">1</span>, right, k);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">partition</span><span class="params">(<span class="type">int</span>[] a, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">  <span class="comment">//设置分区点为数组最后一个元素</span></span><br><span class="line">  <span class="type">int</span> <span class="variable">pivot</span> <span class="operator">=</span> a[right];</span><br><span class="line">  <span class="comment">//开始分区</span></span><br><span class="line">  <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> left; j &lt; right - <span class="number">1</span>; j++) &#123;</span><br><span class="line">    <span class="comment">//从左向右找到比分区点小的元素</span></span><br><span class="line">    <span class="comment">// 找到下标为j，将他从i开始向右放，找到后较</span></span><br><span class="line">    <span class="keyword">if</span> (a[j] &lt; pivot) &#123;</span><br><span class="line">      <span class="comment">//如果元素比分区点小，则将元素从左侧开始放，将原来左侧的数据换到现在这个位置上</span></span><br><span class="line">      <span class="comment">//i表示左侧的位置，交换后就加一</span></span><br><span class="line">      swap(a, i, j);</span><br><span class="line">      i++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//最后将分区点放到对应位置上</span></span><br><span class="line">  <span class="comment">//交换后，i左侧为比分区点小的元素，右侧为比分区点大的元素</span></span><br><span class="line">  swap(a, i, right);</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">swap</span><span class="params">(<span class="type">int</span>[] a, <span class="type">int</span> first, <span class="type">int</span> second)</span> &#123;</span><br><span class="line">  <span class="type">int</span> <span class="variable">temp</span> <span class="operator">=</span> a[first];</span><br><span class="line">  a[first] = a[second];</span><br><span class="line">  a[second] = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在三种解决思路中，使用快排的方法是实现最高效的，但是如果没有一定的练习或许想不到这样的解题思路。</p>
+<p>而第一种排序后取前k个元素的做法虽然效率低，但是我的想法是这种解决的思路一定不要忘了，有时候一件事件的解决方法不要想的过于复杂，有时候想多了也不见得会好。</p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">算法与数据结构</a>, <a class="classtest-link" href="/tags/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-Leetcode/" rel="tag">算法与数据结构/Leetcode</a> — 2020年4月13日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>Spark-Shuffle过程</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2022/04/01/coding/big_data/spark/Shuffle%E8%BF%87%E7%A8%8B/">
+  
+  <meta name="description" content="Map阶段的输出是什么Map阶段最终生成的数据会以中间文件的形式物化到磁盘中, 这些文件存储在spark.local.dir设置的文件目录中. 中间文件包含两种类型:  后缀为data的数据文件 存储的内容是Map阶段生成的待分发数据  后缀为index的索引文件 记录的是数据文件中不同分区(Red">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Spark-Shuffle过程" />
+  
+  <meta property="og:description" content="Map阶段的输出是什么Map阶段最终生成的数据会以中间文件的形式物化到磁盘中, 这些文件存储在spark.local.dir设置的文件目录中. 中间文件包含两种类型:  后缀为data的数据文件 存储的内容是Map阶段生成的待分发数据  后缀为index的索引文件 记录的是数据文件中不同分区(Red">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2022/04/01/coding/big_data/spark/Shuffle%E8%BF%87%E7%A8%8B/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spark-Shuffle过程">
+  
+  <meta name="twitter:description" content="Map阶段的输出是什么Map阶段最终生成的数据会以中间文件的形式物化到磁盘中, 这些文件存储在spark.local.dir设置的文件目录中. 中间文件包含两种类型:  后缀为data的数据文件 存储的内容是Map阶段生成的待分发数据  后缀为index的索引文件 记录的是数据文件中不同分区(Red">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2022/04/01/coding/big_data/spark/Shuffle%E8%BF%87%E7%A8%8B/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>Spark-Shuffle过程</h2>
+
+  <h1 id="Map阶段的输出是什么"><a href="#Map阶段的输出是什么" class="headerlink" title="Map阶段的输出是什么"></a>Map阶段的输出是什么</h1><p>Map阶段最终生成的数据会以中间文件的形式物化到磁盘中, 这些文件存储在<code>spark.local.dir</code>设置的文件目录中. 中间文件包含两种类型:</p>
+<ul>
+<li><p>后缀为data的数据文件</p>
+<p>存储的内容是Map阶段生成的待分发数据</p>
+</li>
+<li><p>后缀为index的索引文件</p>
+<p>记录的是数据文件中不同分区(Reduce阶段的分区)的偏移地址. 分区数量与Reduce阶段的并行度保持一致.</p>
+</li>
+</ul>
+<p>Map阶段的每个Task都会生成这样的一组文件, 因此中间文件的数量与Map阶段的并行度保持一致.</p>
+<h1 id="数据生成过程"><a href="#数据生成过程" class="headerlink" title="数据生成过程"></a>数据生成过程</h1><h2 id="计算目标分区"><a href="#计算目标分区" class="headerlink" title="计算目标分区"></a>计算目标分区</h2><p>在Spark中, 每条数据的分区是由Key的哈希值决定的</p>
+<h2 id="写入缓存区或溢写到文件"><a href="#写入缓存区或溢写到文件" class="headerlink" title="写入缓存区或溢写到文件"></a>写入缓存区或溢写到文件</h2><h3 id="GroupByKey的实现"><a href="#GroupByKey的实现" class="headerlink" title="GroupByKey的实现"></a>GroupByKey的实现</h3><p>计算完目标分区后, Map Task会把每条记录和它的目标分区, 放到一个特殊的数据结构<code>PartitionedPairBuffer</code>里, 这个数据结构本质上是一个数组形式的缓存结构.</p>
+<p>每条数据都会占用数组中相邻的两个元素空间, 第一个元素存储(目标分区, Key), 第二个元素存储值.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121617362.png"></p>
+<p>这个数组的长度不可能无限大来存储所有Map端的元素. 所以Spark有一种机制, 来保障在数据总量超过可用内存的情况下, 依然能够完成计算. 这种机制就是: <strong>排序、溢出、归并.</strong></p>
+<p>举个例子:</p>
+<p>假如我们的<code>PartitionedPairBuffer</code> 的数组长度为8, 也就是说可以存储4个元素. 而我们的Map端共有16个元素, 那么就会需要4批才能完成计算. 在处理第二批的数据时, Spark会将第一批的数据溢写到磁盘的临时文件上.</p>
+<p>在溢写时, 会对<code>PartitionedPairBuffer</code> 中已有的数据, 按照目标分区以及Key进行排序后再进行写入, 所以<code>临时文件中的数据是有序的</code>.</p>
+<p>在处理第四批的时, 这时已经是最后一批, 所以这次不再需要溢写到临时文件. 现在的数据分布在3个临时文件中, 还有缓存在PartitionedPairBuffer中.</p>
+<p>最后, 会从这两个输入源中(临时文件, 缓存区)生成最终的数据文件和索引文件. 并且由于每个文件都是有序的, 所以在合并时使用了归并算法.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121617650.png"></p>
+<p>主要步骤为:</p>
+<ol>
+<li>对于分片中的数据记录, 逐一计算其目标分区, 并将其填充到PartitionedPairBuffer</li>
+<li><code>PartitionedPairBuffer</code> 填满后, 如果后续还有未处理的数据, 则对Buffer中的数据按(Partition ID, Key)进行排序, 将Buffer中的文件溢出到临时文件, 同时清空缓存区</li>
+<li>重复步骤1, 2. 直到分片内的所有数据都被处理</li>
+<li>对所有临时文件和<code>PartitionedPairBuffer</code>归并排序, 最终生成数据文件和索引文件</li>
+</ol>
+<h3 id="ReduceByKey"><a href="#ReduceByKey" class="headerlink" title="ReduceByKey"></a>ReduceByKey</h3><p>ReduceByKey的计算步骤与GroupByKey的一样, 都是先填充内存数据结构, 然后排序溢出, 最后归并排序.</p>
+<p>不一样的地方是, <strong>ReduceByKey采用了一种<code>PartitionedAppendOnlyMap</code> 的数据结构来填充数据记录, 这个数据结构是一种Map, 而Map的值是可以累加, 可以更新的.</strong> 所以非常适合用于聚合类的计算场景, 如计数、求和、均值计算、极值计算等.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121617612.png"></p>
+<p>相比PartitionedPairBuffer, PartitionedAppendOnlyMap的存储效率要高很多, 溢出数据到磁盘文件的频率也要低很多. 因此最终合并的数据文件也会小很多.</p>
+<p><strong>依靠高效的内存存储结构、更少的磁盘文件、更小的文件尺寸. 大幅降低来Shuffle过程中的磁盘和网络开销.</strong></p>
+<h1 id="Reduce阶段流程"><a href="#Reduce阶段流程" class="headerlink" title="Reduce阶段流程"></a>Reduce阶段流程</h1><p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121617931.png"><br>Reduce阶段需要主动从Map端中间文件中拉取数据.</p>
+<p>每个Map Task都会生成上图这样的文件, 文件中的分区数与Reduce阶段的并行度一致. 也就是说每个Map Task生成的数据文件, 都包含所有Reduce Task所需的部分数据.</p>
+<p>因此, 任何一个Reduce Task都需要从所有的Map Task拉取属于自己的那部分数据. 索引文件用于帮助判定哪部分数据属于哪个Reduce Task.</p>
+<p><strong>Reduce Task通过网络拉取中间文件的过程, 实际上就是不同Stages之间数据分发的过程.</strong></p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121618286.png"><br>Reduce Task将拉取到的数据块填充到读缓存区, 然后按照任务的计算逻辑不停的消费、处理缓存区中的数据记录.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>对于Shuffle, 它需要消耗所有的硬件资源</p>
+<ul>
+<li>无论是PartitionedPairBuffer、PartitionedAppendOnlyMap这些内存数据结构, 还是读写缓冲区, 都需要消耗内存资源</li>
+<li>由于内存空间有限, 因此溢写的临时文件会引入大量的磁盘I&#x2F;O, 而且Map阶段输出的中间文件也会消耗磁盘</li>
+<li>Reduce阶段的数据拉取, 需要消耗网络I&#x2F;O.</li>
+</ul>
+<p>其次, 消耗的不同硬件资源之间很难达到平衡.</p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/big-data-spark/" rel="tag">big_data/spark</a> — 2022年4月1日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

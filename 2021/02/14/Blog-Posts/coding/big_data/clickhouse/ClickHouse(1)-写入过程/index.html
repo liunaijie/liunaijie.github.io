@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>ClickHouse(1)-写入过程</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2021/02/14/Blog-Posts/coding/big_data/clickhouse/ClickHouse(1)-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B/">
+  
+  <meta name="description" content="前言这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程 MergeTreeMergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。 先看一下要创建这个引擎的DDL语句： 1234567891011121314CREA">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="ClickHouse(1)-写入过程" />
+  
+  <meta property="og:description" content="前言这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程 MergeTreeMergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。 先看一下要创建这个引擎的DDL语句： 1234567891011121314CREA">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2021/02/14/Blog-Posts/coding/big_data/clickhouse/ClickHouse(1)-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ClickHouse(1)-写入过程">
+  
+  <meta name="twitter:description" content="前言这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程 MergeTreeMergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。 先看一下要创建这个引擎的DDL语句： 1234567891011121314CREA">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2021/02/14/Blog-Posts/coding/big_data/clickhouse/ClickHouse(1)-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>ClickHouse(1)-写入过程</h2>
+
+  <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程</p>
+<h1 id="MergeTree"><a href="#MergeTree" class="headerlink" title="MergeTree"></a>MergeTree</h1><p>MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。</p>
+<p>先看一下要创建这个引擎的DDL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] [db.]table_name [<span class="keyword">ON</span> CLUSTER cluster]</span><br><span class="line">(</span><br><span class="line">    name1 [type1] [<span class="keyword">DEFAULT</span><span class="operator">|</span>MATERIALIZED<span class="operator">|</span>ALIAS expr1] [TTL expr1],</span><br><span class="line">    name2 [type2] [<span class="keyword">DEFAULT</span><span class="operator">|</span>MATERIALIZED<span class="operator">|</span>ALIAS expr2] [TTL expr2],</span><br><span class="line">    ...</span><br><span class="line">    INDEX index_name1 expr1 TYPE type1(...) GRANULARITY value1,</span><br><span class="line">    INDEX index_name2 expr2 TYPE type2(...) GRANULARITY value2</span><br><span class="line">) ENGINE <span class="operator">=</span> MergeTree()</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> expr</span><br><span class="line">[<span class="keyword">PARTITION</span> <span class="keyword">BY</span> expr]</span><br><span class="line">[<span class="keyword">PRIMARY</span> KEY expr]</span><br><span class="line">[SAMPLE <span class="keyword">BY</span> expr]</span><br><span class="line">[TTL expr [<span class="keyword">DELETE</span><span class="operator">|</span><span class="keyword">TO</span> DISK <span class="string">&#x27;xxx&#x27;</span><span class="operator">|</span><span class="keyword">TO</span> VOLUME <span class="string">&#x27;xxx&#x27;</span>], ...]</span><br><span class="line">[SETTINGS name<span class="operator">=</span><span class="keyword">value</span>, ...]</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>首先 <code>ENGINE = MergeTree()</code>表明这个表的引擎</p>
+<ul>
+<li>[ON CLUSTER cluster] 添加这一句可以在集群名为cluster的集群上创建这张表，而不需要去每个节点都创建一遍</li>
+<li>ORDER BY expr 声明主键，ClickHouse的主键是可以重复的。数据存储会按照这个进行排序</li>
+<li>PARTITION BY 分区字段，不同的数据会存储在不同的文件夹下</li>
+<li>PRIMARY KEY expr 设置主键，一般情况下使用ORDER BY来完成，如果同时出现ORDER BY与PRIMARY KEY，primary key需要是order by的子集</li>
+</ul>
+<h2 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h2><p>ClickHouse的数据存储位置由配置文件config.xml中指定，默认路径为<code>/var/clickhouse/data/</code></p>
+<p>在这个路径下首先按照数据库名称，表名称进行区分。在一个表下的又会存在多个分区文件夹。</p>
+<h3 id="分区文件夹命名规则"><a href="#分区文件夹命名规则" class="headerlink" title="分区文件夹命名规则"></a>分区文件夹命名规则</h3><p>分区文件夹的名称格式长这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PartitionId_MinBlockNum_MaxBlockNum_Level</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>PartitionId</strong></em></p>
+<ul>
+<li><p>None</p>
+<p>当未指定分区字段时，会生成一个<code>all</code>的文件夹，所有数据都在这个文件夹下</p>
+</li>
+<li><p>Number</p>
+<p>当分区字段为数字时，会使用数字作为文件夹的名称</p>
+</li>
+<li><p>Date</p>
+<p>当分区字段为日期时，将会格式化为yyyyMMdd格式</p>
+</li>
+<li><p>Others</p>
+<p>其它情况会将分区值做一次哈希，然后使用哈希值作为文件夹名称</p>
+</li>
+</ul>
+<p><em><strong>BlockNum</strong></em></p>
+<p>ClickHouse会在每个表上维护一个全局递增的数字，每创建一个文件夹都会更新这个数字，新创建文件夹的Min和Max都是相同的数字，在后续merge的过程中，会取两个文件夹block num的最大最小值作为新文件夹的min，max。</p>
+<p><em><strong>Level</strong></em></p>
+<p>表示这个文件夹被merge的次数，每被merge一次，这个数字都会加1.</p>
+<p>举个🌰：</p>
+<img src="https://lh4.googleusercontent.com/zVtgYhztsQhwArsPE9vqmlCFhFYkIc23NGt4-VGF-JNVo8vQ0QKWMYKctgbYEiD6N4Am4M-iPUhwtzTst7M8fi6xba-jgpW0ccd0Xf6-gY18aM0D93yEYbZtJrgrclwQq7wUfekm" alt="img" style="zoom: 80%;" />
+
+<p>每个文件夹是否是active的状态则被保存在<code>system.parts</code>表中</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20210214122112.png"></p>
+<h3 id="数据存储结构"><a href="#数据存储结构" class="headerlink" title="数据存储结构"></a>数据存储结构</h3><p>看完外层文件夹被合并的过程，再看一下文件夹内部的文件存储</p>
+<img src="https://lh4.googleusercontent.com/KgLthqXPOaQ2PZfSNGH9ujErBn3YLzJMb2fur8Gbl_pvrdwzNrCciJ8hM4kI9KYTcOlur7xNkHpOiHGFEFfQVdhtvT-5yQXL_hJyev7MrvdvHYV4RWxk-6F3TCki55JQ1E_CHQV_" style="zoom:50%;" >
+
+<p>在单个文件夹内主要包含这几个文件：</p>
+<ul>
+<li><p>primary.idx </p>
+<p>主键索引</p>
+</li>
+<li><p>[Column].mrk2</p>
+</li>
+<li><p>[Column].bin</p>
+<p>由于ClickHouse采用了列式存储，所以每一列都会有mrk2, bin两个文件</p>
+<p>bin文件是存储的被压缩过的真实数据文件，mrk2文件中保存了主键索引与文件块之间的关系</p>
+</li>
+<li><p>count.txt</p>
+</li>
+<li><p>columnar.txt</p>
+<p>这两个文件都是明文存储的，分别保存了在这个文件夹下的记录数量以及表结构</p>
+</li>
+</ul>
+<p>每次写入都会生成这些文件，即便是一次一条记录，所以clickhouse的写入最好还是批量写，在实时场景下做一下缓存后再进行写入。不然每次都会产生这些文件，造成大量的IO操作，后续也需要大量的merge过程，并且在查询时也会有一定的影响，对查询的影响在查询的部分再进行细说。</p>
+<p>由于clickhouse在每次插入时数据都是直接落盘的，不会有log或者内存缓存再写入的过程。从这一地方也可以看出不支持事务。</p>
+<p>在数据写入时不会进行一遍主键校验，所以主键是会重复的。为了解决这个文件，clickhouse有一个<code>ReplacingMergeTree</code>引擎来实现主键去重，但也只是一定程度上解决了主键重复。</p>
+<p>其他的若干种引擎，都是基于<code>MergeTree</code>引擎的合并过程做了一些修改,扩展。</p>
+<h1 id="ReplacingMergeTree"><a href="#ReplacingMergeTree" class="headerlink" title="ReplacingMergeTree"></a>ReplacingMergeTree</h1><p>可以在一定程度上解决主键重复的问题，异步完成的，有一定的时间延迟。</p>
+<p>例如我们的DDL以及几条数据如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table_001</span><br><span class="line">(</span><br><span class="line">    id UInt32,</span><br><span class="line">    name String,</span><br><span class="line">  	age UInt8</span><br><span class="line">) ENGINE <span class="operator">=</span> ReplacingMergeTree()</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> id</span><br><span class="line"><span class="keyword">PARTITION</span> <span class="keyword">BY</span> age</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id			name		age</span><br><span class="line">1				name1		18</span><br><span class="line">1				name2		18</span><br><span class="line">2				name3		19</span><br></pre></td></tr></table></figure>
+
+<p>这3条数据分3批进行插入，3条数据都完成写入后，文件夹及数据长这样</p>
+<p>文件夹：</p>
+<ul>
+<li>18_1_1_0</li>
+<li>18_2_2_0</li>
+<li>19_3_3_0</li>
+</ul>
+<p>数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id			name		age</span><br><span class="line">1				name1		18</span><br><span class="line">1				name2		18</span><br><span class="line">2				name3		19</span><br></pre></td></tr></table></figure>
+
+<p>这不是跟之前一样吗，并没有数据去重。</p>
+<p>是的，在数据刚刚写入的时候数据确实是这样的，数据去重发生在文件夹merge的过程中。</p>
+<p>我们可以手动执行命令来触发文件夹合并<code>optimize table db_name.table_name</code>，或者等待几分钟后clickhouse也会自动执行merge过程。</p>
+<p>在文件夹合并之后的文件夹及数据是这样：</p>
+<ul>
+<li><p>文件夹</p>
+<ul>
+<li>18_1_2_1</li>
+<li>19_3_3_0</li>
+</ul>
+</li>
+<li><p>数据</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	name	age</span><br><span class="line">1		name1	18</span><br><span class="line">2 	name3 19</span><br></pre></td></tr></table></figure>
+
+<p>这个时候在相同分区下的主键重复数据就被删掉了一条。<strong>这里需要注意的是，如果主键分布在不同的分区下，那么相同主键的数据是不会被删除的（因为它们不会被merge到一个文件夹下）。所以使用这个引擎并不能保证数据的唯一性，只能在一定情况下保证数据的唯一性。</strong></p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/big-data-clickhouse/" rel="tag">big_data/clickhouse</a> — 2021年2月14日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

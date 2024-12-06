@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>Spark-配置项</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2022/04/01/coding/big_data/spark/%E9%85%8D%E7%BD%AE%E9%A1%B9/">
+  
+  <meta name="description" content="内存相关配置项设置并行度, 并行度用spark.default.parallelism和spark.sql.shuffle.partitions 两个参数确定.  对于没有明确分区规则的RDD, 使用spark.default.parallelism来定义并行度 对于数据关联或聚合操作中可以使用sp">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Spark-配置项" />
+  
+  <meta property="og:description" content="内存相关配置项设置并行度, 并行度用spark.default.parallelism和spark.sql.shuffle.partitions 两个参数确定.  对于没有明确分区规则的RDD, 使用spark.default.parallelism来定义并行度 对于数据关联或聚合操作中可以使用sp">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2022/04/01/coding/big_data/spark/%E9%85%8D%E7%BD%AE%E9%A1%B9/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spark-配置项">
+  
+  <meta name="twitter:description" content="内存相关配置项设置并行度, 并行度用spark.default.parallelism和spark.sql.shuffle.partitions 两个参数确定.  对于没有明确分区规则的RDD, 使用spark.default.parallelism来定义并行度 对于数据关联或聚合操作中可以使用sp">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2022/04/01/coding/big_data/spark/%E9%85%8D%E7%BD%AE%E9%A1%B9/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>Spark-配置项</h2>
+
+  <p>内存相关配置项设置并行度, 并行度用<code>spark.default.parallelism</code>和<code>spark.sql.shuffle.partitions</code> 两个参数确定.</p>
+<ul>
+<li>对于没有明确分区规则的RDD, 使用<code>spark.default.parallelism</code>来定义并行度</li>
+<li>对于数据关联或聚合操作中可以使用<code>spark.sql.shuffle.partitions</code>来指定Reduce端的分区数量</li>
+</ul>
+<p><strong>什么是并行度</strong>: 指的是分布式数据集被划分为多少份, 从而用于分布式计算. 并行度的出发点是数据, 它明确了数据划分的粒度. 并行度越高, 数据的粒度越细, 数据分片越多, 数据越分散.</p>
+<p><strong>并行计算任务</strong>: 指的是在任意时刻整个集群能够同时计算的任务数量. 并行计算任务的出发点是计算任务, 是CPU. 由CPU有关的三个参数共同决定. — 具体说来，Executor 中并行计算任务数的上限是 spark.executor.cores 与 spark.task.cpus 的商，暂且记为 <code>#Executor-tasks</code>，整个集群的并行计算任务数自然就是 <code>#Executor-tasks</code> 乘以集群内 Executors 的数量，记为 <code>#Executors</code>。因此，最终的数值是：<code>#Executor-tasks * #Executors</code>。</p>
+<p><strong>并行度决定了数据粒度, 数据粒度决定了分区大小, 分区大小决定每个计算任务的内存消耗.</strong></p>
+<h2 id="CPU相关配置项"><a href="#CPU相关配置项" class="headerlink" title="CPU相关配置项"></a>CPU相关配置项</h2><p>CPU的配置项主要包括 <code>spark.cores.max</code>、<code>spark.executor.cores</code> 和 <code>spark.task.cpus</code> 这三个参数.</p>
+<ul>
+<li>spark.cores.max — 限制整个job可以申请到的最大CPU数量, 当不设置时默认使用<code>spark.deploy.defaultCores</code>这个参数(默认为Integer.MAX_VALUE, 也就是不限制)</li>
+<li>spark.executor.cores — 设置单个executor可以使用的CPU资源, executor的数量可以通过($spark.cores.max &#x2F; spark.executor.cores$)来确定</li>
+<li>spark.task.cpus — 设置单个task消耗的CPU核数, 一个executor上并行执行的task数量可以通过($spark.executor.cores &#x2F; spark.task.cpus$)来确定</li>
+</ul>
+<h2 id="内存相关配置项"><a href="#内存相关配置项" class="headerlink" title="内存相关配置项"></a>内存相关配置项</h2><p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121607765.png"><br><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121607158.png"><br>Spark管理的内存分为堆内内存和堆外内存.</p>
+<p>堆外内存又分为两个区域, <code>Execution Memory</code>和<code>Storage Memory</code>. 要想启用堆外内存, 需要将参数<code>spark.memory.offHeap.enabled</code>设置为<code>true</code> .然后再用<code>spark.memory.offHeap.size</code> 参数来指定堆外内存的大小</p>
+<p>堆内内存也分为四个区域, 分别是<code>Reserved Memory</code>, <code>User Memory</code>, <code>Execution Memory</code> 和 <code>Storage Memory</code></p>
+<p>内存的基础配置项主要是5个:</p>
+<ul>
+<li>spark.executor.memory — 单个Executor中的堆内内存总大小</li>
+<li>spark.memory.offHeap.size — 单个Executor中堆外内存总大小(当spark.memory.offHeap.enable为true才生效)</li>
+<li>spark.memory.fraction — 堆内内存中, (用于缓存RDD和执行计算的内存之和)占可用内存的比例</li>
+<li>spark.memory.storageFraction — 用于缓存RDD的内存占比, 执行内存占比为$(1-spark.memory.storageFraction)$</li>
+<li>spark.rdd.compress — RDD缓存是否压缩, 默认不压缩</li>
+</ul>
+<h3 id="如何选择使用堆内内存或者是堆外内存"><a href="#如何选择使用堆内内存或者是堆外内存" class="headerlink" title="如何选择使用堆内内存或者是堆外内存"></a>如何选择使用堆内内存或者是堆外内存</h3><p>堆外内存虽然更好的进行内存占用统计, 不需要垃圾回收机制, 不需要序列化与反序列化. 但是终归还是有缺点, 不然我们就无脑的使用堆外内存了.</p>
+<p>我们来看一个例子: 这个表有4个字段</p>
+<ul>
+<li>int类型的userId</li>
+<li>String类型的姓名</li>
+<li>int类型的年龄</li>
+<li>Char类型的性别</li>
+</ul>
+<p>当我们需要用字节数组来存储这条记录时, 由于无法事先知道String类型的长度, 所以只能在存储位置使用真正存储位置的offset来代替, 在offset位置的第一位表示String的长度, 从而完成这条记录的存储.<br><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121608566.png"><br>Spark的堆外内存也是使用这种方式来存储应用的数据. 这种方式比JVM的存储更加紧凑, 从而节省来空间. 但是当我们的Schema变得复杂后, 维护这样一条记录的指针和偏移地址变得越来越多, 让字段的访问效率大打折扣, 而且指针多了之后, 内存泄漏的风险也变大了. Spark直接管理堆外内存的成本就变得非常高.</p>
+<p><strong>对于需要处理的数据集，如果数据模式比较扁平，而且字段多是定长数据类型，就更多地使用堆外内存。相反地，如果数据模式很复杂，嵌套结构或变长字段很多，就更多采用 JVM 堆内内存会更加稳妥</strong></p>
+<h3 id="User-Memory与Spark可用内存如何分配"><a href="#User-Memory与Spark可用内存如何分配" class="headerlink" title="User Memory与Spark可用内存如何分配"></a>User Memory与Spark可用内存如何分配</h3><p>现在Spark的<code>spark.memory.fraction</code>参数默认为<code>0.6</code> , 也就是默认会有60%的内存归Spark调用, 剩余的40%为User Memory.</p>
+<p>User Memory主要存储开发者自定义的数据结构或Spark内部元数据.</p>
+<p>如果应用中自定义数据结构不多, 可以适当调大<code>spark.memory.fraction</code>参数, 从而提高Spark用于分布式计算和缓存分布式数据集的内存大小.</p>
+<h3 id="Execution-Memory与Storage-Memory如何平衡"><a href="#Execution-Memory与Storage-Memory如何平衡" class="headerlink" title="Execution Memory与Storage Memory如何平衡"></a>Execution Memory与Storage Memory如何平衡</h3><p>统一内存管理模式下, 这两部分会互相占用. 当<code>Execution Memory</code>占用<code>Storage Memory</code>后, 需要执行完成后才会被释放, 而当<code>Storage Memory</code>占用<code>Execution Memory</code>时, 当Execution Memory需要则需要理解释放掉.</p>
+<p>如果应用是“缓存密集型”的, 即需要反复遍历同一份分布式数据, 这个时候将数据缓存下来则可以提高效率. 即可以提高<code>spark.memory.storageFraction</code></p>
+<p>但是, 还需要注意这两个之间的平衡.</p>
+<p>当Storage Memory调大之后, 意味着Execution Memory变小了. 那么在执行关联, 排序, 聚合等需要消耗执行内存的任务时, 就会变慢.</p>
+<p>由于Execution Memory变小, 在堆内创建新对象时, 由内存不足造成的垃圾回收也会影响执行效率.</p>
+<p>还有一种方法是在进行缓存是将数据进行压缩, 这样相同的内存空间下就可以存储更多的数据, 可以修改<code>spark.rdd.compress</code>参数, 默认情况下是不使用压缩的</p>
+<h2 id="磁盘相关配置项"><a href="#磁盘相关配置项" class="headerlink" title="磁盘相关配置项"></a>磁盘相关配置项</h2><p><code>spark.local.dir</code> 这个参数可以运行开发者设置存储_RDD cache落盘数据块_和_Shuffle中间文件_的磁盘目录</p>
+<h2 id="Shuffle类配置项"><a href="#Shuffle类配置项" class="headerlink" title="Shuffle类配置项"></a>Shuffle类配置项</h2><p>Shuffle分为Map和Reduce两个阶段. Map阶段按照Reducer的分区规则, 将中间数据写入到磁盘中, 然后Reduce阶段从各个Map节点拉取数据, 根据计算规则进行计算.</p>
+<p><code>spark.shuffle.file.buffer</code> 和 <code>spark.reducer.maxSizeInFlight</code> 两个参数可以分别控制Map端和Reduce端的读写缓冲区大小.</p>
+<p>Map阶段, 由于是先将数据写到内存(写缓存区)中, 当内存不足时再写到磁盘, 所以可以调大内存(写缓冲区)来减少<code>I/O</code>次数, 从而提高整体性能. 这个时候就需要调大<code>spark.shuffle.file.buffer</code> 参数.</p>
+<p>Reduce阶段, Spark通过网络从不同Map节点的磁盘中拉取中间文件, 然后以数据块的形式暂存到Reduce节点的读缓冲区. 读缓冲区越大, 可以暂存的数据块也就越多, 拉取数据所需的网络请求次数也就越少, 单次请求的网络吞吐越高, 网络I&#x2F;O的效率也就越高. 这个时候可以调节<code>spark.reducer.maxSizeInFlight</code> 来调大读缓冲区的大小, 提高性能.</p>
+<p><strong>跳过排序</strong></p>
+<p>spark从1.6版本开始, Spark统一采用Sort shuffle manager来管理Shuffle操作, 这时不管计算是否真的需要排序, 都会在Map阶段和Reduce阶段进行排序.</p>
+<p>所以在不需要聚合，也不需要排序的计算场景中，我们就可以通过设置 <code>spark.shuffle.sort.bypassMergeThreshold</code> 的参数，来改变 Reduce 端的并行度（默认值是 200）。当 Reduce 端的分区数小于这个设置值的时候，我们就能避免 Shuffle 在计算过程引入排序。</p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/big-data-spark/" rel="tag">big_data/spark</a> — 2022年4月1日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

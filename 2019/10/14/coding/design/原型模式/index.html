@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>设计模式-原形模式</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2019/10/14/coding/design/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">
+  
+  <meta name="description" content="原型模式的原理与应用如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式. 何为”对象的创建成本比较大”">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="设计模式-原形模式" />
+  
+  <meta property="og:description" content="原型模式的原理与应用如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式. 何为”对象的创建成本比较大”">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2019/10/14/coding/design/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="设计模式-原形模式">
+  
+  <meta name="twitter:description" content="原型模式的原理与应用如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式. 何为”对象的创建成本比较大”">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2019/10/14/coding/design/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>设计模式-原形模式</h2>
+
+  <h1 id="原型模式的原理与应用"><a href="#原型模式的原理与应用" class="headerlink" title="原型模式的原理与应用"></a><strong>原型模式的原理与应用</strong></h1><p>如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做<strong>原型设计模式</strong>.</p>
+<h2 id="何为”对象的创建成本比较大”"><a href="#何为”对象的创建成本比较大”" class="headerlink" title="何为”对象的创建成本比较大”"></a><strong>何为”对象的创建成本比较大”</strong></h2><p>创建对象包含的申请内存, 变量赋值这一过程, 本身并不会花费太多时间, 对于大部分业务系统来说, 这点时间是可以忽略的.</p>
+<p>如果对象中的数据需要复杂的计算才能得到(比如排序, 计算哈希值), 或者需要从RPC, 网络, 数据库, 文件系统等非常慢速的IO中读取, 这种情况下, 我们就可以利用原型模式, 从其他已有对象中直接拷贝得到, 而不用每次在创建新对象时, 都重复执行这些耗时的操作.</p>
+<h1 id="原型模式的实现方式-深拷贝与浅拷贝"><a href="#原型模式的实现方式-深拷贝与浅拷贝" class="headerlink" title="原型模式的实现方式: 深拷贝与浅拷贝"></a><strong>原型模式的实现方式: 深拷贝与浅拷贝</strong></h1><p>深拷贝与浅拷贝的区别在于: 浅拷贝只会复制对象的索引(内存地址), 而不会复制对象本身. 深拷贝不仅会复制索引还好复制对象本身.</p>
+<p>浅拷贝得到的对象跟原始对象共享数据, 当值进行修改后, 两边的值都会被修改, 因为他们是一个值.</p>
+<p>而深拷贝得到的是一份完完全全独立的对象.</p>
+<p>Java中的clone方法执行的就是浅拷贝.</p>
+<p>进行深拷贝有两种方法:</p>
+<ol>
+<li><p>递归拷贝对象, 对象的引用对象以及饮用对象的引用对象, 直到要拷贝的对象只包含基本数据类型, 没有饮用对象为止.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">     public class Demo &#123;</span><br><span class="line">       private HashMap&lt;String, SearchWord&gt; currentKeywords=new HashMap&lt;&gt;();</span><br><span class="line">       private long lastUpdateTime = -1;</span><br><span class="line">     </span><br><span class="line">       public void refresh() &#123;</span><br><span class="line">         // Deep copy</span><br><span class="line">         HashMap&lt;String, SearchWord&gt; newKeywords = new HashMap&lt;&gt;();</span><br><span class="line">         for (HashMap.Entry&lt;String, SearchWord&gt; e : currentKeywords.entrySet()) &#123;</span><br><span class="line">           SearchWord searchWord = e.getValue();</span><br><span class="line">           SearchWord newSearchWord = new SearchWord(</span><br><span class="line">                   searchWord.getKeyword(), searchWord.getCount(), searchWord.getLastUpdateTime());</span><br><span class="line">           newKeywords.put(e.getKey(), newSearchWord);</span><br><span class="line">         &#125;</span><br><span class="line">     </span><br><span class="line">         // 从数据库中取出更新时间&gt;lastUpdateTime的数据，放入到newKeywords中</span><br><span class="line">         List&lt;SearchWord&gt; toBeUpdatedSearchWords = getSearchWords(lastUpdateTime);</span><br><span class="line">         long maxNewUpdatedTime = lastUpdateTime;</span><br><span class="line">         for (SearchWord searchWord : toBeUpdatedSearchWords) &#123;</span><br><span class="line">           if (searchWord.getLastUpdateTime() &gt; maxNewUpdatedTime) &#123;</span><br><span class="line">             maxNewUpdatedTime = searchWord.getLastUpdateTime();</span><br><span class="line">           &#125;</span><br><span class="line">           if (newKeywords.containsKey(searchWord.getKeyword())) &#123;</span><br><span class="line">             SearchWord oldSearchWord = newKeywords.get(searchWord.getKeyword());</span><br><span class="line">             oldSearchWord.setCount(searchWord.getCount());</span><br><span class="line">             oldSearchWord.setLastUpdateTime(searchWord.getLastUpdateTime());</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">             newKeywords.put(searchWord.getKeyword(), searchWord);</span><br><span class="line">           &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     </span><br><span class="line">         lastUpdateTime = maxNewUpdatedTime;</span><br><span class="line">         currentKeywords = newKeywords;</span><br><span class="line">       &#125;</span><br><span class="line">     </span><br><span class="line">       private List&lt;SearchWord&gt; getSearchWords(long lastUpdateTime) &#123;</span><br><span class="line">         // TODO: 从数据库中取出更新时间&gt;lastUpdateTime的数据</span><br><span class="line">         return null;</span><br><span class="line">       &#125;</span><br><span class="line">     </span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>先将对象序列化, 然后再反序列化成新的对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">     public Object deepCopy(Object object) &#123;</span><br><span class="line">       ByteArrayOutputStream bo = new ByteArrayOutputStream();</span><br><span class="line">       ObjectOutputStream oo = new ObjectOutputStream(bo);</span><br><span class="line">       oo.writeObject(object);</span><br><span class="line">    </span><br><span class="line">       ByteArrayInputStream bi = new ByteArrayInputStream(bo.toByteArray());</span><br><span class="line">       ObjectInputStream oi = new ObjectInputStream(bi);</span><br><span class="line">    </span><br><span class="line">       return oi.readObject();</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a><strong>优化</strong></h2><p>这两种方法, 不管采用哪种, 深拷贝都要比浅拷贝耗时, 耗内存空间. 我们可以先采用浅拷贝的方法来进行复制, 对于需要更新的对象, 再使用深拷贝的方式来创建一份新的对象, 替换老对象. 这种方法即利用了浅拷贝节省时间, 空间的优点. 又能保证数据符合要求.</p>
+</li>
+</ol>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/design/" rel="tag">design</a> — 2019年10月14日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>
