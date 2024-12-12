@@ -1,13 +1,10 @@
 ---
 title: 微服务之SpringCloud-注册中心eureka
-date: 2019-12-18 11:33:18
+date: 2019-12-18
 categories:
-  - - coding
-    - micro_service
+  - notes
 tags:
-  - Java
-  - Java/micro_service
-  - Java/eureka
+  - eureka
 ---
 
 # 简单项目

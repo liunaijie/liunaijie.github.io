@@ -1,9 +1,8 @@
 ---
 title: Java实现经典问题算法
-date: 2017-11-27 15:52:41
+date: 2017-11-27
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"

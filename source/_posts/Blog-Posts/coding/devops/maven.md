@@ -1,11 +1,10 @@
 ---
 title: maven
-date: 2021-01-23 08:24:39
+date: 2021-01-23
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/maven
+  - maven
 ---
 
 *Dependency-reduced-pom.xml**

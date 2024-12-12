@@ -1,12 +1,10 @@
 ---
 title: Java注解
-date: 2019-12-06 09:28:00
+date: 2019-12-06
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/annotation
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

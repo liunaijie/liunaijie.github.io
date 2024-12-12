@@ -1,12 +1,10 @@
 ---
 title: Spark-如何选择Join策略
-date: 2022-04-01 23:10:23
+date: 2022-04-01
 categories:
-  - - coding
-    - big_data
-    - spark
+  - notes
 tags:
-  - big_data/spark
+  - Spark
 ---
 
 Spark支持多种Join形式:

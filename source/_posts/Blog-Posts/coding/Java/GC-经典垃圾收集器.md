@@ -1,13 +1,11 @@
 ---
 title: GC-经典垃圾收集器
-date: 2021-09-25 22:33:39
+date: 2021-09-25
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java
-  - Java/jvm
-  - Java/gc
+  - JVM
+  - GC
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

@@ -1,13 +1,10 @@
 ---
 title: ClickHouse-MergeTree引擎
-date: 2022-10-09 20:25:23
+date: 2022-10-09
 categories:
-  - - coding
-    - big_data
-    - olap
-    - clickhouse
+  - notes
 tags:
-  - big_data/clickhouse
+  - ClickHouse
 ---
 # 数据存储格式
 

@@ -1,12 +1,10 @@
 ---
 title: HashSet源码
-date: 2019-08-26 21:12:23
+date: 2019-08-26
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

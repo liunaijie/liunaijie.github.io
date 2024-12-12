@@ -1,10 +1,10 @@
 ---
 title: SeaTunnel源码解析-(三)Zeta引擎执行解析
-date: 2024-11-25T14:56:00
+date: 2024-11-25
 categories:
-  - - coding
+  - publish
 tags:
-  - big_data/seatunnel
+  - seatunnel
 ---
 # 这篇文章会聊些什么
 SeaTunnel作为一款数据集成工具, 那么它最终的目的是来做数据同步的, 可以将数据从某个存储同步到另外一个存储中. 

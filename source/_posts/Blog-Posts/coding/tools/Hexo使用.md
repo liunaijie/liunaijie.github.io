@@ -1,11 +1,10 @@
 ---
 title: Hexo使用
-date: 2019-01-17 16:51:39
+date: 2019-01-17
 categories:
-  - - coding
-    - tools
+  - notes
 tags:
-  - chore/hexo
+  - hexo
 ---
 
 

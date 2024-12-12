@@ -1,13 +1,10 @@
 ---
 title: ClickHouse-SummingMergeTree
-date: 2022-10-09 20:25:23
+date: 2022-10-09
 categories:
-  - - coding
-    - big_data
-    - olap
-    - clickhouse
+  - notes
 tags:
-  - big_data/clickhouse
+  - ClickHouse
 ---
 
 假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）

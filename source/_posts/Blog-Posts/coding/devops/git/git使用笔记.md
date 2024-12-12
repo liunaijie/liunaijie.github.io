@@ -1,11 +1,10 @@
 ---
 title: git使用笔记
-date: 2019-05-29 10:18:45
+date: 2019-05-29
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/git
+  - git
 ---
 
 # 安装

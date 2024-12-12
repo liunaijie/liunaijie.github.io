@@ -1,12 +1,10 @@
 ---
 title: Docker使用笔记
-date: 2019-07-03 17:08:39
+date: 2019-07-03
 categories:
-  - - coding
-    - cloud_native
-    - docker
+  - notes
 tags:
-  - devops/docker
+  - Docker
 ---
 
 Docker是一个使用了Linux Namespace和Cgroups的虚拟化工具

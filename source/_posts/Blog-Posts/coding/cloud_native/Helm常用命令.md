@@ -1,14 +1,10 @@
 ---
 title: Helm常用命令
-date: 2020-06-20 19:33:15
+date: 2020-06-20
 categories:
-  - - coding
-    - cloud_native
-    - kubetnetes
-    - helm
+  - notes
 tags:
-  - devops/kubetnetes
-  - devops/helm
+  - Helm
 ---
 安装：
 

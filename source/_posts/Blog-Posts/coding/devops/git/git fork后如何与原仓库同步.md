@@ -1,11 +1,10 @@
 ---
 title: git fork后如何与原仓库同步
-date: 2020-05-08 21:08:39
+date: 2020-05-08
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/git
+  - git
 ---
 
 # 背景

@@ -1,9 +1,8 @@
 ---
 title: JAVA知识整理
-date: 2019-09-10 20:33:24
+date: 2019-09-10
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"

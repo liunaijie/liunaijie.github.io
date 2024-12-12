@@ -1,12 +1,10 @@
 ---
 title: Java类加载机制
-date: 2021-10-10 22:45:21
+date: 2021-10-10
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java
-  - Java/class_loader
+  - class_loader
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

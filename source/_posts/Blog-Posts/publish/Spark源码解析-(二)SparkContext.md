@@ -1,13 +1,10 @@
 ---
 title: Spark源码解析-(二)SparkContext
-date: 2023-07-30 13:20:43
+date: 2023-07-30
 categories:
-  - - publish
-    - coding
-    - big_data
-    - spark
+  - publish
 tags:
-  - big_data/spark
+  - spark
 ---
 继上一篇分析完Spark的提交流程之后, 这次继续分析下SparkContext的源码.
 # 创建

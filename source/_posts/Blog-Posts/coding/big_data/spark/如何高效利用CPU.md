@@ -1,12 +1,10 @@
 ---
 title: Spark-如何高效利用CPU
-date: 2022-04-01 23:10:23
+date: 2022-04-01
 categories:
-  - - coding
-    - big_data
-    - spark
+  - notes
 tags:
-  - big_data/spark
+  - Spark
 ---
 # 执行内存抢占规则，
 

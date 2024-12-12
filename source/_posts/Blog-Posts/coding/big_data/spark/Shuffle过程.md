@@ -1,12 +1,10 @@
 ---
 title: Spark-Shuffle过程
-date: 2022-04-01 23:10:23
+date: 2022-04-01
 categories:
-  - - coding
-    - big_data
-    - spark
+  - notes
 tags:
-  - big_data/spark
+  - Spark
 ---
 # Map阶段的输出是什么
 

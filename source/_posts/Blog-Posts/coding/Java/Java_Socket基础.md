@@ -1,12 +1,10 @@
 ---
 title: Java Socket基础
-date: 2019-05-09 11:55:18
+date: 2019-05-09
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/socket
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

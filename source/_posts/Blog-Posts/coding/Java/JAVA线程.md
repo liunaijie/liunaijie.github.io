@@ -1,12 +1,10 @@
 ---
 title: JAVA线程
-date: 2019-09-22 20:33:39
+date: 2019-09-22
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/thread
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

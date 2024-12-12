@@ -1,12 +1,10 @@
 ---
 title: Java OOM异常分析
-date: 2021-09-10 20:33:39
+date: 2021-09-10
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java
-  - Java/jvm
+  - JVM
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

@@ -1,12 +1,10 @@
 ---
 title: Java Class Loader
-date: 2021-10-14 20:13:29
+date: 2021-10-14
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java
-  - Java/class_loader
+  - class_loader
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

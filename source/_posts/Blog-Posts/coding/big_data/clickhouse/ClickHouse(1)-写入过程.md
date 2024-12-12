@@ -1,13 +1,10 @@
 ---
 title: ClickHouse(1)-写入过程
-date: 2021-02-14 10:10:23
+date: 2021-02-14
 categories:
-  - - coding
-    - big_data
-    - olap
-    - clickhouse
+  - notes
 tags:
-  - big_data/clickhouse
+  - ClickHouse
 ---
 
 # 前言

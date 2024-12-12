@@ -1,13 +1,10 @@
 ---
 title: 一段代码在Spark中的执行过程
-date: 2022-04-01 23:10:23
+date: 2022-04-01
 categories:
-  - - publish
-    - coding
-    - big_data
-    - spark
+  - publish
 tags:
-  - big_data/spark
+  - spark
 ---
 
 # 一段代码在Spark中的执行过程

@@ -1,11 +1,10 @@
 ---
 title: 利用goaccess实时监控nginx的访问日志
-date: 2018-12-15 20:15:40
+date: 2018-12-15
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/nginx/goaccess
+  - nginx
 ---
 
 这篇文章主要写一下我在利用goaccess查看nginx生成的访问日志时的经历。

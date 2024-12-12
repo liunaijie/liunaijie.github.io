@@ -1,14 +1,10 @@
 ---
 title: Airflow调度系统
-date: 2022-04-09 10:08:12
+date: 2022-04-09
 categories:
-  - - coding
-    - big_data
-    - scheduler
-    - airflow
+  - notes
 tags:
-  - big_data/scheduler
-  - big_data/airflow
+  - Airflow
 ---
 
 # 前言

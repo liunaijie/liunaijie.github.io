@@ -1,12 +1,10 @@
 ---
 title: TreeMap源码学习
-date: 2019-11-12 15:59:25
+date: 2019-11-12
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

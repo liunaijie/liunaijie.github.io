@@ -1,12 +1,10 @@
 ---
 title: Java中的锁
-date: 2022-09-01 10:18:39
+date: 2022-09-01
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/lock
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 Java中的锁机制主要分为`Synchronized`和`Lock`

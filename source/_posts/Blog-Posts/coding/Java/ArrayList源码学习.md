@@ -1,12 +1,10 @@
 ---
 title: ArrayList源码学习
-date: 2019-08-20 19:28:12
+date: 2019-08-20
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

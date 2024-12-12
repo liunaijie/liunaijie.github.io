@@ -1,12 +1,10 @@
 ---
 title: Kubetnetes的一些概念和术语
-date: 2019-08-30 10:05:39
+date: 2019-08-30
 categories:
-  - - coding
-    - cloud_native
-    - kubetnetes
+  - notes
 tags:
-  - devops/kubetnetes
+  - Kubetnetes
 ---
 
 此篇文章来自《Kubernetes权威指南：从Docker到Kubernetes实践全接触（第4版） 》

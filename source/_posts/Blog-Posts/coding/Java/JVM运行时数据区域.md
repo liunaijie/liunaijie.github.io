@@ -1,12 +1,10 @@
 ---
 title: JVM运行时数据区域
-date: 2021-08-28 14:18:39
+date: 2021-08-28
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java
-  - Java/jvm
+  - JVM
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

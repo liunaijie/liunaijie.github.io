@@ -1,13 +1,10 @@
 ---
 title: Spark内容整理
-date: 2024-01-20 14:10:23
+date: 2024-01-20
 categories:
-  - - publish
-    - coding
-    - big_data
-    - spark
+  - publish
 tags:
-  - big_data/spark
+  - spark
 ---
 
 最近在换工作, 抽个时间把这几年所学的内容整理一下.

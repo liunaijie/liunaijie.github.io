@@ -1,9 +1,8 @@
 ---
 title: Java位运算符详解
-date: 2019-12-24 12:18:07
+date: 2019-12-24
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"

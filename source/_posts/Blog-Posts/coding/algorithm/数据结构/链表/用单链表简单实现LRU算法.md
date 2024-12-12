@@ -1,11 +1,10 @@
 ---
 title: 用单链表简单实现LRU算法
-date: 2020-02-26 13:51:33
+date: 2020-02-26
 categories:
-  - - coding
-    - algorithm
+  - notes
 tags:
-  - 算法与数据结构/链表
+  - 链表
 ---
 
 # 什么是LRU算法

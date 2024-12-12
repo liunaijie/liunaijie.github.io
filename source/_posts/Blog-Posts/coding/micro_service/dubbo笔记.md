@@ -1,10 +1,10 @@
 ---
 title: dubbo笔记
-date: 2019-06-23 17:58:16
+date: 2019-06-23
+categories:
+  - notes
 tags:
-  - Java
-  - Java/rpc
-  - Java/dubbo
+  - Dubbo
 ---
 
 ## 建立基础项目

@@ -1,9 +1,8 @@
 ---
 title: Java关键字-transient
-date: 2019-12-22 12:11:10
+date: 2019-12-22
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"

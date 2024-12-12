@@ -1,12 +1,10 @@
 ---
 title: JAVA容器
-date: 2019-08-31 19:12:23
+date: 2019-08-31
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

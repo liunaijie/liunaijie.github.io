@@ -1,12 +1,10 @@
 ---
 title: Java古老的集合类之Hashtable
-date: 2019-12-20 10:12:23
+date: 2019-12-20
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

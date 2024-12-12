@@ -1,13 +1,10 @@
 ---
 title: Spark-Tungsten
-date: 2022-04-01 23:10:23
+date: 2022-04-01
 categories:
-  - - coding
-    - big_data
-    - spark
-    - tungsten
+  - notes
 tags:
-  - big_data/spark
+  - Spark
 ---
 在Spark SQL中, Catalyst优化器负责把查询语句最终转换为可以执行的Physical Plan.
 

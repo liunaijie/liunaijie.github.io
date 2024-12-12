@@ -1,11 +1,10 @@
 ---
 title: Spring笔记
-date: 2019-09-04 16:01:11
+date: 2019-09-04
 categories:
-  - - coding
-    - spring
+  - notes
 tags:
-  - Java/spring
+  - Spring
 ---
 
 最近在阅读《Spring in action》这本书，也以此篇文章记录一下`spring`框架的相关内容。

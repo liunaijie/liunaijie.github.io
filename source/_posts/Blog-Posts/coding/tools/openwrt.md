@@ -1,11 +1,10 @@
 ---
 title: Ubuntu16编译openwrt
-date: 2019-01-22 09:08:39
+date: 2019-01-22
 categories:
-  - - coding
-    - tools
+  - notes
 tags:
-  - chore/openwrt
+  - openwrt
 ---
 
 ## Ubuntu16编译openwrt

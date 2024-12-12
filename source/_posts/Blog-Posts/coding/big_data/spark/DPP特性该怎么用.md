@@ -1,12 +1,10 @@
 ---
 title: Spark-DPP特性
-date: 2022-04-01 23:10:23
+date: 2022-04-01
 categories:
-  - - coding
-    - big_data
-    - spark
+  - notes
 tags:
-  - big_data/spark
+  - Spark
 ---
 DPP(Dynamic Partition Pruning, 动态分区剪裁)是Spark 3.0版本中第二个引人瞩目的特性, 它指的是在星型数仓的数据关联场景中, 可以充分利用过滤之后的维度表, 大幅削减事实表的数据扫描量, 从整体上提升关联计算的执行性能.
 

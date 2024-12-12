@@ -1,9 +1,8 @@
 ---
 title: StringBuilder为什么线程不安全?
-date: 2019-11-17 16:55:30
+date: 2019-11-17
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"

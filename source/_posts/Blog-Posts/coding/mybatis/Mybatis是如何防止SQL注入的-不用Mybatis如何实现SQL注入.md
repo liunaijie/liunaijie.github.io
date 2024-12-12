@@ -1,12 +1,10 @@
 ---
 title: Mybatis是如何防止SQL注入的,不用Mybatis如何实现SQL注入
-date: 2020-01-06 15:00:12
+date: 2020-01-06
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java/mybatis
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
+  - Mybatis
 ---
 
 ![](https://raw.githubusercontent.com/liunaijie/images/master/happy-new-year-4718894_640.png)

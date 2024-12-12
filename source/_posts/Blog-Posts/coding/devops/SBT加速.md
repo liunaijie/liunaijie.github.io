@@ -2,10 +2,9 @@
 title: SBT加速
 date: 2021-01-23 08:24:39
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/sbt
+  - sbt
 ---
 
 最近有一个项目使用到了sbt作为构建工具，在电脑上即便有科学工具，下载依赖也是巨慢无比，有时候一天都下不下来。所以这篇文章就记录一下如何对sbt进行加速。

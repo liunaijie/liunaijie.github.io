@@ -1,9 +1,8 @@
 ---
 title: list循环添加相同的map
-date: 2017-09-25 10:55:04
+date: 2017-09-25
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"

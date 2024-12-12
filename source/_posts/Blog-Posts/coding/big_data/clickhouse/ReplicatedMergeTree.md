@@ -1,13 +1,10 @@
 ---
 title: ClickHouse-ReplicatedMergeTree
-date: 2022-10-09 20:25:23
+date: 2022-10-09
 categories:
-  - - coding
-    - big_data
-    - olap
-    - clickhouse
+  - notes
 tags:
-  - big_data/clickhouse
+  - ClickHouse
 ---
 
 ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。

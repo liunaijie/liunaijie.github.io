@@ -1,10 +1,10 @@
 ---
 title: SeaTunnel源码解析-(一)SeaTunnel API解析
-date: 2024-11-25 14:54
+date: 2024-11-25
 categories:
-  - - coding
+  - coding
 tags:
-  - big_data/seatunnel
+  - seatunnel
 ---
 # 从接口定义来看SeaTunnel
 

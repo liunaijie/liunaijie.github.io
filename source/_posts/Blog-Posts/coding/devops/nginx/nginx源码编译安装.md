@@ -1,11 +1,10 @@
 ---
 title: nginx源码编译安装
-date: 2019-04-11 12:29:40
+date: 2019-04-11
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/nginx
+  - nginx
 ---
 
 在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。

@@ -1,11 +1,10 @@
 ---
 title: GitTag
-date: 2022-03-09 20:25:23
+date: 2022-03-09
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/git
+  - git
 ---
 
 Git commit是一次文件提交.

@@ -1,11 +1,10 @@
 ---
 title: gradle笔记
-date: 2020-06-20 19:33:15
+date: 2020-06-20
 categories:
-  - - coding
-    - devops
+  - notes
 tags:
-  - devops/gradle
+  - gradle
 ---
 编译打包时，将依赖也打入jar包，在build.gradle文件中，添加这一部分即可
 

@@ -1,12 +1,10 @@
 ---
 title: LSM-Tree
-date: 2023-09-10 21:29
+date: 2023-09-10
 categories:
-  - - coding
-    - algorithm
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/LSM-Tree
+  - LSM-Tree
 ---
 
 ![](https://raw.githubusercontent.com/liunaijie/images/master/202309112128645.png)

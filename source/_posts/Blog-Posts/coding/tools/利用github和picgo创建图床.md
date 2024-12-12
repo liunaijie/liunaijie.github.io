@@ -1,12 +1,10 @@
 ---
 title: 利用github和picgo创建图床
-date: 2019-06-28 17:28:39
+date: 2019-06-28
 categories:
-  - - coding
-    - tools
+  - notes
 tags:
-  - chore/github
-  - chore/picgo
+  - picgo
 ---
 
 在写博客的时候需要存储一些图片，网上有一些图床工具，有免费的也有收费的。免费的肯定没有保障，我就看到很多人使用一些免费的图床，然后提供方不再提供后图床就挂了。所以我准备使用github作为图床存储，有一定的网络延迟，但也可以接受。

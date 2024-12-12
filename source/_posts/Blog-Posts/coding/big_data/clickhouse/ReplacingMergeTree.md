@@ -1,13 +1,10 @@
 ---
 title: ClickHouse-ReplacingMergeTree
-date: 2022-10-09 20:25:23
+date: 2022-10-09
 categories:
-  - - coding
-    - big_data
-    - olap
-    - clickhouse
+  - notes
 tags:
-  - big_data/clickhouse
+  - ClickHouse
 ---
 
 在MergeTree的写入过程中可以看到，ClickHouse无法保证主键的唯一性。

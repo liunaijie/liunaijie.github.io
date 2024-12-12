@@ -1,13 +1,11 @@
 ---
 title: GC-垃圾回收算法
-date: 2021-09-20 22:12:39
+date: 2021-09-20
 categories:
-  - - coding
-    - java
+  - notes
 tags:
-  - Java
-  - Java/jvm
-  - Java/gc
+  - JVM
+  - GC
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

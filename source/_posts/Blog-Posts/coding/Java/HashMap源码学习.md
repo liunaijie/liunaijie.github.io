@@ -1,12 +1,10 @@
 ---
 title: HashMap源码学习
-date: 2019-08-22 10:12:23
+date: 2019-08-22
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

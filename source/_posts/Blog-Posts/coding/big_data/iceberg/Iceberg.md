@@ -1,10 +1,10 @@
 ---
 title: Iceberg
-date: 2023-11-23 21:23
+date: 2023-11-23
 categories:
-  - - coding
+  - notes
 tags:
-  - big_data/iceberg
+  - Iceberg
 ---
 # 前言
 本文将记录一下iceberg表的文件存储结构, 数据写入流程, 查询流程的等. 基于Spark引擎.
