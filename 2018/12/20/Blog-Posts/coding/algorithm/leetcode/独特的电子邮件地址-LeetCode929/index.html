@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>独特的电子邮件地址-LeetCode929</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2018/12/20/Blog-Posts/coding/algorithm/leetcode/%E7%8B%AC%E7%89%B9%E7%9A%84%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E5%9C%B0%E5%9D%80-LeetCode929/">
+  
+  <meta name="description" content="题目描述  每封电子邮件都由一个本地名称和一个域名组成，以 @ 符号分隔。 例如，在 &amp;#97;&amp;#108;&amp;#105;&amp;#99;&amp;#x65;&amp;#64;&amp;#x6c;&amp;#x65;&amp;#101;&amp;#x74;&amp;#x63;&amp;#x6f;&amp;#100;&amp;#x65;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;中，">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="独特的电子邮件地址-LeetCode929" />
+  
+  <meta property="og:description" content="题目描述  每封电子邮件都由一个本地名称和一个域名组成，以 @ 符号分隔。 例如，在 &amp;#97;&amp;#108;&amp;#105;&amp;#99;&amp;#x65;&amp;#64;&amp;#x6c;&amp;#x65;&amp;#101;&amp;#x74;&amp;#x63;&amp;#x6f;&amp;#100;&amp;#x65;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;中，">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2018/12/20/Blog-Posts/coding/algorithm/leetcode/%E7%8B%AC%E7%89%B9%E7%9A%84%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E5%9C%B0%E5%9D%80-LeetCode929/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="独特的电子邮件地址-LeetCode929">
+  
+  <meta name="twitter:description" content="题目描述  每封电子邮件都由一个本地名称和一个域名组成，以 @ 符号分隔。 例如，在 &amp;#97;&amp;#108;&amp;#105;&amp;#99;&amp;#x65;&amp;#64;&amp;#x6c;&amp;#x65;&amp;#101;&amp;#x74;&amp;#x63;&amp;#x6f;&amp;#100;&amp;#x65;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;中，">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2018/12/20/Blog-Posts/coding/algorithm/leetcode/%E7%8B%AC%E7%89%B9%E7%9A%84%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E5%9C%B0%E5%9D%80-LeetCode929/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>独特的电子邮件地址-LeetCode929</h2>
+
+  <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p> 每封电子邮件都由一个本地名称和一个域名组成，以 @ 符号分隔。</p>
+<p>例如，在 <a href="mailto:&#97;&#108;&#105;&#99;&#x65;&#64;&#x6c;&#x65;&#101;&#x74;&#x63;&#x6f;&#100;&#x65;&#x2e;&#x63;&#111;&#109;">&#97;&#108;&#105;&#99;&#x65;&#64;&#x6c;&#x65;&#101;&#x74;&#x63;&#x6f;&#100;&#x65;&#x2e;&#x63;&#111;&#109;</a>中， alice 是本地名称，而 leetcode.com 是域名。</p>
+<p>除了小写字母，这些电子邮件还可能包含 ‘.’ 或 ‘+’。</p>
+<p>如果在电子邮件地址的本地名称部分中的某些字符之间添加句点（’.’），则发往那里的邮件将会转发到本地名称中没有点的同一地址。例如，”<a href="mailto:&#x61;&#x6c;&#x69;&#x63;&#101;&#46;&#122;&#64;&#108;&#x65;&#x65;&#116;&#99;&#111;&#100;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x61;&#x6c;&#x69;&#x63;&#101;&#46;&#122;&#64;&#108;&#x65;&#x65;&#116;&#99;&#111;&#100;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>” 和 “<a href="mailto:&#x61;&#108;&#x69;&#99;&#101;&#122;&#64;&#x6c;&#x65;&#101;&#116;&#x63;&#111;&#x64;&#x65;&#x2e;&#x63;&#111;&#109;">&#x61;&#108;&#x69;&#99;&#101;&#122;&#64;&#x6c;&#x65;&#101;&#116;&#x63;&#111;&#x64;&#x65;&#x2e;&#x63;&#111;&#109;</a>” 会转发到同一电子邮件地址。 （请注意，此规则不适用于域名。）</p>
+<p>如果在本地名称中添加加号（’+’），则会忽略第一个加号后面的所有内容。这允许过滤某些电子邮件，例如 <a href="mailto:&#x6d;&#46;&#121;&#43;&#110;&#97;&#x6d;&#101;&#x40;&#x65;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;">&#x6d;&#46;&#121;&#43;&#110;&#97;&#x6d;&#101;&#x40;&#x65;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;</a> 将转发到 <a href="mailto:&#109;&#121;&#x40;&#101;&#109;&#x61;&#105;&#x6c;&#46;&#99;&#111;&#x6d;">&#109;&#121;&#x40;&#101;&#109;&#x61;&#105;&#x6c;&#46;&#99;&#111;&#x6d;</a>。 （同样，此规则不适用于域名。）</p>
+<p>可以同时使用这两个规则。</p>
+<p>给定电子邮件列表 emails，我们会向列表中的每个地址发送一封电子邮件。实际收到邮件的不同地址有多少？</p>
+<p>示例：</p>
+<p>输入：[“<a href="mailto:&#116;&#101;&#x73;&#x74;&#46;&#x65;&#109;&#x61;&#105;&#108;&#43;&#97;&#108;&#x65;&#x78;&#x40;&#x6c;&#101;&#101;&#116;&#x63;&#111;&#100;&#101;&#46;&#99;&#111;&#x6d;">&#116;&#101;&#x73;&#x74;&#46;&#x65;&#109;&#x61;&#105;&#108;&#43;&#97;&#108;&#x65;&#x78;&#x40;&#x6c;&#101;&#101;&#116;&#x63;&#111;&#100;&#101;&#46;&#99;&#111;&#x6d;</a>“,”<a href="mailto:&#x74;&#x65;&#x73;&#116;&#x2e;&#x65;&#46;&#x6d;&#x61;&#x69;&#x6c;&#43;&#98;&#111;&#98;&#46;&#99;&#x61;&#116;&#x68;&#x79;&#x40;&#108;&#101;&#x65;&#x74;&#99;&#x6f;&#x64;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#x74;&#x65;&#x73;&#116;&#x2e;&#x65;&#46;&#x6d;&#x61;&#x69;&#x6c;&#43;&#98;&#111;&#98;&#46;&#99;&#x61;&#116;&#x68;&#x79;&#x40;&#108;&#101;&#x65;&#x74;&#99;&#x6f;&#x64;&#x65;&#46;&#x63;&#x6f;&#x6d;</a>“,”<a href="mailto:&#x74;&#x65;&#x73;&#x74;&#x65;&#x6d;&#x61;&#105;&#108;&#43;&#100;&#x61;&#x76;&#x69;&#100;&#x40;&#x6c;&#101;&#x65;&#x2e;&#116;&#99;&#111;&#100;&#x65;&#x2e;&#x63;&#x6f;&#x6d;">&#x74;&#x65;&#x73;&#x74;&#x65;&#x6d;&#x61;&#105;&#108;&#43;&#100;&#x61;&#x76;&#x69;&#100;&#x40;&#x6c;&#101;&#x65;&#x2e;&#116;&#99;&#111;&#100;&#x65;&#x2e;&#x63;&#x6f;&#x6d;</a>“]<br>输出：2<br>解释：实际收到邮件的是 “<a href="mailto:&#116;&#101;&#115;&#x74;&#101;&#109;&#97;&#x69;&#108;&#x40;&#x6c;&#101;&#x65;&#x74;&#x63;&#111;&#x64;&#101;&#x2e;&#x63;&#111;&#109;">&#116;&#101;&#115;&#x74;&#101;&#109;&#97;&#x69;&#108;&#x40;&#x6c;&#101;&#x65;&#x74;&#x63;&#111;&#x64;&#101;&#x2e;&#x63;&#111;&#109;</a>“ 和 “<a href="mailto:&#116;&#x65;&#115;&#x74;&#x65;&#109;&#x61;&#x69;&#108;&#x40;&#108;&#x65;&#101;&#46;&#x74;&#x63;&#111;&#x64;&#101;&#46;&#99;&#111;&#109;">&#116;&#x65;&#115;&#x74;&#x65;&#109;&#x61;&#x69;&#108;&#x40;&#108;&#x65;&#101;&#46;&#x74;&#x63;&#111;&#x64;&#101;&#46;&#99;&#111;&#109;</a>“。</p>
+<p>提示：</p>
+<p>1 &lt;&#x3D; <code>emails[i]</code>.length &lt;&#x3D; 100<br>1 &lt;&#x3D; emails.length &lt;&#x3D; 100<br>每封 <code>emails[i]</code> 都包含有且仅有一个 ‘@’ 字符。</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h1><p>先根据<code>@</code>将本地名称与域名进行区分，域名不用做任何操作。</p>
+<p>将本地名称根据规则进行修改</p>
+<p>然后再将两个信息合并添加到set中，最后返回set的数量即可。</p>
+<p><strong>代码实现：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">numUniqueEmails</span><span class="params">(String[] emails)</span> &#123;</span><br><span class="line">  Set&lt;String&gt; all = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;String&gt;();</span><br><span class="line">  <span class="keyword">for</span> (String email : emails) &#123;</span><br><span class="line">    <span class="comment">//用@符号将两者分隔</span></span><br><span class="line">    String[] address = email.split(<span class="string">&quot;@&quot;</span>);</span><br><span class="line">    <span class="comment">//得到本地名称</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">localName</span> <span class="operator">=</span> address[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">//判断是否有+，如果有只截取+前面的内容</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">plus</span> <span class="operator">=</span> <span class="string">&quot;+&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span> (localName.contains(plus)) &#123;</span><br><span class="line">				localName = localName.substring(<span class="number">0</span>, localName.indexOf(plus));</span><br><span class="line">		&#125;</span><br><span class="line">    <span class="comment">//判断是否有. 如果有则替换</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">point</span> <span class="operator">=</span> <span class="string">&quot;.&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span> (localName.contains(point)) &#123;</span><br><span class="line">      localName = localName.replace(point, <span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//然后再将两者拼接添加到set中</span></span><br><span class="line">    all.add(localName + <span class="string">&quot;@&quot;</span> + address[<span class="number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> all.size();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/LeetCode/" rel="tag">LeetCode</a> — 2018年12月21日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

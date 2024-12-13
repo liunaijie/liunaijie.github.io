@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>nginx源码编译安装</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2019/04/10/Blog-Posts/coding/devops/nginx/nginx%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">
+  
+  <meta name="description" content="在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。 提前需要安装的软件Ubuntu 12sudo apt-get install gcc automake autoconf make libpcre3 li">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="nginx源码编译安装" />
+  
+  <meta property="og:description" content="在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。 提前需要安装的软件Ubuntu 12sudo apt-get install gcc automake autoconf make libpcre3 li">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2019/04/10/Blog-Posts/coding/devops/nginx/nginx%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="nginx源码编译安装">
+  
+  <meta name="twitter:description" content="在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。 提前需要安装的软件Ubuntu 12sudo apt-get install gcc automake autoconf make libpcre3 li">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2019/04/10/Blog-Posts/coding/devops/nginx/nginx%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>nginx源码编译安装</h2>
+
+  <p>在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。</p>
+<h1 id="提前需要安装的软件"><a href="#提前需要安装的软件" class="headerlink" title="提前需要安装的软件"></a>提前需要安装的软件</h1><p>Ubuntu</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gcc automake autoconf make libpcre3 libpcre3-dev</span><br><span class="line">sudo apt-get install openssl # 开启ssl、https时需要</span><br></pre></td></tr></table></figure>
+
+<p>centos</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc gcc-c++ zlib zlib-devel openssl openssl-devel pcre pcre-devel unzip zip</span><br><span class="line">yum -y install openssl-devel # 开启ssl、https时需要</span><br></pre></td></tr></table></figure>
+
+<p>树莓派</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y make gcc libpcre3 libpcre3-dev  libperl-dev libssl-dev libcurl4-openssl-dev</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h1 id="下载、解压"><a href="#下载、解压" class="headerlink" title="下载、解压"></a>下载、解压</h1><p>去官网找到最近的稳定版本，右键复制下载链接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget 下载链接</span><br><span class="line">tar -zxvf 下载的压缩包</span><br></pre></td></tr></table></figure>
+
+<h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>进入解压完成的文件夹，执行编译命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br></pre></td></tr></table></figure>
+
+<p>我常用的命令有这些：</p>
+<table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">–prefix&#x3D;path</td>
+<td>指定nginx的安装目录，默认是安装在&#x2F;usr&#x2F;local&#x2F;nginx文件夹下</td>
+</tr>
+<tr>
+<td align="left">–with-http_ssl_module</td>
+<td>开启ssl模块，即网站支持https访问，这个默认是不开启的，需要编译时开启后配置文件中的配置才能生效</td>
+</tr>
+<tr>
+<td align="left">–with-http_realip_module</td>
+<td>开启realip模块，获取用户访问的真实ip</td>
+</tr>
+</tbody></table>
+<p>其他还有很多的配置项，可以从<a target="_blank" rel="noopener" href="http://nginx.org/en/docs/configure.html">http://nginx.org/en/docs/configure.html</a>网站上自行查阅并配置。</p>
+<p>我常用的编译命令就是：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --with-http_ssl_module --with-http_realip_module</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>执行<code>make</code>,<code>make install</code></p>
+<h1 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h1><p>如果没有指定安装目录则默认安装在了<code>/usr/local/nginx</code>里面，进入该文件夹。  </p>
+<p>执行<code>./sbin/nginx</code>即可开启nginx，如果提示权限不足，前面添加<code>sudo</code>即可。  </p>
+<p>这时访问<code>127.0.0.1</code>即可看到nginx默认的访问页面。  </p>
+<p>设置开机自启，修改<code>/etc/rc.local</code>文件，在后面添加<code>/usr/local/nginx/sbin/nginx</code>，如果权限不足，在前面添加<code>sudo</code>即可。</p>
+<h1 id="修改配置文件，重新启动"><a href="#修改配置文件，重新启动" class="headerlink" title="修改配置文件，重新启动"></a>修改配置文件，重新启动</h1><p>nginx的配置文件在<code>conf/nginx.conf</code>文件中。在这个文件中对根据我们的需求进行修改即可。修改完成后执行<code>./sbin/nginx -t</code>这是测试我们的配置文件是否格式正确，也可直接使用<code>./sbin/nginx -s reload</code>执行重启命令，执行重启命令时也会执行检查配置文件格式。如果我们的配置文件格式有错误，都会在命令行中提示错误的位置，进入查看修改即可。</p>
+<p>一般的web服务器配置都像这样：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#user  nobody;  ## 指定nginx的用户，默认为nobody 我们也可以修改为root</span></span><br><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下几个配置都是指定日志文件和启动的id路径，不用管它</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#pid        logs/nginx.pid;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># http模块，这是我们主要进行配置的地方</span></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span>       mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置访问日志的格式，log_format 是命令 main是这个格式的名称后面直接用名称就知道是这个格式了 再后面的就是具体的日志格式了</span></span><br><span class="line">    <span class="attribute">log_format</span>  main  <span class="string">&#x27;<span class="variable">$remote_addr</span> <span class="variable">$server_port</span>  - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] &quot;<span class="variable">$request</span>&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> &quot;<span class="variable">$http_referer</span>&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;<span class="variable">$http_user_agent</span>&quot; &quot;<span class="variable">$http_x_forwarded_for</span>&quot;&#x27;</span>;</span><br><span class="line">	<span class="comment"># 指定访问日志的存储路径和日志格式</span></span><br><span class="line">    <span class="attribute">access_log</span>  logs/access.log  main;</span><br><span class="line">    <span class="comment"># ip黑名单(从其他配置文件中读取配置)</span></span><br><span class="line">    <span class="attribute">include</span> ip_deny.conf;</span><br><span class="line">	</span><br><span class="line">    <span class="attribute">server_tokens</span> <span class="literal">off</span>; <span class="comment"># 关闭nginx版本号</span></span><br><span class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">tcp_nopush</span>     <span class="literal">on</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#keepalive_timeout  0;</span></span><br><span class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">65</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">gzip</span>  <span class="literal">on</span>; <span class="comment"># 开启gzip压缩</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 负载均衡的配置，这个配置也值得拿出来单独记录，我这里就是简单的配置了一下</span></span><br><span class="line">    <span class="section">upstream</span> users &#123;</span><br><span class="line">         <span class="attribute">server</span> <span class="number">192.168.0.13:8001</span> weight=<span class="number">2</span>; <span class="comment">#权重为2 3次访问中会有两次到这个机器上去</span></span><br><span class="line">         <span class="attribute">server</span> <span class="number">192.168.0.14:8001</span> weight=<span class="number">1</span>;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置无法通过其他域名,ip访问(即除了我们配置的server_name所有请求都会被阻拦)</span></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">80</span> default;</span><br><span class="line">        <span class="attribute">server_name</span> _name_;</span><br><span class="line">        <span class="attribute">return</span> <span class="number">403</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># liunaijie page settings</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">        <span class="comment"># server_name 可以配置多个域名</span></span><br><span class="line">        <span class="attribute">server_name</span> www.liunaijie.top liunaijie.top;</span><br><span class="line">        <span class="comment"># 强制将http重定向到https</span></span><br><span class="line">        <span class="attribute">rewrite</span><span class="regexp"> ^</span> https://www.liunaijie.top<span class="variable">$request_uri</span>? <span class="literal">permanent</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># HTTPS server</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">access_log</span>  logs/liunaijie.log  main;</span><br><span class="line">        <span class="attribute">listen</span>       <span class="number">443</span> ssl;</span><br><span class="line">        <span class="attribute">server_name</span>  www.liunaijie.top;</span><br><span class="line">        <span class="attribute">charset</span> utf-<span class="number">8</span>; <span class="comment"># 设置文件编码格式</span></span><br><span class="line">        <span class="attribute">ssl_certificate</span>      /usr/top.pem; <span class="comment">#这两个是https的ssl证书路径</span></span><br><span class="line">        <span class="attribute">ssl_certificate_key</span>  /usr/key;</span><br><span class="line">        <span class="attribute">ssl_session_timeout</span> <span class="number">5m</span>;</span><br><span class="line">        <span class="attribute">ssl_ciphers</span> ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">        <span class="attribute">ssl_protocols</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">        <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># location是指定对域名下访问路径的处理</span></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="comment"># 什么都不写表示直接访问域名</span></span><br><span class="line">            <span class="attribute">access_log</span> logs/blog.log main;</span><br><span class="line">            <span class="attribute">root</span>   html;</span><br><span class="line">         &#125;</span><br><span class="line">        </span><br><span class="line">		<span class="comment"># 对 /videos 开启文件访问</span></span><br><span class="line">        <span class="section">location</span> /videos &#123;</span><br><span class="line">                <span class="attribute">alias</span> /aaa/bbb/ccc/ddd/videos; <span class="comment"># 指定文件夹</span></span><br><span class="line">                <span class="attribute">autoindex</span> <span class="literal">on</span>; <span class="comment">#开启索引</span></span><br><span class="line">                <span class="attribute">autoindex_localtime</span> <span class="literal">on</span>; <span class="comment"># 显示时间</span></span><br><span class="line">                <span class="attribute">autoindex_exact_size</span> <span class="literal">on</span>; <span class="comment">#显示文件大小</span></span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">        <span class="comment"># 这个是对我写的项目的一个配置</span></span><br><span class="line">         <span class="section">location</span> /users &#123;</span><br><span class="line">             <span class="comment"># 下面三行是开启 websocket 配置</span></span><br><span class="line">             <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">             <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">             <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">             <span class="attribute">proxy_pass</span> http://users; <span class="comment">#开启负载均衡</span></span><br><span class="line">             <span class="comment"># 解决跨域</span></span><br><span class="line">             <span class="attribute">add_header</span> <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span> <span class="string">&#x27;<span class="variable">$http_origin</span>&#x27;</span>;</span><br><span class="line">             <span class="attribute">add_header</span> <span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span> <span class="string">&#x27;GET, POST, OPTIONS&#x27;</span>;</span><br><span class="line">             <span class="attribute">add_header</span> <span class="string">&#x27;Access-Control-Allow-Headers&#x27;</span> <span class="string">&#x27;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type&#x27;</span>;</span><br><span class="line">             <span class="attribute">add_header</span> <span class="string">&#x27;Access-Control-Allow-Credentials&#x27;</span> <span class="string">&#x27;true&#x27;</span>;</span><br><span class="line">        &#125; </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h1><p>停止nginx有几种方式，使用nginx自己的停止方式或者找到nginx的进程然后杀掉他</p>
+<ul>
+<li><code>nginx -s quit</code>这个命令是优雅的停止，会先完成当前正在进行的工作后再停止。</li>
+<li><code>nginx -s stop</code>这个就直接停止了，不管有没有正在进行的工作</li>
+<li><code>kill nginx</code>这个是使用的系统命令直接杀死进程。</li>
+</ul>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/nginx/" rel="tag">nginx</a> — 2019年4月11日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

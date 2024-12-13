@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>Airflow调度系统</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2022/04/08/Blog-Posts/coding/big_data/Airflow%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/">
+  
+  <meta name="description" content="前言我们组内使用Airflow来做日常的任务调度也有一年多的时间了, 今天写这篇文章来对Airflow进行一下记录. 组件Airflow需要的几个基础组件为:  airflow-scheduler  airflow-webserver  airflow-worker  airflow-flower ">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Airflow调度系统" />
+  
+  <meta property="og:description" content="前言我们组内使用Airflow来做日常的任务调度也有一年多的时间了, 今天写这篇文章来对Airflow进行一下记录. 组件Airflow需要的几个基础组件为:  airflow-scheduler  airflow-webserver  airflow-worker  airflow-flower ">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2022/04/08/Blog-Posts/coding/big_data/Airflow%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Airflow调度系统">
+  
+  <meta name="twitter:description" content="前言我们组内使用Airflow来做日常的任务调度也有一年多的时间了, 今天写这篇文章来对Airflow进行一下记录. 组件Airflow需要的几个基础组件为:  airflow-scheduler  airflow-webserver  airflow-worker  airflow-flower ">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2022/04/08/Blog-Posts/coding/big_data/Airflow%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>Airflow调度系统</h2>
+
+  <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们组内使用Airflow来做日常的任务调度也有一年多的时间了, 今天写这篇文章来对Airflow进行一下记录.</p>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>Airflow需要的几个基础组件为:</p>
+<ul>
+<li><p>airflow-scheduler</p>
+</li>
+<li><p>airflow-webserver</p>
+</li>
+<li><p>airflow-worker</p>
+</li>
+<li><p>airflow-flower</p>
+</li>
+<li><p>mysql(也可以使用其他数据库)</p>
+</li>
+<li><p>redis(也可以使用其他消息队列)</p>
+<p>  前缀为airflow的是airflow的内部组件, 除此之外还需要数据库和一个消息队列</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/371649498716_.pic.jpg"></p>
+<p>我们根据这个架构图一起看下这些组件分别是什么作用:</p>
+<p>首先来解释一个名词 : DAG文件, 在airflow中将一个任务的整体流程称为一个DAG, 这个DAG里面可以有多个子任务. 由于Airflow是使用python编写的, 所以需要将这个DAG的流程定义为一个python文件.</p>
+<ul>
+<li><p>airflow-scheduler</p>
+<p>  airflow的核心组件, 作用是扫描dag存入数据库. 检查任务的依赖状态, 如果可以执行则将任务放到消息队列中</p>
+<p>  默认是单节点, 当使用MySQL 8.x版本以上以及Postgres 9.6版本以上可以实现多节点. </p>
+</li>
+<li><p>airflow-webserver</p>
+<p>  UI页面, 提供可视化操作, 监控、管理dag.</p>
+</li>
+<li><p>airflow-worker</p>
+<p>  真正干活的节点, 执行任务和上报任务的状态</p>
+</li>
+<li><p>airflow-flower</p>
+<p>  监控airflow集群的状态</p>
+</li>
+<li><p>mysql(也可以使用其他数据库)</p>
+<p>  存储调度信息、任务状态等元数据信息</p>
+</li>
+<li><p>redis(也可以使用其他消息队列)</p>
+<p>  scheduler将需要运行的任务放到消息队列中, worker拉取任务去执行</p>
+</li>
+</ul>
+<h1 id="支持的执行器-Operators-类型"><a href="#支持的执行器-Operators-类型" class="headerlink" title="支持的执行器(Operators)类型"></a>支持的执行器(Operators)类型</h1><p>operator执行器代表如何去运行一个任务. 这里简单介绍一下两种类型:</p>
+<ol>
+<li><p>BashOperator</p>
+<p> 在Bash shell中执行命令, 可以直接执行命令也可以去执行shell脚本</p>
+ <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash_task1 = BashOperator(</span><br><span class="line">		    task_id = <span class="string">&#x27;bash_task1&#x27;</span>,</span><br><span class="line">		    bash_command = <span class="string">&#x27;echo 123&#x27;</span>,</span><br><span class="line">		    dag = dag</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p> 命令中也可以使用参数模版</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash_task2 = BashOperator(</span><br><span class="line">    task_id=&#x27;bash_task2&#x27;,</span><br><span class="line">    bash_command=&#x27;echo &quot;run_id=&#123;&#123; run_id &#125;&#125; | dag_run=&#123;&#123; dag_run &#125;&#125;&quot;&#x27;,</span><br><span class="line">    dag=dag</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p> 如果要去执行shell脚本, 则需要注意在脚本名词后要添加空格</p>
+ <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bash_task3 = BashOperator(</span><br><span class="line">    task_id=<span class="string">&#x27;bash_task3&#x27;</span>,</span><br><span class="line">    <span class="comment"># 如果不添加空格, 会报错</span></span><br><span class="line">    bash_command=<span class="string">&quot;/home/batcher/test.sh &quot;</span>,</span><br><span class="line">    dag=dag</span><br><span class="line">   )</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PythonOperator</p>
+<p> 也可以编写python函数来实现一些功能</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> def print_context ( ds , ** kwargs ):</span><br><span class="line">    pprint ( kwargs )</span><br><span class="line">    print ( ds )</span><br><span class="line">    return &#x27;Whatever you return gets printed in the logs&#x27;</span><br><span class="line"></span><br><span class="line">python_task1 = PythonOperator (</span><br><span class="line">    task_id = &#x27;python_task1&#x27; ,</span><br><span class="line">    provide_context = True ,</span><br><span class="line">    python_callable = print_context ,</span><br><span class="line">    dag = dag </span><br><span class="line"> )</span><br></pre></td></tr></table></figure>
+
+<p> 这里就是去执行了上面的python函数.</p>
+</li>
+</ol>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="关键项"><a href="#关键项" class="headerlink" title="关键项"></a>关键项</h2><ul>
+<li>dags_folder: 存储dag的文件夹</li>
+<li>default_timezone : 时区设置</li>
+<li>parallelism : 任务的并行度, 整个集群可以同时运行的任务数量, 包括正在运行的, 等待运行的, 重试的等等. 当任务达到上限后, 其他任务都会排队等待. 相当于消息队列的长度.</li>
+<li>dag_concurrency :  单个dag运行同时执行的数量</li>
+<li>plugins_folder : 自定义插件的位置</li>
+</ul>
+<h2 id="webserver"><a href="#webserver" class="headerlink" title="webserver"></a>webserver</h2><ul>
+<li>expose_config : 是否在UI上展示配置项</li>
+</ul>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Airflow/" rel="tag">Airflow</a> — 2022年4月9日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>自己动手实现一个RPC框架（三）</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2020/03/25/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%89%EF%BC%89/">
+  
+  <meta name="description" content="rpc-commons这个模块主要是定义一些通信协议类，工具类。    请求编号类  对请求过程添加请求编号，所以设置一个IDUtil，里面的实现使用AtomicLong来进行递增取值。  反射工具类  在生产者接收到请求信息进行实际调用时需要用到反射来进行实际调用。所有在这里先将反射的一些方法写成">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="自己动手实现一个RPC框架（三）" />
+  
+  <meta property="og:description" content="rpc-commons这个模块主要是定义一些通信协议类，工具类。    请求编号类  对请求过程添加请求编号，所以设置一个IDUtil，里面的实现使用AtomicLong来进行递增取值。  反射工具类  在生产者接收到请求信息进行实际调用时需要用到反射来进行实际调用。所有在这里先将反射的一些方法写成">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2020/03/25/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%89%EF%BC%89/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="自己动手实现一个RPC框架（三）">
+  
+  <meta name="twitter:description" content="rpc-commons这个模块主要是定义一些通信协议类，工具类。    请求编号类  对请求过程添加请求编号，所以设置一个IDUtil，里面的实现使用AtomicLong来进行递增取值。  反射工具类  在生产者接收到请求信息进行实际调用时需要用到反射来进行实际调用。所有在这里先将反射的一些方法写成">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2020/03/25/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%89%EF%BC%89/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>自己动手实现一个RPC框架（三）</h2>
+
+  <h1 id="rpc-commons"><a href="#rpc-commons" class="headerlink" title="rpc-commons"></a>rpc-commons</h1><p>这个模块主要是定义一些通信协议类，工具类。</p>
+<span id="more"></span>
+
+<ol>
+<li>请求编号类</li>
+</ol>
+<p>对请求过程添加请求编号，所以设置一个<code>IDUtil</code>，里面的实现使用<code>AtomicLong</code>来进行递增取值。</p>
+<ol start="2">
+<li><p>反射工具类</p>
+<p> 在生产者接收到请求信息进行实际调用时需要用到反射来进行实际调用。所有在这里先将反射的一些方法写成工具类。</p>
+<p> 需要通过反射来获取对象实例，进行实际调用，并且注册时需要将所有公共方法都进行注册，所有还需要一个获取类中所有公共方法的方法。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReflectionUtils</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 根据class创建对象实例</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> clazz 待创建的对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> &lt;T&gt;   对象类型</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 创建好的对象</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; T <span class="title function_">newInstance</span><span class="params">(Class&lt;T&gt; clazz)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> clazz.newInstance();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 获取一个类中所有的公共方法</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> clazz 目标类</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 公共方法的数组</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Method[] getPublicMethods(Class clazz) &#123;</span><br><span class="line">		Method[] methods = clazz.getDeclaredMethods();</span><br><span class="line">		List&lt;Method&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">			<span class="keyword">if</span> (Modifier.isPublic(method.getModifiers())) &#123;</span><br><span class="line">				list.add(method);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> list.toArray(<span class="keyword">new</span> <span class="title class_">Method</span>[<span class="number">0</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 调用指定对象的指定方法</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> obj    被调用的对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> method 被调用的参数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> args   参数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 方法返回结果</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">invoke</span><span class="params">(Object obj, Method method, Object... args)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> method.invoke(obj, args);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>网络传输发送的信息</p>
+<p> 我们将实际发送的业务请求信息与一些其它项目分别开。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Command</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 头信息</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> Header header;</span><br><span class="line">	<span class="keyword">private</span> <span class="type">byte</span>[] bytes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 在这里，<code>bytes</code>是业务请求信息，而<code>header</code>中是我们对请求的一些信息。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Header</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 请求编号</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">long</span> requestId;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 请求协议的版本号</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">int</span> version;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 计算长度信息，后面请求解析时用到</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">length</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> Long.BYTES + Integer.BYTES;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResponseHeader</span> <span class="keyword">extends</span> <span class="title class_">Header</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">SUCCESS_CODE</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SUCCESS_MSG</span> <span class="operator">=</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 响应码</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">int</span> <span class="variable">code</span> <span class="operator">=</span> SUCCESS_CODE;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 响应信息，错误信息</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> SUCCESS_MSG;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">length</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> Long.BYTES + Integer.BYTES +</span><br><span class="line">				Integer.BYTES + Integer.BYTES +</span><br><span class="line">				(msg == <span class="literal">null</span> ? <span class="number">0</span> : msg.getBytes(StandardCharsets.UTF_8).length);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">ResponseHeader</span><span class="params">(<span class="type">long</span> requestId, <span class="type">int</span> version, <span class="type">int</span> code, String msg)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>(requestId, version);</span><br><span class="line">		<span class="built_in">this</span>.code = code;</span><br><span class="line">		<span class="built_in">this</span>.msg = msg;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <code>Header</code>也分为请求头部和返回信息的头部，在请求信息中，我们需要给出这次请求的编号，这次请求的协议版本号，版本号是为了后续可能升级协议后导致的不兼容问题。</p>
+<p> <code>ResponseHeader</code>是返回信息的头部，它是<code>Header</code>的子类，除了父类中的请求编号，协议版本号之外，还增加了状态码，状态信息字段。</p>
+<p> <strong>重要的地方：length()</strong></p>
+<p> **length()**方法，这个方法是返回头部信息的长度。由于<code>Header</code>中只有两个字段分别为<code>long</code>,<code>int</code>。所以长度即为它们两个的字节长度之和。</p>
+<p> 而在返回信息中，它多了<code>msg</code>这个字符串类型的字段，它在遇到异常时返回异常信息，所以它的长度是不固定的，我们在响应编码时需要先写入<code>msg</code>的长度，再写入<code>msg</code>的具体信息。所以这里求长度，除了几个字段的长度为还多了一个<code>Integet.BYTES</code>，这就是因为在编码时多了一个长度。</p>
+<p> 可以结合<code>rpc-transport/netty/codec/ResponseEncoder</code>和<code>rpc-transport/netty/codec/ResponseDecoder</code> 两个类分别为对响应信息的编解码操作来理解。</p>
+</li>
+<li><p>业务请求内容</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RequestInfo</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 服务描述，类，方法，参数类型，返回类型等</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> ResponseServiceDescription responseServiceDescription;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 参数</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> Object[] parameters;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个类就是在<code>Command</code>类中的<code>bytes</code>对应的内容。</p>
+<p>而这里有使用了一个类<code>ResponseServiceDescription</code>，这个类是对服务的描述信息。它首先继承自&#96;&#96;ServiceDescription&#96;。</p>
+<p>来看一下它们两个类的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ServiceDescriptor</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEFAULT_VERSION</span> <span class="operator">=</span> <span class="string">&quot;1.0&quot;</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 接口名称</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> String clazz;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 方法</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> String method;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 版本号</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> String version;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 返回值类型</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> String returnType;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 参数类型</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> Class[] parameterTypes;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> ServiceDescriptor <span class="title function_">from</span><span class="params">(Class clazz, String version, Method method)</span> &#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResponseServiceDescription</span> <span class="keyword">extends</span> <span class="title class_">ServiceDescriptor</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 实现类</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> String implName;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 实例的地址</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> URI uri;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> ResponseServiceDescription <span class="title function_">from</span><span class="params">(Class clazz, String version, Method method, Class implClass, URI uri)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它们两个主要的区别是<code>ResponseServiceDescription</code>中多了<code>implName</code>和<code>uri</code>两个字段。</p>
+<p>我这里采用的是消费者构造<code>ServiceDescription</code>去注册中心进查询，注册中心返回<code>ResponseServiceDescription</code>，即给出了要调用接口的实现类，这个实现类所在实例的请求地址。</p>
+<p>返回实现类是为了请求到达生产者后，生产者能直接构建实例进行调用，请求地址则是为了网络通信。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>对于通用模块或者协议的定义中，需要提前想到升级后的处理，比如这里的<code>version</code>字段。</p>
+<p>对于同一个实现类，可能存在不同版本的实现，在<code>ServiceDescription</code>中的<code>version</code>字段来表示。</p>
+<p>我这里其实将实现类的信息返回给了消费者，也可以在消费者端维护一个容器，存储接口和实现类，注册中心只返回<code>uri</code>。这样消费者发送给生产者的信息就可以是<code>ServiceDescription</code>。</p>
+<h1 id="其他部分链接"><a href="#其他部分链接" class="headerlink" title="其他部分链接"></a>其他部分链接</h1><ul>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%BA%8C%EF%BC%89/">自己动手首先一个RPC框架（二）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%9B%9B%EF%BC%89/">自己动手首先一个RPC框架（四）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%BA%94%EF%BC%89/">自己动手首先一个RPC框架（五）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%85%AD%EF%BC%89/">自己动手首先一个RPC框架（六）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%83%EF%BC%89/">自己动手首先一个RPC框架（七）</a></li>
+</ul>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Java/" rel="tag">Java</a>, <a class="classtest-link" href="/tags/Java-rpc/" rel="tag">Java/rpc</a> — 2020年3月25日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

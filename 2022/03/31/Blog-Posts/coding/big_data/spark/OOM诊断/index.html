@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>Spark-OOM诊断</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2022/03/31/Blog-Posts/coding/big_data/spark/OOM%E8%AF%8A%E6%96%AD/">
+  
+  <meta name="description" content="有哪些位置会发生OOM首先我们要明确OOM是发生在Driver端还是Executor. 如果在Executor上, 是在哪个区域. Driver端的OOMDriver的主要职责是任务调度, 同时参与非常少量的任务计算. Driver端的内存并没有明细的划分, 是整体的一块. 所以OOM问题只可能来自">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Spark-OOM诊断" />
+  
+  <meta property="og:description" content="有哪些位置会发生OOM首先我们要明确OOM是发生在Driver端还是Executor. 如果在Executor上, 是在哪个区域. Driver端的OOMDriver的主要职责是任务调度, 同时参与非常少量的任务计算. Driver端的内存并没有明细的划分, 是整体的一块. 所以OOM问题只可能来自">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2022/03/31/Blog-Posts/coding/big_data/spark/OOM%E8%AF%8A%E6%96%AD/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spark-OOM诊断">
+  
+  <meta name="twitter:description" content="有哪些位置会发生OOM首先我们要明确OOM是发生在Driver端还是Executor. 如果在Executor上, 是在哪个区域. Driver端的OOMDriver的主要职责是任务调度, 同时参与非常少量的任务计算. Driver端的内存并没有明细的划分, 是整体的一块. 所以OOM问题只可能来自">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2022/03/31/Blog-Posts/coding/big_data/spark/OOM%E8%AF%8A%E6%96%AD/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>Spark-OOM诊断</h2>
+
+  <h1 id="有哪些位置会发生OOM"><a href="#有哪些位置会发生OOM" class="headerlink" title="有哪些位置会发生OOM"></a>有哪些位置会发生OOM</h1><p>首先我们要明确OOM是发生在Driver端还是Executor.</p>
+<p>如果在Executor上, 是在哪个区域.</p>
+<h1 id="Driver端的OOM"><a href="#Driver端的OOM" class="headerlink" title="Driver端的OOM"></a>Driver端的OOM</h1><p>Driver的主要职责是任务调度, 同时参与非常少量的任务计算.</p>
+<p>Driver端的内存并没有明细的划分, 是整体的一块. 所以OOM问题只可能来自它设计的计算任务, 主要有两类:</p>
+<ul>
+<li>创建小规模的分布式数据集: 通过parallelize、createDataFrame等API创建数据集</li>
+<li>收集计算结果: 通过take、show、collect等算子把结果收集到Driver端</li>
+</ul>
+<p>所以Driver端的OOM只会有这两类原因:</p>
+<ul>
+<li>创建的数据集超过内存上限</li>
+<li>收集的结果集超过内存上限</li>
+</ul>
+<p>第一类原因不言而喻就是我们创建的数据集太大, 这类错误可以明显的在代码中找到进行修改.</p>
+<p>而对于第二类原因, 有很多是间接调用了collect从而导致的OOM. 这类错误在代码中就没有那么明确的可以找到.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121616745.png"></p>
+<p>比如说我们对一个数据集进行broadcast操作, 在这个过程中就需要Driver从每个Executor的数据分片上把部分数据拉取到Driver端来构建全量数据集. 所以这个时候如果总大小超过Driver端内存就会报出OOM错误. 这个时候在日志中可以看到这样的错误:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: Not enough memory to build and broadcast</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何修改配置"><a href="#如何修改配置" class="headerlink" title="如何修改配置"></a>如何修改配置</h2><p>对于这两种情况, 都可以通过<code>spark.driver.memory</code> 配置项增大Driver的内存来避免OOM.</p>
+<p>但是我们可以看下能否通过优化代码来解决这类问题</p>
+<p>例如是否需要构建大数据量的数据集. 以及预估要广播变量的数据集大小, 从而可以更准确的调整内存大小</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> df: <span class="type">DataFrame</span> = _</span><br><span class="line">df.cache.count</span><br><span class="line"><span class="keyword">val</span> plan = df.queryExecution.logical</span><br><span class="line"><span class="keyword">val</span> estimated: <span class="type">BigInt</span> = spark</span><br><span class="line">.sessionState</span><br><span class="line">.executePlan(plan)</span><br><span class="line">.optimizedPlan</span><br><span class="line">.stats</span><br><span class="line">.sizeInBytes</span><br></pre></td></tr></table></figure>
+
+<h1 id="Executor端的OOM"><a href="#Executor端的OOM" class="headerlink" title="Executor端的OOM"></a>Executor端的OOM</h1><p>Executor的内存主要分为4个区域:</p>
+<ul>
+<li>Reserved Memory 大小固定为300MB, 这部分是spark系统自己使用的内存</li>
+<li>Storage Memory 缓存内存区域, 数据集如果超过Storage Memory大小, 要么会直接抛弃(Memory_Only), 要么会缓存到磁盘(Memory_And_Disk)上</li>
+<li>User Memory 存储用户自定义的数据结构</li>
+<li>Execution Memory</li>
+</ul>
+<p>我们可以看出Reserved Memory和Storage Memory是不会出现内存溢出的问题的. 如果在Executor端出现OOM那么只有可能出现在User Memory或者Execution Memory上.</p>
+<h2 id="User-Memory"><a href="#User-Memory" class="headerlink" title="User Memory"></a>User Memory</h2><p>存储用户自定义的数据结构, 例如定义的一些变量值. 这些变量值会分发到每一个task上, 在同一个Executor上会有多个变量的副本, 这些副本都存储在User Memory区域中.</p>
+<h3 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h3><p>该区域大小计算公式为: spark.executor.memory * （ 1 - spark.memory.fraction)</p>
+<p>所以我们可以调高每个Executor的memory大小, 或者调低(执行内存+缓存内存)的比例</p>
+<h2 id="Execution-Memory"><a href="#Execution-Memory" class="headerlink" title="Execution Memory"></a>Execution Memory</h2><p>执行内存区域, 这个区域出错的概率比其他区域都高.</p>
+<p>这个区域不仅于内存空间大小、数据分布有关, 还与Executor线程池和运行时调度有关.</p>
+<h3 id="来看一下数据倾斜的例子"><a href="#来看一下数据倾斜的例子" class="headerlink" title="来看一下数据倾斜的例子:"></a>来看一下数据倾斜的例子:</h3><p>我们现在的配置为: 2个CPU core, 每个core有两个线程, 内存大小为1GB. spark.executor.cores为3, spark.executor.memory为900MB.</p>
+<p>在默认配置下, Execution Memory和Storage Memory为180MB( spark.memory.fraction&#x3D;0.6, spark.memory.storageFraction&#x3D;0.5. 还有300MB为Reserved Memory). Execution Memory的上限为360MB(没有RDD缓存时, 即占用了全部的Storage Memory).</p>
+<p>节点在Reduce阶段拉取数据分片, 3个Reduce Rask对应的数据分片大小分别为100MB和300MB.</p>
+<p>由于Executor线程池大小为3, 因此每个Reduce Task最多可以获取360&#x2F;3&#x3D;120MB的内存. 对于Task1, Task2可以顺利完成任务, 但是Task3的数据分片远超内存上限, 从而造成OOM.<br><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121616946.png"></p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Spark/" rel="tag">Spark</a> — 2022年4月1日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

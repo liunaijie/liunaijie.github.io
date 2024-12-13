@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>三角形最小路径和—LeetCode120</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2019/06/15/Blog-Posts/coding/algorithm/leetcode/%E4%B8%89%E8%A7%92%E5%BD%A2%E7%9A%84%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C-LeetCode120/">
+  
+  <meta name="description" content="题目描述 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。 例如，给定三角形： [     [2],    [3,4],   [6,5,7],  [4,1,8,3]]自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 &amp;#x3D; 11）。 说明： 如果你可">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="三角形最小路径和—LeetCode120" />
+  
+  <meta property="og:description" content="题目描述 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。 例如，给定三角形： [     [2],    [3,4],   [6,5,7],  [4,1,8,3]]自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 &amp;#x3D; 11）。 说明： 如果你可">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2019/06/15/Blog-Posts/coding/algorithm/leetcode/%E4%B8%89%E8%A7%92%E5%BD%A2%E7%9A%84%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C-LeetCode120/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="三角形最小路径和—LeetCode120">
+  
+  <meta name="twitter:description" content="题目描述 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。 例如，给定三角形： [     [2],    [3,4],   [6,5,7],  [4,1,8,3]]自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 &amp;#x3D; 11）。 说明： 如果你可">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2019/06/15/Blog-Posts/coding/algorithm/leetcode/%E4%B8%89%E8%A7%92%E5%BD%A2%E7%9A%84%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C-LeetCode120/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>三角形最小路径和—LeetCode120</h2>
+
+  <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><blockquote>
+<p>给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。</p>
+<p>例如，给定三角形：</p>
+<p>[<br>     [2],<br>    [3,4],<br>   [6,5,7],<br>  [4,1,8,3]<br>]<br>自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 &#x3D; 11）。</p>
+<p>说明：</p>
+<p>如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。</p>
+</blockquote>
+<p>题目中有一句话，每一步只能移动到下一行中相邻的结点中，所以在m行n列时，下一步的落地只能在m+1行n列或者m+1行n+1列中。</p>
+<span id="more"></span>
+
+<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h1><h2 id="二维数组，从上向下"><a href="#二维数组，从上向下" class="headerlink" title="二维数组，从上向下"></a>二维数组，从上向下</h2><p>利用二维数组，将每一步到开始的步骤记录下来。</p>
+<p>以上面的例子为例：我们如果将每一个位置到顶点的最小步数记录下来，那么就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [<span class="number">2</span>],</span><br><span class="line">  [<span class="number">5</span>,<span class="number">6</span>],</span><br><span class="line">  [<span class="number">11</span>,<span class="number">10</span>,<span class="number">13</span>],</span><br><span class="line">  [<span class="number">15</span>,<span class="number">11</span>,<span class="number">18</span>,<span class="number">16</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，第一层不变，每一行的最开始和结束两个位置的计算方法为当前元素加上上一行中的第一个或最后一个元素。即<code>sum[i][0]=a[i][0]+sum[i-1][0]</code>，<code>sum[i][last]=a[i][last]+sum[i-1][last]</code></p>
+<p>代码实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">minimumTotalTwo</span><span class="params">(List&lt;List&lt;Integer&gt;&gt; triangle)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (triangle.size() == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">int</span>[][] paths = <span class="keyword">new</span> <span class="title class_">int</span>[triangle.size()][triangle.size()];</span><br><span class="line">  <span class="comment">//对第一层进行初始化</span></span><br><span class="line">  paths[<span class="number">0</span>][<span class="number">0</span>] = triangle.get(<span class="number">0</span>).get(<span class="number">0</span>);</span><br><span class="line">  <span class="comment">//从第二层开始</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; triangle.size(); i++) &#123;</span><br><span class="line">    List&lt;Integer&gt; single = triangle.get(i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; single.size(); j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (j == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 当前行第一个数字 是上一行的和与当前值累加 </span></span><br><span class="line">        <span class="comment">//因为第一个元素的上一步只能是第一个过来，m(i,j)的上一步为m(i-1,j-1)和m(i-1,j)由于j已经为0，所以j-1不存在，后面同理在当前行中的最后一个元素，在上一行中是没有的</span></span><br><span class="line">        paths[i][j] = paths[i - <span class="number">1</span>][<span class="number">0</span>] + single.get(<span class="number">0</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (j == single.size() - <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 当前行最后一个数字</span></span><br><span class="line">        paths[i][j] = paths[i - <span class="number">1</span>][j - <span class="number">1</span>] + single.get(j);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        paths[i][j] = Math.min(paths[i - <span class="number">1</span>][j - <span class="number">1</span>], paths[i - <span class="number">1</span>][j]) + single.get(j);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">int</span>[] nums = paths[triangle.size() - <span class="number">1</span>];</span><br><span class="line">  <span class="type">int</span> <span class="variable">min</span> <span class="operator">=</span> nums[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> temp : nums) &#123;</span><br><span class="line">    <span class="keyword">if</span> (temp &lt; min) &#123;</span><br><span class="line">      min = temp;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> min;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自下向上，一维数组"><a href="#自下向上，一维数组" class="headerlink" title="自下向上，一维数组"></a>自下向上，一维数组</h2><p>刚才我们是从开始向结束看，我们如果从结束向开始看呢？</p>
+<p>那么<code>sum[i,j]=Math.min(sum[i+1,j],sum[i+1,j+1])+a[i,j]</code>。我们可以临时构建一个一维数组，<strong>存储每一行到结束的最小路径</strong>，那么最后<code>sum[0]</code>就是最小路径</p>
+<p>代码实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">minimumTotal</span><span class="params">(List&lt;List&lt;Integer&gt;&gt; triangle)</span> &#123;</span><br><span class="line">  <span class="comment">//入参判断</span></span><br><span class="line">  <span class="keyword">if</span> (triangle.size() == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//由于j+1可能会造成越界，所以长度多加一位</span></span><br><span class="line">  <span class="type">int</span>[] dp = <span class="keyword">new</span> <span class="title class_">int</span>[triangle.size() + <span class="number">1</span>];</span><br><span class="line">  <span class="comment">// 从后向前进行计算</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> triangle.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="comment">//从后得到每一行</span></span><br><span class="line">    List&lt;Integer&gt; content = triangle.get(i);</span><br><span class="line">    <span class="comment">//这一行中这一列到终点的最小路径为上一行中能到达位置的最小值加上自身值</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; content.size(); j++) &#123;</span><br><span class="line">      dp[j] = Math.min(dp[j], dp[j + <span class="number">1</span>]) + content.get(j);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> dp[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/LeetCode/" rel="tag">LeetCode</a> — 2019年6月16日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

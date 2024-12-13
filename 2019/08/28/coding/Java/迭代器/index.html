@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>迭代器</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2019/08/28/coding/Java/%E8%BF%AD%E4%BB%A3%E5%99%A8/">
+  
+  <meta name="description" content="迭代器在java中主要有两种迭代器，Iterator和ListIterator。这两个都是接口。先来看一下这两个接口有什么区别 12345678910111213141516public interface Iterator&amp;lt;E&amp;gt; &amp;#123;        boolean hasNex">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="迭代器" />
+  
+  <meta property="og:description" content="迭代器在java中主要有两种迭代器，Iterator和ListIterator。这两个都是接口。先来看一下这两个接口有什么区别 12345678910111213141516public interface Iterator&amp;lt;E&amp;gt; &amp;#123;        boolean hasNex">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2019/08/28/coding/Java/%E8%BF%AD%E4%BB%A3%E5%99%A8/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="迭代器">
+  
+  <meta name="twitter:description" content="迭代器在java中主要有两种迭代器，Iterator和ListIterator。这两个都是接口。先来看一下这两个接口有什么区别 12345678910111213141516public interface Iterator&amp;lt;E&amp;gt; &amp;#123;        boolean hasNex">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2019/08/28/coding/Java/%E8%BF%AD%E4%BB%A3%E5%99%A8/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>迭代器</h2>
+
+  <h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><p>在java中主要有两种迭代器，<code>Iterator</code>和<code>ListIterator</code>。这两个都是接口。先来看一下这两个接口有什么区别</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterator</span>&lt;E&gt; &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    E <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">default</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>(<span class="string">&quot;remove&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">default</span> <span class="keyword">void</span> <span class="title function_">forEachRemaining</span><span class="params">(Consumer&lt;? <span class="built_in">super</span> E&gt; action)</span> &#123;</span><br><span class="line">        Objects.requireNonNull(action);</span><br><span class="line">        <span class="keyword">while</span> (hasNext())</span><br><span class="line">            action.accept(next());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Iterator</code>主要有四个方法。判断有没有下一个元素、获取下一个元素，删除元素和<code>forEachRemaining</code>方法。</p>
+<p>再来看一下<code>ListIterator</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ListIterator</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">Iterator</span>&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    E <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasPrevious</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    E <span class="title function_">previous</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="title function_">nextIndex</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="title function_">previousIndex</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(E e)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到他是继承了<code>Iterator</code>。除了上面的两个方法还多了好几个方法。判断是否有上一个元素，获取上一个元素的值，获取上一个元素的索引，获取上一个元素的索引。除了移除还有添加和更新的方法。  </p>
+<p>他们在不同的类里面都有自己的实现，之前看<code>ArrayList</code>，<code>HashMap</code>的时候把这一块给跳过了，现在来看一下他们是如何实现的。</p>
+<span id="more"></span>
+
+<h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><p>他里面实现了上面说过的两个接口，先来看一下实现的<code>Iterator</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">Itr</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="comment">// 记录下一个返回元素的索引</span></span><br><span class="line">    <span class="type">int</span> cursor;       <span class="comment">// index of next element to return</span></span><br><span class="line">    <span class="comment">// 记录刚刚返回的最后一个元素的索引</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">lastRet</span> <span class="operator">=</span> -<span class="number">1</span>; <span class="comment">// index of last element returned; -1 if no such</span></span><br><span class="line">    <span class="comment">// </span></span><br><span class="line">    <span class="type">int</span> <span class="variable">expectedModCount</span> <span class="operator">=</span> modCount;</span><br><span class="line"></span><br><span class="line">    Itr() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 判断有没有下一个元素，将下一个元素的索引与元素长度进行对比</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> cursor != size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        <span class="comment">/** 将下一个的索引赋给i，如果下一个索引比集合长度还大，则抛出异常 **/</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> cursor;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line">        Object[] elementData = ArrayList.<span class="built_in">this</span>.elementData;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">        	<span class="comment">/** 这里又进行了一次判断，判断索引值与元素长度的关系 **/</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">        <span class="comment">/**然后将下一个的索引进行加一**/</span></span><br><span class="line">        cursor = i + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">/**返回这个位置上的元素，并且将lastRet赋值为i **/</span></span><br><span class="line">        <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**这个方法是移除刚刚获取的那个元素**/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">/**如果lastRet小于0，则表示刚刚没有获取过元素**/</span></span><br><span class="line">        <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>();</span><br><span class="line">        checkForComodification();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">/**调用了ArrayList的根据索引删除元素方法**/</span></span><br><span class="line">            ArrayList.<span class="built_in">this</span>.remove(lastRet);</span><br><span class="line">            <span class="comment">/**将下一个元素索引赋值为上一个索引，并且将最后返回的索引置为-1**/</span></span><br><span class="line">            cursor = lastRet;</span><br><span class="line">            lastRet = -<span class="number">1</span>;</span><br><span class="line">            <span class="comment">/**因为进行了删除，所以modCount进行了修改，这里要再次赋值到expectedModCount上**/</span></span><br><span class="line">            expectedModCount = modCount;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 检查 </span></span><br><span class="line"><span class="comment">	* 在开始的时候将 expectedModCount初始化为modCount的值</span></span><br><span class="line"><span class="comment">	* 如果在初始化后集合进行了 添加或删除元素的操作 则modCount会改变</span></span><br><span class="line"><span class="comment">	* 在这里进行判断，有没有进行修改的操作。</span></span><br><span class="line"><span class="comment">	* 例：[1,2,3,4,5]。从开始用迭代器，判断了第一位有值(现在是1)，在调用next()方法之前进行了删除，把1删除了。</span></span><br><span class="line"><span class="comment">	* 这时再调用next()会返回2。这是不对的。这个判断就是为了这种情况的。</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">checkForComodification</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的代码可以看出  </p>
+<ul>
+<li>对于移除元素来说，只能移除刚刚获取的那一个元素。如果刚刚没获取元素获取则抛出异常，如果要删除获取的前两个元素也不可以。</li>
+</ul>
+<p>然后再来看一下实现的<code>ListIterator</code>接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ListItr</span> <span class="keyword">extends</span> <span class="title class_">Itr</span> <span class="keyword">implements</span> <span class="title class_">ListIterator</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="comment">/**它的构造方法必须传入一个参数**/</span></span><br><span class="line">    ListItr(<span class="type">int</span> index) &#123;</span><br><span class="line">        <span class="built_in">super</span>();</span><br><span class="line">        cursor = index;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**判断有没有上一个元素，如果下一个返回元素不是第一个元素则表示有上一个元素**/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasPrevious</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> cursor != <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">nextIndex</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> cursor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">previousIndex</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> cursor - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">previous</span><span class="params">()</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> cursor - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line">        Object[] elementData = ArrayList.<span class="built_in">this</span>.elementData;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">        cursor = i;</span><br><span class="line">        <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**调用了ArrayList的set方法，传入的坐标是刚刚返回值的坐标**/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(E e)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>();</span><br><span class="line">        checkForComodification();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ArrayList.<span class="built_in">this</span>.set(lastRet, e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**添加一个元素，因为多了一个元素，所以下一个元素的索引要加1，并且刚刚没有返回元素，lastRet置为-1**/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> cursor;</span><br><span class="line">            ArrayList.<span class="built_in">this</span>.add(i, e);</span><br><span class="line">            cursor = i + <span class="number">1</span>;</span><br><span class="line">            lastRet = -<span class="number">1</span>;</span><br><span class="line">            expectedModCount = modCount;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h1><p>也是将这两个接口都实现了，但是从代码里可以看出实现的<code>Iterator</code>最终还是调用了<code>ListIterator</code>方法  </p>
+<p>不过他后面的调用<code>next</code>、<code>hasNext</code>方法是调用是是否有上一个值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">DescendingIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="comment">// 这个类是在下面声明的 实现了ListIterator的类</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">ListItr</span> <span class="variable">itr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ListItr</span>(size());</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> itr.hasPrevious();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> itr.previous();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span> &#123;</span><br><span class="line">        itr.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ListItr</span> <span class="keyword">implements</span> <span class="title class_">ListIterator</span>&lt;E&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;E&gt; lastReturned;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;E&gt; next;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> nextIndex;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">expectedModCount</span> <span class="operator">=</span> modCount;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 上面调用方法时传入了 size()方法的返回值相当于传入了size变量</span></span><br><span class="line"><span class="comment">	* 如果传入的值等于size则 next赋值为null 不然置为该位置上的元素</span></span><br><span class="line"><span class="comment">	* 然后让 nextIndex置为传入的值</span></span><br><span class="line"><span class="comment">	**/</span></span><br><span class="line">    ListItr(<span class="type">int</span> index) &#123;</span><br><span class="line">        <span class="comment">// assert isPositionIndex(index);</span></span><br><span class="line">        next = (index == size) ? <span class="literal">null</span> : node(index);</span><br><span class="line">        nextIndex = index;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**判断有没有下一个元素，判断下一个的索引是不是小于数组长度**/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nextIndex &lt; size;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**获取下一个元素**/</span></span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        <span class="keyword">if</span> (!hasNext())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line"></span><br><span class="line">        lastReturned = next;</span><br><span class="line">        next = next.next;</span><br><span class="line">        nextIndex++;</span><br><span class="line">        <span class="keyword">return</span> lastReturned.item;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**判断有没有上一个元素，如果下一个元素索引大于零则肯定有上一个元素**/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasPrevious</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nextIndex &gt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">/**获取上一个元素**/</span></span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">previous</span><span class="params">()</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        <span class="keyword">if</span> (!hasPrevious())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line"></span><br><span class="line">        lastReturned = next = (next == <span class="literal">null</span>) ? last : next.prev;</span><br><span class="line">        nextIndex--;</span><br><span class="line">        <span class="keyword">return</span> lastReturned.item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">nextIndex</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nextIndex;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">previousIndex</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nextIndex - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        <span class="keyword">if</span> (lastReturned == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>();</span><br><span class="line"></span><br><span class="line">        Node&lt;E&gt; lastNext = lastReturned.next;</span><br><span class="line">        unlink(lastReturned);</span><br><span class="line">        <span class="keyword">if</span> (next == lastReturned)</span><br><span class="line">            next = lastNext;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            nextIndex--;</span><br><span class="line">        lastReturned = <span class="literal">null</span>;</span><br><span class="line">        expectedModCount++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(E e)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (lastReturned == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>();</span><br><span class="line">        checkForComodification();</span><br><span class="line">        lastReturned.item = e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span> &#123;</span><br><span class="line">        checkForComodification();</span><br><span class="line">        lastReturned = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (next == <span class="literal">null</span>)</span><br><span class="line">            linkLast(e);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            linkBefore(e, next);</span><br><span class="line">        nextIndex++;</span><br><span class="line">        expectedModCount++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">checkForComodification</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConcurrentModificationException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从这里可以看出之前定义的<code>modCount</code>的作用，这个变量在迭代器中作为一个判断。  </p>
+<p><code>forEachRemaining</code>方法暂时还没弄明白他的作用，而且它的作用应该并不是为了在迭代器中使用，应该有其他方面的作用，这个就放到后面再来看。</p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Java/" rel="tag">Java</a> — 2019年8月28日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

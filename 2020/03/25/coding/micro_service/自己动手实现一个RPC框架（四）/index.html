@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>自己动手实现一个RPC框架(四)</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2020/03/25/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%9B%9B%EF%BC%89/">
+  
+  <meta name="description" content="rpc-register注册中心，这里使用zookeeper来实现。 生产者在启动服务时，将自己实现的服务注册到注册中心。 消费者调用服务时，来注册中心查找，返回调用服务实例的地址信息。 并且为了适应不同的注册实现，我们将功能定义为接口，在替换实现时在配置文件中进行替换即可。 12345678910">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="自己动手实现一个RPC框架(四)" />
+  
+  <meta property="og:description" content="rpc-register注册中心，这里使用zookeeper来实现。 生产者在启动服务时，将自己实现的服务注册到注册中心。 消费者调用服务时，来注册中心查找，返回调用服务实例的地址信息。 并且为了适应不同的注册实现，我们将功能定义为接口，在替换实现时在配置文件中进行替换即可。 12345678910">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2020/03/25/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%9B%9B%EF%BC%89/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="自己动手实现一个RPC框架(四)">
+  
+  <meta name="twitter:description" content="rpc-register注册中心，这里使用zookeeper来实现。 生产者在启动服务时，将自己实现的服务注册到注册中心。 消费者调用服务时，来注册中心查找，返回调用服务实例的地址信息。 并且为了适应不同的注册实现，我们将功能定义为接口，在替换实现时在配置文件中进行替换即可。 12345678910">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2020/03/25/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%9B%9B%EF%BC%89/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>自己动手实现一个RPC框架(四)</h2>
+
+  <h1 id="rpc-register"><a href="#rpc-register" class="headerlink" title="rpc-register"></a>rpc-register</h1><p>注册中心，这里使用<code>zookeeper</code>来实现。</p>
+<p>生产者在启动服务时，将自己实现的服务注册到注册中心。</p>
+<p>消费者调用服务时，来注册中心查找，返回调用服务实例的地址信息。</p>
+<p>并且为了适应不同的注册实现，我们将功能定义为接口，在替换实现时在配置文件中进行替换即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RpcRegister</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 注册服务</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> serviceDescriptor</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> responseServiceDescription</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">register</span><span class="params">(ServiceDescriptor serviceDescriptor, ResponseServiceDescription responseServiceDescription)</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 根据服务名称查询实例地址</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> serviceDescriptor</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	ResponseServiceDescription <span class="title function_">lookup</span><span class="params">(ServiceDescriptor serviceDescriptor)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="zookeeper实现"><a href="#zookeeper实现" class="headerlink" title="zookeeper实现"></a>zookeeper实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ZookeeperRegistry</span> <span class="keyword">implements</span> <span class="title class_">RpcRegister</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 注册的名称</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">NAME_SPACE</span> <span class="operator">=</span> <span class="string">&quot;zk-rpc&quot;</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 节点信息</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">RPC_PROVIDER_NODE</span> <span class="operator">=</span> <span class="string">&quot;/provider&quot;</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 保存多个生产者信息,作为缓存容器</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Map&lt;ServiceDescriptor, List&lt;ResponseServiceDescription&gt;&gt; remoteProviders = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 客户端</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> CuratorFramework zkClient;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 编解码，将节点信息编码后存到节点中</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">  <span class="keyword">private</span> Encoder encoder;</span><br><span class="line">	<span class="keyword">private</span> Decoder decoder;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">ZookeeperRegistry</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>(<span class="string">&quot;localhost:2181&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">ZookeeperRegistry</span><span class="params">(String zkConnectString)</span> &#123;</span><br><span class="line">		<span class="comment">// 设置重试次数和两次重试间隔时间</span></span><br><span class="line">		<span class="type">RetryPolicy</span> <span class="variable">retryPolicy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RetryNTimes</span>(<span class="number">3</span>, <span class="number">5000</span>);</span><br><span class="line">		<span class="comment">//获取客户端</span></span><br><span class="line">		<span class="built_in">this</span>.zkClient = CuratorFrameworkFactory.builder()</span><br><span class="line">				.connectString(zkConnectString)</span><br><span class="line">				.sessionTimeoutMs(<span class="number">10000</span>)</span><br><span class="line">				.retryPolicy(retryPolicy)</span><br><span class="line">				.namespace(NAME_SPACE)</span><br><span class="line">				.build();</span><br><span class="line">		<span class="built_in">this</span>.encoder = <span class="keyword">new</span> <span class="title class_">FastJsonEncoder</span>();</span><br><span class="line">		<span class="built_in">this</span>.decoder = <span class="keyword">new</span> <span class="title class_">FastJsonDecoder</span>();</span><br><span class="line">		<span class="built_in">this</span>.zkClient.start();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 注册服务</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> serviceDescriptor 请求服务信息</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> responseServiceDescription 响应信息，包括实现类和实例地址</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">register</span><span class="params">(ServiceDescriptor serviceDescriptor, ResponseServiceDescription responseServiceDescription)</span> &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">nodePath</span> <span class="operator">=</span> RPC_PROVIDER_NODE + <span class="string">&quot;/&quot;</span> + serviceDescriptor.toString();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 判断节点是否存在，如果不存在则创建</span></span><br><span class="line">			<span class="type">Stat</span> <span class="variable">stat</span> <span class="operator">=</span> zkClient.checkExists().forPath(nodePath);</span><br><span class="line">			<span class="keyword">if</span> (stat == <span class="literal">null</span>) &#123;</span><br><span class="line">				zkClient.create()</span><br><span class="line">						.creatingParentsIfNeeded()</span><br><span class="line">						.withMode(CreateMode.EPHEMERAL_SEQUENTIAL)</span><br><span class="line">						.withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)</span><br><span class="line">					<span class="comment">//创建节点，并且将信息写入节点中	</span></span><br><span class="line">          .forPath(nodePath, encoder.encode(responseServiceDescription));</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//这里对于多个实例的情况没有处理</span></span><br><span class="line">				System.out.println(<span class="string">&quot;the provider already exist,&quot;</span> + serviceDescriptor.toString());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 订阅服务</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">subscribe</span><span class="params">(ServiceDescriptor serviceDescriptor)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			List&lt;String&gt; providerIds = zkClient.getChildren().forPath(RPC_PROVIDER_NODE);</span><br><span class="line">			<span class="keyword">for</span> (String providerId : providerIds) &#123;</span><br><span class="line">				<span class="comment">//如果与订阅服务相同，则获取节点信息</span></span><br><span class="line">				<span class="keyword">if</span> (providerId.contains(serviceDescriptor.toString())) &#123;</span><br><span class="line">					<span class="type">String</span> <span class="variable">nodePath</span> <span class="operator">=</span> RPC_PROVIDER_NODE + <span class="string">&quot;/&quot;</span> + providerId;</span><br><span class="line">					<span class="type">byte</span>[] data = zkClient.getData().forPath(nodePath);</span><br><span class="line">					<span class="type">ResponseServiceDescription</span> <span class="variable">providerInfo</span> <span class="operator">=</span> decoder.decode(data, ResponseServiceDescription.class);</span><br><span class="line">          <span class="comment">//获取到服务信息后，将它放到缓存中</span></span><br><span class="line">					<span class="keyword">if</span> (remoteProviders.containsKey(serviceDescriptor)) &#123;</span><br><span class="line">						remoteProviders.get(serviceDescriptor).add(providerInfo);</span><br><span class="line">					&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">						List&lt;ResponseServiceDescription&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">						list.add(providerInfo);</span><br><span class="line">						remoteProviders.put(serviceDescriptor, list);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//添加监听事件</span></span><br><span class="line">			addProviderWatch(serviceDescriptor);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addProviderWatch</span><span class="params">(ServiceDescriptor serviceDescriptor)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">//创建子节点缓存</span></span><br><span class="line">			<span class="keyword">final</span> <span class="type">PathChildrenCache</span> <span class="variable">childrenCache</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathChildrenCache</span>(<span class="built_in">this</span>.zkClient, RPC_PROVIDER_NODE, <span class="literal">true</span>);</span><br><span class="line">			childrenCache.start(PathChildrenCache.StartMode.BUILD_INITIAL_CACHE);</span><br><span class="line">			<span class="comment">//添加子节点监听事件</span></span><br><span class="line">			childrenCache.getListenable().addListener((client, event) -&gt; &#123;</span><br><span class="line">				<span class="type">String</span> <span class="variable">nodePath</span> <span class="operator">=</span> event.getData().getPath();</span><br><span class="line">				<span class="keyword">if</span> (nodePath.contains(serviceDescriptor.toString())) &#123;</span><br><span class="line">					<span class="keyword">if</span> (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) &#123;</span><br><span class="line">						<span class="comment">//节点移除</span></span><br><span class="line">						<span class="built_in">this</span>.remoteProviders.remove(nodePath);</span><br><span class="line">					&#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)) &#123;</span><br><span class="line">						<span class="type">byte</span>[] data = event.getData().getData();</span><br><span class="line">						<span class="type">ResponseServiceDescription</span> <span class="variable">providerInfo</span> <span class="operator">=</span> decoder.decode(data, ResponseServiceDescription.class);</span><br><span class="line">						<span class="comment">//添加节点</span></span><br><span class="line">						<span class="keyword">if</span> (remoteProviders.containsKey(serviceDescriptor)) &#123;</span><br><span class="line">							remoteProviders.get(serviceDescriptor).add(providerInfo);</span><br><span class="line">						&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">							List&lt;ResponseServiceDescription&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">							list.add(providerInfo);</span><br><span class="line">							remoteProviders.put(serviceDescriptor, list);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 查找服务，先去缓存容器中查询，如果没有调用订阅的方法，</span></span><br><span class="line"><span class="comment">	 * 订阅后会将信息放到容器中。最后都从容器中返回。</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> ResponseServiceDescription <span class="title function_">lookup</span><span class="params">(ServiceDescriptor serviceDescriptor)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (!remoteProviders.containsKey(serviceDescriptor)) &#123;</span><br><span class="line">			subscribe(serviceDescriptor);</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;ResponseServiceDescription&gt; list = remoteProviders.get(serviceDescriptor);</span><br><span class="line">		<span class="keyword">return</span> list.get(<span class="keyword">new</span> <span class="title class_">Random</span>().nextInt(list.size()));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一个问题是如果有多个实现类，我这里只是随机返回一个，这种请求在spring中也需要进行手动声明，</p>
+<p>所以暂时没有想到什么好的解决方法。</p>
+<p>在注册中心维护了一个容器作为客户端调用的缓存。并且对节点进行监听，如果有变动会更改容器的内容。</p>
+<h1 id="rpc-codec"><a href="#rpc-codec" class="headerlink" title="rpc-codec"></a>rpc-codec</h1><p>编解码模块，将对象转换成字节码从而进行网络传输。</p>
+<p>将字节码进行解析成对象，从而进行业务处理。</p>
+<p>这里使用了阿里的<code>Fastjson</code>来进行实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Decoder</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 将字节数组转换为对象</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> bytes 字节数组</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> clazz 被转换成的类型</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> &lt;T&gt;   类型</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 转换成的对象</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	&lt;T&gt; T <span class="title function_">decode</span><span class="params">(<span class="type">byte</span>[] bytes, Class&lt;T&gt; clazz)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Encoder</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 将对象转换为字节数组</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> obj 要转换的对象</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="type">byte</span>[] encode(Object obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而实现对象也直接调用fastjson的方法即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonDecoder</span> <span class="keyword">implements</span> <span class="title class_">Decoder</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> &lt;T&gt; T <span class="title function_">decode</span><span class="params">(<span class="type">byte</span>[] bytes, Class&lt;T&gt; calzz)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> JSON.parseObject(bytes, calzz);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonEncoder</span> <span class="keyword">implements</span> <span class="title class_">Encoder</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">byte</span>[] encode(Object obj) &#123;</span><br><span class="line">		<span class="keyword">return</span> JSON.toJSONBytes(obj);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="其他部分链接"><a href="#其他部分链接" class="headerlink" title="其他部分链接"></a>其他部分链接</h1><ul>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%BA%8C%EF%BC%89/">自己动手首先一个RPC框架（二）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%89%EF%BC%89/">自己动手首先一个RPC框架（三）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%BA%94%EF%BC%89/">自己动手首先一个RPC框架（五）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E5%85%AD%EF%BC%89/">自己动手首先一个RPC框架（六）</a></li>
+<li><a href="https://www.liunaijie.top/2020/03/25/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AARPC%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%83%EF%BC%89/">自己动手首先一个RPC框架（七）</a></li>
+</ul>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Java/" rel="tag">Java</a>, <a class="classtest-link" href="/tags/Java-rpc/" rel="tag">Java/rpc</a> — 2020年3月25日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>Java注解</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2019/12/05/Blog-Posts/coding/Java/Java%E6%B3%A8%E8%A7%A3/">
+  
+  <meta name="description" content="注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？ 什么是注解我们在日常开发中，比如 java 中的@Override，在 springboot 中用到的@SpringBootApplication等一系列标注在类或者方法上的注解。我们添加上注解后会有对应的事件处理">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Java注解" />
+  
+  <meta property="og:description" content="注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？ 什么是注解我们在日常开发中，比如 java 中的@Override，在 springboot 中用到的@SpringBootApplication等一系列标注在类或者方法上的注解。我们添加上注解后会有对应的事件处理">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2019/12/05/Blog-Posts/coding/Java/Java%E6%B3%A8%E8%A7%A3/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Java注解">
+  
+  <meta name="twitter:description" content="注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？ 什么是注解我们在日常开发中，比如 java 中的@Override，在 springboot 中用到的@SpringBootApplication等一系列标注在类或者方法上的注解。我们添加上注解后会有对应的事件处理">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2019/12/05/Blog-Posts/coding/Java/Java%E6%B3%A8%E8%A7%A3/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>Java注解</h2>
+
+  <p>注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？</p>
+<h1 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h1><p>我们在日常开发中，比如 java 中的<code>@Override</code>，在 springboot 中用到的<code>@SpringBootApplication</code>等一系列标注在类或者方法上的注解。我们添加上注解后会有对应的事件处理，比如我们的<code>@Override</code>注解标明这个方法是重写了父类或者接口的方法，当参数不一致、返回类型不一致等不符合重写的要求时，编译器会报错。类似的<code>@SpringBootApplication</code>也是标明这个项目的一个 springboot 项目，默认会启动一个 tomcat 容器等。</p>
+<p>注解是从 jdk5 开始引入的新特性。</p>
+<h1 id="注解的语法"><a href="#注解的语法" class="headerlink" title="注解的语法"></a>注解的语法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> FirstAnnotation &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>@interface</code>即可声明一个注解。</p>
+<span id="more"></span>
+
+<h2 id="内置的注解"><a href="#内置的注解" class="headerlink" title="内置的注解"></a>内置的注解</h2><p>Java 定义了一套注解，共有 7 个，3 个在 java.lang 中，剩下 4 个在 java.lang.annotation 中</p>
+<h3 id="作用在代码的注解是"><a href="#作用在代码的注解是" class="headerlink" title="作用在代码的注解是"></a>作用在代码的注解是</h3><ul>
+<li><code>@Override</code> - 检查该方法是否是重载方法。如果发现其父类，或者是引用的接口中并没有该方法时，会报编译错误。</li>
+<li><code>@Deprecated</code> - 标记过时方法。如果使用该方法，会报编译警告。</li>
+<li><code>@SuppressWarnings</code> - 指示编译器去忽略注解中声明的警告。</li>
+</ul>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><p>我们通过上面的语法定义了一个注解，但还需要其他的注解一同作用。在 jdk1.5中定义了 4 个标准注解，它们用来提供对其他 annotation 类型做说明。分别是：</p>
+<ul>
+<li><code>@Retention</code> - 标识这个注解怎么保存，是只在代码中，还是编入class文件中，或者是在运行时可以通过反射访问。</li>
+<li><code>@Documented</code> - 标记这些注解是否包含在用户文档中。</li>
+<li><code>@Target</code> - 标记这个注解应该是哪种 Java 成员。</li>
+<li><code>@Inherited</code> - 标记这个注解是继承于哪个注解类(默认 注解并没有继承于任何子类)</li>
+</ul>
+<p>从 Java 7 开始，额外添加了 3 个注解:</p>
+<ul>
+<li><code>@SafeVarargs</code> - Java 7 开始支持，忽略任何使用参数为泛型变量的方法或构造函数调用产生的警告。</li>
+<li><code>@FunctionalInterface</code> - Java 8 开始支持，标识一个匿名函数或函数式接口。</li>
+<li><code>@Repeatable</code> - Java 8 开始支持，标识某注解可以在同一个声明上使用多次。</li>
+</ul>
+<h4 id="Retention"><a href="#Retention" class="headerlink" title="@Retention"></a>@Retention</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.ANNOTATION_TYPE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Retention &#123;</span><br><span class="line">   </span><br><span class="line">    RetentionPolicy <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">RetentionPolicy</span> &#123;</span><br><span class="line">    <span class="comment">/* 注解被编译器丢弃，不会保留到 class 文件中 */</span></span><br><span class="line">    SOURCE,</span><br><span class="line">    <span class="comment">/* 默认的类型。 注解在 class 文件中可用，但会被 jvm 丢弃 */</span></span><br><span class="line">    CLASS,</span><br><span class="line">    <span class="comment">/*在运行期也保留，可以通过反射机制读取注解的信息*/</span></span><br><span class="line">    RUNTIME</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个注解只有一个变量，类型是一个枚举。可以通过这个变量来表明这个注解是保存在源码中(source)，还是编入 class 文件中(class)，还是在运行时通过反射访问(runtime)。</p>
+<h4 id="Target"><a href="#Target" class="headerlink" title="@Target"></a>@Target</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.ANNOTATION_TYPE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target &#123;</span><br><span class="line">    </span><br><span class="line">    ElementType[] value();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">ElementType</span> &#123;</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 类，接口（包括注解类型）或枚举声明*/</span></span><br><span class="line">    TYPE,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 字段声明（包括枚举常量） */</span></span><br><span class="line">    FIELD,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 方法声明 */</span></span><br><span class="line">    METHOD,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 参数声明 */</span></span><br><span class="line">    PARAMETER,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 构造函数声明 */</span></span><br><span class="line">    CONSTRUCTOR,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 局部变量声明 */</span></span><br><span class="line">    LOCAL_VARIABLE,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 注解声明（应用于另一个注解上） */</span></span><br><span class="line">    ANNOTATION_TYPE,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 包声明 */</span></span><br><span class="line">    PACKAGE,</span><br><span class="line">    <span class="comment">/* 表明该注解可以用于 类型参数声明@since 1.8 */</span></span><br><span class="line">    TYPE_PARAMETER,</span><br><span class="line">    <span class="comment">/* 类型使用声明 */</span></span><br><span class="line">    TYPE_USE</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Documented"><a href="#Documented" class="headerlink" title="@Documented"></a>@Documented</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.ANNOTATION_TYPE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Documented &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它没有任何变量，添加这个注解可以让我们执行 JavaDoc 文档打包时注解会被保存进 doc 文档，反之将在打包时丢弃。</p>
+<h4 id="Inherited"><a href="#Inherited" class="headerlink" title="@Inherited"></a>@Inherited</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.ANNOTATION_TYPE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Inherited &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个注解是什么意思呢？我们通过一个例子来说明一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DocumentFirst &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DocumentSecond &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@DocumentFirst</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@DocumentSecond</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">D</span> <span class="keyword">extends</span> <span class="title class_">C</span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DocumentDemo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        A instanceA=<span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line">        System.out.println(<span class="string">&quot;实例 B 拥有的注解:&quot;</span>+Arrays.toString(instanceA.getClass().getAnnotations()));</span><br><span class="line"></span><br><span class="line">        <span class="type">C</span> <span class="variable">instanceC</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">D</span>();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;实例 D 拥有的注解:&quot;</span>+Arrays.toString(instanceC.getClass().getAnnotations()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 运行结果:</span></span><br><span class="line"><span class="comment">     实例 B 拥有的注解:[<span class="doctag">@cn</span>.lnj.annotationdemo.DocumentFirst()]</span></span><br><span class="line"><span class="comment">     实例 D 拥有的注解:[]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出来，添加了<code>@Inherited</code>元注解的注解，这个类被继承后的子类也可以拥有这个注解。也就是说这个注解的作用范围是父类和子类。而没有添加这个元注解的注解，作用范围只有被添加的类。</p>
+<h4 id="Repeatable"><a href="#Repeatable" class="headerlink" title="@Repeatable"></a>@Repeatable</h4><p>添加这个注解后，注解可以在同一个声明上使用多次，来看一个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DocumentA &#123;</span><br><span class="line">    String[] names;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Repeatable</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DocumentB &#123;</span><br><span class="line">    String[] names;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//相同的注解，不能同时声明多次，因为没有添加@Repeatable注解</span></span><br><span class="line"><span class="meta">@DocumentA(names=&quot;AAA&quot;)</span></span><br><span class="line"><span class="comment">//@DocumentA(names=&quot;BBB&quot;)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//相同的注解，可以同时被声明多次，不会报错</span></span><br><span class="line"><span class="meta">@DocumentB(names=&quot;AAA&quot;)</span></span><br><span class="line"><span class="meta">@DocumentB(names=&quot;BBB&quot;)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="FunctionalInterface"><a href="#FunctionalInterface" class="headerlink" title="@FunctionalInterface"></a>@FunctionalInterface</h4><p>在 jdk1.8中添加了 lambda 表达式，也就是函数式编程。虽然说添加了lambda，但也并不是所有的东西都可以无条件的去使用。需要在接口上添加<code>@FunctionalInterface</code>注解，并且这个接口里面只能有一个抽象方法。</p>
+<h1 id="通过-aop-来进行拦截"><a href="#通过-aop-来进行拦截" class="headerlink" title="通过 aop 来进行拦截"></a>通过 aop 来进行拦截</h1><p>通过上面我们可以进行一个自定义的注解，但是我们即便把他声明在方法上，它其实还是没有作用的，如果需要这个注解起到我们想要的作用还需要进行自定义的处理。比如我们使用 aop 来进行这个处理</p>
+<p>首先定义一个注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> HelloAnnotation &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在方法上添加这个注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HelloAnnotation</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">()</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;i am working&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后定义拦截器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Around(&quot;@annotation(HelloAnnotation)&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">around</span><span class="params">(ProceedingJoinPoint proceedingJoinPoint, HelloAnnotation helloAnnotation)</span> &#123;</span><br><span class="line">	<span class="comment">//方法执行前</span></span><br><span class="line">    System.out.println(<span class="string">&quot;start&quot;</span>);</span><br><span class="line">    <span class="comment">//调用方法</span></span><br><span class="line">    proceedingJoinPoint.proceed();</span><br><span class="line">    <span class="comment">//方法执行后</span></span><br><span class="line">    System.out.println(<span class="string">&quot;finish&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就可以在调用<code>sayHello()</code>这个方法后，执行这个拦截器逻辑。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Java%E6%B3%A8%E8%A7%A3">维基百科</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/javazejian/article/details/71860633">https://blog.csdn.net/javazejian/article/details/71860633</a></li>
+</ul>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Java/" rel="tag">Java</a> — 2019年12月6日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

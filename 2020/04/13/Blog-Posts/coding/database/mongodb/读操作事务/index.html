@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>mongo-读操作事务</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2020/04/13/Blog-Posts/coding/database/mongodb/%E8%AF%BB%E6%93%8D%E4%BD%9C%E4%BA%8B%E5%8A%A1/">
+  
+  <meta name="description" content="读取数据的过程需要关注以下两个问题：  从哪里读？关注数据节点位置 什么样的数据可以读？关注数据的隔离性 第一个问题是由readPreference来解决 第二个问是题由readConcern来解决  什么是readPreferencereadPreference决定使用哪一个节点来满足正在发起的读">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="mongo-读操作事务" />
+  
+  <meta property="og:description" content="读取数据的过程需要关注以下两个问题：  从哪里读？关注数据节点位置 什么样的数据可以读？关注数据的隔离性 第一个问题是由readPreference来解决 第二个问是题由readConcern来解决  什么是readPreferencereadPreference决定使用哪一个节点来满足正在发起的读">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2020/04/13/Blog-Posts/coding/database/mongodb/%E8%AF%BB%E6%93%8D%E4%BD%9C%E4%BA%8B%E5%8A%A1/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mongo-读操作事务">
+  
+  <meta name="twitter:description" content="读取数据的过程需要关注以下两个问题：  从哪里读？关注数据节点位置 什么样的数据可以读？关注数据的隔离性 第一个问题是由readPreference来解决 第二个问是题由readConcern来解决  什么是readPreferencereadPreference决定使用哪一个节点来满足正在发起的读">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2020/04/13/Blog-Posts/coding/database/mongodb/%E8%AF%BB%E6%93%8D%E4%BD%9C%E4%BA%8B%E5%8A%A1/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>mongo-读操作事务</h2>
+
+  <p>读取数据的过程需要关注以下两个问题：</p>
+<ul>
+<li>从哪里读？关注数据节点位置</li>
+<li>什么样的数据可以读？关注数据的隔离性 第一个问题是由<code>readPreference</code>来解决 第二个问是题由<code>readConcern</code>来解决</li>
+</ul>
+<h1 id="什么是readPreference"><a href="#什么是readPreference" class="headerlink" title="什么是readPreference"></a>什么是readPreference</h1><p>readPreference决定使用哪一个节点来满足正在发起的读请求。可选值包括：</p>
+<ul>
+<li>primary 主选择主节点</li>
+<li>primaryPreferred 优先选择主节点，如果不可用则选择从节点</li>
+<li>secondary 只选择从节点</li>
+<li>nearest 选择最近的节点</li>
+</ul>
+<p><strong>readPreperfence使用场景举例</strong></p>
+<ul>
+<li>用户下订单后马上将用户转到订单详情页 primary&#x2F;primaryPreferred。因为此时从节点可能还没复制到新订单</li>
+<li>用户查询自己下过的订单 secondary&#x2F;secondaryPreferred。查询历史订单对时效性通常没有太高要求</li>
+<li>生成报表 secondary。报表对时效性要求不高，但要进行计算资源需求大，可以在从节点单独处理，避免对线上用户造成影响</li>
+<li>将用户上传的图片分发到全世界，让各地用户能够就近读取 nearest。每个地区的应用选择最近的节点读取时间</li>
+</ul>
+<p><strong>readPreference与Tag</strong> readPreference只能控制使用一类节点。Tag则可以将节点选择控制到一个或多个节点。 考虑以下场景： 一个5个节点的复制集，3个节点硬件较好，专用于服务线上客户，2个节点硬件较差，专用于生成报表。</p>
+<p>可以使用Tag来达到这样的控制目的：</p>
+<ul>
+<li><p>为3个较好的节点打上{purpose:”online”}</p>
+</li>
+<li><p>为2个较差的节点打上{purpose:”analyse”}</p>
+</li>
+<li><p>在线应用读取时指定<code>online</code>，报表读取时指定<code>reporting</code></p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200329100110.png" alt="https://raw.githubusercontent.com/liunaijie/images/master/20200329100110.png"></p>
+</li>
+</ul>
+<h2 id="readPreference配置"><a href="#readPreference配置" class="headerlink" title="readPreference配置"></a>readPreference配置</h2><ul>
+<li>通过MongoDB的连接串参数<code>mongodb://host1:port,host2:port,host3:port/?replicaSet=rs&amp;readPreperence=secondary</code></li>
+<li>通过MongoDB驱动程序API <code>MongoCollection.withReadPreference(ReadPreference readPref)</code></li>
+<li>Mongo Shell<code>db.collection.find(&#123;&#125;).readPref(&quot;secondary&quot;)</code></li>
+</ul>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p><strong>锁定写入（同步）的命令</strong><code>db.fsyncLock()</code>，解锁:<code>db.fsyncUnlock()</code></p>
+<ol>
+<li>主节点写入{x:1},观察该条数据在各个节点均可见</li>
+<li>在两个从节点分别执行<code>db.fsyncLock()</code>来锁定写入</li>
+<li>主节点写入{x:2}，在各个节点观察数据变化</li>
+<li>接触从节点锁定，观察各节点数据变化</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>指定readPreference时也应注意高可用问题，利用将readPreference指定primary，则发生故障转移不存在primary期间将没有节点可读。所以如果业务允许，则应该选择primaryPreferred</li>
+<li>使用Tag时也会遇到同样的问题，如果只有一个节点拥有一个特定Tag，则在这个节点失效将无节点可读。这在有时候是期望的结果，有时候不是。例如<ul>
+<li>如果报表使用的节点失效，即使不生成报表，通常也不希望将报表负载转移到其他节点上，此时只有一个节点有报表Tag是合理的选择</li>
+<li>如果线上节点失效，通常希望有代替节点，所以应该保持多个节点有同样的Tag</li>
+</ul>
+</li>
+<li>Tag有时需要与优先级，选举权综合考虑。例如做报表的节点通常不会希望它成为主节点，则优先级应为0</li>
+</ul>
+<h1 id="什么是readConcern"><a href="#什么是readConcern" class="headerlink" title="什么是readConcern"></a>什么是readConcern</h1><p>在readPreference选择了指定的节点后，readConcern决定这个节点上的数据哪些是可读的，类似于关系数据库的隔离级别。可选值包括：</p>
+<ul>
+<li>avaliable 读取所有可用的数据</li>
+<li>local 读取所有可用且属于当前分片的数据</li>
+<li>majority 读取在大多数节点上提交完成的数据</li>
+<li>linearizable 可线性化读取文档</li>
+<li>snapshot 读取最近快照中的数据</li>
+</ul>
+<p><strong>readConcern:local和avaliable</strong> 在复制集中local和avaliable是没有区别的。两者的区别主要是体现在分片集上考虑以下场景：</p>
+<ul>
+<li>一个chunk x正在从shard1向shard2迁移</li>
+<li>这个迁移过程中chunk x中的部分数据会在shard1和shard2中同时存在，但源分片shard1仍然是chunk 想的负责方<ul>
+<li>所有对chunk x的读写操作仍然进入shard1</li>
+<li>config中记录的信息chunk x仍然属于shard1</li>
+</ul>
+</li>
+<li>此时如果读shard2，则会体现出local和avaliable的区别：<ul>
+<li>local：只去应该有shard2负责的数据（不包括x）</li>
+<li>avaliable：shard2上有什么就读什么（包括xß）</li>
+</ul>
+</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li>虽然看上去总是应该选择local，但毕竟对结果集进行过滤会造成额外消耗。在一些无关紧要的场景下，也可以考虑avaliable</li>
+<li>MongoDB &lt;&#x3D;3.6不支持对从节点使用{readConcern:”local”}</li>
+<li>从主节点读取数据默认readConcern是local，从从节点读取数据是默认readConcern是avaliable（向前兼容）</li>
+</ul>
+<h2 id="readConcern-majority"><a href="#readConcern-majority" class="headerlink" title="readConcern:majority"></a>readConcern:majority</h2><p>只读取大多数据节点上都提交了的数据。考虑如下场景：</p>
+<ul>
+<li>集合原有文档{x:0}</li>
+<li>将x值更新为1</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200329105211.png" alt="https://raw.githubusercontent.com/liunaijie/images/master/20200329105211.png"></p>
+<p>这时在各个节点上应用{readConcern:”majority”}来读取数据</p>
+<p><a target="_blank" rel="noopener" href="https://www.notion.so/2539180bd8f8419d897b8813bb152740">Untitled</a></p>
+<p>在t3时，P收到S1写入成功的响应，再加上自己已经完成写入，达到大多数数据节点的条件。此时返回数据。 在t5时，S1收到P向S1发送的消息，此时在S1上达到大多数数据节点的条件，返回数据。</p>
+<h3 id="readConcern-majority实现方式"><a href="#readConcern-majority实现方式" class="headerlink" title="readConcern:majority实现方式"></a>readConcern:majority实现方式</h3><p>节点上维护多个版本，MVCC机制 MongoDB通过维护多个快照来链接不同的版本</p>
+<ul>
+<li>每个被大多数节点确认过的版本都将是一个快照</li>
+<li>快照持续到没有人使用为止才被删除</li>
+</ul>
+<h2 id="使用条件"><a href="#使用条件" class="headerlink" title="使用条件"></a>使用条件</h2><p>如果要使用<code>readConcern:&quot;majority&quot;</code>则必须在配置文件中将此项打开，默认是关闭的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">replcation:</span><br><span class="line">    replSetName: rs0</span><br><span class="line">    enableMajorityReadConcern: true</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="readConcern：majority与脏读"><a href="#readConcern：majority与脏读" class="headerlink" title="readConcern：majority与脏读"></a>readConcern：majority与脏读</h3><p>MongoDB中的回滚</p>
+<ul>
+<li>写操作达到大多数节点之前都是不安全的，一旦主节点崩溃，而从节点还没复制到该次操作，刚才的写操作就丢失了</li>
+<li>把异常写操作视为一个事务，从事务的角度，可以认为事务被回滚了</li>
+</ul>
+<p>所以从分布式系统的角度来看，事务的提交被提示到分布式集群的多个节点级别的“提交”，而不再是单个节点上的“提交” 在可能发生回滚的前提下考虑脏读问题：</p>
+<ul>
+<li>如果一次写操作到达大多数节前读取了这个写操作，然后因为系统故障该操作回滚了，则发生了脏读问题</li>
+</ul>
+<p>使用{readConcern:”majority”}可以有效避免脏读</p>
+<p><strong>readConcern:majorit对于事务隔离级别中的Read Committed</strong></p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Mongo/" rel="tag">Mongo</a> — 2020年4月14日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

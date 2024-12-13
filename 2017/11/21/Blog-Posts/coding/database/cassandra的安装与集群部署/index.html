@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>cassandra的安装与集群部署</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2017/11/21/Blog-Posts/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+  
+  <meta name="description" content="前提安装jdk1.8以上，python2.7   安装CassandraCassandra的下载地址：http://cassandra.apache.org/download/下载后将文件解压到某目录下，然后配置环境变量CASSANDRA_HOME为你解压的目录，path为%CASSANDRA_HO">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="cassandra的安装与集群部署" />
+  
+  <meta property="og:description" content="前提安装jdk1.8以上，python2.7   安装CassandraCassandra的下载地址：http://cassandra.apache.org/download/下载后将文件解压到某目录下，然后配置环境变量CASSANDRA_HOME为你解压的目录，path为%CASSANDRA_HO">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2017/11/21/Blog-Posts/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="cassandra的安装与集群部署">
+  
+  <meta name="twitter:description" content="前提安装jdk1.8以上，python2.7   安装CassandraCassandra的下载地址：http://cassandra.apache.org/download/下载后将文件解压到某目录下，然后配置环境变量CASSANDRA_HOME为你解压的目录，path为%CASSANDRA_HO">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2017/11/21/Blog-Posts/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>cassandra的安装与集群部署</h2>
+
+  <h1 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h1><p>安装jdk1.8以上，python2.7</p>
+<span id="more"></span>
+
+<h1 id="安装Cassandra"><a href="#安装Cassandra" class="headerlink" title="安装Cassandra"></a>安装Cassandra</h1><p>Cassandra的下载地址：<a target="_blank" rel="noopener" href="http://cassandra.apache.org/download/">http://cassandra.apache.org/download/</a><br>下载后将文件解压到某目录下，<br>然后配置环境变量<br><code>CASSANDRA_HOME</code>为你解压的目录，<br>path为<code>%CASSANDRA_HOME%\bin</code><br>然后用管理员身份运行cmd（不然可能提示权限不够）<br>进入Cassandra目录下的bin，<br>执行<code>cassandra</code><br><img src="https://raw.githubusercontent.com/liunaijie/images/master/SouthEast.png" alt="执行cassandrs"><br>然后如果成功会出一大堆东西，并且不能再输入命令；</p>
+<h1 id="查询状态"><a href="#查询状态" class="headerlink" title="查询状态"></a>查询状态</h1><p>再打开一个cmd窗口，原来的不要关闭<br>进入bin文件夹<br>执行<code>nodetool status</code><br><img src="https://raw.githubusercontent.com/liunaijie/images/master/nodetool.png" alt="nodetool status"><br>这是成功状态，<br>然后输入<code>cqlsh</code>进入编写sql<br><img src="https://raw.githubusercontent.com/liunaijie/images/master/cqlsh.png" alt="执行cqlsh"></p>
+<p><em>如果执行cqlsh时出现<code>Can&#39;t detect python version</code>需要到pylib目录下执行<code>python setup.py install</code></em></p>
+<p>出现cqlsh&gt;开头就表示你现在正在编写sql；</p>
+<h1 id="查询命令"><a href="#查询命令" class="headerlink" title="查询命令"></a>查询命令</h1><p>查看表空间 <code>describe keyspaces</code>；<br>查看已有表：<code>describe tables</code>;<br>查看表结构：<code>describe table table_name</code>;</p>
+<h1 id="多节点部署"><a href="#多节点部署" class="headerlink" title="多节点部署"></a>多节点部署</h1><p><strong>以上是单个几点的安装，下面是多个节点的集群部署：</strong><br>修改配置文件：<code>cassandra.yaml</code><br><code>cluster_name</code>：集群名称。<br>如果启动过数据库再修改集群名称需要先执行命令:<br>进入cqlsh执行<br><code>UPDATE system.local SET cluster_name = &#39;你修改后的名称&#39; where key=&#39;local&#39;;</code><br>退出cqlsh状态，执行<code>nodetool flush system</code><br><code>seeds</code>节点，将每个节点的ip加进去，<code>&quot;x.x.x.x,xx.xx.xx.xx&quot;</code>不用加尖括号！<br><code>listen_address</code>改为自己的ip地址<br><code>rpc_address</code>改为自己的ip地址<br>重启数据库。<br>再次执行cqlsh命令，后面需要加自己的ip</p>
+
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Cassandra/" rel="tag">Cassandra</a> — 2017年11月22日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

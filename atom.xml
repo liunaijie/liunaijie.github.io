@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>J.A.R.V.I.S</title>
+  
+  <subtitle>Life is not just Live</subtitle>
+  <link href="https://www.liunaijie.top/atom.xml" rel="self"/>
+  
+  <link href="https://www.liunaijie.top/"/>
+  <updated>2024-12-13T17:00:22.866Z</updated>
+  <id>https://www.liunaijie.top/</id>
+  
+  <author>
+    <name>Jarvis</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://www.liunaijie.top/2024/12/13/coding/algorithm/leetcode/leetcode/"/>
+    <id>https://www.liunaijie.top/2024/12/13/coding/algorithm/leetcode/leetcode/</id>
+    <published>2024-12-13T17:00:22.866Z</published>
+    <updated>2024-12-13T17:00:22.866Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://www.liunaijie.top/2024/12/13/Blog-Posts/coding/algorithm/leetcode/leetcode/"/>
+    <id>https://www.liunaijie.top/2024/12/13/Blog-Posts/coding/algorithm/leetcode/leetcode/</id>
+    <published>2024-12-13T17:00:22.846Z</published>
+    <updated>2024-12-13T17:00:22.846Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://www.liunaijie.top/2024/12/13/Blog-Posts/coding/algorithm/leetcode/leetcode_DiskStation_Nov-29-0201-2024_DownloadConflict/"/>
+    <id>https://www.liunaijie.top/2024/12/13/Blog-Posts/coding/algorithm/leetcode/leetcode_DiskStation_Nov-29-0201-2024_DownloadConflict/</id>
+    <published>2024-12-13T17:00:22.846Z</published>
+    <updated>2024-12-13T17:00:22.846Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo博客自动部署方案</title>
+    <link href="https://www.liunaijie.top/2024/11/25/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/"/>
+    <id>https://www.liunaijie.top/2024/11/25/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/</id>
+    <published>2024-11-25T07:24:51.000Z</published>
+    <updated>2024-12-13T17:00:22.874Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;更新记录下当前博客的写作, 同步, 发布方案.&lt;/p&gt;
+&lt;p&gt;目前使用&lt;code&gt;Hexo&lt;/code&gt;来作为博客的生成框架, 使用&lt;code&gt;Github Action&lt;/code&gt;来进行自动化部署.&lt;br&gt;写作记录方面则是使用&lt;code&gt;Obsidian&lt;/code&gt;来进行写作, 通过&lt;code&gt;Remote Sync&lt;/code&gt;来进行多端同步, 同步到&lt;code&gt;OneDrive&lt;/</summary>
+      
+    
+    
+    
+    <category term="publish" scheme="https://www.liunaijie.top/categories/publish/"/>
+    
+    <category term="coding" scheme="https://www.liunaijie.top/categories/publish/coding/"/>
+    
+    <category term="tools" scheme="https://www.liunaijie.top/categories/publish/coding/tools/"/>
+    
+    
+    <category term="chore/blog" scheme="https://www.liunaijie.top/tags/chore-blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SeaTunnel源码解析-(三)Zeta引擎执行解析</title>
+    <link href="https://www.liunaijie.top/2024/11/25/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%89)Zeta%E5%BC%95%E6%93%8E%E6%89%A7%E8%A1%8C%E8%A7%A3%E6%9E%90/"/>
+    <id>https://www.liunaijie.top/2024/11/25/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%89)Zeta%E5%BC%95%E6%93%8E%E6%89%A7%E8%A1%8C%E8%A7%A3%E6%9E%90/</id>
+    <published>2024-11-25T06:56:00.000Z</published>
+    <updated>2024-12-13T17:00:22.874Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;这篇文章会聊些什么&quot;&gt;&lt;a href=&quot;#这篇文章会聊些什么&quot; class=&quot;headerlink&quot; title=&quot;这篇文章会聊些什么&quot;&gt;&lt;/a&gt;这篇文章会聊些什么&lt;/h1&gt;&lt;p&gt;SeaTunnel作为一款数据集成工具, 那么它最终的目的是来做数据同步的, 可以将数据从某个存储同步到另外一个存储中.&lt;br&gt;但是这篇文档并不会聊它使用层面的事情, 而是去聊一下这个工具&amp;#x2F;框架</summary>
+      
+    
+    
+    
+    <category term="coding" scheme="https://www.liunaijie.top/categories/coding/"/>
+    
+    
+    <category term="big_data/seatunnel" scheme="https://www.liunaijie.top/tags/big-data-seatunnel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SeaTunnel源码解析-(二)Zeta引擎源码讲解</title>
+    <link href="https://www.liunaijie.top/2024/11/25/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%BA%8C)Zeta%E5%BC%95%E6%93%8E%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3/"/>
+    <id>https://www.liunaijie.top/2024/11/25/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%BA%8C)Zeta%E5%BC%95%E6%93%8E%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3/</id>
+    <published>2024-11-25T06:55:00.000Z</published>
+    <updated>2024-12-13T17:00:22.874Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;省流&quot;&gt;&lt;a href=&quot;#省流&quot; class=&quot;headerlink&quot; title=&quot;省流&quot;&gt;&lt;/a&gt;省流&lt;/h1&gt;&lt;p&gt;这篇文章以seatunnel 2.3.6版本，讲解了一个zeta引擎的一个任务是如何从提交到运行的全流程，希望通过这篇文档，对刚刚上手seatunnel的朋友提供一些帮助。&lt;/p&gt;
+&lt;p&gt;这篇文章将从&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;seatunnel server</summary>
+      
+    
+    
+    
+    <category term="coding" scheme="https://www.liunaijie.top/categories/coding/"/>
+    
+    
+    <category term="big_data/seatunnel" scheme="https://www.liunaijie.top/tags/big-data-seatunnel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SeaTunnel源码解析-(一)SeaTunnel API解析</title>
+    <link href="https://www.liunaijie.top/2024/11/25/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%80)SeaTunnel%20API%E8%A7%A3%E6%9E%90/"/>
+    <id>https://www.liunaijie.top/2024/11/25/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%80)SeaTunnel%20API%E8%A7%A3%E6%9E%90/</id>
+    <published>2024-11-25T06:54:00.000Z</published>
+    <updated>2024-12-13T17:00:22.874Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;从接口定义来看SeaTunnel&quot;&gt;&lt;a href=&quot;#从接口定义来看SeaTunnel&quot; class=&quot;headerlink&quot; title=&quot;从接口定义来看SeaTunnel&quot;&gt;&lt;/a&gt;从接口定义来看SeaTunnel&lt;/h1&gt;&lt;p&gt;从官网的这个图中, 可以看到在SeaTunnel中, 定义了&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Source&lt;/li&gt;
+&lt;li&gt;Transform&lt;/li&gt;</summary>
+      
+    
+    
+    
+    <category term="coding" scheme="https://www.liunaijie.top/categories/coding/"/>
+    
+    
+    <category term="big_data/seatunnel" scheme="https://www.liunaijie.top/tags/big-data-seatunnel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SeaTunnel源码解析-(一)SeaTunnel API解析</title>
+    <link href="https://www.liunaijie.top/2024/11/24/Blog-Posts/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%80)SeaTunnel%20API%E8%A7%A3%E6%9E%90/"/>
+    <id>https://www.liunaijie.top/2024/11/24/Blog-Posts/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%80)SeaTunnel%20API%E8%A7%A3%E6%9E%90/</id>
+    <published>2024-11-24T16:00:00.000Z</published>
+    <updated>2024-12-13T17:00:22.862Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;从接口定义来看SeaTunnel&quot;&gt;&lt;a href=&quot;#从接口定义来看SeaTunnel&quot; class=&quot;headerlink&quot; title=&quot;从接口定义来看SeaTunnel&quot;&gt;&lt;/a&gt;从接口定义来看SeaTunnel&lt;/h1&gt;&lt;p&gt;从官网的这个图中, 可以看到在SeaTunnel中, 定义了&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Source&lt;/li&gt;
+&lt;li&gt;Transform&lt;/li&gt;</summary>
+      
+    
+    
+    
+    <category term="coding" scheme="https://www.liunaijie.top/categories/coding/"/>
+    
+    
+    <category term="seatunnel" scheme="https://www.liunaijie.top/tags/seatunnel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo博客自动部署方案</title>
+    <link href="https://www.liunaijie.top/2024/11/24/Blog-Posts/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/"/>
+    <id>https://www.liunaijie.top/2024/11/24/Blog-Posts/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/</id>
+    <published>2024-11-24T16:00:00.000Z</published>
+    <updated>2024-12-13T17:00:22.866Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;更新记录下当前博客的写作, 同步, 发布方案.&lt;/p&gt;
+&lt;p&gt;目前使用&lt;code&gt;Hexo&lt;/code&gt;来作为博客的生成框架, 使用&lt;code&gt;Github Action&lt;/code&gt;来进行自动化部署.&lt;br&gt;写作记录方面则是使用&lt;code&gt;Obsidian&lt;/code&gt;来进行写作, 通过&lt;code&gt;Remote Sync&lt;/code&gt;来进行多端同步, 同步到&lt;code&gt;OneDrive&lt;/</summary>
+      
+    
+    
+    
+    <category term="publish" scheme="https://www.liunaijie.top/categories/publish/"/>
+    
+    
+    <category term="blog" scheme="https://www.liunaijie.top/tags/blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SeaTunnel源码解析-(三)Zeta引擎执行解析</title>
+    <link href="https://www.liunaijie.top/2024/11/24/Blog-Posts/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%89)Zeta%E5%BC%95%E6%93%8E%E6%89%A7%E8%A1%8C%E8%A7%A3%E6%9E%90/"/>
+    <id>https://www.liunaijie.top/2024/11/24/Blog-Posts/publish/SeaTunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-(%E4%B8%89)Zeta%E5%BC%95%E6%93%8E%E6%89%A7%E8%A1%8C%E8%A7%A3%E6%9E%90/</id>
+    <published>2024-11-24T16:00:00.000Z</published>
+    <updated>2024-12-13T17:00:22.862Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;这篇文章会聊些什么&quot;&gt;&lt;a href=&quot;#这篇文章会聊些什么&quot; class=&quot;headerlink&quot; title=&quot;这篇文章会聊些什么&quot;&gt;&lt;/a&gt;这篇文章会聊些什么&lt;/h1&gt;&lt;p&gt;SeaTunnel作为一款数据集成工具, 那么它最终的目的是来做数据同步的, 可以将数据从某个存储同步到另外一个存储中.&lt;br&gt;但是这篇文档并不会聊它使用层面的事情, 而是去聊一下这个工具&amp;#x2F;框架</summary>
+      
+    
+    
+    
+    <category term="publish" scheme="https://www.liunaijie.top/categories/publish/"/>
+    
+    
+    <category term="seatunnel" scheme="https://www.liunaijie.top/tags/seatunnel/"/>
+    
+  </entry>
+  
+</feed>

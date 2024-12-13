@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>mongo-基本命令</title>
+  
+  <link rel="canonical" href="https://www.liunaijie.top/2020/04/13/Blog-Posts/coding/database/mongodb/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/">
+  
+  <meta name="description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo 基本操作命令： 插入操作insert格式： 1234-">
+  
+  
+  <meta name="keywords" content="blog">
+  
+  <meta name="author" content="Jarvis">
+  
+  
+  
+  <meta property="og:site_name" content="J.A.R.V.I.S" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="mongo-基本命令" />
+  
+  <meta property="og:description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo 基本操作命令： 插入操作insert格式： 1234-">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/2020/04/13/Blog-Posts/coding/database/mongodb/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mongo-基本命令">
+  
+  <meta name="twitter:description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo 基本操作命令： 插入操作insert格式： 1234-">
+  
+  
+  
+  
+  <meta name="twitter:url" content="https://www.liunaijie.top/2020/04/13/Blog-Posts/coding/database/mongodb/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="/fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/jarvis.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #0FA0CE;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #0FA0CE 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #0FA0CE;
+  }
+  .nanobar .bar {
+    background: #0FA0CE;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #0FA0CE;
+    border-color: #0FA0CE;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #0FA0CE;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+  
+  <script src="/js/pic.min.js" defer></script>
+  
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="J.A.R.V.I.S" type="application/atom+xml">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn"></div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden></div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+  <div class="six columns ml-1">
+    <h1 class="mt-2">
+      Jarvis&#39;s Blog
+    </h1>
+  </div>
+
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        
+          
+          <a href="/" class="ml">Home</a>
+          
+        
+          
+          <a href="/categories/publish/" class="ml">Publish</a>
+          
+        
+          
+          <a href="/about" class="ml">About</a>
+          
+        
+          
+          <a href="/atom.xml" class="ml">Rss</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>mongo-基本命令</h2>
+
+  <p>docker下载：<code>docker pull mongo</code> 运行：<code>docker run -itd --name mongo -p 27017:27017 mongo</code> 进入容器并运行mongo命令：<code>docker exec -it mongo mongo</code></p>
+<p>基本操作命令：</p>
+<h1 id="插入操作insert"><a href="#插入操作insert" class="headerlink" title="插入操作insert"></a>插入操作<code>insert</code></h1><p>格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-   db.&lt;集合&gt;.insertOne(&lt;JSON对象&gt;)</span><br><span class="line">-   db.&lt;集合&gt;.insertMany&lt;[&lt;JSON 1&gt;,&lt;JSON 2&gt;, ...&lt;JSON N&gt;]&gt; 示例：</span><br><span class="line">-   `db.fruit.insertOne(&#123;name:&quot;apple&quot;&#125;)`</span><br><span class="line">-   `db.fruit.insertMany([&#123;name:&quot;apple&quot;&#125;,&#123;name:&quot;pear&quot;&#125;, &#123;name:&quot;orange&quot;&#125;])`</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询文档find"><a href="#查询文档find" class="headerlink" title="查询文档find"></a>查询文档find</h1><p>find是MongoDB中查询数据的基本指令，相当于SQL中的SELECT find返回的是游标 示例：</p>
+<ul>
+<li>db.movies.find({“year”:1975}) 单条件查询</li>
+<li>db.movies.find({“year”:1989,”title”:”Batman”}) 多条件and查询</li>
+<li>db.movies.find({$and:[{“title”:”Batman”},{“category”:”action”}]}) and的另一种形式</li>
+<li>db.movies.find($or:[{“year”:1989},{“title”:”Batman”}]) 多条件or查询</li>
+<li>db.movies.find({“title”:”&#x2F;^B&#x2F;“}) 按正则表达式查找</li>
+</ul>
+<p>查询条件对照表:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SQL | MQL</span><br><span class="line">---|---</span><br><span class="line">a = 1 | &#123;a : 1&#125;</span><br><span class="line">a &lt;&gt; 1 (a!=1) | &#123;a: &#123;$ne: 1&#125;&#125;</span><br><span class="line">a &gt; 1 | &#123;a: &#123;$gt: 1&#125;&#125;</span><br><span class="line">a &gt;= 1 | &#123;a: &#123;$gte: 1&#125;&#125;</span><br><span class="line">a &lt; 1 | &#123;a: &#123;$lt: 1&#125;&#125;</span><br><span class="line">a &lt;= 1 | &#123;a: &#123;$lte: 1&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查询逻辑对照表:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SQL | MQL</span><br><span class="line">---|---</span><br><span class="line">a = 1 AND b = 1 | &#123;a : 1,b: 1&#125; 或 &#123;$and:[&#123;a:1&#125;,&#123;b:1&#125;]&#125;</span><br><span class="line">a =1 OR b=1 | &#123;$or: [&#123;a: 1&#125;,&#123;b:1&#125;]&#125;</span><br><span class="line">a IS NULL | &#123;a: &#123;$exists: false&#125;&#125;</span><br><span class="line">a IN (1,2,3) | &#123;a: &#123;$in:[1,2,3]&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查询逻辑运算符：</p>
+<ul>
+<li>$lt ：存在并小于</li>
+<li>$lte ：存在并小于等于</li>
+<li>$gt ：存在并大于</li>
+<li>$gte ：存在并大于等于</li>
+<li>$ne ：不存在或存在但不等于</li>
+<li>$in : 存在并在指定数组中</li>
+<li>$nin : 不存在或不在指定数组中</li>
+<li>$or : 匹配两个或多个添加中的一个</li>
+<li>$and : 匹配全部条件</li>
+</ul>
+<h2 id="使用find搜索子文档"><a href="#使用find搜索子文档" class="headerlink" title="使用find搜索子文档"></a>使用find搜索子文档</h2><p>假设现在有一个文档：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">db.fruit.insertOne(&#123;</span><br><span class="line">    name : &quot;apple&quot;,</span><br><span class="line">    from : &#123;</span><br><span class="line">        country : &quot;china&quot;,</span><br><span class="line">        province : &quot;guanddong&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当要进行查询<code>from</code>属性中的<code>country</code>值为<code>china</code>时语句应该要怎样写呢？即查询<code>fruit</code>中的子文档<code>from</code>时应该怎样查询？ 可以使用这样的语句：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.fruit.find(&#123;&quot;from.country&quot;:&quot;china&quot;&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用find搜索数组"><a href="#使用find搜索数组" class="headerlink" title="使用find搜索数组"></a>使用find搜索数组</h2><ol>
+<li>查询条件在数组中时 文档格式如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.fruit.insert([</span><br><span class="line">    &#123;name:&quot;apple&quot;,color:[&quot;red&quot;,&quot;green&quot;]&#125;,</span><br><span class="line">    &#123;name:&quot;pear&quot;,color:[&quot;yellow&quot;,&quot;green&quot;]&#125;</span><br><span class="line">])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当要查询颜色为<code>red</code>语句时可以这样写：<code>db.fruit.find(&#123;color:&quot;red&quot;&#125;)</code> 当查询条件为多个时，可以这样写：<code>db.fruit.find(&#123;$or:[&#123;color:&quot;red&quot;&#125;,&#123;color:&quot;yellow&quot;&#125;]&#125;)</code></p>
+<ol>
+<li>当数组里面为对象时，格式如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.movies.insertOne(&#123;</span><br><span class="line">    &quot;title&quot;:&quot;Raiders of the Lost ark&quot;,</span><br><span class="line">    &quot;filming_locations&quot; : [</span><br><span class="line">        &#123;&quot;city&quot;:&quot;Los Angeles&quot;,&quot;state&quot;:&quot;CA&quot;,&quot;country&quot;:&quot;USA&quot;&#125;,</span><br><span class="line">        &#123;&quot;city&quot;:&quot;Rome&quot;,&quot;state&quot;:&quot;Lazio&quot;,&quot;country&quot;:&quot;Italy&quot;&#125;,</span><br><span class="line">        &#123;&quot;city&quot;:&quot;Florence&quot;,&quot;state&quot;:&quot;SC&quot;,&quot;country&quot;:&quot;USA&quot;&#125;,</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当需要查找城市为<code>Rome</code>的记录时： <code>db.movies.find(&#123;&quot;filming_locations.city&quot;:&quot;Rome&quot;&#125;)</code> 3. 当查找子数组的多个字段都需要满足条件时，可以使用如下查询。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(&#x27;movies&#x27;).find(&#123;</span><br><span class="line">    &quot;filming_locations.city&quot;:&quot;Rome&quot;,</span><br><span class="line">    &quot;filming_locations.country&quot;:&quot;USA&quot;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也可使用<code>$elemMatch</code>来进行匹配查询</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(&#x27;movies&#x27;).find(&#123;</span><br><span class="line">    &quot;filming_locations&quot;:&#123;</span><br><span class="line">        $elemMatch:&#123;&quot;city&quot;:&quot;Rome&quot;,&quot;country&quot;:&quot;USA&quot;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="控制find返回的字段"><a href="#控制find返回的字段" class="headerlink" title="控制find返回的字段"></a>控制find返回的字段</h2><p>find({condition},{columns})</p>
+<ul>
+<li>find可以指定返回指定的字段</li>
+<li>_id字段必须明确指明不返还，否则默认返回</li>
+<li>在MongoDB中称其为投影（projection）</li>
+<li><code>db.movies.find(&#123;&quot;category&quot;:&quot;action&quot;&#125;,&#123;&quot;_id&quot;:0,title:1&#125;)</code> 这条查询语句中指明不返回id，返回title字段</li>
+</ul>
+<h1 id="使用remove删除文档"><a href="#使用remove删除文档" class="headerlink" title="使用remove删除文档"></a>使用remove删除文档</h1><ul>
+<li>remove命令需要配合查询条件使用</li>
+<li>匹配查询条件的文档会被删除</li>
+<li>指定一个空文档条件会删除所有文档</li>
+</ul>
+<p>实例：</p>
+<ul>
+<li>db.testcol.remove({a:1}) 删除a&#x3D;1的记录</li>
+<li>db.testcol.remove({a:{$lt:5}}) 删除a&lt;&#x3D;5的记录</li>
+<li>db.testcol.remove({}) 删除所有记录</li>
+<li>db.testcol.remove() 报错</li>
+</ul>
+<h1 id="使用update更新文档"><a href="#使用update更新文档" class="headerlink" title="使用update更新文档"></a>使用update更新文档</h1><p>db.&lt;集合&gt;.update(&lt;查询条件&gt;,&lt;更新字段&gt;) 当被更新的字段如果不存在，则创建字段，如果存在则更新 以如下的结构为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.fruit.insertMany([</span><br><span class="line">    &#123;name:&quot;apple&quot;&#125;,</span><br><span class="line">    &#123;name:&quot;pear&quot;&#125;,</span><br><span class="line">    &#123;name:&quot;orange&quot;&#125;</span><br><span class="line">])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>对<code>name=apple</code>的文档添加属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.fruit.updateOne(&#123;name:&quot;apple&quot;&#125;,&#123;$set:&#123;from:&quot;china&quot;&#125;&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用updateOne()表示无论条件匹配多少条记录，始终只更新第一条</li>
+<li>使用updateMany表示条件匹配多少条就更新多少条</li>
+<li>updateOne&#x2F;updateMany方法要求更新条件部分必须有以下之一，否则将报 错：<ul>
+<li>$set&#x2F;$unset</li>
+<li>$push&#x2F;$pushAll&#x2F;$pop</li>
+<li>$pull&#x2F;$pullAll</li>
+<li>$addToSet</li>
+</ul>
+</li>
+</ul>
+<p>更新命令：</p>
+<ul>
+<li>$push 增加一个对象到数组底部</li>
+<li>$pushAll 增加多个对象到数组底部</li>
+<li>$pop 从数组底部删除一个对象</li>
+<li>$pull 如果匹配指定的值，从数组中删除相应的对象</li>
+<li>$pullAll 如果匹配任意的值，从数组中删除相应的对象</li>
+<li>$addToSet 不过不存在则增加一个值到数组</li>
+</ul>
+<h1 id="使用drop删除集合"><a href="#使用drop删除集合" class="headerlink" title="使用drop删除集合"></a>使用drop删除集合</h1><ul>
+<li>使用db.&lt;集合&gt;.drop()来删除一个集合</li>
+<li>集合中的全部文档都会被删除</li>
+<li>集合相关的索引也会被删除</li>
+</ul>
+<p><code>db.fruit.drop()</code> </p>
+<h1 id="使用dropDatabase删除数据库"><a href="#使用dropDatabase删除数据库" class="headerlink" title="使用dropDatabase删除数据库"></a>使用dropDatabase删除数据库</h1><ul>
+<li>使用db.dropDatabase()来删除数据库</li>
+<li>数据库相应文件也会被删除，磁盘空间将被释放</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use tempDB</span><br><span class="line">db.dropDatabase()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<h2>Tags: </h2>
+  <p><a class="classtest-link" href="/tags/Mongo/" rel="tag">Mongo</a> — 2020年4月14日</p>
+  
+
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+        </div>
+        <!-- <div class="row mt-2">
+  <h3>Search</h3>
+  <div><input id="search-text" title="search" class="search-text" type="text" placeholder="search......"></div>
+  <div style="margin-top: 1.5rem;">
+    <ul id="result"></ul>
+  </div>
+</div> -->
+        <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+    </div>
+
+    <!-- Sepcial thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/liunaijie" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+
+      
+
+      
+
+      
+      
+        <a class="ml-0 footer-link icon" href="mailto:jarvis@apache.org" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Email">
+          <svg class="email svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Email</title><path d="M12 12.713l11.985-7.99c-.01-.01-11.985-7.723-11.985-7.723s-11.975 7.713-11.985 7.723l11.985 7.99zm0 2.287l-12-8v14h24v-14l-12 8z"/></svg>
+        </a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>
