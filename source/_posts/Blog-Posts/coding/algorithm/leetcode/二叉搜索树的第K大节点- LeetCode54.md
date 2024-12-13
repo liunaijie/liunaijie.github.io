@@ -1,9 +1,10 @@
 ---
 title: 二叉搜索树的第K大节点-剑指Offer LeetCode54
-date: 2022-03-23 20:14:19
+date: 2022-03-23
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

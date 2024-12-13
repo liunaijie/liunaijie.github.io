@@ -1,8 +1,10 @@
 ---
 title: 多数元素-LeetCode169
-date: 2020-03-29 14:03:52
+date: 2020-03-29
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

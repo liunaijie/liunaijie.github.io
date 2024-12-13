@@ -1,8 +1,10 @@
 ---
 title: 保持城市的天际线-LeetCode807
-date: 2019-08-06 23:13:34
+date: 2019-08-06
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,12 +1,10 @@
 ---
 title: LinkedList源码学习
-date: 2019-08-21 09:44:49
+date: 2019-08-21
 categories:
-  - - coding
-    - java
+  - notes
 tags:
   - Java
-  - Java/collection
 related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 

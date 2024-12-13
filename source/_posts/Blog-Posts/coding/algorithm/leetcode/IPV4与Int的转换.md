@@ -1,9 +1,10 @@
 ---
 title: IPV4与Int的转换
-date: 2021-01-05 21:13:30
+date: 2021-01-05
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

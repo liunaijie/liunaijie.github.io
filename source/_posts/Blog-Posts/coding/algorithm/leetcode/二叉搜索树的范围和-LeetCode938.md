@@ -1,9 +1,10 @@
 ---
 title: 二叉搜索树的范围和-LeetCode938
-date: 2019-10-31 20:53:30
+date: 2019-10-31
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

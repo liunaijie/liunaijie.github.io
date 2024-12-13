@@ -1,9 +1,10 @@
 ---
 title: 移除元素-LeetCode27
-date: 2019-12-14 21:02:38
+date: 2019-12-14
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

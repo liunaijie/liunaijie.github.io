@@ -1,8 +1,10 @@
 ---
 title: 反转图像—LeetCode832
-date: 2019-06-10 21:34:39
+date: 2019-06-10
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,8 +1,10 @@
 ---
 title: 二进制链表转整数-LeetCode1290
-date: 2019-02-21 20:17:30
+date: 2019-02-21
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

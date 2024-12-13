@@ -1,9 +1,10 @@
 ---
 title: 最大二叉树—LeetCode654
-date: 2019-01-08 20:52:40
+date: 2019-01-08
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

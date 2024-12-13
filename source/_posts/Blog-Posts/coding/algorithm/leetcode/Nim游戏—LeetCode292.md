@@ -1,9 +1,11 @@
 ---
 title: Nim游戏—LeetCode292
-date: 2019-06-01 13:52:40
+date: 2019-06-01
+categories:
+  - notes
 tags:
   - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

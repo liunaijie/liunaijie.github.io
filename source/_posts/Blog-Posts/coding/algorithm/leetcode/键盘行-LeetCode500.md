@@ -1,8 +1,10 @@
 ---
 title: 键盘行-LeetCode500
-date: 2019-07-15 20:06:56
+date: 2019-07-15
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

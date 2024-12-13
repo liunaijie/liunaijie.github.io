@@ -1,8 +1,10 @@
 ---
 title: 旋转数组—LeetCode189
-date: 2018-08-29 20:28:32
+date: 2018-08-29
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

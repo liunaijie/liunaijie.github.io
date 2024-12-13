@@ -1,8 +1,10 @@
 ---
 title: 矩阵中的路径-剑指Offer LeetCode12
-date: 2022-03-25 00:02:19
+date: 2022-03-25
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

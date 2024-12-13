@@ -1,8 +1,10 @@
 ---
 title: 跳跃游戏-LeetCode55
-date: 2022-04-14 07:35:38
+date: 2022-04-14
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

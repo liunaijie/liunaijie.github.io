@@ -1,9 +1,10 @@
 ---
 title: 环形链表—LeetCode141
-date: 2019-12-21 13:13:30
+date: 2019-12-21
+categories:
+  - notes
 tags:
-  - 算法与数据结构/链表
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

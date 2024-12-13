@@ -1,9 +1,11 @@
 ---
 title: 使用最小花费爬楼梯-LeetCode746
-date: 2022-04-13 20:52:24
+date: 2022-04-13
+categories:
+  - notes
 tags:
-  - 算法与数据结构/动态规划
-  - 算法与数据结构/Leetcode
+  - 动态规划
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

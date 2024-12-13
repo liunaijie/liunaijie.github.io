@@ -1,8 +1,10 @@
 ---
 title: 机器人能否返回终点—LeetCode657
-date: 2019-06-03 14:32:30
+date: 2019-06-03
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

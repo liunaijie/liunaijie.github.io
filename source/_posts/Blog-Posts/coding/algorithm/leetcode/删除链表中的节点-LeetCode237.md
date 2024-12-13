@@ -1,8 +1,10 @@
 ---
 title: 删除链表中的节点—LeetCode237
-date: 2019-04-07 20:13:30
+date: 2019-04-07
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

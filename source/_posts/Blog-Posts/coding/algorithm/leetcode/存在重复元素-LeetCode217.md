@@ -1,8 +1,10 @@
 ---
 title: 存在重复元素-LeetCode217
-date: 2019-03-10 21:50:48
+date: 2019-03-10
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

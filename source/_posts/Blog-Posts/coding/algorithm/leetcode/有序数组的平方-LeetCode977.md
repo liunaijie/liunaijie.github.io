@@ -1,9 +1,10 @@
 ---
 title: 有序数组的平方—LeetCode977
-date: 2019-01-09 13:52:40
+date: 2019-01-09
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

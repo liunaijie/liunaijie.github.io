@@ -1,9 +1,10 @@
 ---
 title: 重复N次的元素-LeetCode961
-date: 2019-08-08 21:01:56
+date: 2019-08-08
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

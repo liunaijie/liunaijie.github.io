@@ -1,8 +1,10 @@
 ---
 title: 回文数—LeetCode9
-date: 2019-11-07 19:58:29
+date: 2019-11-07
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

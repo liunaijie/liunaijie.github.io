@@ -1,9 +1,10 @@
 ---
 title: 对称二叉树—LeetCode101
-date: 2019-02-25 11:21:16
+date: 2019-02-25
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

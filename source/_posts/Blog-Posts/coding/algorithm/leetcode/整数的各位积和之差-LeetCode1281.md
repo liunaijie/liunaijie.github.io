@@ -1,9 +1,10 @@
 ---
 title: 整数的各位积和之差—LeetCode1281
-date: 2020-02-19 11:52:30
+date: 2020-02-19
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

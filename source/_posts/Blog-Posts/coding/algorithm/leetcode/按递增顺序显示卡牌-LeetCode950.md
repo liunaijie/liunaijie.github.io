@@ -1,8 +1,10 @@
 ---
 title: 按递增顺序显示卡牌—LeetCode950
-date: 2019-01-05 21:13:30
+date: 2019-01-05
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

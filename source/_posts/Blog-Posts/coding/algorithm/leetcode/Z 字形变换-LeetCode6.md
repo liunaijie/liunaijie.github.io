@@ -1,9 +1,10 @@
 ---
 title: Z字形变换—LeetCode6
-date: 2020-07-02 22:03:47
+date: 2020-07-02
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

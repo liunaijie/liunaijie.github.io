@@ -1,8 +1,10 @@
 ---
 title: 两数之和—LeetCode1
-date: 2018-08-25 20:52:40
+date: 2018-08-25
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

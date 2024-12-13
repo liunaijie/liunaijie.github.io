@@ -1,9 +1,11 @@
 ---
 title: 最大子数组和-LeetCode53
-date: 2022-04-14 08:02:56
+date: 2022-04-14
+categories:
+  - notes
 tags:
-  - 算法与数据结构/动态规划
-  - 算法与数据结构/Leetcode
+  - 动态规划
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

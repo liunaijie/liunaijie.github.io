@@ -1,9 +1,10 @@
 ---
 title: 买卖股票的最佳时机II-LeetCode122
-date: 2019-03-18 10:50:08
+date: 2019-03-18
+categories:
+  - notes
 tags:
-  - 算法与数据结构/贪心
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

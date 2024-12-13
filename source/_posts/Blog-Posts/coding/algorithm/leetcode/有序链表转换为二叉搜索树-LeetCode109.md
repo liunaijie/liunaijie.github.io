@@ -1,9 +1,10 @@
 ---
 title: 有序链表转换为二叉搜索树—LeetCode109
-date: 2020-03-21 17:13:30
+date: 2020-03-21
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

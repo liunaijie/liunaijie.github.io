@@ -1,9 +1,10 @@
 ---
 title: 翻转二叉树—LeetCode226
-date: 2019-11-01 10:13:30
+date: 2019-11-01
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

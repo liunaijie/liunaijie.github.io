@@ -1,8 +1,10 @@
 ---
 title: 加一—LeetCode66
-date: 2018-08-27 21:05:12
+date: 2018-08-27
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

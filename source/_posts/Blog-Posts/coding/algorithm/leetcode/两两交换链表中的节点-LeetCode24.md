@@ -1,9 +1,10 @@
 ---
 title: 两两交换链表中的节点—LeetCode24
-date: 2019-11-21 14:13:30
+date: 2019-11-21
+categories:
+  - notes
 tags:
-  - 算法与数据结构/链表
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

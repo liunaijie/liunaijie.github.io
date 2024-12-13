@@ -1,8 +1,10 @@
 ---
 title: 宝石与石头-LeetCode771
-date: 2018-12-19 18:55:48
+date: 2018-12-19
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: 最后一个单词的长度-LeetCode58
-date: 2018-12-20 21:40:08
+date: 2018-12-20
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: 杨辉三角—LeetCode118
-date: 2019-05-05 20:13:30
+date: 2019-05-05
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,9 +1,11 @@
 ---
 title: 打家劫舍—LeetCode198
-date: 2022-04-13 21:12:29
+date: 2022-04-13
+categories:
+  - notes
 tags:
-  - 算法与数据结构/动态规划
-  - 算法与数据结构/Leetcode
+  - 动态规划
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

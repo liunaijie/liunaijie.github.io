@@ -1,9 +1,10 @@
 ---
 title: 自除数—LeetCode728
-date: 2019-06-04 15:20:09
+date: 2019-06-04
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

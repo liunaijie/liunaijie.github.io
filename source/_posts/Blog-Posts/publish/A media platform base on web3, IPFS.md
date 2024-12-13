@@ -5,7 +5,7 @@ categories:
   - publish
 tags:
   - inspiration
-  - web3
+  - Web3
 ---
 # Purpose
 Now there has a lot of media company, but they won the data, means they can delete your video at any time and tell you: you broke some rules.

@@ -1,9 +1,10 @@
 ---
 title: 二叉树的锯齿形层次遍历-LeetCode103
-date: 2020-03-31 09:34:50
+date: 2020-03-31
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

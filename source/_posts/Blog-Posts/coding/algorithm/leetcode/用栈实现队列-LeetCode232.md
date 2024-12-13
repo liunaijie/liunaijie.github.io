@@ -1,10 +1,10 @@
 ---
 title: 用栈实现队列-LeetCode232
-date: 2019-11-24 09:34:27
+date: 2019-11-24
+categories:
+  - notes
 tags:
-  - 算法与数据结构/队列
-  - 算法与数据结构/栈
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

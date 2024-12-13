@@ -1,8 +1,10 @@
 ---
 title: 罗马数字转整数-LeetCode13
-date: 2018-12-10 19:59:29
+date: 2018-12-10
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

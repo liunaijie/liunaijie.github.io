@@ -1,9 +1,10 @@
 ---
 title: 转换为小写字母—LeetCode709
-date: 2019-01-03 13:52:40
+date: 2019-01-03
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

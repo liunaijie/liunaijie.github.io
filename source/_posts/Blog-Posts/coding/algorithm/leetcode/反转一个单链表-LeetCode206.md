@@ -1,9 +1,10 @@
 ---
 title: 反转一个单链表-LeetCode206
-date: 2019-11-24 11:18:35
+date: 2019-11-24
+categories:
+  - notes
 tags:
-  - 算法与数据结构/链表
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

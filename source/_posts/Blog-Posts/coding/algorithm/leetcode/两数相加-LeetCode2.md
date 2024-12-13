@@ -1,8 +1,10 @@
 ---
 title: 两数相加-LeetCode2
-date: 2019-08-20 16:17:51
+date: 2019-08-20
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

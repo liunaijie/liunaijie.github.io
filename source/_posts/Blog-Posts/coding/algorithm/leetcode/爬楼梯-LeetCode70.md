@@ -1,9 +1,11 @@
 ---
 title: 爬楼梯-LeetCode70
-date: 2019-03-16 19:56:08
+date: 2019-03-16
+categories:
+  - notes
 tags:
-  - 算法与数据结构/动态规划
-  - 算法与数据结构/Leetcode
+  - 动态规划
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

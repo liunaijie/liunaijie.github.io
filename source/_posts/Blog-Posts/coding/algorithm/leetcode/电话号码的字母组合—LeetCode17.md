@@ -1,8 +1,10 @@
 ---
 title: 电话号码的字母组合—LeetCode17
-date: 2019-06-15 20:48:52
+date: 2019-06-15
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

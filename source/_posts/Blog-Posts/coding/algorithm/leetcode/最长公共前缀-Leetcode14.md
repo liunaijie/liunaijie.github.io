@@ -1,9 +1,10 @@
 ---
 title: 最长公共前缀-LeetCode14
-date: 2018-12-12 20:50:52
+date: 2018-12-12
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

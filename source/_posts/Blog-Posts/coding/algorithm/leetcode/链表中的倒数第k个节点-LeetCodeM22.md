@@ -1,9 +1,10 @@
 ---
 title: 链表中的倒数第K个节点-LeetCodeM22
-date: 2020-02-08 11:42:28
+date: 2020-02-08
+categories:
+  - notes
 tags:
-  - 算法与数据结构/链表
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: 整数反转—LeetCode7
-date: 2019-11-15 20:18:39
+date: 2019-11-15
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

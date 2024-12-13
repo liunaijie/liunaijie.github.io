@@ -1,9 +1,10 @@
 ---
 title: 二叉树中和为某一值的路径- 剑指Offer LeetCode34
-date: 2022-03-24 22:21:46
+date: 2022-03-24
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: 最小的k个数-LeetCodeM40
-date: 2020-04-13 12:29:33
+date: 2020-04-13
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

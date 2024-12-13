@@ -1,9 +1,8 @@
 ---
 title: 算法与数据结构
-date: 2019-10-15 10:01:10
+date: 2019-10-15
 categories:
-  - - coding
-    - algorithm
+  - notes
 tags:
   - 算法与数据结构
 ---

@@ -1,8 +1,10 @@
 ---
 title: 翻转单词顺序-LeetCode58
-date: 2022-04-13 09:20:49
+date: 2022-04-13
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

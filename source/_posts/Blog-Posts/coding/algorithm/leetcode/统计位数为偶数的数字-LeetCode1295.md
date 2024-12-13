@@ -1,8 +1,10 @@
 ---
 title: 统计位数为偶数的数字—LeetCode1295
-date: 2020-02-21 21:13:30
+date: 2020-02-21
+categories:
+  - notes
 tags:
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

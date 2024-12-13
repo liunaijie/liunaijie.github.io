@@ -1,9 +1,10 @@
 ---
 title: 增减字符串匹配—LeetCode942
-date: 2019-06-20 20:36:23
+date: 2019-06-20
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

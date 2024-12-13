@@ -1,9 +1,10 @@
 ---
 title: 二叉树的最大深度-LeetCode104
-date: 2020-02-20 20:53:30
+date: 2020-02-20
+categories:
+  - notes
 tags:
-  - 算法与数据结构/二叉树
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

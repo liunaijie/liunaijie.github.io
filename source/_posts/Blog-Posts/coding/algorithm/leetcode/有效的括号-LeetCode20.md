@@ -1,9 +1,10 @@
 ---
 title: 有效的括号—LeetCode20
-date: 2019-08-07 20:17:30
+date: 2019-08-07
+categories:
+  - notes
 tags:
-  - 算法与数据结构
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 

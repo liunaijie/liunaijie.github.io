@@ -1,9 +1,10 @@
 ---
 title: K个一组翻转链表-LeetCode25
-date: 2019-11-27 18:50:08
+date: 2019-11-27
+categories:
+  - notes
 tags:
-  - 算法与数据结构/链表
-  - 算法与数据结构/Leetcode
+  - LeetCode
 related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
 ---
 
