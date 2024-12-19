@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/tools/raspberry_pi/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%B9%B6%E7%BB%91%E5%AE%9A%E8%87%AA%E5%B7%B1%E7%9A%84%E5%9F%9F%E5%90%8D/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="frp内网穿透并绑定自已的域名">
+  <meta property="og:description" content="环境需求 一台有公网ip的机器，一台内网的机器(以树莓派为例)
+使用软件：nginx、frp
+frp软件地址：https://github.com/fatedier/frp
+申请自己的域名，并将域名解析到公网ip(可以为三级或四级域名)(可选) frp配置 我们首先需要根据自己的机型下载适合的版本，要注意的是服务器与客户端都要使用同一个frp版本
+下载地址：https://github.com/fatedier/frp/releases
+比如我使用的树莓派是arm系统的，就选择了最新版本的linux_arm版本，下载完成后解压，进入
+服务器： 服务器修改的是frps.ini配置文件
+1 2 3 4 [common] bind_port = 7000 # 绑定本机的端口 vhost_http_port = 7001 #http访问的端口 subdomail_host = pi.liunaijie.top # 自己的域名 然后后台启动即可：nohup ./frps -c ./frps.ini &amp;
+默认日志为nohup.out，可以查看这个文件查看frp是否正常启动
+树莓派(或其他内网机器) 客户端修改frpc.ini配置文件
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 [common] server_addr = x.x.x.x #公网的ip地址 server_port = 7000 # 服务器开启的端口 [ssh] # 开启ssh type = tcp local_ip = 127.0.0.1 local_port = 22 remote_port = 6000 # 远程ssh端口 [web] # web服务 type = http local_port = 80 custom_domains = pi.liunaijie.top # 我们自己的域名，可以通过这个域名访问这个机器 然后后台启动服务nohup ./frpc -c ./frpc.ini &amp;。要注意的是我们要先开启服务器的服务，不然本地是无法开启的。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-03-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-03-20T00:00:00+00:00">
+    <meta property="article:tag" content="树莓派">
+    <meta property="article:tag" content="Frp">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="frp内网穿透并绑定自已的域名">
+  <meta name="twitter:description" content="环境需求 一台有公网ip的机器，一台内网的机器(以树莓派为例)
+使用软件：nginx、frp
+frp软件地址：https://github.com/fatedier/frp
+申请自己的域名，并将域名解析到公网ip(可以为三级或四级域名)(可选) frp配置 我们首先需要根据自己的机型下载适合的版本，要注意的是服务器与客户端都要使用同一个frp版本
+下载地址：https://github.com/fatedier/frp/releases
+比如我使用的树莓派是arm系统的，就选择了最新版本的linux_arm版本，下载完成后解压，进入
+服务器： 服务器修改的是frps.ini配置文件
+1 2 3 4 [common] bind_port = 7000 # 绑定本机的端口 vhost_http_port = 7001 #http访问的端口 subdomail_host = pi.liunaijie.top # 自己的域名 然后后台启动即可：nohup ./frps -c ./frps.ini &amp;
+默认日志为nohup.out，可以查看这个文件查看frp是否正常启动
+树莓派(或其他内网机器) 客户端修改frpc.ini配置文件
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 [common] server_addr = x.x.x.x #公网的ip地址 server_port = 7000 # 服务器开启的端口 [ssh] # 开启ssh type = tcp local_ip = 127.0.0.1 local_port = 22 remote_port = 6000 # 远程ssh端口 [web] # web服务 type = http local_port = 80 custom_domains = pi.liunaijie.top # 我们自己的域名，可以通过这个域名访问这个机器 然后后台启动服务nohup ./frpc -c ./frpc.ini &amp;。要注意的是我们要先开启服务器的服务，不然本地是无法开启的。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - frp内网穿透并绑定自已的域名
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">frp内网穿透并绑定自已的域名</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 03 月 20 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e6%a0%91%e8%8e%93%e6%b4%be">#树莓派</a>
+      
+      
+      <a class="ml-1" href="/tags/frp">#frp</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="环境需求">环境需求</h1>
+<ol>
+<li>
+<p>一台有公网ip的机器，一台内网的机器(以树莓派为例)</p>
+</li>
+<li>
+<p>使用软件：<code>nginx</code>、<code>frp</code></p>
+</li>
+</ol>
+<p>frp软件地址：<a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a></p>
+<ol start="3">
+<li>申请自己的域名，并将域名解析到公网ip(可以为三级或四级域名)(可选)</li>
+</ol>
+<h1 id="frp配置">frp配置</h1>
+<p>我们首先需要根据自己的机型下载适合的版本，要注意的是服务器与客户端都要使用同一个frp版本</p>
+<p>下载地址：<a href="https://github.com/fatedier/frp/releases">https://github.com/fatedier/frp/releases</a></p>
+<p>比如我使用的树莓派是arm系统的，就选择了最新版本的linux_arm版本，下载完成后解压，进入</p>
+<h2 id="服务器">服务器：</h2>
+<p>服务器修改的是frps.ini配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"> <span class="o">[</span>common<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">bind_port</span> <span class="o">=</span> <span class="m">7000</span>  <span class="c1"># 绑定本机的端口</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">vhost_http_port</span> <span class="o">=</span> <span class="m">7001</span>  <span class="c1">#http访问的端口</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">subdomail_host</span> <span class="o">=</span> pi.liunaijie.top <span class="c1"># 自己的域名</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后后台启动即可：<code>nohup ./frps -c ./frps.ini &amp;</code></p>
+<p>默认日志为nohup.out，可以查看这个文件查看frp是否正常启动</p>
+<h2 id="树莓派或其他内网机器">树莓派(或其他内网机器)</h2>
+<p>客户端修改frpc.ini配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>common<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">server_addr</span> <span class="o">=</span> x.x.x.x <span class="c1">#公网的ip地址</span>
+</span></span><span class="line"><span class="cl"><span class="nv">server_port</span> <span class="o">=</span> <span class="m">7000</span> <span class="c1"># 服务器开启的端口</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>ssh<span class="o">]</span>  <span class="c1"># 开启ssh</span>
+</span></span><span class="line"><span class="cl"><span class="nb">type</span> <span class="o">=</span> tcp
+</span></span><span class="line"><span class="cl"><span class="nv">local_ip</span> <span class="o">=</span> 127.0.0.1
+</span></span><span class="line"><span class="cl"><span class="nv">local_port</span> <span class="o">=</span> <span class="m">22</span>
+</span></span><span class="line"><span class="cl"><span class="nv">remote_port</span> <span class="o">=</span> <span class="m">6000</span> <span class="c1"># 远程ssh端口</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>web<span class="o">]</span> <span class="c1"># web服务</span>
+</span></span><span class="line"><span class="cl"><span class="nb">type</span> <span class="o">=</span> http 
+</span></span><span class="line"><span class="cl"><span class="nv">local_port</span> <span class="o">=</span> <span class="m">80</span> 
+</span></span><span class="line"><span class="cl"><span class="nv">custom_domains</span> <span class="o">=</span> pi.liunaijie.top  <span class="c1"># 我们自己的域名，可以通过这个域名访问这个机器</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后后台启动服务<code>nohup ./frpc -c ./frpc.ini &amp;</code>。要注意的是我们要先开启服务器的服务，不然本地是无法开启的。</p>
+<h1 id="nginx配置">nginx配置</h1>
+<p>如果按照官网的文档这样就配置完成了，但是我的服务器并不只是作为这个内网穿透的功能，还有其他的功能，并且是通过nginx进行转发，所以还需要配置ningx。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">。。。其他设置。。。</span>
+</span></span><span class="line"><span class="cl"><span class="s">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span> <span class="c1">#监听http的80端口
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="kn">server_name</span> <span class="s">pi.liunaijie.top</span><span class="p">;</span>  <span class="c1"># 这是我们设置的域名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="kn">access_log</span>  <span class="s">logs/pi_liunaijie.log</span>  <span class="s">main</span><span class="p">;</span> <span class="c1"># 记录日志
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                  <span class="kn">proxy_pass</span> <span class="s">http://127.0.0.1:7001</span><span class="p">;</span> <span class="c1"># 转发到我们在frps.ini中设置的vhost_http_port端口
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                  <span class="kn">proxy_set_header</span>    <span class="s">Host</span>            <span class="nv">$host:80</span><span class="p">;</span>  <span class="c1">#不添加这行时访问需要 域名:7001才能访问到内网的机器，如果加了就不再需要后面的端口，直接使用域名访问
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                  <span class="kn">proxy_set_header</span>    <span class="s">X-Real-IP</span>       <span class="nv">$remote_addr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                  <span class="kn">proxy_set_header</span>    <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                  <span class="kn">proxy_hide_header</span>   <span class="s">X-Powered-By</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">。。。其他设置。。。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="https配置">https配置</h1>
+<p>首先在<code>frps.ini</code>中进行添加<code>https</code>的配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"> <span class="o">[</span>common<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">bind_port</span> <span class="o">=</span> <span class="m">7000</span>  <span class="c1"># 绑定本机的端口</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">vhost_http_port</span> <span class="o">=</span> <span class="m">7001</span>  <span class="c1">#http访问的端口</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">vhost_https_port</span> <span class="o">=</span> <span class="m">7002</span> <span class="c1"># https的端口</span>
+</span></span><span class="line"><span class="cl"> <span class="nv">subdomail_host</span> <span class="o">=</span> pi.liunaijie.top <span class="c1"># 自己的域名</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在<code>frpc.ini</code>中修改配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">...省略...
+</span></span><span class="line"><span class="cl"><span class="nb">type</span> <span class="o">=</span> https 
+</span></span><span class="line"><span class="cl"><span class="nv">local_port</span> <span class="o">=</span> <span class="m">443</span> 
+</span></span><span class="line"><span class="cl"><span class="nv">custom_domains</span> <span class="o">=</span> pi.liunaijie.top  <span class="c1"># 我们自己的域名，可以通过这个域名访问这个机器</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后开启服务我们可以通过我们设置的域名加端口进行访问，例如以我上面的配置就需要<code>https://pi.liunaijie.top:7002</code>来进行访问。但是我不想使用后面的端口所以又进行修改了nginx的配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">...省略...</span>
+</span></span><span class="line"><span class="cl"><span class="s">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">server_name</span> <span class="s">pi.liunaijie.top</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">charset</span> <span class="s">utf-8</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">ssl_certificate</span> <span class="s">/usr/local/nginx/cert/pi.liunaijie.top.pem</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">ssl_certificate_key</span> <span class="s">/usr/local/nginx/cert/pi.liunaijie.top.key</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">access_log</span>  <span class="s">logs/pi_liunaijie.log</span>  <span class="s">main</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">resolver</span> <span class="mi">8</span><span class="s">.8.8.8</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">proxy_ssl_server_name</span> <span class="no">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">proxy_pass</span> <span class="s">https://</span><span class="nv">$host:7002</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">proxy_set_header</span>    <span class="s">Host</span>            <span class="nv">$host:$server_port</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">proxy_set_header</span>    <span class="s">X-Real-IP</span>       <span class="nv">$remote_addr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">proxy_set_header</span>    <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kn">proxy_hide_header</span>   <span class="s">X-Powered-By</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>其中有很重要的几条配置，一定要注意，不然还是没法不加端口进行访问</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">resolver 8.8.8.8<span class="p">;</span> <span class="c1"># 这个最重要 不加这个就是502，加了就好了 也不知道是为什么</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我现在是http与https并存，如果只想使用https可以在nginx的80端口进行跳转</p>
+<p>到此我们就完成了通过我们预定义的域名访问在内网中的机器。</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

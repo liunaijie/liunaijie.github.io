@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/tools/hexo%E4%BD%BF%E7%94%A8/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Hexo使用">
+  <meta property="og:description" content="其实根据官网文档就很容易进行安装了，官网文档链接，所以也不写安装和启动的流程了。
+安装主题 修改配置 项目配置 主题配置 部署、发布 修改_config.yml配置文件，支持多个配置信息，如果多个需要如下填写
+1 2 3 4 5 6 7 8 9 10 # 单个配置 deploy: type: git repo: # 多个配置 deploy: - type: git repo: - type: sftp repo: 发布到github
+先进行安装npm install hexo-deployer-git --save
+1 2 3 4 5 deploy: type: git repo: # 仓库地址，最好使用http的协议，使用ssh协议时有可能会报错 branch: #发布的分支，默认是 master message: # 提交的信息 发布到个人服务器（sftp）">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-01-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-01-17T00:00:00+00:00">
+    <meta property="article:tag" content="Hexo">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hexo使用">
+  <meta name="twitter:description" content="其实根据官网文档就很容易进行安装了，官网文档链接，所以也不写安装和启动的流程了。
+安装主题 修改配置 项目配置 主题配置 部署、发布 修改_config.yml配置文件，支持多个配置信息，如果多个需要如下填写
+1 2 3 4 5 6 7 8 9 10 # 单个配置 deploy: type: git repo: # 多个配置 deploy: - type: git repo: - type: sftp repo: 发布到github
+先进行安装npm install hexo-deployer-git --save
+1 2 3 4 5 deploy: type: git repo: # 仓库地址，最好使用http的协议，使用ssh协议时有可能会报错 branch: #发布的分支，默认是 master message: # 提交的信息 发布到个人服务器（sftp）">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Hexo使用
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Hexo使用</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 01 月 17 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/hexo">#hexo</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>其实根据官网文档就很容易进行安装了，<a href="https://hexo.io/zh-cn/docs/">官网文档链接</a>，所以也不写安装和启动的流程了。</p>
+<h1 id="安装主题">安装主题</h1>
+<h1 id="修改配置">修改配置</h1>
+<ol>
+<li>项目配置</li>
+<li>主题配置</li>
+</ol>
+<h1 id="部署发布">部署、发布</h1>
+<p>修改<code>_config.yml</code>配置文件，支持多个配置信息，如果多个需要如下填写</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 单个配置</span>
+</span></span><span class="line"><span class="cl">deploy:
+</span></span><span class="line"><span class="cl">  type: git
+</span></span><span class="line"><span class="cl">  repo:
+</span></span><span class="line"><span class="cl"><span class="c1"># 多个配置</span>
+</span></span><span class="line"><span class="cl">deploy:
+</span></span><span class="line"><span class="cl">- type: git
+</span></span><span class="line"><span class="cl">  repo:
+</span></span><span class="line"><span class="cl">- type: sftp
+</span></span><span class="line"><span class="cl">  repo:
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>发布到github</p>
+<p>先进行安装<code>npm install hexo-deployer-git --save</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">deploy:
+</span></span><span class="line"><span class="cl">  type: git
+</span></span><span class="line"><span class="cl">  repo: <span class="c1"># 仓库地址，最好使用http的协议，使用ssh协议时有可能会报错</span>
+</span></span><span class="line"><span class="cl">  branch: <span class="c1">#发布的分支，默认是 master</span>
+</span></span><span class="line"><span class="cl">  message: <span class="c1"># 提交的信息</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>发布到个人服务器（sftp）</p>
+<p>先进行安装<code>npm install hexo-deployer-sftp --save</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">deploy:
+</span></span><span class="line"><span class="cl">  type: sftp
+</span></span><span class="line"><span class="cl">  host: &lt;host&gt; <span class="c1"># 远程主机的地址</span>
+</span></span><span class="line"><span class="cl">  user: &lt;user&gt; <span class="c1"># 用户名</span>
+</span></span><span class="line"><span class="cl">  pass: &lt;password&gt; <span class="c1"># 密码</span>
+</span></span><span class="line"><span class="cl">  remotePath: <span class="o">[</span>remote path<span class="o">]</span> <span class="c1"># 发布到的路径</span>
+</span></span><span class="line"><span class="cl">  port: <span class="o">[</span>port<span class="o">]</span> <span class="c1"># 端口 默认为22</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<p>经过如上配置后，执行<code>hexo -d</code>后就会将生产的静态文件发布到git和服务器上。</p>
+<h1 id="草稿">草稿</h1>
+<p>有时候建立一些草稿，还没写完不需要发布的时候我们可以使用以下的方式来实现。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 新建草稿</span>
+</span></span><span class="line"><span class="cl">hexo new draft <span class="s1">&#39;md_name&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行这个命令后会在<code>source/_drafts</code>文件夹下新建一个<code>md_name.md</code>文件，所以我们不需要加文件后缀。</p>
+<p>然后我们启动hexo后并不能看到草稿，如果需要看到草稿可以使用以下方案</p>
+<ul>
+<li>
+<p>修改配置文件</p>
+<p>将配置文件中的<code>render_drafts</code>改为<code>true</code></p>
+</li>
+<li>
+<p>启动hexo时加参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">hexo server --drafts
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<p>当我们写完草稿后将其变成正式文章，执行以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">hexo publish <span class="s1">&#39;md_name&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里也不需要加后缀名，如果文件名称是中文，在shell中无法输入中文可以执行以下操作</p>
+<p>先对<code>~/.bash_profile</code>配置文件进行修改，添加或修改这一行信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后执行<code>source ~/.bash_profile</code>，让配置生效。</p>
+<p>最后重新打开终端就可以输入中文了。</p>
+<h1 id="参考文章">参考文章</h1>
+<p><a href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></p>
+<p><a href="https://blog.csdn.net/j754379117/article/details/53897115">https://blog.csdn.net/j754379117/article/details/53897115</a></p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

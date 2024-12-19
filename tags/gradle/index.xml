@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gradle on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/gradle/</link>
+    <description>Recent content in Gradle on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 20 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/gradle/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gradle笔记</title>
+      <link>https://www.liunaijie.top/coding/devops/gradle/</link>
+      <pubDate>Sat, 20 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/devops/gradle/</guid>
+      <description>&lt;p&gt;编译打包时，将依赖也打入jar包，在build.gradle文件中，添加这一部分即可&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;jar {&#xA;    from {&#xA;        configurations.runtime.collect { zipTree(it) }&#xA;    }&#xA;    enabled = true&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;去除依赖：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;    compile(&amp;#39;com.ebay.fount:managed-fount-client:0.1.1&amp;#39;) {&#xA;        exclude group: &amp;#39;com.ebay.platform.security&amp;#39;, module: &amp;#39;trustfabric-client&amp;#39;&#xA;    }&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+  </channel>
+</rss>

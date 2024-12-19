@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/docker/</link>
+    <description>Recent content in Docker on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 03 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker使用笔记</title>
+      <link>https://www.liunaijie.top/coding/cloud_native/docker%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Wed, 03 Jul 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/cloud_native/docker%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;p&gt;Docker是一个使用了Linux Namespace和Cgroups的虚拟化工具&lt;/p&gt;&#xA;&lt;h1 id=&#34;安装&#34;&gt;安装&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;mac&lt;/p&gt;&#xA;&lt;p&gt;从官网下载安装包进行安装即可&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;树莓派&lt;/p&gt;&#xA;&lt;p&gt;使用ssh连接树莓派后执行&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;curl -sSL https://get.docker.com | sh&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;就可以安装了，不过这是国外的安装源，速度可能会比较慢一些。&lt;/p&gt;&#xA;&lt;p&gt;如果在安装过程中提示缺少某些包根据提示进行安装即可。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;配置&#34;&gt;配置&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;mac&lt;/p&gt;&#xA;&lt;p&gt;修改国内源&lt;/p&gt;&#xA;&lt;p&gt;点击应用图标后打开&lt;code&gt;daemon&lt;/code&gt;选项，在&lt;code&gt;registry mirrors&lt;/code&gt;中可以看到我们的镜像下载源，我们可以搜索一些国内源进行替换。&lt;/p&gt;&#xA;&lt;p&gt;比如阿里云：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;进入阿里的容器镜像服务：https://cr.console.aliyun.com/cn-hangzhou/instances/repositories&lt;/li&gt;&#xA;&lt;li&gt;进入镜像加速器，创建加速器&lt;/li&gt;&#xA;&lt;li&gt;复制加速器地址进行替换&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;树莓派&lt;/p&gt;&#xA;&lt;p&gt;将docker设置为开机自启动&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;sudo systemctl enable docker&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;然后我们启动 Docker 守护程序，或者重启树莓派来完成启动docker&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;sudo systemctl start docker&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;将当前用户添加到docker用户组&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;现在安装完成后的docker还只能由&lt;code&gt;root&lt;/code&gt;用户或者&lt;code&gt;docker&lt;/code&gt;组的用户使用，所以如果你不是使用的root用户，例如跟我一样使用的pi用户、或者其他用户。还需要将用户加到docker组中，下面这个命令就是将当前用户加到docker组中&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;sudo usermod -aG docker $USER&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;完成此操作后，当前用户还是不能操作docker，需要注销后重新连接即可。&lt;/p&gt;&#xA;&lt;p&gt;重新连接后运行&lt;code&gt;docker run hello-world&lt;/code&gt;就可以运行hello-world的镜像了。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;常用命令&#34;&gt;常用命令&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;查找镜像&#xA;&lt;code&gt;docker search [OPTIONS] TERM&lt;/code&gt;&#xA;比如我们需要查找一个MySQL镜像，我们可以&lt;code&gt;docker search mysql&lt;/code&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;获取镜像&#xA;&lt;code&gt;docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]&lt;/code&gt;&#xA;当我们对地址和标签缺省时，默认为当前仓库最新的镜像&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;列出本地镜像&#xA;&lt;code&gt;docker image&lt;/code&gt;&#xA;将列出下载到本地的所有镜像&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;列出本地历史运行镜像&#xA;&lt;code&gt;docker ps -a&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

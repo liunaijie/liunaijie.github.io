@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JVM on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/jvm/</link>
+    <description>Recent content in JVM on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 25 Sep 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GC-经典垃圾收集器</title>
+      <link>https://www.liunaijie.top/coding/java/gc-%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</link>
+      <pubDate>Sat, 25 Sep 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/java/gc-%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</guid>
+      <description>&lt;h1 id=&#34;经典垃圾收集器&#34;&gt;经典垃圾收集器&lt;/h1&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20211121102320.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;serial收集器&#34;&gt;Serial收集器&lt;/h1&gt;&#xA;&lt;p&gt;Serial收集器是最基础、历史最悠久的收集器. 这个收集器是一个单线程工作的收集器, 在他进行垃圾收集时, 必须暂停其他所有工作线程, 直到它收集结束.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20211121102351.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;它是HotSpot虚拟机运行在客户端模式下的默认新生代收集器, 它简单高效, 额外内存消耗最少.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>GC-垃圾回收算法</title>
+      <link>https://www.liunaijie.top/coding/java/gc-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 20 Sep 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/java/gc-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/</guid>
+      <description>&lt;h1 id=&#34;垃圾回收算法&#34;&gt;垃圾回收算法&lt;/h1&gt;&#xA;&lt;p&gt;从如何判定对象消亡的角度出发, 垃圾收集算法可以划分为“引用计数器垃圾收集”(Reference Counting GC)和“追踪式垃圾收集”(Tracing GC)两大类. 这两类也常被称作“直接垃圾收集“和”间接垃圾收集“. 但是引用计数式垃圾收集算法在主流Java虚拟机中均为涉及.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>GC-垃圾收集器</title>
+      <link>https://www.liunaijie.top/coding/java/gc-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</link>
+      <pubDate>Wed, 15 Sep 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/java/gc-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/</guid>
+      <description>&lt;h1 id=&#34;垃圾收集器&#34;&gt;垃圾收集器&lt;/h1&gt;&#xA;&lt;p&gt;垃圾收集需要完成三件事情:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;哪些地方的内存需要回收?&lt;/li&gt;&#xA;&lt;li&gt;如何判断能否回收?&lt;/li&gt;&#xA;&lt;li&gt;如何回收?&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+    </item>
+    <item>
+      <title>Java OOM异常分析</title>
+      <link>https://www.liunaijie.top/coding/java/java-oom%E5%BC%82%E5%B8%B8%E5%88%86%E6%9E%90/</link>
+      <pubDate>Fri, 10 Sep 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/java/java-oom%E5%BC%82%E5%B8%B8%E5%88%86%E6%9E%90/</guid>
+      <description>&lt;h1 id=&#34;java-oom异常分析&#34;&gt;Java OOM异常分析&lt;/h1&gt;&#xA;&lt;h1 id=&#34;oom异常分析&#34;&gt;OOM异常分析&lt;/h1&gt;&#xA;&lt;h2 id=&#34;java堆溢出&#34;&gt;Java堆溢出&lt;/h2&gt;&#xA;&lt;p&gt;Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况. 出现Java堆内存溢出时, 异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“&lt;code&gt;Java heap space&lt;/code&gt;“&lt;/p&gt;&#xA;&lt;p&gt;可能的原因有:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;内存泄漏&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;内存溢出&lt;/p&gt;&#xA;&lt;p&gt;需要从代码上检查是否存在某些对象生命周期过长、持有状态时间过长、存储结构设计不合理的情况, 尽量减少程序运行期的内存消耗&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;要处理这个内存区域的异常, 常规的处理方法是通过内存映像分析工具对Dump出来的堆转储快照进行分析.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>JVM中Java对象的创建、内存布局、访问定位</title>
+      <link>https://www.liunaijie.top/coding/java/jvm%E4%B8%ADjava%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D/</link>
+      <pubDate>Wed, 01 Sep 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/java/jvm%E4%B8%ADjava%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D/</guid>
+      <description>&lt;h1 id=&#34;java对象创建&#34;&gt;Java对象创建&lt;/h1&gt;&#xA;&lt;p&gt;当Java虚拟机遇到一条字节码new指令时, 首先将去检查这个指令的参数能否在常量池中定位到一个类的符号引用, 并且检查这个符号引用代表的类是否被加载, 解析和初始化. 如果没有则会先执行相应的类加载过程.&lt;/p&gt;&#xA;&lt;p&gt;对象的创建过程大致分为以下四步:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;为新生对象分配内存&lt;/li&gt;&#xA;&lt;li&gt;虚拟机将分配到的内存空间(不包括对象头)都初始化为零值&lt;/li&gt;&#xA;&lt;li&gt;对对象进行必要的设置, 例如这个对象是哪个类的实例, 如果找到这个类的元数据信息, 对象的GC分代年龄等, 这些信息存放在对象的对象头之上&lt;/li&gt;&#xA;&lt;li&gt;执行Class文件额init方法&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+    </item>
+    <item>
+      <title>JVM运行时数据区域</title>
+      <link>https://www.liunaijie.top/coding/java/jvm%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</link>
+      <pubDate>Sat, 28 Aug 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/java/jvm%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</guid>
+      <description>&lt;h1 id=&#34;jvm运行时数据区域&#34;&gt;JVM运行时数据区域&lt;/h1&gt;&#xA;&lt;p&gt;Java虚拟机所管理的内存包括以下几个运行时数据区域：&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20211121102013.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

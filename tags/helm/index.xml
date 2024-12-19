@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Helm on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/helm/</link>
+    <description>Recent content in Helm on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 20 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/helm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Helm常用命令</title>
+      <link>https://www.liunaijie.top/coding/cloud_native/helm%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Sat, 20 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/cloud_native/helm%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>&lt;p&gt;安装：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;helm install -f xxx.yaml server-name chart-dir&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;更新：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;helm upgrade -f xxx.yaml server-name chart-dir&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看部署记录&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;helm history [xxx]&#xA; &#xA;&#xA;REVISION&#x9;UPDATED                 &#x9;STATUS    &#x9;CHART           &#x9;APP VERSION&#x9;DESCRIPTION&#xA;1       &#x9;Wed Oct 21 18:33:37 2020&#x9;superseded&#x9;clickhouse-1.0.1&#x9;19.14      &#x9;Install complete&#xA;2       &#x9;Wed Oct 21 18:49:18 2020&#x9;deployed  &#x9;clickhouse-1.0.1&#x9;19.14      &#x9;Upgrade complete&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;回滚：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;helm rollback [xxx] [version]&#xA;helm rollback clickhouse 1 #回滚到版本1&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;卸载：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;helm uninstall server-name&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+  </channel>
+</rss>

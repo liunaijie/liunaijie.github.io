@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/java/java-oom%E5%BC%82%E5%B8%B8%E5%88%86%E6%9E%90/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Java OOM异常分析">
+  <meta property="og:description" content="Java OOM异常分析 OOM异常分析 Java堆溢出 Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况. 出现Java堆内存溢出时, 异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“Java heap space“
+可能的原因有:
+内存泄漏
+内存溢出
+需要从代码上检查是否存在某些对象生命周期过长、持有状态时间过长、存储结构设计不合理的情况, 尽量减少程序运行期的内存消耗
+要处理这个内存区域的异常, 常规的处理方法是通过内存映像分析工具对Dump出来的堆转储快照进行分析.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2021-09-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-09-10T00:00:00+00:00">
+    <meta property="article:tag" content="JVM">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java OOM异常分析">
+  <meta name="twitter:description" content="Java OOM异常分析 OOM异常分析 Java堆溢出 Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况. 出现Java堆内存溢出时, 异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“Java heap space“
+可能的原因有:
+内存泄漏
+内存溢出
+需要从代码上检查是否存在某些对象生命周期过长、持有状态时间过长、存储结构设计不合理的情况, 尽量减少程序运行期的内存消耗
+要处理这个内存区域的异常, 常规的处理方法是通过内存映像分析工具对Dump出来的堆转储快照进行分析.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Java OOM异常分析
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Java OOM异常分析</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2021 年 09 月 10 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/JVM">#JVM</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="java-oom异常分析">Java OOM异常分析</h1>
+<h1 id="oom异常分析">OOM异常分析</h1>
+<h2 id="java堆溢出">Java堆溢出</h2>
+<p>Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况. 出现Java堆内存溢出时, 异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“<code>Java heap space</code>“</p>
+<p>可能的原因有:</p>
+<ol>
+<li>
+<p>内存泄漏</p>
+</li>
+<li>
+<p>内存溢出</p>
+<p>需要从代码上检查是否存在某些对象生命周期过长、持有状态时间过长、存储结构设计不合理的情况, 尽量减少程序运行期的内存消耗</p>
+</li>
+</ol>
+<p>要处理这个内存区域的异常, 常规的处理方法是通过内存映像分析工具对Dump出来的堆转储快照进行分析.</p>
+<h2 id="虚拟机栈和本地方法栈溢出">虚拟机栈和本地方法栈溢出</h2>
+<p>无论是由于栈帧太大还是虚拟机栈容量太小, 当新的栈帧内存无法分配的时候, HotSpot虚拟机抛出的都是<code>StackOverflowError</code>异常</p>
+<p>原因可能是:</p>
+<ol>
+<li>
+<p>线程请求的栈深度大于虚拟机所运行的最大深度</p>
+<p>方法链的调用太长, 例如递归没有退出.</p>
+</li>
+</ol>
+<h2 id="方法区和运行时常量池溢出">方法区和运行时常量池溢出</h2>
+<p>在JDK7之后, 字符串常量池被移至Java堆之中, 出现OOM时, 报错信息与Java堆溢出一致, 错误信息提示“<code>Java heap space</code>“</p>
+<h2 id="本机直接内存溢出">本机直接内存溢出</h2>
+<p>直接内存(Direct Memory)的容量大小可通过-XX:MaxDirectMemorySize参数来指定, 如果不去指定, 则默认与Java堆最大值(由-Xmx指定)一致.</p>
+<p>由直接内存导致的内存溢出, 一个明显的特征是在Heap Dump文件中不会看见有什么明显的异常情况.</p>
+<p>在程序直接或间接使用了直接内存时(典型的间接使用就是NIO), 可以重点考虑一下直接内存的原因.</p>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

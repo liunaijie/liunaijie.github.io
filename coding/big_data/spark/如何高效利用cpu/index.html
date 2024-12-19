@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%88%A9%E7%94%A8cpu/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-如何高效利用CPU">
+  <meta property="og:description" content="执行内存抢占规则， 在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则
+执行内存总大小（记为 M）为两部分之和，一部分是 Execution Memory 初始大小，另一部分是 Storage Memory 剩余空间 每个线程分到的可用内存有一定的上下限，下限是 M/N/2，上限是 M/N，也就是均值 并行度、并发度与执行内存的关系 并行度 明确了数据的划分粒度, 并行度越高, 数据的粒度越细, 数据分片越多, 数据越分散.
+并行度可以通过两个参数来设置: 分别是 spark.default.parallelism 和 spark.sql.shuffle.partitions. 前者用于设置 RDD 的默认并行度, 后者在 Spark SQL 开发框架下, 指定了 Shuffle Reduce 阶段默认的并行度.
+并发度 ****一个Executor内部可以同时运行的最大任务数量.
+由Executor的线程池大小(spark.executor.cores)除以每个任务执行期间需要消耗的线程数(spark.task.cpus)得到. spark.task.cpus默认是1, 通常不会调整, 所以并发度基本由spark.executor.cores参数决定
+就Executor的线程池来说, 尽管线程本身可以复用, 但每个线程同一时间只能计算一个任务, 每个任务负责处理一个数据分片. 因此, 在运行时, 线程、任务与分区是一一对应的关系.
+分布式任务由Driver分发给Executor后, Executor将Task封装为TaskRunner, 然后将其交给可回收缓存线程池(newCachedThreadPool). 线程池中的线程领取到TaskRunner之后, 向Execution Memory申请内存, 开始执行任务.
+执行内存 堆内执行内存的初始值:
+spark.executor.memory * spark.memory.fraction * (1- spark.memory.storageFraction)
+executor的内存 * 执行内存和缓存内存占总内存系数 * (1-缓存内存系数)">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-如何高效利用CPU">
+  <meta name="twitter:description" content="执行内存抢占规则， 在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则
+执行内存总大小（记为 M）为两部分之和，一部分是 Execution Memory 初始大小，另一部分是 Storage Memory 剩余空间 每个线程分到的可用内存有一定的上下限，下限是 M/N/2，上限是 M/N，也就是均值 并行度、并发度与执行内存的关系 并行度 明确了数据的划分粒度, 并行度越高, 数据的粒度越细, 数据分片越多, 数据越分散.
+并行度可以通过两个参数来设置: 分别是 spark.default.parallelism 和 spark.sql.shuffle.partitions. 前者用于设置 RDD 的默认并行度, 后者在 Spark SQL 开发框架下, 指定了 Shuffle Reduce 阶段默认的并行度.
+并发度 ****一个Executor内部可以同时运行的最大任务数量.
+由Executor的线程池大小(spark.executor.cores)除以每个任务执行期间需要消耗的线程数(spark.task.cpus)得到. spark.task.cpus默认是1, 通常不会调整, 所以并发度基本由spark.executor.cores参数决定
+就Executor的线程池来说, 尽管线程本身可以复用, 但每个线程同一时间只能计算一个任务, 每个任务负责处理一个数据分片. 因此, 在运行时, 线程、任务与分区是一一对应的关系.
+分布式任务由Driver分发给Executor后, Executor将Task封装为TaskRunner, 然后将其交给可回收缓存线程池(newCachedThreadPool). 线程池中的线程领取到TaskRunner之后, 向Execution Memory申请内存, 开始执行任务.
+执行内存 堆内执行内存的初始值:
+spark.executor.memory * spark.memory.fraction * (1- spark.memory.storageFraction)
+executor的内存 * 执行内存和缓存内存占总内存系数 * (1-缓存内存系数)">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-如何高效利用CPU
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-如何高效利用CPU</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="执行内存抢占规则">执行内存抢占规则，</h1>
+<p>在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则</p>
+<ul>
+<li>执行内存总大小（记为 M）为两部分之和，一部分是 Execution Memory 初始大小，另一部分是 Storage Memory 剩余空间</li>
+<li>每个线程分到的可用内存有一定的上下限，下限是 M/N/2，上限是 M/N，也就是均值</li>
+</ul>
+<h1 id="并行度并发度与执行内存的关系">并行度、并发度与执行内存的关系</h1>
+<h3 id="并行度"><strong>并行度</strong></h3>
+<p>明确了数据的划分粒度, 并行度越高, 数据的粒度越细, 数据分片越多, 数据越分散.</p>
+<p>并行度可以通过两个参数来设置: 分别是 spark.default.parallelism 和 spark.sql.shuffle.partitions. 前者用于设置 RDD 的默认并行度, 后者在 Spark SQL 开发框架下, 指定了 Shuffle Reduce 阶段默认的并行度.</p>
+<h3 id="并发度"><strong>并发度</strong></h3>
+<p>****一个Executor内部可以同时运行的最大任务数量.</p>
+<p>由Executor的线程池大小(spark.executor.cores)除以每个任务执行期间需要消耗的线程数(spark.task.cpus)得到. spark.task.cpus默认是1, 通常不会调整, 所以并发度基本由spark.executor.cores参数决定</p>
+<p>就Executor的线程池来说, 尽管线程本身可以复用, 但每个线程同一时间只能计算一个任务, 每个任务负责处理一个数据分片. 因此, <strong>在运行时, 线程、任务与分区是一一对应的关系.</strong></p>
+<p>分布式任务由Driver分发给Executor后, Executor将Task封装为TaskRunner, 然后将其交给可回收缓存线程池(newCachedThreadPool). 线程池中的线程领取到TaskRunner之后, 向Execution Memory申请内存, 开始执行任务.</p>
+<h3 id="执行内存">执行内存</h3>
+<p>堆内执行内存的初始值:</p>
+<p>spark.executor.memory * spark.memory.fraction * (1- spark.memory.storageFraction)</p>
+<p>executor的内存 * 执行内存和缓存内存占总内存系数 * (1-缓存内存系数)</p>
+<p>堆外执行内存:</p>
+<p>spark.memory.offHeap.size * (1-spark.memory.storageFraction)</p>
+<p>堆外内存大小 * (1 - 缓存内存系数)</p>
+<p>在统一内存管理模式下, 当Storage Memory没有被RDD缓存占满的情况下, 执行任务可以动态大的抢占Storage Memory. 可分配的执行内存总量会随着缓存任务和执行任务的此消彼长而动态变化. 但无论怎么变, 可用的执行内存总量, 都不会低于配置项设定的初始值.</p>
+<h1 id="如何提升cpu效率">如何提升CPU效率</h1>
+<h3 id="cpu低效原因之一-线程挂起">CPU低效原因之一: 线程挂起</h3>
+<p>在给定执行内存总量M和线程总数N的情况下, 为了保证每个线程都有机会拿到适量的内存去处理数据, Spark用HashMap的数据结构, 以(K, V)的方式来记录每个线程消耗的内存大小, 并确保所有的Value值都不超过<code>M/N</code>. 但是在某些极端情况下, <strong>有些线程申请不到所需的内存空间, 能拿到的内存合计还不到<code>M/N/2</code>. 这个时候Spark就会把线程挂起,</strong> 直到其他线程释放了足够的内存空间为止.</p>
+<p>即便能保证每个线程能拿到的内存上限是M/N, 也就是内存总量对线程数取平均值. 但是由于以下3方面的变化, 造成了有些线程连<code>M/N/2</code>的资源都拿不到</p>
+<ul>
+<li>
+<p>动态变化的执行内存总量M</p>
+<p>M的下限是Execution Memory初始值, 上限是Execution Memory + Storage Memory. 在应用刚开始时, 由于没有RDD缓存占用Storage Memory, 所以取这个上限, 但是随着RDD缓存的填充, M的值就会下降</p>
+</li>
+<li>
+<p>动态变化的并发度N‘</p>
+<p>上下限公式中计算用的N不是线程总数N, 而是当前的并发度N’. 尽管一个Executor中有N个CPU线程 但是这个N个线程不一定都在干活. 在Spark任务调度的过程中, 这个N个线程不一定可以同时拿到分布式任务, 所以先拿到任务的线程就可以申请更多的内存.</p>
+</li>
+<li>
+<p>分布式数据集的数据分布</p>
+<p>每个Task申请多少内存取决于需要处理的数据分片多大, 如果分片过大, 那么就需要申请大内存, 如果内存不足, 就造成了线程挂起. 如果分布式数据集的并行度设置得当, 因任务调度滞后而导致的线程挂起问题就会得当缓解.</p>
+</li>
+</ul>
+<h3 id="cpu低效原因之二-调度开销">CPU低效原因之二: 调度开销</h3>
+<p>对于每一个分布式任务, Driver会将其封装为TaskDescription, 然后分发给各个Executor. TaskDescription包含着与任务运行有关的所有信息, 如任务ID、要处理的数据分片ID、开发者添加的本地文件和Jar包、任务属性、序列化的任务代码等等. Executor接受到TaskDescription后, 需要首先对TaskDescription反序列化才能读取任务信息, 然后将任务代码再反序列化得到可执行代码, 最后结合其他任务信息创建TaskRunner.</p>
+<p>每个任务的调度都需要Executor消耗CPU去执行上述一系列的操作步骤. 数据分片与线程、执行任务一一对应, 当数据过于分散, 任务调度上的开销就与数据处理的开销在相同数量级.</p>
+<p><strong>因此，在给定 Executor 线程池和执行内存大小的时候，我们可以参考上面的算法，去计算一个能够让数据分片平均大小在（M/N/2, M/N）之间的并行度，这往往是个不错的选择</strong></p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121609910.png" alt=""></p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

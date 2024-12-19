@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>图像处理 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
+    <description>Recent content in 图像处理 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 11 Sep 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图像处理入门-基础概念</title>
+      <link>https://www.liunaijie.top/coding/image_process/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E5%85%A5%E9%97%A8-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/</link>
+      <pubDate>Mon, 11 Sep 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/image_process/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E5%85%A5%E9%97%A8-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/</guid>
+      <description>&lt;p&gt;最近买了台相机, 出去拍了一些照片, 然后突然想到AI来做照片的处理,优化等. 所以找了一些课程来学习一下图像处理的基础知识.&#xA;目前从这些课程中学习:&#xA;&lt;a href=&#34;https://www.bilibili.com/video/BV1Kh411X7Qv?p=3&#34;&gt;https://www.bilibili.com/video/BV1Kh411X7Qv?p=3&lt;/a&gt;&#xA;&lt;a href=&#34;https://www.bilibili.com/video/BV1R84y1f79o?p=1&#34;&gt;https://www.bilibili.com/video/BV1R84y1f79o?p=1&lt;/a&gt;&#xA;&lt;a href=&#34;https://www.bilibili.com/video/BV1tT4y1Y7Ak/?spm_id_from=333.788&amp;amp;vd_source=f7b0753424ba1b445914c36a2cbf1439&#34;&gt;https://www.bilibili.com/video/BV1tT4y1Y7Ak/?spm_id_from=333.788&amp;amp;vd_source=f7b0753424ba1b445914c36a2cbf1439&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;基础概念&#34;&gt;基础概念&lt;/h1&gt;&#xA;&lt;h3 id=&#34;像素&#34;&gt;像素&lt;/h3&gt;&#xA;&lt;p&gt;一张图片在计算机中使用二维数组表示&lt;code&gt;array[m][n]&lt;/code&gt;，二维数组的的大小&lt;code&gt;m*n&lt;/code&gt;就表示照片的像素&#xA;相同的照片尺寸下，一张图片的像素越高，则显示的细节越多。&#xA;以这个照片为例，左侧图片的像素为&lt;code&gt;2*2&lt;/code&gt;，右侧照片像素为&lt;code&gt;4*4&lt;/code&gt;, 当放大某个细节时，右侧照片能给出更多的细节。&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/202309112132448.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;灰度值&#34;&gt;灰度值&lt;/h3&gt;&#xA;&lt;p&gt;二维数组中填充值的范围，对于黑白照片，灰度值的范围是0-255. 白色为255，黑色为0.&#xA;&lt;code&gt;array[m][n]=k,  0&amp;lt;=k&amp;lt;=255&lt;/code&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;直方图&#34;&gt;直方图&lt;/h3&gt;&#xA;&lt;p&gt;查看图片中灰度值的分布情况，横坐标是灰度值，纵坐标表示该灰度值出现的频率。&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/202309112133842.png&#34; alt=&#34;&#34;&gt;&#xA;&lt;strong&gt;要注意的是，一个照片只有一个直方图，但一个直方图并不对应唯一的一张照片&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;使用直方图可以直观的展示出图像中各个灰度值的分布情况，占比情况。&lt;/p&gt;&#xA;&lt;h2 id=&#34;图像增强&#34;&gt;图像增强&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;灰度变换&lt;/li&gt;&#xA;&lt;li&gt;代数运算&lt;/li&gt;&#xA;&lt;li&gt;空间域滤波&lt;/li&gt;&#xA;&lt;li&gt;频域滤波&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;灰度变换&#34;&gt;灰度变换&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;简单，常用的空间域图像增强方法&lt;/li&gt;&#xA;&lt;li&gt;对输入图像像素的灰度级进行变换&#xA;$s=f(r)$,  r/s 输入/输出灰度级&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;f(): 灰度变换函数，这个函数可以是线性变换, 也可以是非线性变换.&lt;/p&gt;&#xA;&lt;h4 id=&#34;线性变换&#34;&gt;线性变换&lt;/h4&gt;&#xA;&lt;p&gt;$s = Ar+B$&#xA;当A&amp;gt;1时, 相当于做灰度拉伸, 变换完的图像会比原来的图片亮.&#xA;当A&amp;lt;1时, 相当于做灰度压缩, 变换完的图像会比原来的图片暗.&lt;/p&gt;&#xA;&lt;p&gt;在线性变换中, 还可以进行&lt;strong&gt;分段线性变换&lt;/strong&gt;&#xA;$$&#xA;s=&#xA;\begin{cases}&#xA;f1(x), \quad 0 &amp;lt;r&amp;lt;a \&#xA;f2(x), \quad a\leq r&amp;lt; b \&#xA;f3(r), \quad b\leq r&amp;lt; N&#xA;\end{cases}&#xA;$$&lt;/p&gt;&#xA;&lt;p&gt;可以对感兴趣的灰度区域进行突出, 对不感兴趣的灰度区域进行抑制.&lt;/p&gt;&#xA;&lt;h4 id=&#34;非线性变换&#34;&gt;非线性变换&lt;/h4&gt;&#xA;&lt;h5 id=&#34;对数变换&#34;&gt;对数变换&lt;/h5&gt;&#xA;&lt;p&gt;$s = c * log(1+r)$&#xA;在灰度级比较小(暗)时做拉伸, 在灰度值大(亮)时做压缩, 可以使暗的图像更加亮&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

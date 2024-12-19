@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/tools/raspberry_pi/%E6%A0%91%E8%8E%93%E6%B4%BE%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="树莓派使用笔记">
+  <meta property="og:description" content="预备条件 树莓派（我的型号的3b&#43;），电源线 内存卡 class10 8g以上 一台有ssh连接的电脑或者显示器、键鼠 最终实现功能 开机自动挂载外接硬盘 Samba（局域网文件共享） 开启ftp连接 Nginx Mariadb数据库（与MySQL相同） Docker 内网穿透 Aria2下载机 安装系统 下载镜像 从官网下载自己想要的镜像，一般就下载树莓派的默认Raspbian系统就行了，有桌面版和无桌面版。自行选择所需系统下载即可。
+输入内存卡 推荐使用软件balenaEtcher这个软件，这个有windows版本和macos版本，所以还是很方便的。
+选择我们下载镜像的安装位置，选择要刷的设备这里就是我们的内存卡，然后点击确认即可。
+系统配置 在刷完系统后拔出读卡器，然后再插入电脑，此时可以看到一个boot分区。以下文件都保存在这个分区里面。
+设置SSH访问
+写一个空白的文件，命名为ssh，大小写无所谓，注意ssh就是文件的全部名称不要有后缀。
+设置WIFI
+如果有网线，可以先使用网线连接，后面再考虑这一步。
+写一个命名为wpa_supplicant.conf的文件，这里面写wifi的配置信息。
+主要有以下几个属性：
+ssid：WiFi的名称 psk： 密码 key_mgmt：WIFI的加密方式 priority：连接的优先级，数字越大优先级越高，不可以是负数 scan_ssid：连接隐藏的wifi时需要将这个指定为1 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 # WiFi配置 network={ ssid=&#34;WiFi-A&#34; psk=&#34;12345678&#34; key_mgmt=WPA-PSK priority=1 } # 连接隐藏的WiFi network={ ssid=&#34;WiFi-B&#34; psk=&#34;12345678&#34; key_mgmt=WPA-PSK priority=2 scan_ssid=1 } # 无密码时候的配置 network={ ssid=&#34;你的无线网络名称（ssid）&#34; key_mgmt=NONE } # WiFi 使用WEP加密 network={ ssid=&#34;你的无线网络名称（ssid）&#34; key_mgmt=NONE wep_key0=&#34;你的wifi密码&#34; } # WiFi 使用WPA/WPA2加密 network={ ssid=&#34;你的无线网络名称（ssid）&#34; key_mgmt=WPA-PSK psk=&#34;你的wifi密码&#34; } 开机重置密码 如果有屏幕和键鼠就直接连接即可。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-08-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-08-08T00:00:00+00:00">
+    <meta property="article:tag" content="树莓派">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="树莓派使用笔记">
+  <meta name="twitter:description" content="预备条件 树莓派（我的型号的3b&#43;），电源线 内存卡 class10 8g以上 一台有ssh连接的电脑或者显示器、键鼠 最终实现功能 开机自动挂载外接硬盘 Samba（局域网文件共享） 开启ftp连接 Nginx Mariadb数据库（与MySQL相同） Docker 内网穿透 Aria2下载机 安装系统 下载镜像 从官网下载自己想要的镜像，一般就下载树莓派的默认Raspbian系统就行了，有桌面版和无桌面版。自行选择所需系统下载即可。
+输入内存卡 推荐使用软件balenaEtcher这个软件，这个有windows版本和macos版本，所以还是很方便的。
+选择我们下载镜像的安装位置，选择要刷的设备这里就是我们的内存卡，然后点击确认即可。
+系统配置 在刷完系统后拔出读卡器，然后再插入电脑，此时可以看到一个boot分区。以下文件都保存在这个分区里面。
+设置SSH访问
+写一个空白的文件，命名为ssh，大小写无所谓，注意ssh就是文件的全部名称不要有后缀。
+设置WIFI
+如果有网线，可以先使用网线连接，后面再考虑这一步。
+写一个命名为wpa_supplicant.conf的文件，这里面写wifi的配置信息。
+主要有以下几个属性：
+ssid：WiFi的名称 psk： 密码 key_mgmt：WIFI的加密方式 priority：连接的优先级，数字越大优先级越高，不可以是负数 scan_ssid：连接隐藏的wifi时需要将这个指定为1 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 # WiFi配置 network={ ssid=&#34;WiFi-A&#34; psk=&#34;12345678&#34; key_mgmt=WPA-PSK priority=1 } # 连接隐藏的WiFi network={ ssid=&#34;WiFi-B&#34; psk=&#34;12345678&#34; key_mgmt=WPA-PSK priority=2 scan_ssid=1 } # 无密码时候的配置 network={ ssid=&#34;你的无线网络名称（ssid）&#34; key_mgmt=NONE } # WiFi 使用WEP加密 network={ ssid=&#34;你的无线网络名称（ssid）&#34; key_mgmt=NONE wep_key0=&#34;你的wifi密码&#34; } # WiFi 使用WPA/WPA2加密 network={ ssid=&#34;你的无线网络名称（ssid）&#34; key_mgmt=WPA-PSK psk=&#34;你的wifi密码&#34; } 开机重置密码 如果有屏幕和键鼠就直接连接即可。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 树莓派使用笔记
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">树莓派使用笔记</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 08 月 08 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e6%a0%91%e8%8e%93%e6%b4%be">#树莓派</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="预备条件">预备条件</h1>
+<ul>
+<li>树莓派（我的型号的3b+），电源线</li>
+<li>内存卡 class10 8g以上</li>
+<li>一台有ssh连接的电脑或者显示器、键鼠</li>
+</ul>
+<h1 id="最终实现功能">最终实现功能</h1>
+<ul>
+<li>开机自动挂载外接硬盘</li>
+<li>Samba（局域网文件共享）</li>
+<li>开启ftp连接</li>
+<li>Nginx</li>
+<li>Mariadb数据库（与MySQL相同）</li>
+<li>Docker</li>
+<li>内网穿透</li>
+<li>Aria2下载机</li>
+</ul>
+<h1 id="安装系统">安装系统</h1>
+<h2 id="下载镜像">下载镜像</h2>
+<p>从<a href="https://www.raspberrypi.org/downloads/">官网</a>下载自己想要的镜像，一般就下载树莓派的默认<code>Raspbian</code>系统就行了，有桌面版和无桌面版。自行选择所需系统下载即可。</p>
+<h2 id="输入内存卡">输入内存卡</h2>
+<p>推荐使用软件<code>balenaEtcher</code>这个软件，这个有windows版本和macos版本，所以还是很方便的。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20190803094630.png" alt=""></p>
+<p>选择我们下载镜像的安装位置，选择要刷的设备这里就是我们的内存卡，然后点击确认即可。</p>
+<h2 id="系统配置">系统配置</h2>
+<p>在刷完系统后拔出读卡器，然后再插入电脑，此时可以看到一个<code>boot</code>分区。以下文件都保存在这个分区里面。</p>
+<ul>
+<li>
+<p>设置SSH访问</p>
+<p>写一个空白的文件，命名为<code>ssh</code>，大小写无所谓，注意ssh就是文件的全部名称不要有后缀。</p>
+</li>
+<li>
+<p>设置WIFI</p>
+<p>如果有网线，可以先使用网线连接，后面再考虑这一步。</p>
+<p>写一个命名为<code>wpa_supplicant.conf</code>的文件，这里面写wifi的配置信息。</p>
+<p>主要有以下几个属性：</p>
+<ul>
+<li>ssid：WiFi的名称</li>
+<li>psk： 密码</li>
+<li>key_mgmt：WIFI的加密方式</li>
+<li>priority：连接的优先级，数字越大优先级越高，不可以是负数</li>
+<li>scan_ssid：连接隐藏的wifi时需要将这个指定为1</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># WiFi配置</span>
+</span></span><span class="line"><span class="cl"><span class="nv">network</span><span class="o">={</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">ssid</span><span class="o">=</span><span class="s2">&#34;WiFi-A&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">psk</span><span class="o">=</span><span class="s2">&#34;12345678&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">key_mgmt</span><span class="o">=</span>WPA-PSK
+</span></span><span class="line"><span class="cl">    <span class="nv">priority</span><span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 连接隐藏的WiFi</span>
+</span></span><span class="line"><span class="cl"><span class="nv">network</span><span class="o">={</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">ssid</span><span class="o">=</span><span class="s2">&#34;WiFi-B&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">psk</span><span class="o">=</span><span class="s2">&#34;12345678&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">key_mgmt</span><span class="o">=</span>WPA-PSK
+</span></span><span class="line"><span class="cl">    <span class="nv">priority</span><span class="o">=</span><span class="m">2</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">scan_ssid</span><span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 无密码时候的配置</span>
+</span></span><span class="line"><span class="cl"><span class="nv">network</span><span class="o">={</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">ssid</span><span class="o">=</span><span class="s2">&#34;你的无线网络名称（ssid）&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">key_mgmt</span><span class="o">=</span>NONE
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># WiFi 使用WEP加密</span>
+</span></span><span class="line"><span class="cl"><span class="nv">network</span><span class="o">={</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">ssid</span><span class="o">=</span><span class="s2">&#34;你的无线网络名称（ssid）&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">key_mgmt</span><span class="o">=</span>NONE
+</span></span><span class="line"><span class="cl">    <span class="nv">wep_key0</span><span class="o">=</span><span class="s2">&#34;你的wifi密码&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># WiFi 使用WPA/WPA2加密</span>
+</span></span><span class="line"><span class="cl"><span class="nv">network</span><span class="o">={</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">ssid</span><span class="o">=</span><span class="s2">&#34;你的无线网络名称（ssid）&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">key_mgmt</span><span class="o">=</span>WPA-PSK
+</span></span><span class="line"><span class="cl">    <span class="nv">psk</span><span class="o">=</span><span class="s2">&#34;你的wifi密码&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h1 id="开机重置密码">开机重置密码</h1>
+<p>如果有屏幕和键鼠就直接连接即可。</p>
+<p>如果没有屏幕，需要先知道树莓派的ip，到路由器上查看树莓派的ip利用ssh软件连接到这个ip即可。</p>
+<p>默认的用户名与密码是<code>pi</code>，<code>raspberry</code>。登录后可以重置密码。</p>
+<p>输入<code>passwd</code>，然后根据提示输入新密码即可。</p>
+<p>树莓派默认是锁住root用户的，如果需要可以执行以下命令进行解锁：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo passwd root <span class="c1"># 根据提示设置root密码即可</span>
+</span></span><span class="line"><span class="cl">sudo passwd --unlock root <span class="c1"># 解锁root用户</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后我们可以对系统执行一下更新：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get update
+</span></span><span class="line"><span class="cl">sudo apt-get upgrade
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="开机挂载硬盘">开机挂载硬盘</h1>
+<p>由于树莓派使用的是内存卡，并把它当做存储系统，所以存储大小就取决于内存卡的大小，所以我将树莓派挂载了一个外接硬盘。并且设置了开机自动挂载，这样就不用每次执行挂载命令了。但是要注意的是可能供电不足，如果遇到这种情况需要给移动硬盘额外供电，不过我没出现这种情况。</p>
+<p>1.为了在windows和mac上都能使用，所以先将硬盘转换为<code>ExFAT</code>格式并安装所需软件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install exfat-fuse
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2.在树莓派上插上硬盘，查看设备编号。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo fdisk -l <span class="c1"># 我们可以根据容量大小等信息判断哪个是sd卡，哪个是硬盘</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>3.建立挂载目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo mkdir /media/yingpan  <span class="c1"># 这个位置随便</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>4.挂载</p>
+<p>挂载的时候我遇到了一个问题就是硬盘里面有东西就挂载不进去，所以我将内容备份了一下，重置了后又重新挂载的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo mount /dev/sda1 /media/yingpan <span class="c1"># /dev/sda1 是第2步的硬盘编号， /media/yingpan 是第3步建立的位置</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>5.开机挂载</p>
+<p>编辑<code>/etc/fstab</code>文件，在最后一行添加：</p>
+<pre tabindex="0"><code>/dev/sda1 /media/yingpan exfat rw,defaults,nofail 0 0
+</code></pre><p><code>/dev/sda1</code>是你要自动挂载的硬盘</p>
+<p><code>/media/yingpan</code>是你要挂载到的地方</p>
+<p><code>nofail</code>是很重要的一个参数，如果连接了硬盘就实现自动挂载，如果没连接硬盘也能正常启动。</p>
+<p>我就在填了这个文件后启动报错了，然后我连接上屏幕将这个文件又重新修改了后才能开机，所以这个配置文件很重要，如果填错了就开不了机了。一定要注意跟自己的硬盘格式是不是一致，如果错了也不要怕，连上屏幕使用root用户把这个文件再修改回来就好了。</p>
+<p>6.热插拔挂载</p>
+<p>在<code>/etc/udev/rules.d/</code>新建<code>10-usbstorage.rules</code>文件，会自动在<code>/meida/yingpan/</code>目录下挂载。</p>
+<pre tabindex="0"><code>[ruby] view plaincopy
+
+KERNEL!=&#34;sd*&#34;, GOTO=&#34;media_by_label_auto_mount_end&#34;  
+SUBSYSTEM!=&#34;block&#34;,GOTO=&#34;media_by_label_auto_mount_end&#34;  
+IMPORT{program}=&#34;/sbin/blkid -o udev -p %N&#34;  
+ENV{ID_FS_TYPE}==&#34;&#34;, GOTO=&#34;media_by_label_auto_mount_end&#34;  
+ENV{ID_FS_LABEL}!=&#34;&#34;, ENV{dir_name}=&#34;%E{ID_FS_LABEL}&#34;  
+ENV{ID_FS_LABEL}==&#34;&#34;, ENV{dir_name}=&#34;Untitled-%k&#34;  
+ACTION==&#34;add&#34;, ENV{mount_options}=&#34;relatime,sync&#34;  
+ACTION==&#34;add&#34;, ENV{ID_FS_TYPE}==&#34;vfat&#34;, ENV{mount_options}=&#34;iocharset=utf8,umaskk=000&#34;  
+ACTION==&#34;add&#34;, ENV{ID_FS_TYPE}==&#34;ntfs&#34;, ENV{mount_options}=&#34;iocharset=utf8,umaskk=000&#34;  
+ACTION==&#34;add&#34;, RUN+=&#34;/bin/mkdir -p /mnt/yingpan/&#34;, RUN+=&#34;/bin/mount -o $env{mount__options} /dev/%k /mnt/yingpan/&#34;  
+ACTION==&#34;remove&#34;, ENV{dir_name}!=&#34;&#34;, RUN+=&#34;/bin/umount -l /meida/yingpan/}&#34;, RUN+=&#34;//bin/rmdir /meida/yingpan/&#34;
+LABEL=&#34;media_by_label_auto_mount_end&#34;
+</code></pre><h1 id="samba局域网文件共享">Samba（局域网文件共享）</h1>
+<p>使用树莓派挂载移动硬盘后，如果需要在其他机器上访问移动硬盘，可以在树莓派上安装samba开启局域网的文件共享</p>
+<p>首先我们需要安装<code>samba</code>软件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install samba samba-common-bin
+</span></span><span class="line"><span class="cl">sudo apt-get install avahi-daemon（可选，用于支持网内的计算机自动发现）
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>安装完成后修改配置文件：<code>sudo vim /etc/samba/smb.conf</code>，在配置文件最后追加这些信息：</p>
+<pre tabindex="0"><code>[NAS] # 文件夹的名称，在局域网中以这个名称展示
+comment = Public Storage # 文件夹说明
+path = /path # 共享文件的路径，要把这个文件夹的权限修改成 777
+create mask = 0777 #创建文件的权限
+directory mask = 0777 #创建文件夹的权限
+guest ok = yes # 游客访问，不需密码。
+# valid users = pi # 需要登录后查看，登录的用户名
+browseable = yes # 允许浏览
+read only = no # 是否可读
+</code></pre><p>如果配置了访问的用户，这个用户与系统用户还不一致，需要自行添加用户到samba系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo smbpasswd -a pi <span class="c1"># pi 就是用户名 然后输入密码即可</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后我将上面没有的<code>[printers]</code>删掉了，并对<code>[homes]</code>进行了修改，最终<code>[homes]</code>的配置如下：</p>
+<pre tabindex="0"><code>[homes]
+comment = Home Directories
+browseable = no
+read only = no
+create mask = 0777
+directory mask = 0777
+valid users = %S
+</code></pre><p>这样登录后即可访问<code>[homes]</code>的文件夹下内容了。</p>
+<p>这时打开mac系统的访达就可以看到我设置的<code>[NAS]</code>文件夹，登录后就可以看到<code>[homes]（/home/pi）</code>文件夹下的内容。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/image-20190806161645025.png" alt=""></p>
+<h1 id="配置ftp">配置ftp</h1>
+<p>有时候还会使用到ftp操作，所以安装了vsftpd。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install vsftpd
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后再进行修改配置文件，配置文件在<code>/etc/vsftpd.conf</code>，主要修改为以下的内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nv">write_enable</span><span class="o">=</span>YES <span class="c1">#可以进行写操作</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 下面几项都是默认的或者被注释的。可改可不改</span>
+</span></span><span class="line"><span class="cl"><span class="nv">annoymous_enable</span><span class="o">=</span>NO <span class="c1">#是否开启匿名访问，关闭即可</span>
+</span></span><span class="line"><span class="cl"><span class="nv">local_enable</span><span class="o">=</span>YES <span class="c1">#设定本地用户可以访问</span>
+</span></span><span class="line"><span class="cl"><span class="nv">local_umask</span><span class="o">=</span><span class="m">022</span> <span class="c1"># 上传后文件的权限，默认是077</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后开启服务<code>sudo service vsftpd start</code>。</p>
+<p>我们就可以使用ftp软件连接到树莓派了。</p>
+<h1 id="安装编译nginx">安装编译nginx</h1>
+<p>具体文章可以参照我的这篇文章<a href="https://www.liunaijie.top/2019/04/11/Nginx/nginx%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">nginx编译安装</a></p>
+<h1 id="安装配置mariadb">安装、配置Mariadb</h1>
+<h2 id="安装">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install mariadb-server
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="配置">配置</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo mysql -u root -p <span class="c1"># 以root身份登录，然后提示输入密码，安装完成后密码为空，所以直接回车即可</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这时已经进入mysql的命令行，对root修改密码并且授权远程访问</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="n">usr</span><span class="w"> </span><span class="n">mysql</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">update</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="kt">set</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">PASSWORD</span><span class="p">(</span><span class="s1">&#39;要设置的密码&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;root&#39;</span><span class="w"> </span><span class="c1"># 对root用户修改密码，如果需要root可远程访问将host更新为 % 即可
+</span></span></span><span class="line"><span class="cl"><span class="c1"># 或者新建其他用户(新建用户为 pi  密码为 123456)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;pi&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="w"> </span><span class="k">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;123456&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1"># 对新建用户授予权限
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;pi&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后还需要修改mysql的配置文件<code>/etc/mysql/mariadb.conf.d/50-server.cnf</code>，将其中的<code>bind-address = 127.0.0.1</code>给注释掉即可。</p>
+<h1 id="docker">Docker</h1>
+<p>自己的电脑上也能安装docker，但是运行时会有些卡顿，所以我就将docker装在了树莓派上面</p>
+<p>具体安装和使用文章可以看我的这篇文章：<a href="https://www.liunaijie.top/2019/07/03/%E5%B7%A5%E5%85%B7/Docker%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">Docker</a></p>
+<h1 id="内网穿透">内网穿透</h1>
+<p>我仅仅使用过花生壳与frp两种方案，还有很多其他的解决方案。</p>
+<h2 id="花生壳">花生壳</h2>
+<p>首先贴出官方文档地址，一般看这个文档按照这个执行就可以完成了：http://service.oray.com/question/2680.html</p>
+<p>但是这个毕竟是人家公司的服务项目，所以我们申请后只有1m的带宽，限制也挺多。但是刚刚开始使用时也是不错的解决方案。</p>
+<h2 id="frp">frp</h2>
+<p>这个方案就是使用自己的服务器做中转，所以我们就需要一台自己的服务器。</p>
+<p>具体实现方案可以看我的这篇文章：<a href="https://www.liunaijie.top/2019/03/20/%E6%A0%91%E8%8E%93%E6%B4%BE/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%B9%B6%E7%BB%91%E5%AE%9A%E8%87%AA%E5%B7%B1%E7%9A%84%E5%9F%9F%E5%90%8D/">内网穿透</a></p>
+<h1 id="aria2下载机">Aria2下载机</h1>
+<p>有了NAS和外接硬盘，我们可以做一个下载机。</p>
+<h2 id="安装-1">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install aria2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-1">配置</h2>
+<p>创建配置文件夹和配置文件、会话文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir -p ~/.config/aria2/ <span class="c1">#创建文件夹 这个文件夹位置可以随意修改，只要后面能对应即可</span>
+</span></span><span class="line"><span class="cl">touch ~/.config/aria2/aria2.session <span class="c1">#创建会话文件</span>
+</span></span><span class="line"><span class="cl">vim ~/.config/aria2/aria2/conf <span class="c1">#创建配置文件</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后配置文件的内容可以照着这样写：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1">#后台运行</span>
+</span></span><span class="line"><span class="cl"><span class="nv">daemon</span><span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#允许rpc</span>
+</span></span><span class="line"><span class="cl">enable-rpc<span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#允许所有来源, web界面跨域权限需要</span>
+</span></span><span class="line"><span class="cl">rpc-allow-origin-all<span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#允许外部访问，false的话只监听本地端口</span>
+</span></span><span class="line"><span class="cl">rpc-listen-all<span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#RPC端口, 仅当默认端口被占用时修改</span>
+</span></span><span class="line"><span class="cl">rpc-listen-port<span class="o">=</span><span class="m">6800</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#最大同时下载数(任务数), 路由建议值: 3</span>
+</span></span><span class="line"><span class="cl">max-concurrent-downloads<span class="o">=</span><span class="m">5</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#断点续传</span>
+</span></span><span class="line"><span class="cl"><span class="k">continue</span><span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#同服务器连接数</span>
+</span></span><span class="line"><span class="cl">max-connection-per-server<span class="o">=</span><span class="m">5</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#最小文件分片大小, 下载线程数上限取决于能分出多少片, 对于小文件重要</span>
+</span></span><span class="line"><span class="cl">min-split-size<span class="o">=</span>10M
+</span></span><span class="line"><span class="cl"><span class="c1">#单文件最大线程数, 路由建议值: 5</span>
+</span></span><span class="line"><span class="cl"><span class="nv">split</span><span class="o">=</span><span class="m">10</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#下载速度限制</span>
+</span></span><span class="line"><span class="cl">max-overall-download-limit<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#单文件速度限制</span>
+</span></span><span class="line"><span class="cl">max-download-limit<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#上传速度限制</span>
+</span></span><span class="line"><span class="cl">max-overall-upload-limit<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#单文件速度限制</span>
+</span></span><span class="line"><span class="cl">max-upload-limit<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#文件保存路径, 默认为当前启动位置(我的是外置设备，请自行坐相应修改)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">dir</span><span class="o">=</span>/mnt/LiuNaiJie/download
+</span></span><span class="line"><span class="cl"><span class="c1">#保存下载会话</span>
+</span></span><span class="line"><span class="cl">save-session<span class="o">=</span>/home/pi/.config/aria2/aria2.session
+</span></span><span class="line"><span class="cl">input-file<span class="o">=</span>/home/pi/.config/aria2/aria2.session
+</span></span><span class="line"><span class="cl"><span class="c1">#断电续传</span>
+</span></span><span class="line"><span class="cl">save-session-interval<span class="o">=</span><span class="m">60</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">## BT/PT下载相关 ##</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 当下载的是一个种子(以.torrent结尾)时, 自动开始BT任务, 默认:true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#follow-torrent=true</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># BT监听端口, 当端口被屏蔽时使用, 默认:6881-6999</span>
+</span></span><span class="line"><span class="cl">listen-port<span class="o">=</span><span class="m">51413</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 单个种子最大连接数, 默认:55</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#bt-max-peers=55</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 打开DHT功能, PT需要禁用, 默认:true</span>
+</span></span><span class="line"><span class="cl">enable-dht<span class="o">=</span><span class="nb">false</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 打开IPv6 DHT功能, PT需要禁用</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#enable-dht6=false</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># DHT网络监听端口, 默认:6881-6999</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#dht-listen-port=6881-6999</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 本地节点查找, PT需要禁用, 默认:false</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#bt-enable-lpd=false</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 种子交换, PT需要禁用, 默认:true</span>
+</span></span><span class="line"><span class="cl">enable-peer-exchange<span class="o">=</span><span class="nb">false</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 每个种子限速, 对少种的PT很有用, 默认:50K</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#bt-request-peer-speed-limit=50K</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 客户端伪装, PT需要</span>
+</span></span><span class="line"><span class="cl">peer-id-prefix<span class="o">=</span>-TR2770-
+</span></span><span class="line"><span class="cl">user-agent<span class="o">=</span>Transmission/2.77
+</span></span><span class="line"><span class="cl"><span class="c1"># 当种子的分享率达到这个数时, 自动停止做种, 0为一直做种, 默认:1.0</span>
+</span></span><span class="line"><span class="cl">seed-ratio<span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 强制保存会话, 即使任务已经完成, 默认:false</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 较新的版本开启后会在任务完成后依然保留.aria2文件</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#force-save=false</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># BT校验相关, 默认:true</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#bt-hash-check-seed=true</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 继续之前的BT任务时, 无需再次校验, 默认:false</span>
+</span></span><span class="line"><span class="cl">bt-seed-unverified<span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 保存磁力链接元数据为种子文件(.torrent文件), 默认:false</span>
+</span></span><span class="line"><span class="cl">bt-save-metadata<span class="o">=</span><span class="nb">true</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="启动">启动：</h2>
+<p><code>aria2c --conf-path=/home/pi/.config/aria2/aria2.config</code></p>
+<h2 id="下载web管理页面">下载web管理页面</h2>
+<p>我这里使用的是<code>AriaNg</code>，官网地址是<a href="https://github.com/mayswind/AriaNg/releases">https://github.com/mayswind/AriaNg/releases</a>，可以下载最近的版本，之前已经安装过nginx了，就直接下载解压到nginx的html下，然后访问<code>树莓派ip/aria-ng</code>显示如下的页面。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1565243809170.jpg" alt=""></p>
+<h2 id="设置开机启动">设置开机启动</h2>
+<p>创建ststemctl service文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo vim /libsudo vim /lib/systemd/system/aria2.service
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>编写脚本文件，里面的配置文件路径修改为自己的路径</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>Unit<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Description</span><span class="o">=</span>Aria2 Service
+</span></span><span class="line"><span class="cl"><span class="nv">After</span><span class="o">=</span>network.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Service<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">User</span><span class="o">=</span>pi
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/aria2c --conf-path<span class="o">=</span>/home/pi/.config/aria2/aria2.config
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Install<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">WantedBy</span><span class="o">=</span>default.target
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后重载服务并设置开机启动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo systemctl daemon-reload
+</span></span><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> aria2
+</span></span><span class="line"><span class="cl">sudo systemctl start aria2
+</span></span><span class="line"><span class="cl">sudo systemctl status aria2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>参考文章：</p>
+<ul>
+<li><a href="https://www.cnblogs.com/mq0036/p/8886971.html">https://www.cnblogs.com/mq0036/p/8886971.html</a></li>
+<li><a href="http://shumeipai.nxez.com/">http://shumeipai.nxez.com/</a></li>
+<li><a href="https://blog.csdn.net/kxwinxp/article/details/80288006">https://blog.csdn.net/kxwinxp/article/details/80288006</a></li>
+<li><a href="https://li-aaron.github.io/2019/01/aira2-on-raspberry/#tocAnchor-1-3-2">https://li-aaron.github.io/2019/01/aira2-on-raspberry/#tocAnchor-1-3-2</a></li>
+<li><a href="http://shumeipai.nxez.com/2014/07/01/raspberry-pi-do-download-machine-aria2.html">http://shumeipai.nxez.com/2014/07/01/raspberry-pi-do-download-machine-aria2.html</a></li>
+</ul>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

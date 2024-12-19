@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>堆 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E5%A0%86/</link>
+    <description>Recent content in 堆 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 12 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E5%A0%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>堆以及堆排序</title>
+      <link>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/</guid>
+      <description>&lt;h1 id=&#34;什么是堆&#34;&gt;什么是堆&lt;/h1&gt;&#xA;&lt;p&gt;堆是一种特殊的树，它满足以下两点：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;堆是一个完全二叉树&lt;/p&gt;&#xA;&lt;p&gt;完全二叉树要求，除最后一层，其他层的节点个数都是满的，最后一次的节点都靠左排列。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值&lt;/p&gt;&#xA;&lt;p&gt;当前节点的值是子树中的最大或最小值。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;我们将每个节点的值都大于等于子树中每个节点值的堆，叫做“大顶堆”。对于每个节点的值都小于等于子树中每个节点值的堆，我们叫做“小顶堆”&lt;/p&gt;&#xA;&lt;p&gt;我们来看一下例子：&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20200413141220.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;在上面的四个实例中，我们根据以上两条规则，可以判断出：&lt;/p&gt;&#xA;&lt;p&gt;第一个、第二个是大顶堆，第三个是小顶堆，第四个由于不是完全二叉树所以不是堆。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

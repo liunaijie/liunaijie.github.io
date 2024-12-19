@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/avl%E7%BA%A2%E9%BB%91%E6%A0%91%E5%AD%A6%E4%B9%A0/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="AVL，红黑树学习">
+  <meta property="og:description" content="二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
+1 2 3 4 5 6 7 8 class TreeNode { Object val; TreeNode leftNode; TreeNode rightNode; ... } 性质 在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0) 深度为 k 的二叉树至多有2^k&#43;1^-1个节点(k&gt;=0) 有 n 个节点的完全二叉树的高度为 log2(n&#43;1) 它主要有五种基本形态：
+满二叉树 定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。
+大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。
+完全二叉树 定义：设二叉树的深度为 k，除第 k 层外，其他各层(1~(k-1)层)的节点都都达到最大值，其第 k 层所有的节点都连续集中在最左边，这样的树就是完全二叉树
+这些是二叉树的一些基本定义以及变形，它对于数据的存储并没有要求，只是要求了结构。所以对于实际应用中还存在很多的不足，比如对于一个 n 个节点的树，判断一个节点是不是在树里面，它的复杂度还是 o(n)。所以我们下面介绍几种对于存储有要求的树。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-12-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-12-09T00:00:00+00:00">
+    <meta property="article:tag" content="树">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="AVL，红黑树学习">
+  <meta name="twitter:description" content="二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
+1 2 3 4 5 6 7 8 class TreeNode { Object val; TreeNode leftNode; TreeNode rightNode; ... } 性质 在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0) 深度为 k 的二叉树至多有2^k&#43;1^-1个节点(k&gt;=0) 有 n 个节点的完全二叉树的高度为 log2(n&#43;1) 它主要有五种基本形态：
+满二叉树 定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。
+大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。
+完全二叉树 定义：设二叉树的深度为 k，除第 k 层外，其他各层(1~(k-1)层)的节点都都达到最大值，其第 k 层所有的节点都连续集中在最左边，这样的树就是完全二叉树
+这些是二叉树的一些基本定义以及变形，它对于数据的存储并没有要求，只是要求了结构。所以对于实际应用中还存在很多的不足，比如对于一个 n 个节点的树，判断一个节点是不是在树里面，它的复杂度还是 o(n)。所以我们下面介绍几种对于存储有要求的树。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - AVL，红黑树学习
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">AVL，红黑树学习</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 12 月 09 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e6%a0%91">#树</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="二叉树">二叉树</h1>
+<h2 id="定义">定义</h2>
+<ul>
+<li>二叉树由节点的有限集合构成</li>
+<li>这个有限集合或者为空集</li>
+<li>或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合</li>
+</ul>
+<p>在 java 中用代码定义为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">TreeNode</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">leftNode</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">rightNode</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="性质">性质</h2>
+<ol>
+<li>在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0)</li>
+<li>深度为 k 的二叉树至多有2^k+1^-1个节点(k&gt;=0)</li>
+<li>有 n 个节点的完全二叉树的高度为 log<del>2</del>(n+1)</li>
+</ol>
+<p>它主要有五种基本形态：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E5%BD%A2%E6%80%81.png" alt="二叉树的五种基本形态"></p>
+<h2 id="满二叉树">满二叉树</h2>
+<p>定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。</p>
+<p>大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91.png" alt="满二叉树"></p>
+<h2 id="完全二叉树">完全二叉树</h2>
+<p>定义：设二叉树的深度为 k，除第 k 层外，其他各层(1~(k-1)层)的节点都都达到最大值，其第 k 层所有的节点都连续集中在最左边，这样的树就是完全二叉树</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91.png" alt="完全二叉树"></p>
+<p>这些是二叉树的一些基本定义以及变形，它对于数据的存储并没有要求，只是要求了结构。所以对于实际应用中还存在很多的不足，比如对于一个 n 个节点的树，判断一个节点是不是在树里面，它的复杂度还是 o(n)。所以我们下面介绍几种对于存储有要求的树。</p>
+<h2 id="二叉树的遍历">二叉树的遍历</h2>
+<p><a href="https://www.liunaijie.top/2020/03/03/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%9A%84%E5%87%A0%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F">树的几种遍历方式</a></p>
+<p>我们以这样的一个二叉树为例，来进行不同形式的遍历</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86.png" alt=""></p>
+<h3 id="中序">中序</h3>
+<p>我们以一个节点为例，它分别有该节点本身，左节点，右节点。</p>
+<p>中序遍历的顺序为：</p>
+<ol>
+<li>访问左节点（如果左节点为树，则继续递归访问）</li>
+<li>访问自身节点</li>
+<li>访问右节点（如果右节点为树，则继续递归访问）</li>
+</ol>
+<p>拿我们上面的例子来说：首先拿到 A 节点。根据上面的规则，先访问左节点 B，左节点 B 为树，那么继续访问 B 的左节点 C，最终我们可以访问到 E。E 没有左子树了，那么将 E 放到结果集中。</p>
+<p>然后访问自身节点，这时的自身节点是 D，将 D 放到结果集中，然后访问右节点 F。</p>
+<p>一步一步的返回到 A，这时结果集里的顺序是(E,D,F,C,B,G,I,H,A)。</p>
+<p>然后访问右节点J，这时 J 是一个树，然后访问 J 的左节点 K，将它放到结果集中，然后访问自身，最后访问右节点 L。</p>
+<p>那么最终得到的结果集是：(E,D,F,C,B,G,I,H,A,K,J,L)</p>
+<h3 id="前序">前序</h3>
+<p>中序遍历的顺序为：</p>
+<ol>
+<li>访问自身节点</li>
+<li>访问左节点（如果左节点为树，则继续递归访问）</li>
+<li>访问右节点（如果右节点为树，则继续递归访问）</li>
+</ol>
+<p>继续拿上面的例子：首先拿到 A 节点，然后将它放到结果集中。然后访问左节点 B，将 B 放到结果集中。然后访问做节点 C，将 C 放到结果集中，然后访问 D，然后 E。这时 E 没有子节点，向上返回到 D。继续访问右节点 F，F 也没有子节点，向上返回到 B，访问 B 的右节点 G。</p>
+<p>最后返回到 A，这时结果集里的顺序为(A,B,C,D,E,F,G,H,I)</p>
+<p>然后访问右节点 J，将 J 放到结果集中，继续访问左节点 K，k 没有子节点，向上返回然后访问右节点 L。最后完成遍历</p>
+<p>最终得到的结果为:(A,B,C,D,E,F,G,H,I,J,K,L)</p>
+<h3 id="后序">后序</h3>
+<p>后序遍历的顺序为：</p>
+<ol>
+<li>访问左节点（如果左节点为树，则继续递归访问）</li>
+<li>访问右节点（如果右节点为树，则继续递归访问）</li>
+<li>访问自身节点</li>
+</ol>
+<p>继续拿上面的例子：首先拿到根节点 A。然后访问左节点B，B 还有左节点，所以继续向下访问，一直到 E，将 E 放到结果集中。然后向上返回到 D，接下来访问 D 的右节点F，将 F 放到结果集中。然后访问自身节点 D，将值放到结果集中，然后返回 C，由于 C 没有右节点，所以将 C 放到结果集中，一直返回。</p>
+<p>返回到 A 的时候，结果集里面的值为：(E,F,D,C,I,H,G,B)</p>
+<p>然后需要访问 A 的右节点 J，J 还有子节点，所以再进行递归。访问 J 的左节点 K，访问右节点 L，访问自身节点。完成 J 的访问后再回到 A，将 A 添加到结果集中</p>
+<p>最终得到的结果是：(E,F,D,C,I,H,G,B,K,L,K,A)</p>
+<p><strong>所以这里的前中后，对于的就是根节点对于左右节点的顺序。如果根节点在左右节点之间则为中序、如果根节点在左右节点之前则为前序、在左右节点后面就是后序</strong></p>
+<h3 id="其他遍历方式">其他遍历方式</h3>
+<p>还是一些其他的遍历方式，比如深度优先、广度优先等。</p>
+<h1 id="二叉搜索树bst">二叉搜索树（BST）</h1>
+<p>为了解决二叉树在搜索上的效率问题，我们定义了二叉搜索树。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91.png" alt="二叉搜索树"></p>
+<h2 id="定义-1">定义：</h2>
+<ul>
+<li>可以是一颗空树</li>
+<li>或者是具有下列性质的二叉树
+<ul>
+<li>对于任何一个节点，设其值为 k</li>
+<li>则该节点的左子树(若不为空)的任意一个节点的值都小于 k</li>
+<li>该节点的右子树(若不为空)的任意一个节点的值都大于 k</li>
+<li>而且它的左右子树也分别为二叉搜索树</li>
+</ul>
+</li>
+</ul>
+<h2 id="性质-1">性质</h2>
+<ul>
+<li>
+<p>中序遍历是正序的(由小到大的排列)</p>
+</li>
+<li>
+<p>搜索的时候使用二分搜索法</p>
+</li>
+<li>
+<p>插入也是一遍检索的过程</p>
+</li>
+<li>
+<p>删除时，可以使用左子树的最大或者右子树的最小值作为被删除值的替换，然后将左子树最大或者右子树最小进行删除（比如删除 35，我们可以用右子树最小 51 来替换 35 的值，然后将 51 节点删除）</p>
+</li>
+<li>
+<p>最优的情况下，我们搜索的时间复杂度是 o(log<del>2</del>N)，最坏的情况下是 o(N)</p>
+</li>
+</ul>
+<h1 id="平衡二叉树avl">平衡二叉树（AVL）</h1>
+<p>当我们给定一个正序的数组[1,2,3,4,5,6,7]然后将他们顺序插入到二叉搜索树中。它就变成了如下的结构：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191209121823.png" alt=""></p>
+<p>它从我们的树退化成了链表，我们对于这样的数据结构访问的时间复杂度也变成了 o(n)。但我们希望它能变成这样的数据结构，那么我们就可以使用 o(log<del>2</del>N)的复杂度去访问了。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191209122134.png" alt="平衡二叉树"></p>
+<p>这就是我们引入平衡二叉树的意义。</p>
+<h2 id="定义-2">定义</h2>
+<ol>
+<li>一颗平衡二叉树或者是空树，或者是具有以下性质的<strong>二叉排序树</strong>
+<ul>
+<li>左子树与右子树的高度之差的绝对值小于等于 1</li>
+<li>左子树与右子树也是平衡二叉树</li>
+</ul>
+</li>
+</ol>
+<p>所以平衡的关键点就是在二叉搜索树的基础上，实现左右子树的高度差不超过 1</p>
+<h2 id="实现">实现</h2>
+<p>为了方便起见，给每个节点附加一个数字，给出该节点左子树与右子树的高度差。这个数组称为节点的平衡因子(BF)</p>
+<blockquote>
+<p>平衡因子 = 节点左子树的高度-节点右子树的高度</p>
+</blockquote>
+<p>根据平衡二叉树的定义，平衡二叉树上所有节点的平衡因子只能是 -1,0,1;</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191209132042.png" alt=""></p>
+<p>如果在一颗 AVL 树中插入一个新节点后造成失衡，则必须重新调整树的结构，使之恢复平衡。平衡调整分为以下四种类型：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191210104833.png" alt="平衡调整的四种类型"></p>
+<p>当出现失衡时就需要进行调整，而调整的原则就是：</p>
+<ul>
+<li><strong>降低高度</strong></li>
+<li><strong>保持二叉排序树的性质</strong></li>
+</ul>
+<p>所以可以将上面四种情况分别调整为：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191210105042.png" alt=""></p>
+<p>上面的调整都是在简单的情况或者理想情况下的图，当我们实际操作起来 A,B 节点还可能有其他的子节点。这时又该如何调整呢？我们继续来看：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191210115550.png" alt=""></p>
+<h2 id="例子">例子</h2>
+<p>我们以一个例子来看一下平衡二叉树的构造过程。</p>
+<p>我们用一个数组：[16,3,7,11,9,26,18,14,15]顺序插入到二叉平衡树中。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191210121715.png" alt=""></p>
+<h1 id="2-3-树">2-3 树</h1>
+<p>学习 2-3 树是为了下面红黑树的学习。2-3 树在完美平衡的情况下所有空链接到根节点的距离都是相同的。我们接下来描述的也都是完美平衡的 2-3 树。</p>
+<h2 id="定义-3">定义</h2>
+<p>首先我们知道二叉树的节点是有一个值，有两个子节点。我们在 2-3 树中将这样的节点称为 2-节点(因为有两个子节点)，然后我们再引入一个定义 3-节点（这个节点里面有两个值，有三个子节点，左节点小于两个值，右节点大于两个值，中节点介于两个值之间）</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213103254.png" alt="2-3树"></p>
+<p>所以它也是一颗二叉搜索树，它的查找和二叉搜索树的查找基本上没区别</p>
+<h2 id="插入过程">插入过程</h2>
+<ol>
+<li>
+<p>向一颗空树插入</p>
+<p>当向空树插入时，新建一个 2-节点即可。</p>
+</li>
+<li>
+<p>向 2-节点插入</p>
+<p>把这个 2-节点替换为一个 3-节点即可。</p>
+</li>
+<li>
+<p>向 3-节点插入</p>
+<p>先将这个 3-节点临时变为 4-节点(节点里面有 3 个值，两个旧值，一个新值)。然后将三个值的中间值作为父节点，父节点的左节点为这三个值中的最小值，父节点的右节点为这三个值中的最大值。这时树的高度增加了 1。</p>
+</li>
+<li>
+<p>向一个父节点为 2-节点的 3-节点插入</p>
+<p>首先我们看第三步，我们向一个 3-节点插入，会将其分解为 3 个 2-节点，然后树高加 1。但是我们这次有一个父节点，并且它是一个 2-节点。那我们是不是可以把它看做，向一个 2-节点插入一个新键(这个新键是从子节点分解上来的中间值)。那么这样就可以按照第二步，将这个 2-节点替换为 3-节点。这时父节点变成了 3-节点。</p>
+</li>
+<li>
+<p>向一个父节点为 3-节点的 3-节点插入</p>
+<p>首先它是向一个 3-节点插入，我们再按照第三步操作，得到了一个中间值向上传递。这时父节点又是一个 3-节点。我们继续按照第三步来操作。一直向上传递，直到遇到一个父节点为 2-节点，或者到达根节点。</p>
+<p>当我们到达根节点后，如果根节点也是 3-节点，就需要分解根节点，变成 3个 2-节点。此时树的高度加 1。</p>
+</li>
+</ol>
+<p>只看这个步骤可能有些晦涩，我们就直接上例子(1,3,5,7,9,2,4,6,8)的插入过程。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213110950.png" alt="2-3树的插入过程"></p>
+<p>我们只要记住，首先按照二叉搜索树的性质来进行插入。小就往左子树，大就向右子树，中间就想中间的树。然后遇到 2-节点就变 3-节点。遇到 3-节点就分解向上传递，然后就又变成了向 2-或 3-节点插入的问题。</p>
+<h1 id="红黑树">红黑树</h1>
+<h2 id="性质-2">性质</h2>
+<ol>
+<li>节点是红色或黑色</li>
+<li>根节点是黑色</li>
+<li>所有叶子节点都是黑色</li>
+<li>每个红色节点必须有两个黑色的子节点（从每个叶子到根的所有路径上不能有两个连续的红色节点）</li>
+<li>从任意节点到其每个叶子节点的所有简单路径都包含相同数目的黑色节点</li>
+</ol>
+<p>我们为什么在上面要学习一下 2-3 树呢，因为在《算法》第四版中，它将红黑树看成 2-3 树的变形。我们知道 2-3 树中有一个 3-节点。它在一个节点中有两个值，这两个值肯定是一个大，一个小。我们如果把这个小的值分离出来，并且将它的颜色设置成红色，因为它小，所以它是大值的左节点，这样就形成了一颗红黑树。</p>
+<p>将上面的 2-3 树的例子拿过来对比一下</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213114159.png" alt="红黑树与 2-3 树对比"></p>
+<p>有一个重要的点是：<strong>红黑树不是完美的平衡二叉树，它只是近似平衡</strong>，我刚开始以为它是一颗平衡二叉树，在进行转换的时候就有了一下困难。</p>
+<p>我们可以将它的结构用代码定义一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Node</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Key</span><span class="w"> </span><span class="n">key</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Val</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Node</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">color</span><span class="p">;</span><span class="w"> </span><span class="c1">// true 为红，false 为黑</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Node</span><span class="p">(</span><span class="n">Key</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="n">Val</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="kt">boolean</span><span class="w"> </span><span class="n">color</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">color</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isRed</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="kc">null</span><span class="p">){</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="na">color</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="插入">插入</h2>
+<p>首先我们明确，新插入的节点都是红色的，然后经过一系列操作它可能会改变颜色，但是我们在新建节点来插入时它是红色的。</p>
+<p>我们在讲插入之前先来讲一下插入过程中需要的变换</p>
+<h3 id="旋转">旋转</h3>
+<h4 id="左旋转">左旋转</h4>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213123822.png" alt="左旋转"></p>
+<p>代码简单实现如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">Node</span><span class="w"> </span><span class="nf">rotateLeft</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">h</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//变换位置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="na">left</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">x</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//变色</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">x</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="na">color</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="右旋转">右旋转</h4>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213123455.png" alt="右旋转"></p>
+<p>代码简单实现如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">Node</span><span class="w"> </span><span class="nf">rotateRight</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">h</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//变换位置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="na">right</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">x</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//变色</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">x</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="na">color</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>旋转操作可以保持红黑树的两个重要性质：有序性和完美平衡性</strong></p>
+<p>那我们就开始一个红黑树的插入：</p>
+<ol>
+<li>向单个2-节点插入</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213174548.png" alt=""></p>
+<ol start="2">
+<li>
+<p>向树底部的 2-节点插入</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213174652.png" alt=""></p>
+</li>
+<li>
+<p>向 3-节点插入</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213174756.png" alt=""></p>
+<p>上面的第二、三种情况用到了颜色转换，将两个孩子节点变成黑色，将父节点变成红色，简单代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">void</span><span class="w"> </span><span class="nf">flipColors</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">h</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">.</span><span class="na">color</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<p>接下来我们用一个例子来说明一下这个过程：[1,3,5,7,9,2,4,6,8]</p>
+<p>并且简单代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="n">Key</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="n">Val</span><span class="w"> </span><span class="n">val</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">val</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//最终保证根节点为黑色</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">root</span><span class="p">.</span><span class="na">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">h</span><span class="p">,</span><span class="n">Key</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="n">Val</span><span class="w"> </span><span class="n">val</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">h</span><span class="o">==</span><span class="kc">null</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">val</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">//每次都插入一个红节点</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">cmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compareTo</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//判断大小关系后递归调用</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//需要返回值的原因是 当添加值之后可能会影响性质，需要旋转变色等。也就是节点发生了变换，需要重新赋值。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&lt;</span><span class="n">0</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">val</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="n">0</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">val</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">h</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">isRed</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isRed</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//右节点为红色，左节点为空或者黑色时需要左旋转</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rotateLeft</span><span class="p">(</span><span class="n">h</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">isRed</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isRed</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//当左节点为红色，左节点的左节点也为红色时，需要进行右旋转</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rotateRight</span><span class="p">(</span><span class="n">h</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">isRed</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isRed</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="na">right</span><span class="p">)</span><span class="w"> </span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//当两个子节点都为红色时，将两个子节点变黑，根节点变红</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">flipColors</span><span class="p">(</span><span class="n">h</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后我们来看一下图示过程：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191213183308.png" alt=""></p>
+<h1 id="后续">后续</h1>
+<p>关于节点删除的部分后面继续添加</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%BA%A2%E9%BB%91%E6%A0%91">https://zh.wikipedia.org/wiki/%E7%BA%A2%E9%BB%91%E6%A0%91</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%8F%89%E6%A0%91">https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%8F%89%E6%A0%91</a></li>
+<li><a href="https://www.cxyxiaowu.com/7374.html">https://www.cxyxiaowu.com/7374.html</a></li>
+<li><a href="https://www.icourse163.org/course/PKU-1002534001">https://www.icourse163.org/course/PKU-1002534001</a></li>
+<li>《算法》（第四版）</li>
+</ul>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

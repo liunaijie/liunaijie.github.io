@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mybatis on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/mybatis/</link>
+    <description>Recent content in Mybatis on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 06 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/mybatis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mybatis是如何防止SQL注入的,不用Mybatis如何实现SQL注入</title>
+      <link>https://www.liunaijie.top/coding/mybatis/mybatis%E6%98%AF%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2sql%E6%B3%A8%E5%85%A5%E7%9A%84-%E4%B8%8D%E7%94%A8mybatis%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0sql%E6%B3%A8%E5%85%A5/</link>
+      <pubDate>Mon, 06 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/mybatis/mybatis%E6%98%AF%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2sql%E6%B3%A8%E5%85%A5%E7%9A%84-%E4%B8%8D%E7%94%A8mybatis%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0sql%E6%B3%A8%E5%85%A5/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/happy-new-year-4718894_640.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;Mybatis这个框架在日常开发中用的很多，比如面试中经常有一个问题：&lt;code&gt;$&lt;/code&gt;和&lt;code&gt;#&lt;/code&gt;的区别，它们的区别是使用&lt;code&gt;#&lt;/code&gt;可以防止SQL注入，今天就来看一下它是如何实现SQL注入的。&lt;/p&gt;&#xA;&lt;h1 id=&#34;什么是sql注入&#34;&gt;什么是SQL注入&lt;/h1&gt;&#xA;&lt;p&gt;在讨论怎么实现之前，首先了解一下什么是SQL注入，我们有一个简单的查询操作：根据id查询一个用户信息。它的sql语句应该是这样：&lt;code&gt;select * from user where id = &lt;/code&gt;。我们根据传入条件填入id进行查询。&lt;/p&gt;&#xA;&lt;p&gt;如果正常操作，传入一个正常的id，比如说2，那么这条语句变成&lt;code&gt;select * from user where id =2&lt;/code&gt;。这条语句是可以正常运行并且符合我们预期的。&lt;/p&gt;&#xA;&lt;p&gt;但是如果传入的参数变成&lt;code&gt; &#39;&#39; or 1=1&lt;/code&gt;，这时这条语句变成&lt;code&gt;select * from user where id = &#39;&#39; or 1=1&lt;/code&gt;。让我们想一下这条语句的执行结果会是怎么？它会将我们用户表中所有的数据查询出来，显然这是一个大的错误。这就是SQL注入。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/catalyst%E7%9A%84%E4%BC%98%E5%8C%96%E8%BF%87%E7%A8%8B/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-Catalyst的优化过程">
+  <meta property="og:description" content="Spark SQL完整优化流程主要包含两个阶段: Catalyst优化器和Tungsten. 其中Catalyst优化器包含逻辑优化和物理优化两个阶段. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 select name, age, sum(price * volume) revenue from ( select * from tx ) tx inner join ( select name, age, userId from user where age &lt; 30 and gender in (&#39;M&#39;) ) user on tx.userId = user.userId group by 1,2 ; ANTLR4 在编写完SQL或DataFrame后, spark会先使用Antlr来生成逻辑计划树Unresolved Logical Plan">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-Catalyst的优化过程">
+  <meta name="twitter:description" content="Spark SQL完整优化流程主要包含两个阶段: Catalyst优化器和Tungsten. 其中Catalyst优化器包含逻辑优化和物理优化两个阶段. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 select name, age, sum(price * volume) revenue from ( select * from tx ) tx inner join ( select name, age, userId from user where age &lt; 30 and gender in (&#39;M&#39;) ) user on tx.userId = user.userId group by 1,2 ; ANTLR4 在编写完SQL或DataFrame后, spark会先使用Antlr来生成逻辑计划树Unresolved Logical Plan">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-Catalyst的优化过程
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-Catalyst的优化过程</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121612524.png" alt="">
+Spark SQL完整优化流程主要包含两个阶段: Catalyst优化器和Tungsten. 其中Catalyst优化器包含逻辑优化和物理优化两个阶段.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121612866.png" alt=""></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-SQL" data-lang="SQL"><span class="line"><span class="cl"><span class="k">select</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">volume</span><span class="p">)</span><span class="w"> </span><span class="n">revenue</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">tx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">tx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">select</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w"> </span><span class="k">user</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">where</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="k">user</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">on</span><span class="w"> </span><span class="n">tx</span><span class="p">.</span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">user</span><span class="p">.</span><span class="n">userId</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="antlr4">ANTLR4</h1>
+<p>在编写完SQL或DataFrame后, spark会先使用Antlr来生成逻辑计划树<code>Unresolved Logical Plan</code>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121612334.png" alt=""></p>
+<h1 id="catalyst">Catalyst</h1>
+<p>Catalyst逻辑优化阶段分为两个环节: <strong>逻辑计划解析</strong>和<strong>逻辑计划优化</strong>.</p>
+<p>在逻辑计划解析中, Catalyst把<code>Unresolved Logical Plan</code>转换为<code>Analyzed Logical Plan</code>;</p>
+<p>在逻辑计划优化中, Catalyst基于一些既定的启发式规则(<code>Heuristics Based Rules</code>)把<code>Analyzed Logical Plan</code>转换为<code>Optimized Logical Plan</code>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121612897.png" alt=""></p>
+<h2 id="逻辑计划解析">逻辑计划解析</h2>
+<p>这一步是把<code>Unresolved Logical Plan</code>转换为<code>Analyzed Logical Plan</code></p>
+<p><strong>要结合DataFrame的Schema信息, 来确认计划中的表名, 字段名, 字段类型与实际数据是否一致</strong>. 如果我们的查询中存在表名, 列名不存在. 会在这一步报错.</p>
+<p>完成确认后, Catalyst会生成Analyzed Logical Plan.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121613704.png" alt=""></p>
+<h2 id="逻辑计划优化">逻辑计划优化</h2>
+<p>这一步将<code>Analyzed Logical Plan</code>转换成<code>Optimized Logical Plan</code></p>
+<p>在解析完逻辑计划之后, 我们也可以直接将Analyzed Logical Plan转换为物理计划. 但是这个时候的执行效率可能不是最优的, 我们根据一系列既有规则进行优化, 优化后再转换为物理计划.</p>
+<p>例如上面的Analyzed Logical Plan, 我们在查询中只涉及到user表的4个字段, 但是由于parquet文件中存在5个字段. 我们其实可以将没有用到的email字段舍弃掉.</p>
+<p>对于同样一种计算逻辑, 实现方式可以有多种, 按照不同的顺序对算子做排列组合, 我们可以演化出不同的实现方式. 需要去选择其中最优的哪一个.</p>
+<h3 id="catalyst的优化规则">Catalyst的优化规则</h3>
+<p>优化规则主要可以归纳到3个范畴:</p>
+<ul>
+<li>谓词下推 (Predicate Pushdown)</li>
+<li>列剪裁 (Column Pruning)</li>
+<li>常量替换 (Constant Folding)</li>
+</ul>
+<ol>
+<li><strong>谓词下推</strong>
+谓词指的是一些过滤条件比如<code>age&lt;30</code> , 下推指的是把这些谓词沿着执行计划向下, 推到离数据源最近的地方, 从而在源头就减少数据扫描量. 让这些谓词越接近数据源越好</li>
+</ol>
+<p>在下推之前, Catalyst还会对谓词本身做一些优化, 比如像OptimizeIn规则, 它会把<code>gender in ‘M‘</code> 优化为 <code>gender = ‘M’</code> , 把谓词in替换为等值谓词. 再比如CombineFilters规则, 它会把<code>age&lt;30</code> 和 <code>gender=’M’</code> 这两个谓词, 捏合成一个谓词: <code>age≠null and gender ≠null and age &lt; 30 and gender = ‘M’</code></p>
+<p>完成谓词本身的优化之后, Catalyst再用<code>PushDownPredicte</code>优化规则, 把谓词推到逻辑计划树的最下面的数据源上. 下推的谓词能够大幅减少数据扫描量, 降低磁盘IO
+2.  <strong>列剪裁</strong></p>
+<p>扫描数据源时, 只读取那些与查询相关的字段.
+在上面的例子中, 对于email字段, 虽然在数据中存在, 但是并没有查询这个字段, 所以Catalyst会使用ColumnPruning规则, 把email字段这一列剪掉. 对于列式存储的文件可以减少文件扫描数量, 降低IO开销.</p>
+<ol start="3">
+<li><strong>常量替换</strong>
+对于我们的一些常量表达式, 例如 age &lt; 12+ 18. 会使用ConstantFolding规则, 自动帮我们把条件变成 age&lt;30
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121613785.png" alt=""></li>
+</ol>
+<h3 id="catalyst的优化过程">Catalyst的优化过程</h3>
+<p>逻辑计划（Logical Plan）和物理计划（Physical Plan），它们都继承自 QueryPlan。</p>
+<p>QueryPlan 的父类是 TreeNode，TreeNode 就是语法树中对于节点的抽象。TreeNode 有一个名叫 children 的字段，类型是 <code>Seq[TreeNode]</code>，利用 TreeNode 类型，Catalyst 可以很容易地构建一个树结构。除了 children 字段，TreeNode 还定义了很多高阶函数，其中最值得关注的是一个叫做 transformDown 的方法。transformDown 的形参，正是 Catalyst 定义的各种优化规则，方法的返回类型还是 TreeNode。另外，transformDown 是个递归函数，参数的优化规则会先作用（Apply）于当前节点，然后依次作用到 children 中的子节点，直到整棵树的叶子节点。</p>
+<p>从<code>Analyzed Logical Plan</code>到<code>Optimized Logical Plan</code>的转换，就是从一个 TreeNode 生成另一个 TreeNode 的过程</p>
+<p><code>Analyzed Logical Plan</code> 的根节点，通过调用 <code>transformDown</code> 方法，不停地把各种优化规则作用到整棵树，直到把所有 27 组规则尝试完毕，且树结构不再发生变化为止。这个时候，生成的 TreeNode 就是 Optimized Logical Plan。</p>
+<h1 id="物理计划">物理计划</h1>
+<h2 id="优化spark-plan">优化Spark Plan</h2>
+<p>上面得到的<code>Optimized Logical Plan</code> 只是一些逻辑计划, 不具备可操作性.</p>
+<p>例如下面这个计划, 只是声明了join的方式为inner join. 但是并没有说明我们是需要<code>boradcast join</code>, 还是<code>sort merge join</code>或者其他join方式.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121613542.png" alt="">
+在这一步中, Catalyst共有14类优化策略, 其中6类与流计算相关, 剩下的8类使用与所有的场景.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121613988.png" alt=""></p>
+<h3 id="join策略">Join策略</h3>
+<p>Catalyst在运行时总共支持5种Join策略, 执行效率从高到低分别是:</p>
+<ul>
+<li>Broadcast Hash Join</li>
+<li>Shuffle Sort Merge Join</li>
+<li>Shuffle Hash Join</li>
+<li>Broadcast Nested Loop Join</li>
+<li>Shuffle Cartesian Product Join</li>
+</ul>
+<p><strong>Catalyst在选择Join策略时, 会尝试优先选择执行效率最高的策略.</strong> 也就是说, 在选择join策略时, JoinSelection会先判断当前查询是否满足BHJ所要求的先决条件, 如果满足就立即选中BHJ. 如果不满足则依次向下判断是否满足SMJ的先决条件. 依次类推, 最终使用CPJ来兜底.</p>
+<p>JoinSelection在做决策时会依赖两类信息:</p>
+<ul>
+<li>条件型
+<ul>
+<li>Join类型
+也就是我们的Join key是否是等值连接</li>
+<li>内表尺寸
+判断表的大小, 信息可以来自与hive表, parquet文件信息, 或者缓存大小, AQE的动态统计信息.
+Spark3.x版本的AQE对此有优化
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121614130.png" alt=""></li>
+</ul>
+</li>
+<li>指令型
+也就是Join Hints. 它允许我们主动声明想使用的Join策略, 并且在做Join策略选择时会优先选择我们的策略. 但并不是一定会选择我们的策略</li>
+</ul>
+<p>在上面的查询中, 首先选择BHJ, 但是由于右表user的尺寸太大, 所以退而求其次选择了SMJ. 这时所有条件都满足, 所以最终的Join策略为SMJ. 查询计划树如下所示:
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121614000.png" alt=""></p>
+<h2 id="生成physical-plan">生成Physical Plan</h2>
+<p><strong>Catalyst需要对Spark Plan做进一步的转换, 生成可以操作、可以执行的Physical Plan.</strong>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121614425.png" alt="">
+这里有一步Preparation Rules的规则, 完成这些规则后就转换成了Physical Plan.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121614161.png" alt="">
+这些规则可以保证在上一步优化时添加的规则可以被执行.</p>
+<p>例如在上面的查询中添加了Join策略为SortMergeJoin. 但是SortMergeJoin需要选择进行排序, 并且需要根据key做shuffle. 在上一步的计划中并没有声明这些信息. 那么就需要运用这些规则来完善信息.</p>
+<h3 id="ensurerequirements规则">EnsureRequirements规则</h3>
+<p>这一个规则是确保每一个节点的操作都可以满足前提条件.
+每一个节点, 都会有4个属性用来描述数据输入和输出的分布状态.</p>
+<ul>
+<li>outputPartitioning 输出数据的分区规则</li>
+<li>outputOrdering 输出数据的排序规则</li>
+<li>requireChildDistribution 要求输入数据满足某种分区规则</li>
+<li>requireChildOrdering 要求输入数据满足某种排序规则</li>
+</ul>
+<p>EnsureRequirements规则要求, 子节点的输出数据要满足父节点的输入要求.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121615893.png" alt="">
+上面的图中, 父节点SortMergeJoin有两个子节点, 父节点需要两个子节点按照userId分成200个分区并且排好序. 但是在两个子节点上, 他们输出数据并没有满足这两个条件. 这时就要利用EnsureRuirements规则来将两个子节点满足父节点的输入要求. 它通过添加必要的操作符, 如Shuffle和排序, 来保证父节点SortMergeJoin节点对于输入数据的要求得到满足.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121615691.png" alt="">
+添加必需的节点之后, Physical Plan就已经相当具体, 可以去执行了.</p>
+<p>这时spark可以调用Physical Plan的doExecute方法, 把结构化查询的计算结果, 转换为RDD[InternalRow]. 这里的InternalRow是Tungsten设计的定制化二进制数据结构.</p>
+<p>通过调用RDD[InternalRow]之上的ACTION算子, Spark就可以触发Physical Plan从头至尾依次执行.</p>
+<p>上面查询的Physical Plan最终如下:
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121615045.png" alt="">
+Physical Plan中, 会有一些星号“<em>”, 这些星号后面还带着括号和数字, 比如“</em>(3)”, “*(1)”. 这种星号标记表示的就是WSCG, 后面的数字代表Stage编号. 因此, 括号中数字相同的操作, 最终都会被捏合成一份代码来执行.</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

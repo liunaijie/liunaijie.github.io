@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/clickhouse/replacingmergetree/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="ClickHouse-ReplacingMergeTree">
+  <meta property="og:description" content="在MergeTree的写入过程中可以看到，ClickHouse无法保证主键的唯一性。
+如果在数据写入时做主键校验，那么这个时候就需要维护一个主键的列表，然后每次写入时都需要进行判断，这样做的话就降低了吞吐量。
+ClickHouse利用了MergeTree需要合并相同分区的特性，实现了在合并过程中进行主键校验的过程。
+例子 1 2 3 4 5 6 7 8 CREATE TABLE table_001 ( id UInt32, name String, age UInt8 ) ENGINE = ReplacingMergeTree() ORDER BY id PARTITION BY age 这个表定义主键为id，分区在age字段上。
+写入两条初始化数据：insert into table_001 values(1,&#39;name1&#39;,18),(2,&#39;name2&#39;,18);
+这两条数据属于相同分区，但是主键值不一样，我们这个时候进行查询，可以查询到这两条数据。
+然后再写入一条分区相同id相同的数据insert into table_001 values(1,&#39;name3&#39;,18);
+当插入完成后进行查询时，还是可以看到这条数据，因为合并文件夹不是立即生效的，而当我们过一段时间后再去进行查询就会看到第一次写入的name1 这一行已经被替换掉了。我们也可以设置替换规则，来决定当遇到多条相同主键数据时的保留策略。
+再来写一条不同分区下的相同id数据: insert into table_001 values(1,&#39;name3&#39;,19);
+这条记录的id与之前的重复了，但是它并不会替换之前的值，因为它们属于不同的分区下，在merge过程中并不会被merge到一起，不会触发替换的过程。
+数据替换策略 ReplacingMergeTree的引擎定义中可以传递一个参数，这个参数的类型可以是UInt*，Date或者DateTime类型的字段。
+DDL：
+1 2 3 4 5 6 7 create table replace_table_v1( id String, code String, create_time DateTime ) Engine = ReplacingMergeTree(create_time) Partition By toYYYYMM(create_time) Order By id 当我们向这个表进行插入时，当遇到重复数据时，会保留create_time最大的那一条记录。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:tag" content="ClickHouse">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ClickHouse-ReplacingMergeTree">
+  <meta name="twitter:description" content="在MergeTree的写入过程中可以看到，ClickHouse无法保证主键的唯一性。
+如果在数据写入时做主键校验，那么这个时候就需要维护一个主键的列表，然后每次写入时都需要进行判断，这样做的话就降低了吞吐量。
+ClickHouse利用了MergeTree需要合并相同分区的特性，实现了在合并过程中进行主键校验的过程。
+例子 1 2 3 4 5 6 7 8 CREATE TABLE table_001 ( id UInt32, name String, age UInt8 ) ENGINE = ReplacingMergeTree() ORDER BY id PARTITION BY age 这个表定义主键为id，分区在age字段上。
+写入两条初始化数据：insert into table_001 values(1,&#39;name1&#39;,18),(2,&#39;name2&#39;,18);
+这两条数据属于相同分区，但是主键值不一样，我们这个时候进行查询，可以查询到这两条数据。
+然后再写入一条分区相同id相同的数据insert into table_001 values(1,&#39;name3&#39;,18);
+当插入完成后进行查询时，还是可以看到这条数据，因为合并文件夹不是立即生效的，而当我们过一段时间后再去进行查询就会看到第一次写入的name1 这一行已经被替换掉了。我们也可以设置替换规则，来决定当遇到多条相同主键数据时的保留策略。
+再来写一条不同分区下的相同id数据: insert into table_001 values(1,&#39;name3&#39;,19);
+这条记录的id与之前的重复了，但是它并不会替换之前的值，因为它们属于不同的分区下，在merge过程中并不会被merge到一起，不会触发替换的过程。
+数据替换策略 ReplacingMergeTree的引擎定义中可以传递一个参数，这个参数的类型可以是UInt*，Date或者DateTime类型的字段。
+DDL：
+1 2 3 4 5 6 7 create table replace_table_v1( id String, code String, create_time DateTime ) Engine = ReplacingMergeTree(create_time) Partition By toYYYYMM(create_time) Order By id 当我们向这个表进行插入时，当遇到重复数据时，会保留create_time最大的那一条记录。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - ClickHouse-ReplacingMergeTree
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">ClickHouse-ReplacingMergeTree</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 10 月 09 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/ClickHouse">#ClickHouse</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>在MergeTree的写入过程中可以看到，ClickHouse无法保证主键的唯一性。</p>
+<p>如果在数据写入时做主键校验，那么这个时候就需要维护一个主键的列表，然后每次写入时都需要进行判断，这样做的话就降低了吞吐量。</p>
+<p>ClickHouse利用了MergeTree需要合并相同分区的特性，实现了在合并过程中进行主键校验的过程。</p>
+<h2 id="例子">例子</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">table_001</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">UInt32</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="n">age</span><span class="w"> </span><span class="n">UInt8</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReplacingMergeTree</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">age</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个表定义主键为id，分区在age字段上。</p>
+<p>写入两条初始化数据：<code>insert into table_001 values(1,'name1',18),(2,'name2',18);</code></p>
+<p>这两条数据属于相同分区，但是主键值不一样，我们这个时候进行查询，可以查询到这两条数据。</p>
+<p>然后再写入一条分区相同id相同的数据<code>insert into table_001 values(1,'name3',18);</code></p>
+<p>当插入完成后进行查询时，还是可以看到这条数据，因为合并文件夹不是立即生效的，而当我们过一段时间后再去进行查询就会看到第一次写入的<code>name1</code> 这一行已经被替换掉了。我们也可以设置替换规则，来决定当遇到多条相同主键数据时的保留策略。</p>
+<p>再来写一条不同分区下的相同id数据: <code>insert into table_001 values(1,'name3',19);</code></p>
+<p>这条记录的id与之前的重复了，但是它并不会替换之前的值，因为它们属于不同的分区下，在merge过程中并不会被merge到一起，不会触发替换的过程。</p>
+<h2 id="数据替换策略">数据替换策略</h2>
+<p>ReplacingMergeTree的引擎定义中可以传递一个参数，这个参数的类型可以是UInt*，Date或者DateTime类型的字段。</p>
+<p>DDL：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">replace_table_v1</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">id</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">code</span><span class="w"> </span><span class="n">String</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">create_time</span><span class="w"> </span><span class="n">DateTime</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">Engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReplacingMergeTree</span><span class="p">(</span><span class="n">create_time</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">Partition</span><span class="w"> </span><span class="k">By</span><span class="w"> </span><span class="n">toYYYYMM</span><span class="p">(</span><span class="n">create_time</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">Order</span><span class="w"> </span><span class="k">By</span><span class="w"> </span><span class="n">id</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>当我们向这个表进行插入时，当遇到重复数据时，会保留create_time最大的那一条记录。</p>
+<h1 id="总结">总结</h1>
+<p>简单梳理一下它的处理逻辑：</p>
+<ol>
+<li>使用Order By排序键作为判断重复数据的唯一键</li>
+<li>只有在合并分区的时候才会触发替换重复数据的逻辑</li>
+<li>以分区为单位替换重复数据。当分区合并时，同一分区内的重复数据会被替换，而不同分区之间的重复数据不会被替换。</li>
+<li>在进行数据去重时，由于分区内的数据已经基于Order By进行了排序，所以很容易找到那些相邻的重复数据。</li>
+<li>数据的去重策略有两种：
+<ul>
+<li>当没有设置版本去重策略时，保留同一组重复数据中的最后一行</li>
+<li>当设置了去重策略后，保留字段最大的那一行。</li>
+</ul>
+</li>
+</ol>
+<h1 id="延伸">延伸</h1>
+<ol>
+<li>ReplacingMergeTree引擎也只能实现相同分区内的主键去重，不能实现全局的主键唯一性，而且还是延迟生效的。</li>
+<li>数据去重时，最好指定去重策略，因为保留数据的最后一行有时候可能并不是我们真正想保留的数据。</li>
+</ol>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

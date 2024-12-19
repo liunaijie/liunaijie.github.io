@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/clickhouse/replicatedmergetree/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="ClickHouse-ReplicatedMergeTree">
+  <meta property="og:description" content="ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。
+副本是表级别的，不是整个服务器级别的，所以在相同的服务器(cluster)上可以同时存在备份表和非备份表。
+副本不依赖与分片，每个分片都有它自己的独立副本。
+修改配置 如果要使用副本，需要在配置文件中设置zookeeper集群的地址。例如：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 &lt;zookeeper&gt; &lt;node index=&#34;1&#34;&gt; &lt;host&gt;192.168.10.1&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;2&#34;&gt; &lt;host&gt;192.168.10.2&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;3&#34;&gt; &lt;host&gt;192.168.10.3&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;/zookeeper&gt; 对于不同的机器，这个配置不相同。
+1 2 3 4 5 &lt;macros&gt; &lt;layer&gt;05&lt;/layer&gt; &lt;shard&gt;02&lt;/shard&gt; &lt;replica&gt;example05-02-1.yandex.ru&lt;/replica&gt; &lt;/macros&gt; 如果配置文件中没有设置zk，则无法创建复制表，并且任何现有的复制表都将变为只读。
+在zk中存储元数据的路径是在创建表时指定的。
+DDL 1 2 3 4 5 6 7 8 9 CREATE TABLE test_table ( EventDate DateTime, CounterID UInt32, UserID UInt32, ver UInt16 ) ENGINE = ReplicatedReplacingMergeTree(&#39;/clickhouse/tables/{layer}-{shard}/test_table&#39;, &#39;{replica}&#39;, ver) PARTITION BY toYYYYMM(EventDate) ORDER BY (CounterID, EventDate, intHash32(UserID)) Replicated*MergeTree的参数">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:tag" content="ClickHouse">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ClickHouse-ReplicatedMergeTree">
+  <meta name="twitter:description" content="ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。
+副本是表级别的，不是整个服务器级别的，所以在相同的服务器(cluster)上可以同时存在备份表和非备份表。
+副本不依赖与分片，每个分片都有它自己的独立副本。
+修改配置 如果要使用副本，需要在配置文件中设置zookeeper集群的地址。例如：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 &lt;zookeeper&gt; &lt;node index=&#34;1&#34;&gt; &lt;host&gt;192.168.10.1&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;2&#34;&gt; &lt;host&gt;192.168.10.2&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;3&#34;&gt; &lt;host&gt;192.168.10.3&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;/zookeeper&gt; 对于不同的机器，这个配置不相同。
+1 2 3 4 5 &lt;macros&gt; &lt;layer&gt;05&lt;/layer&gt; &lt;shard&gt;02&lt;/shard&gt; &lt;replica&gt;example05-02-1.yandex.ru&lt;/replica&gt; &lt;/macros&gt; 如果配置文件中没有设置zk，则无法创建复制表，并且任何现有的复制表都将变为只读。
+在zk中存储元数据的路径是在创建表时指定的。
+DDL 1 2 3 4 5 6 7 8 9 CREATE TABLE test_table ( EventDate DateTime, CounterID UInt32, UserID UInt32, ver UInt16 ) ENGINE = ReplicatedReplacingMergeTree(&#39;/clickhouse/tables/{layer}-{shard}/test_table&#39;, &#39;{replica}&#39;, ver) PARTITION BY toYYYYMM(EventDate) ORDER BY (CounterID, EventDate, intHash32(UserID)) Replicated*MergeTree的参数">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - ClickHouse-ReplicatedMergeTree
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">ClickHouse-ReplicatedMergeTree</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 10 月 09 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/ClickHouse">#ClickHouse</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。</p>
+<p>副本是表级别的，不是整个服务器级别的，所以在相同的服务器(cluster)上可以同时存在备份表和非备份表。</p>
+<p>副本不依赖与分片，每个分片都有它自己的独立副本。</p>
+<h2 id="修改配置">修改配置</h2>
+<p>如果要使用副本，需要在配置文件中设置zookeeper集群的地址。例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;zookeeper&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;1&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;host&gt;</span>192.168.10.1<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/node&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;2&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;host&gt;</span>192.168.10.2<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/node&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;3&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;host&gt;</span>192.168.10.3<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/node&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/zookeeper&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>对于不同的机器，这个配置不相同。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;macros&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;layer&gt;</span>05<span class="nt">&lt;/layer&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;shard&gt;</span>02<span class="nt">&lt;/shard&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;replica&gt;</span>example05-02-1.yandex.ru<span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/macros&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果配置文件中没有设置zk，则无法创建复制表，并且任何现有的复制表都将变为只读。</p>
+<p>在zk中存储元数据的路径是在创建表时指定的。</p>
+<h2 id="ddl">DDL</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">test_table</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">EventDate</span><span class="w"> </span><span class="n">DateTime</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">CounterID</span><span class="w"> </span><span class="n">UInt32</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">UserID</span><span class="w"> </span><span class="n">UInt32</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">ver</span><span class="w"> </span><span class="n">UInt16</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReplicatedReplacingMergeTree</span><span class="p">(</span><span class="s1">&#39;/clickhouse/tables/{layer}-{shard}/test_table&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;{replica}&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ver</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">toYYYYMM</span><span class="p">(</span><span class="n">EventDate</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">CounterID</span><span class="p">,</span><span class="w"> </span><span class="n">EventDate</span><span class="p">,</span><span class="w"> </span><span class="n">intHash32</span><span class="p">(</span><span class="n">UserID</span><span class="p">))</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Replicated*MergeTree的参数</strong></p>
+<ul>
+<li><code>zoo_path</code> — 在ZooKeeper中元数据的存储路径.</li>
+<li><code>replica_name</code> — 该节点在ZooKeeper中的名称.</li>
+<li><code>other_parameters</code> — Parameters of an engine which is used for creating the replicated version, for example, version in <code>ReplacingMergeTree</code>.</li>
+</ul>
+<p>这里给的例子是创建了一个ReplacingMergeTree的备份表，Replace的规则是字段<code>ver</code>。这个表的元数据存储在zk的位置是：<code>/clickhouse/tables/05-02/test_table</code> 。</p>
+<h2 id="数据写入过程">数据写入过程</h2>
+<p>由于ClickHouse是多主架构，所以可以在任意一个阶段进行数据写入，数据写入后会将元信息存储到zk中，包括（哪个节点写入了数据，数据存储的位置等）。其他节点检测到变换后会通过元信息向写入数据的阶段来拉取数据。</p>
+<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b714a228-604e-4bda-abe5-05a536636e76/Untitled.png" alt="Untitled"></p>
+<h2 id="其他操作类型信息同步流程">其他操作类型信息同步流程</h2>
+<ol>
+<li><strong>Optimize Table</strong></li>
+</ol>
+<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4fcfb483-8386-41be-aabc-6b90ffb422b2/Untitled.png" alt="Untitled"></p>
+<ol>
+<li><strong>Alert Delete</strong></li>
+</ol>
+<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/11cef192-a3e0-4772-8fd9-c3f32f0d962d/Untitled.png" alt="Untitled"></p>
+<ol>
+<li><strong>Alert Table</strong></li>
+</ol>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/devops/nginx/nginx%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="nginx源码编译安装">
+  <meta property="og:description" content="在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。
+提前需要安装的软件 Ubuntu
+1 2 sudo apt-get install gcc automake autoconf make libpcre3 libpcre3-dev sudo apt-get install openssl # 开启ssl、https时需要 centos
+1 2 yum -y install gcc gcc-c&#43;&#43; zlib zlib-devel openssl openssl-devel pcre pcre-devel unzip zip yum -y install openssl-devel # 开启ssl、https时需要 树莓派
+1 sudo apt-get install -y make gcc libpcre3 libpcre3-dev libperl-dev libssl-dev libcurl4-openssl-dev 下载、解压 去官网找到最近的稳定版本，右键复制下载链接
+1 2 wget 下载链接 tar -zxvf 下载的压缩包 编译 进入解压完成的文件夹，执行编译命令">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-04-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-04-11T00:00:00+00:00">
+    <meta property="article:tag" content="Nginx">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="nginx源码编译安装">
+  <meta name="twitter:description" content="在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。
+提前需要安装的软件 Ubuntu
+1 2 sudo apt-get install gcc automake autoconf make libpcre3 libpcre3-dev sudo apt-get install openssl # 开启ssl、https时需要 centos
+1 2 yum -y install gcc gcc-c&#43;&#43; zlib zlib-devel openssl openssl-devel pcre pcre-devel unzip zip yum -y install openssl-devel # 开启ssl、https时需要 树莓派
+1 sudo apt-get install -y make gcc libpcre3 libpcre3-dev libperl-dev libssl-dev libcurl4-openssl-dev 下载、解压 去官网找到最近的稳定版本，右键复制下载链接
+1 2 wget 下载链接 tar -zxvf 下载的压缩包 编译 进入解压完成的文件夹，执行编译命令">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - nginx源码编译安装
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">nginx源码编译安装</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 04 月 11 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/nginx">#nginx</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>在一些平台上我们可以轻松的使用命令安装nginx，但是安装完成的软件在某些时候可能并不能满足我们的需求，这时候可能就需要从源码来进行编译安装了。</p>
+<h1 id="提前需要安装的软件">提前需要安装的软件</h1>
+<p>Ubuntu</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install gcc automake autoconf make libpcre3 libpcre3-dev
+</span></span><span class="line"><span class="cl">sudo apt-get install openssl <span class="c1"># 开启ssl、https时需要</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>centos</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">yum -y install gcc gcc-c++ zlib zlib-devel openssl openssl-devel pcre pcre-devel unzip zip
+</span></span><span class="line"><span class="cl">yum -y install openssl-devel <span class="c1"># 开启ssl、https时需要</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>树莓派</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">sudo apt-get install -y make gcc libpcre3 libpcre3-dev  libperl-dev libssl-dev libcurl4-openssl-dev
+</span></span></code></pre></td></tr></table>
+</div>
+</div><!-- more -->
+<h1 id="下载解压">下载、解压</h1>
+<p>去官网找到最近的稳定版本，右键复制下载链接</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">wget 下载链接
+</span></span><span class="line"><span class="cl">tar -zxvf 下载的压缩包
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="编译">编译</h1>
+<p>进入解压完成的文件夹，执行编译命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">./configure
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我常用的命令有这些：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">命令</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">&ndash;prefix=path</td>
+          <td>指定nginx的安装目录，默认是安装在/usr/local/nginx文件夹下</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">&ndash;with-http_ssl_module</td>
+          <td>开启ssl模块，即网站支持https访问，这个默认是不开启的，需要编译时开启后配置文件中的配置才能生效</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">&ndash;with-http_realip_module</td>
+          <td>开启realip模块，获取用户访问的真实ip</td>
+      </tr>
+  </tbody>
+</table>
+<p>其他还有很多的配置项，可以从<a href="http://nginx.org/en/docs/configure.html">http://nginx.org/en/docs/configure.html</a>网站上自行查阅并配置。</p>
+<p>我常用的编译命令就是：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">./configure --with-http_ssl_module --with-http_realip_module
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="安装">安装</h1>
+<p>执行<code>make</code>,<code>make install</code></p>
+<h1 id="运行">运行</h1>
+<p>如果没有指定安装目录则默认安装在了<code>/usr/local/nginx</code>里面，进入该文件夹。</p>
+<p>执行<code>./sbin/nginx</code>即可开启nginx，如果提示权限不足，前面添加<code>sudo</code>即可。</p>
+<p>这时访问<code>127.0.0.1</code>即可看到nginx默认的访问页面。</p>
+<p>设置开机自启，修改<code>/etc/rc.local</code>文件，在后面添加<code>/usr/local/nginx/sbin/nginx</code>，如果权限不足，在前面添加<code>sudo</code>即可。</p>
+<h1 id="修改配置文件重新启动">修改配置文件，重新启动</h1>
+<p>nginx的配置文件在<code>conf/nginx.conf</code>文件中。在这个文件中对根据我们的需求进行修改即可。修改完成后执行<code>./sbin/nginx -t</code>这是测试我们的配置文件是否格式正确，也可直接使用<code>./sbin/nginx -s reload</code>执行重启命令，执行重启命令时也会执行检查配置文件格式。如果我们的配置文件格式有错误，都会在命令行中提示错误的位置，进入查看修改即可。</p>
+<p>一般的web服务器配置都像这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#user  nobody;  ## 指定nginx的用户，默认为nobody 我们也可以修改为root
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">worker_processes</span>  <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 以下几个配置都是指定日志文件和启动的id路径，不用管它
+</span></span></span><span class="line"><span class="cl"><span class="c1">#error_log  logs/error.log;
+</span></span></span><span class="line"><span class="cl"><span class="c1">#error_log  logs/error.log  notice;
+</span></span></span><span class="line"><span class="cl"><span class="c1">#error_log  logs/error.log  info;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">#pid        logs/nginx.pid;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">events</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># http模块，这是我们主要进行配置的地方
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">http</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">default_type</span>  <span class="s">application/octet-stream</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 设置访问日志的格式，log_format 是命令 main是这个格式的名称后面直接用名称就知道是这个格式了 再后面的就是具体的日志格式了
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="nv">$server_port</span>  <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
+</span></span><span class="line"><span class="cl">                      <span class="s">&#39;</span><span class="nv">$status</span> <span class="nv">$body_bytes_sent</span> <span class="s">&#34;</span><span class="nv">$http_referer&#34;</span> <span class="s">&#39;</span>
+</span></span><span class="line"><span class="cl">                      <span class="s">&#39;&#34;</span><span class="nv">$http_user_agent&#34;</span> <span class="s">&#34;</span><span class="nv">$http_x_forwarded_for&#34;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># 指定访问日志的存储路径和日志格式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">access_log</span>  <span class="s">logs/access.log</span>  <span class="s">main</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ip黑名单(从其他配置文件中读取配置)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">include</span> <span class="s">ip_deny.conf</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">    <span class="kn">server_tokens</span> <span class="no">off</span><span class="p">;</span> <span class="c1"># 关闭nginx版本号
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">tcp_nopush</span>     <span class="no">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">#keepalive_timeout  0;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kn">gzip</span>  <span class="no">on</span><span class="p">;</span> <span class="c1"># 开启gzip压缩
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 负载均衡的配置，这个配置也值得拿出来单独记录，我这里就是简单的配置了一下
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">upstream</span> <span class="s">users</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="kn">server</span> <span class="n">192.168.0.13</span><span class="p">:</span><span class="mi">8001</span> <span class="s">weight=2</span><span class="p">;</span> <span class="c1">#权重为2 3次访问中会有两次到这个机器上去
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>         <span class="kn">server</span> <span class="n">192.168.0.14</span><span class="p">:</span><span class="mi">8001</span> <span class="s">weight=1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">     <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 设置无法通过其他域名,ip访问(即除了我们配置的server_name所有请求都会被阻拦)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">listen</span> <span class="mi">80</span> <span class="s">default</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">server_name</span> <span class="s">_name_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">return</span> <span class="mi">403</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># liunaijie page settings
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">#
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">listen</span>       <span class="mi">80</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># server_name 可以配置多个域名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">server_name</span> <span class="s">www.liunaijie.top</span> <span class="s">liunaijie.top</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 强制将http重定向到https
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">https://www.liunaijie.top</span><span class="nv">$request_uri?</span> <span class="s">permanent</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># HTTPS server
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">#
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">access_log</span>  <span class="s">logs/liunaijie.log</span>  <span class="s">main</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">listen</span>       <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">server_name</span>  <span class="s">www.liunaijie.top</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">charset</span> <span class="s">utf-8</span><span class="p">;</span> <span class="c1"># 设置文件编码格式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">ssl_certificate</span>      <span class="s">/usr/top.pem</span><span class="p">;</span> <span class="c1">#这两个是https的ssl证书路径
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">ssl_certificate_key</span>  <span class="s">/usr/key</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">ssl_session_timeout</span> <span class="mi">5m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">ssl_ciphers</span> <span class="s">ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">ssl_protocols</span> <span class="s">TLSv1.2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># location是指定对域名下访问路径的处理
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 什么都不写表示直接访问域名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kn">access_log</span> <span class="s">logs/blog.log</span> <span class="s">main</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">root</span>   <span class="s">html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">		<span class="c1"># 对 /videos 开启文件访问
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">location</span> <span class="s">/videos</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kn">alias</span> <span class="s">/aaa/bbb/ccc/ddd/videos</span><span class="p">;</span> <span class="c1"># 指定文件夹
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="kn">autoindex</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#开启索引
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="kn">autoindex_localtime</span> <span class="no">on</span><span class="p">;</span> <span class="c1"># 显示时间
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="kn">autoindex_exact_size</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#显示文件大小
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">        <span class="c1"># 这个是对我写的项目的一个配置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>         <span class="kn">location</span> <span class="s">/users</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">             <span class="c1"># 下面三行是开启 websocket 配置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">&#34;upgrade&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="kn">proxy_pass</span> <span class="s">http://users</span><span class="p">;</span> <span class="c1">#开启负载均衡
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="c1"># 解决跨域
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Origin&#39;</span> <span class="s">&#39;</span><span class="nv">$http_origin&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Methods&#39;</span> <span class="s">&#39;GET,</span> <span class="s">POST,</span> <span class="s">OPTIONS&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Headers&#39;</span> <span class="s">&#39;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Credentials&#39;</span> <span class="s">&#39;true&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="停止">停止</h1>
+<p>停止nginx有几种方式，使用nginx自己的停止方式或者找到nginx的进程然后杀掉他</p>
+<ul>
+<li><code>nginx -s quit</code>这个命令是优雅的停止，会先完成当前正在进行的工作后再停止。</li>
+<li><code>nginx -s stop</code>这个就直接停止了，不管有没有正在进行的工作</li>
+<li><code>kill nginx</code>这个是使用的系统命令直接杀死进程。</li>
+</ul>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

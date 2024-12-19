@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Inspiration on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/inspiration/</link>
+    <description>Recent content in Inspiration on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 18 Sep 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/inspiration/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A media platform base on web3, IPFS</title>
+      <link>https://www.liunaijie.top/publish/a-media-platform-base-on-web3-ipfs/</link>
+      <pubDate>Mon, 18 Sep 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/publish/a-media-platform-base-on-web3-ipfs/</guid>
+      <description>&lt;h1 id=&#34;purpose&#34;&gt;Purpose&lt;/h1&gt;&#xA;&lt;p&gt;Now there has a lot of media company, but they won the data, means they can delete your video at any time and tell you: you broke some rules.&#xA;So I am thinking about create a new platform base on block chain, IPFS. there is no admin, no one can delete your video.&lt;/p&gt;&#xA;&lt;h1 id=&#34;some-feature&#34;&gt;Some Feature&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;People need save video first to earn some &lt;code&gt;COIN&lt;/code&gt;. when they have earn enough &lt;code&gt;COIN&lt;/code&gt;, they can upload and share their videos(The cost depends on the size of the data).&lt;/li&gt;&#xA;&lt;li&gt;When people view your video, give Thumbs up, save, donate. the data saver, the data uploader can earn the &lt;code&gt;COIN&lt;/code&gt;.&lt;/li&gt;&#xA;&lt;li&gt;No administer.&lt;/li&gt;&#xA;&lt;li&gt;The ownership is clear, you have the data ownership that you uploaded.&lt;/li&gt;&#xA;&lt;li&gt;videos can&amp;rsquo;t be deleted after they are uploaded, not even by the author.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;shortcoming&#34;&gt;Shortcoming&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;How to avoid pornography, violence.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;reference&#34;&gt;Reference&lt;/h1&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E6%9C%80%E5%A4%A7%E5%8C%96%E5%86%85%E5%AD%98%E7%9A%84%E4%BD%BF%E7%94%A8%E6%95%88%E7%8E%87/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-最大化内存的使用效率">
+  <meta property="og:description" content="Reserved Memory 堆内内存可以划分为
+Reserved Memory, User Memory Storage Memory Execution Memory 其中Reserved Memory固定为300MB.
+User Memory 再看一下之前在广播变量里提到的一段代码
+1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这里的dict变量, 会被分发到每个Executor上, 每个Executor上会同时存在N份(N为当前Executor上并行执行的task数量). 这些数据被存储到了堆内内存的User Memory区域
+当使用广播变量将这个变量进行分发后, 这个数据就只会在Executor上存储一份. 并且这部分数据也不再存储到User Memory中, 转到了Storage Memory的存储区域
+估算公式
+User Memroy = 应用内自定义数据结构的对象总大小 * Executor的线程池大小
+计算公式:
+(spark.executor.memory - 300MB) * ( 1- spark.memory.fraction )
+Storage Memory Spark存储系统主要有3个对象
+Shuffle中间文件 RDD缓存 广播变量 它们都由Executor上的BlockManager进行管理, 对于数据在内存和磁盘中的存储, BlockManager利用MemoryStore和DiskStore进行抽象和封装
+广播变量所携带的数据内容会物化到MemoryStore中, 以Executor为粒度为所有Task提供唯一的一份数据拷贝.
+广播变量消耗的就是 Storage Memory 内存区域
+估算公式
+Storage Memory = ( 所有broadcast变量的大小 &#43; 数据缓存大小 ) / Executor数量">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-最大化内存的使用效率">
+  <meta name="twitter:description" content="Reserved Memory 堆内内存可以划分为
+Reserved Memory, User Memory Storage Memory Execution Memory 其中Reserved Memory固定为300MB.
+User Memory 再看一下之前在广播变量里提到的一段代码
+1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这里的dict变量, 会被分发到每个Executor上, 每个Executor上会同时存在N份(N为当前Executor上并行执行的task数量). 这些数据被存储到了堆内内存的User Memory区域
+当使用广播变量将这个变量进行分发后, 这个数据就只会在Executor上存储一份. 并且这部分数据也不再存储到User Memory中, 转到了Storage Memory的存储区域
+估算公式
+User Memroy = 应用内自定义数据结构的对象总大小 * Executor的线程池大小
+计算公式:
+(spark.executor.memory - 300MB) * ( 1- spark.memory.fraction )
+Storage Memory Spark存储系统主要有3个对象
+Shuffle中间文件 RDD缓存 广播变量 它们都由Executor上的BlockManager进行管理, 对于数据在内存和磁盘中的存储, BlockManager利用MemoryStore和DiskStore进行抽象和封装
+广播变量所携带的数据内容会物化到MemoryStore中, 以Executor为粒度为所有Task提供唯一的一份数据拷贝.
+广播变量消耗的就是 Storage Memory 内存区域
+估算公式
+Storage Memory = ( 所有broadcast变量的大小 &#43; 数据缓存大小 ) / Executor数量">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-最大化内存的使用效率
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-最大化内存的使用效率</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="reserved-memory">Reserved Memory</h1>
+<p>堆内内存可以划分为</p>
+<ol>
+<li>Reserved Memory,</li>
+<li>User Memory</li>
+<li>Storage Memory</li>
+<li>Execution Memory</li>
+</ol>
+<p>其中Reserved Memory固定为300MB.</p>
+<h1 id="user-memory">User Memory</h1>
+<p>再看一下之前在广播变量里提到的一段代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-scala" data-lang="scala"><span class="line"><span class="cl"><span class="k">val</span> <span class="n">dict</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="err">“</span><span class="n">spark</span><span class="err">”</span><span class="o">,</span> <span class="err">“</span><span class="n">tune</span><span class="err">”</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">words</span> <span class="k">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="err">“</span><span class="o">~/</span><span class="n">words</span><span class="o">.</span><span class="n">csv</span><span class="err">”</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">keywords</span> <span class="k">=</span> <span class="n">words</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">word</span> <span class="k">=&gt;</span> <span class="n">dict</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">word</span><span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="o">((</span><span class="k">_</span><span class="o">,</span> <span class="mi">1</span><span class="o">)).</span><span class="n">reduceByKey</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="k">_</span><span class="o">).</span><span class="n">collect</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里的<code>dict</code>变量, 会被分发到每个Executor上, 每个Executor上会同时存在N份(N为当前Executor上并行执行的task数量). 这些数据被存储到了堆内内存的<code>User Memory</code>区域</p>
+<p>当使用广播变量将这个变量进行分发后, 这个数据就只会在Executor上存储一份. 并且这部分数据也不再存储到User Memory中, 转到了Storage Memory的存储区域</p>
+<p><strong>估算公式</strong></p>
+<p>User Memroy = 应用内自定义数据结构的对象总大小 * Executor的线程池大小</p>
+<p><strong>计算公式:</strong></p>
+<p>(spark.executor.memory - 300MB) * ( 1- spark.memory.fraction )</p>
+<h1 id="storage-memory">Storage Memory</h1>
+<p>Spark存储系统主要有3个对象</p>
+<ul>
+<li>Shuffle中间文件</li>
+<li>RDD缓存</li>
+<li>广播变量</li>
+</ul>
+<p>它们都由Executor上的<code>BlockManager</code>进行管理, 对于数据在内存和磁盘中的存储, BlockManager利用<code>MemoryStore</code>和<code>DiskStore</code>进行抽象和封装</p>
+<p>广播变量所携带的数据内容会物化到MemoryStore中, 以Executor为粒度为所有Task提供唯一的一份数据拷贝.</p>
+<p><strong>广播变量消耗的就是 Storage Memory 内存区域</strong></p>
+<p><strong>估算公式</strong></p>
+<p>Storage Memory = ( 所有broadcast变量的大小 + 数据缓存大小 ) / Executor数量</p>
+<p><strong>计算公式:</strong></p>
+<p>(spark.executor.memory - 300MB) * spark.memory.fraction * spark.memory.storageFraction</p>
+<h1 id="execution-memory">Execution Memory</h1>
+<p><strong>估算公式</strong></p>
+<p>Execution Memory = 线程数 * dataSet大小 / 并行度</p>
+<p><strong>计算公式:</strong></p>
+<p>(spark.executor.memory - 300MB) * spark.memory.fraction * ( 1 - spark.memory.storageFraction )</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

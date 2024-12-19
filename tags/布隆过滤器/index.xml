@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>布隆过滤器 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</link>
+    <description>Recent content in 布隆过滤器 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 15 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>布隆过滤器</title>
+      <link>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</link>
+      <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</guid>
+      <description>&lt;h1 id=&#34;布隆过滤器&#34;&gt;布隆过滤器&lt;/h1&gt;&#xA;&lt;p&gt;一个很长的二进制向量和一个映射函数&lt;/p&gt;&#xA;&lt;p&gt;布隆过滤器可以用于检索一个元素是否在一个集合中&lt;/p&gt;&#xA;&lt;p&gt;它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。&lt;/p&gt;&#xA;&lt;p&gt;先来看这张图：&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8.png&#34; alt=&#34;布隆过滤器&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;步骤一：对参数 &lt;code&gt;A&lt;/code&gt;经过映射函数得到一个二进制向量，进行标记。再对参数&lt;code&gt;B&lt;/code&gt;进行映射，这时他们两个存在相同的向量位置（类似于哈希冲突）。&lt;/p&gt;&#xA;&lt;p&gt;步骤二：检查参数&lt;code&gt;C&lt;/code&gt;是否在过滤器中，经过映射函数得到 C 的向量，去过滤器中查看，得到结果 C 不在过滤器中，并且是肯定不在。&lt;/p&gt;&#xA;&lt;p&gt;步骤三：检查参数 &lt;code&gt;D&lt;/code&gt;是否在过滤器中，经过映射函数得到 D 的向量，发现 D 的向量已经存在于过滤器中，但之前并没有插入 D 这个参数，所以从这里可以看出布隆过滤器在判断参数在过滤器中有一定的误识别率，但是在判断参数不在过滤器中没有问题。&lt;/p&gt;&#xA;&lt;p&gt;步骤四：删除参数&lt;code&gt;B&lt;/code&gt;，从图中也可以很明显的看出，A,B 存在交集，那么删除 B 的时候怎么删除。这就是删除困难。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E9%81%BF%E5%85%8Dcache%E6%BB%A5%E7%94%A8/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-避免Cache滥用">
+  <meta property="og:description" content="不同的缓存级别 Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:
+存储介质: 内存还是磁盘, 还是两者都有 存储形式: 存储对象值还是序列化的字节数组, 带SER字样的表示以序列化方式存储, 不带SER表示采用对象值 副本数量: 拷贝数量, 没有数字默认为1份副本 Spark对RDD.cache函数默认使用MEMORY_ONLY, 对DataFrame.cache默认使用MEMORY_AND_DISK.
+缓存的计算过程 在MEMORY_AND_DISK模式下, Spark会优先尝试把数据集全部缓存到内存, 内存不足的情况下, 再把剩余的数据落盘到本地.
+MEMORY_ONLY则不管内存是否充足, 一股脑的把数据缓存到内存. 无论是RDD还是DataFrame, 它们的数据分片都是以迭代器Iterator的形式存储的. 因此, 要把数据缓存下来, 就要把迭代器展开成实实在在的数据值, 这一步叫做Unroll. 展开的对象暂存在一个叫做ValuesHolder的数据结构里, 然后转化为MemoryEntry. 这里转化的实现方式是toArray, 因此它不产生额外的内存开销, 这一步叫做Transfer. 最终, MemoryEntry和与之对应的BlockID, 以K, V的形式存储到哈希字典(LinkedHashMap)中 当分布式数据集所有的数据分片都从Unroll到Transfer, 再到注册哈希字典后, 数据在内存的缓存过程就结束了
+缓存的销毁过程 将数据缓存进内存时, 如果发现内存不足, 则需要根据LRU算法来驱逐(Eviction)一些数据分片 由于Spark在存储MemoryEntry时使用了LinkedHashMap的数据结构, 所有可以很容易的找到最近最少使用的Block(链表头部).
+Spark当试图缓存一个数据分片, 却发现可用内存不足时, 会对LinkedHashMap从头扫描, 当扫描过的MemoryEntry尺寸之和大于要写入的数据分片时, 将这些数据给删除掉.
+在进行缓存清楚时, 同属一个RDD的MemoryEntry不会被选中
+在缓存清除的过程中, Spark遵循两个基本原则
+LRU, 按照元素的访问顺序, 优先清除那些“最近最少访问”的MemoryEntry 同属一个RDD的MemoryEntry不会被清除 数据丢失 在Memory_Only的模式下, 尽管有缓存销毁这个环境, 但是总会“驱无可驱”, 这个时候, Memory_Only就会放弃剩余的数据分片, 造成数据丢失.
+Cache的注意事项 cache是惰性操作, 在调用cache只会, 需要用Action算子触发缓存的物化过程.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-避免Cache滥用">
+  <meta name="twitter:description" content="不同的缓存级别 Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:
+存储介质: 内存还是磁盘, 还是两者都有 存储形式: 存储对象值还是序列化的字节数组, 带SER字样的表示以序列化方式存储, 不带SER表示采用对象值 副本数量: 拷贝数量, 没有数字默认为1份副本 Spark对RDD.cache函数默认使用MEMORY_ONLY, 对DataFrame.cache默认使用MEMORY_AND_DISK.
+缓存的计算过程 在MEMORY_AND_DISK模式下, Spark会优先尝试把数据集全部缓存到内存, 内存不足的情况下, 再把剩余的数据落盘到本地.
+MEMORY_ONLY则不管内存是否充足, 一股脑的把数据缓存到内存. 无论是RDD还是DataFrame, 它们的数据分片都是以迭代器Iterator的形式存储的. 因此, 要把数据缓存下来, 就要把迭代器展开成实实在在的数据值, 这一步叫做Unroll. 展开的对象暂存在一个叫做ValuesHolder的数据结构里, 然后转化为MemoryEntry. 这里转化的实现方式是toArray, 因此它不产生额外的内存开销, 这一步叫做Transfer. 最终, MemoryEntry和与之对应的BlockID, 以K, V的形式存储到哈希字典(LinkedHashMap)中 当分布式数据集所有的数据分片都从Unroll到Transfer, 再到注册哈希字典后, 数据在内存的缓存过程就结束了
+缓存的销毁过程 将数据缓存进内存时, 如果发现内存不足, 则需要根据LRU算法来驱逐(Eviction)一些数据分片 由于Spark在存储MemoryEntry时使用了LinkedHashMap的数据结构, 所有可以很容易的找到最近最少使用的Block(链表头部).
+Spark当试图缓存一个数据分片, 却发现可用内存不足时, 会对LinkedHashMap从头扫描, 当扫描过的MemoryEntry尺寸之和大于要写入的数据分片时, 将这些数据给删除掉.
+在进行缓存清楚时, 同属一个RDD的MemoryEntry不会被选中
+在缓存清除的过程中, Spark遵循两个基本原则
+LRU, 按照元素的访问顺序, 优先清除那些“最近最少访问”的MemoryEntry 同属一个RDD的MemoryEntry不会被清除 数据丢失 在Memory_Only的模式下, 尽管有缓存销毁这个环境, 但是总会“驱无可驱”, 这个时候, Memory_Only就会放弃剩余的数据分片, 造成数据丢失.
+Cache的注意事项 cache是惰性操作, 在调用cache只会, 需要用Action算子触发缓存的物化过程.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-避免Cache滥用
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-避免Cache滥用</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="不同的缓存级别">不同的缓存级别</h1>
+<p>Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:</p>
+<ul>
+<li>存储介质: 内存还是磁盘, 还是两者都有</li>
+<li>存储形式: 存储对象值还是序列化的字节数组, 带SER字样的表示以序列化方式存储, 不带SER表示采用对象值</li>
+<li>副本数量: 拷贝数量, 没有数字默认为1份副本</li>
+</ul>
+<p>Spark对RDD.cache函数默认使用MEMORY_ONLY, 对DataFrame.cache默认使用MEMORY_AND_DISK.</p>
+<h1 id="缓存的计算过程">缓存的计算过程</h1>
+<p>在MEMORY_AND_DISK模式下, Spark会优先尝试把数据集全部缓存到内存, 内存不足的情况下, 再把剩余的数据落盘到本地.</p>
+<p>MEMORY_ONLY则不管内存是否充足, 一股脑的把数据缓存到内存.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121545329.png" alt=""></p>
+<ol>
+<li>无论是RDD还是DataFrame, 它们的数据分片都是以迭代器Iterator的形式存储的. 因此, 要把数据缓存下来, 就要把迭代器展开成实实在在的数据值, 这一步叫做Unroll.</li>
+<li>展开的对象暂存在一个叫做ValuesHolder的数据结构里, 然后转化为MemoryEntry. 这里转化的实现方式是toArray, 因此它不产生额外的内存开销, 这一步叫做Transfer.</li>
+<li>最终, MemoryEntry和与之对应的BlockID, 以K, V的形式存储到哈希字典(<strong>LinkedHashMap</strong>)中</li>
+</ol>
+<p>当分布式数据集所有的数据分片都从Unroll到Transfer, 再到注册哈希字典后, 数据在内存的缓存过程就结束了</p>
+<h1 id="缓存的销毁过程">缓存的销毁过程</h1>
+<p>将数据缓存进内存时, 如果发现<strong>内存不足</strong>, 则需要根据<strong>LRU</strong>算法来驱逐(<strong>Eviction</strong>)一些数据分片
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121546100.png" alt=""></p>
+<p>由于Spark在存储MemoryEntry时使用了LinkedHashMap的数据结构, 所有可以很容易的找到最近最少使用的Block(链表头部).</p>
+<p>Spark当试图缓存一个数据分片, 却发现可用内存不足时, 会对LinkedHashMap<strong>从头扫描</strong>, 当扫描过的MemoryEntry尺寸之和大于要写入的数据分片时, 将这些数据给删除掉.</p>
+<p><strong>在进行缓存清楚时, 同属一个RDD的MemoryEntry不会被选中</strong></p>
+<p>在缓存清除的过程中, Spark遵循两个基本原则</p>
+<ol>
+<li>LRU, 按照元素的访问顺序, 优先清除那些“最近最少访问”的MemoryEntry</li>
+<li>同属一个RDD的MemoryEntry不会被清除</li>
+</ol>
+<h1 id="数据丢失">数据丢失</h1>
+<p>在Memory_Only的模式下, 尽管有缓存销毁这个环境, 但是总会“驱无可驱”, 这个时候, Memory_Only就会放弃剩余的数据分片, 造成数据丢失.</p>
+<h1 id="cache的注意事项">Cache的注意事项</h1>
+<p>cache是惰性操作, 在调用cache只会, 需要用Action算子触发缓存的物化过程.</p>
+<p>假如我们使用了take, show, first这几个action算子, Spark并不会缓存所有的元素, 只会缓存用到的几个元素, 例如take算子只缓存take的20条记录.</p>
+<p>我们需要使用count这类的全局操作算子. 才能保证cache的完整性.</p>
+<p><strong>Cache Manager要求两个查询的Analyzed Logical Plan必须完全一致, 才能对DataFrame的缓存进行复用.</strong></p>
+<h1 id="缓存清理">缓存清理</h1>
+<p>可以手动调用unpersist来清理弃用的缓存数据, 它支持同步、异步两种模式</p>
+<p>异步模式: 调用unpersist() 或是 unpersist(false)</p>
+<p>同步模式: 调用unpersist(true)</p>
+<p>在异步模式下，Driver 把清理缓存的请求发送给各个 Executors 之后，会立即返回，并且继续执行用户代码，比如后续的任务调度、广播变量创建等等。</p>
+<p>在同步模式下，Driver 发送完请求之后，会一直等待所有 Executors 给出明确的结果（缓存清除成功还是失败）。各个 Executors 清除缓存的效率、进度各不相同，Driver 要等到最后一个 Executor 返回结果，才会继续执行 Driver 侧的代码</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

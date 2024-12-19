@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/database/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="基于Docker的MySQL主从复制环境搭建">
+  <meta property="og:description" content="1. 前言 之前的程序架构可能是这样的一种形式：
+当程序体量扩大后，我们进行扩展，可能会扩展多个后台服务实例，但数据库还是只有一个，所以系统的瓶颈还是在数据库上面，所以这次的主要任务就是对数据库进行扩展，主要形式为：扩展多台数据库实例，实现读写分离，对于一些写的任务分配到主数据库，对于读的任务使用子数据库进行读取。从而提高系统性能。
+修改后的架构如下所示：">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2020-01-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-01-30T00:00:00+00:00">
+    <meta property="article:tag" content="MySQL">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="基于Docker的MySQL主从复制环境搭建">
+  <meta name="twitter:description" content="1. 前言 之前的程序架构可能是这样的一种形式：
+当程序体量扩大后，我们进行扩展，可能会扩展多个后台服务实例，但数据库还是只有一个，所以系统的瓶颈还是在数据库上面，所以这次的主要任务就是对数据库进行扩展，主要形式为：扩展多台数据库实例，实现读写分离，对于一些写的任务分配到主数据库，对于读的任务使用子数据库进行读取。从而提高系统性能。
+修改后的架构如下所示：">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 基于Docker的MySQL主从复制环境搭建
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">基于Docker的MySQL主从复制环境搭建</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2020 年 01 月 30 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/MySQL">#MySQL</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="1-前言">1. 前言</h1>
+<p>之前的程序架构可能是这样的一种形式：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200130131404.png" alt=""></p>
+<p>当程序体量扩大后，我们进行扩展，可能会扩展多个后台服务实例，但数据库还是只有一个，所以系统的瓶颈还是在数据库上面，所以这次的主要任务就是对数据库进行扩展，主要形式为：扩展多台数据库实例，实现读写分离，对于一些写的任务分配到主数据库，对于读的任务使用子数据库进行读取。从而提高系统性能。</p>
+<p>修改后的架构如下所示：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E6%88%AA%E5%B1%8F2020-01-3017.03.05.png" alt=""></p>
+<h1 id="2-环境预搭建">2. 环境预搭建</h1>
+<p>这次使用docker来进行这个环境的搭建，使用MySQL版本为5.7.13。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker pull mysql:5.7.13
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>整体结构为:</p>
+<ul>
+<li>
+<p>1个master主节点，作为写的节点。</p>
+</li>
+<li>
+<p>2个slave从节点，作为读的节点。</p>
+</li>
+</ul>
+<p>先分别将这几个节点启动，映射到不同的端口。在本机使用数据库连接工具连接，测试是否正常启动且正常连接。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker run -p 3307:3306 --name mysql-master -e <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="m">123456</span> -d mysql:5.7.13
+</span></span><span class="line"><span class="cl">docker run -p 3308:3306 --name mysql-slave1 -e <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="m">123456</span> -d mysql:5.7.13
+</span></span><span class="line"><span class="cl">docker run -p 3309:3306 --name mysql-slave2 -e <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="m">123456</span> -d mysql:5.7.13
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我这里分别将主节点（mysql-master）映射为<code>3307</code>端口，两个从节点（mysql-slave1,2）分别为<code>3308</code>和<code>3309</code>端口。然后设置MySQL的root密码为<code>123456</code>。</p>
+<p>然后可以使用<code>navicat</code>等工具连接测试MySQL。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E6%88%AA%E5%B1%8F2020-01-3109.19.54.png" alt=""></p>
+<p>分别进入这几个节点，编辑配置文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker <span class="nb">exec</span> -it mysql-master /bin/bash
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我使用的是name来进入容器，也可以根据id来选择，即<code>docker exec -it 对应容器的id /bin/bash</code>。</p>
+<p>由于没有预先安装<code>vi</code>和<code>vim</code>程序，然后要下载时需要执行<code>apt update</code>命令，这时会从国外源进行下载。由于众所周知的原因，速度很慢。我就将下载源更改为国内源。</p>
+<p>进入到<code>/etc/apt</code>文件夹中，首先将原有的文件进行备份：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mv sources.list sources.list.bak
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后使用如下命令新建文件并输入内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">echo</span> deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse &gt; sources.list
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后我们再执行<code>apt update</code>等操作，最后安装<code>vim</code>即可。</p>
+<h1 id="3-进行主从配置">3. 进行主从配置</h1>
+<ol>
+<li>主节点（master）配置</li>
+</ol>
+<p>进入主节点容器后，进入<code>/etc/mysql</code>文件夹中，会有一个<code>my.cnf</code>文件，主要对它进行修改。</p>
+<p>编辑这个文件，找到<code>[mysqld]</code>，在这个下面添加如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>mysqld<span class="o">]</span>
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## 唯一的编号</span>
+</span></span><span class="line"><span class="cl">server-id<span class="o">=</span><span class="m">101</span>
+</span></span><span class="line"><span class="cl"><span class="c1">## 这个是关键配置项</span>
+</span></span><span class="line"><span class="cl">log-bin<span class="o">=</span>mysql-bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置完成后，需要重启MySQL服务使配置生效。使用<code>service mysql restart</code>命令进行重启，重启完成后会关闭MySQL的容器，我们还要重启容器<code>docker restart mysql-master</code>。</p>
+<ol start="2">
+<li>从节点（slave）配置</li>
+</ol>
+<p>同主节点一样，编辑<code>/etc/mysql/my.cnf</code>文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="o">[</span>mysqld<span class="o">]</span>
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="c1">## 唯一的编号</span>
+</span></span><span class="line"><span class="cl">server-id<span class="o">=</span><span class="m">103</span>
+</span></span><span class="line"><span class="cl"><span class="c1">## 选，如果需要将该节点作为其他节点的主节点则需要添加</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># log-bin=mysql-bin</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>链接主节点和从节点</li>
+</ol>
+<p><em><strong>主节点</strong></em></p>
+<p>在主节点容器中进入MySQL<code>mysql -u root -p</code>，密码就是启动容器时设置的<code>123456</code>。</p>
+<p>进入MySQL后执行<code>show master status;</code>：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200131095802.png" alt=""></p>
+<p>从这里我们得到两个信息<code>File</code>和<code>Position</code>的值，我这里分别是<code>mysql-bin.000001</code>和<code>154</code>。</p>
+<p><em><strong>从节点</strong></em></p>
+<p>进入MySQL，执行如下的命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">change</span><span class="w"> </span><span class="n">master</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">master_host</span><span class="o">=</span><span class="s1">&#39;***&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">master_port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span><span class="w"> </span><span class="n">master_user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">master_password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span><span class="p">,</span><span class="w">  </span><span class="n">master_log_file</span><span class="o">=</span><span class="s1">&#39;****&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">master_log_pos</span><span class="o">=</span><span class="w"> </span><span class="o">***</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><br>
+<p>分别解释一下这几个参数代表的意思：</p>
+<ul>
+<li>
+<p>master_host：主节点的ip地址，可以在本机使用中如下命令来查看容器的ip地址</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">docker inspect --format<span class="o">=</span><span class="s1">&#39;{{.NetworkSettings.IPAddress}}&#39;</span> 容器名称<span class="p">|</span>容器id
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>master_port：mysql的端口号，不是对外映射的端口号</p>
+</li>
+<li>
+<p>master_user：mysql中的用户，要有权限，我直接使用了root，也可以新建用户来使用</p>
+</li>
+<li>
+<p>master_password：用于同步的mysql帐户密码</p>
+</li>
+<li>
+<p>master_log_file：用于同步的文件，就是从主节点查询到的文件，我这里是<code>mysql-bin.000001</code></p>
+</li>
+<li>
+<p>master_log_pos：binlog文件开始同步的位置， 就是从主节点查询到的位置，我这里是<code>154</code></p>
+</li>
+</ul>
+<p>执行刚刚的命令后在MySQL终端执行<code>show slave status \G;</code>来查看主从同步状态。</p>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/20200131101232.png" style="zoom:50%;" />
+<p>我们可以从这里查看配置的信息来进行核查，然后可以看到两个属性<code>slave_io_running</code>和<code>slave_sql_running</code>都是no，也就是关闭状态。</p>
+<p>我们可以执行<code>start slave</code>来开启主从复制，执行后再次执行<code>show slave status \G;</code>命令可以看到两个属性都变成了<code>yes</code>，则说明主从复制已经开启。</p>
+<p><strong>如果启动未成功，我们可以检查网络是否连通，同步用到的mysql密码是否正确，还有就是同步文件名称和位置是否正确！</strong></p>
+<h3 id="测试">测试</h3>
+<p>我们可以在主库中新建一个数据库，到从库中如果看到这个库的存在就表示主从同步完成。</p>
+<h1 id="4-级联配置">4. 级联配置</h1>
+<p>我想再加一个备份节点，并且这个节点是从slave1节点进行备份的，也就是slave1节点作为backup节点的主节点。这就构成了master-&gt;slave-&gt;backup这样一个级联关系。</p>
+<p>我本来是按照上面的步骤，先在slave的<code>my.cnf</code>中添加了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">log-bin<span class="o">=</span>mysql-slave-bin <span class="c1">#为了区分，我对文件名进行了修改 </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接着在backup节点执行的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">change master to <span class="nv">master_host</span><span class="o">=</span><span class="s1">&#39;***&#39;</span>, <span class="nv">master_user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span>, <span class="nv">master_password</span><span class="o">=</span><span class="s1">&#39;123456&#39;</span>, <span class="nv">master_port</span><span class="o">=</span>3306, <span class="nv">master_log_file</span><span class="o">=</span><span class="s1">&#39;****&#39;</span>, <span class="nv">master_log_pos</span><span class="o">=</span> ***<span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>命令换成对应slave节点的ip等属性。结果发现不行。在主节点有更改后，备份节点并没有变更！</p>
+<p>于是我开始了排查，发现在slave节点中的binlog文件并没有更改信息的记录，而backup节点相当于监听这个文件变更，这个文件没有变更所以backup节点也就不会有更改。这里延伸一点，mysql的binlog记录了我们所有更改的操作，所以理论上我们可以通过binlog来恢复任一时间刻的数据库内容。</p>
+<p>于是问题就转变成，主节点变更后如何让从节点的binlog日志有记录。</p>
+<p>我们可以在编辑<code>my.cnf</code>文件时再添加一行：<code>log_slave_updates=1</code>即可，让slave在接到master同步后也将二进制日志写到自己的binlog中。</p>
+<p>这样就可以完成，主节点进行更改后，从节点和备份节点都会进行变更，备份节点的数据是从从节点备份过去的。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://blog.csdn.net/youngwizard/article/details/8530725">https://blog.csdn.net/youngwizard/article/details/8530725</a></li>
+</ul>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sbt on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/sbt/</link>
+    <description>Recent content in Sbt on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 23 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/sbt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SBT加速</title>
+      <link>https://www.liunaijie.top/coding/devops/sbt%E5%8A%A0%E9%80%9F/</link>
+      <pubDate>Sat, 23 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/devops/sbt%E5%8A%A0%E9%80%9F/</guid>
+      <description>&lt;p&gt;最近有一个项目使用到了sbt作为构建工具，在电脑上即便有科学工具，下载依赖也是巨慢无比，有时候一天都下不下来。所以这篇文章就记录一下如何对sbt进行加速。&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;编辑配置文件，添加国内源：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vim ~/.sbt/repository&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;p&gt;将这个文件的信息修改为：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[repositories]&#xA;&#x9;local&#xA;&#x9;aliyun-ivy: http://maven.aliyun.com/nexus/content/groups/public, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]&#xA;&#x9;aliyun-maven: http://maven.aliyun.com/nexus/content/groups/public&#xA;&#x9;typesafe: http://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly&#xA;&#x9;typesafe2: http://repo.typesafe.com/typesafe/releases/&#xA;&#x9;sbt-plugin: http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/&#xA;&#x9;sonatype: http://oss.sonatype.org/content/repositories/snapshots&#xA;&#x9;uk_maven: http://uk.maven.org/maven2/&#xA;&#x9;repo2: http://repo2.maven.org/maven2/&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;更改IDE配置&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20210123083342.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;我使用的是IDEA，找到sbt配置项，在&lt;code&gt;VM parameters&lt;/code&gt;中填入：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;-Dsbt.override.build.repos=true&#xA;-Dsbt.repository.config=~/.sbt/repositories&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

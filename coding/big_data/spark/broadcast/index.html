@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/broadcast/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-Broadcast">
+  <meta property="og:description" content="广播变量 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这段代码中的dict变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.
+我们可以将这个dict变量作为广播变量, 分发到每个executor上, 每个task都从executor上获取数据.
+1 2 3 4 5 val dict = List(“spark”, “tune”) val bc = spark.sparkContext.broadcast(dict) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; bc.value.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 在广播变量的运行机制下，封装成广播变量的数据，由 Driver 端以 Executors 为粒度分发，每一个 Executors 接收到广播变量之后，将其交给 BlockManager 管理
+广播分布式数据集 在创建广播变量时, 由于变量的创建本来就在Driver上, 所以Driver直接把数据分发到各个Executor就可以了, 但是由于分布式数据集并不在Driver上, 它需要从各个Executor上拉取数据.
+步骤为:
+Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据 — 目前spark有个pr是关于将Driver获取到数据分布, 然后通知各个Executor进行拉取, 避免只有Drvier组装以后再一个个发送效率过低 Driver把汇总好的全量数据分发给各个Executor, Executors 将接收到的全量数据缓存到存储系统的 BlockManager 中 相比于广播变量的创建, 广播分布式数据集的代价更大, 一是广播分布式数据需要Driver从各个Executor上拉取数据, 多了一步网络开销. 二是分布式数据的体量通常比广播变量大.
+如何让Spark SQL选择Broadcast Joins 配置项 spark.sql.autoBroadcastJoinThreshold 默认值为10MB.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-Broadcast">
+  <meta name="twitter:description" content="广播变量 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这段代码中的dict变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.
+我们可以将这个dict变量作为广播变量, 分发到每个executor上, 每个task都从executor上获取数据.
+1 2 3 4 5 val dict = List(“spark”, “tune”) val bc = spark.sparkContext.broadcast(dict) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; bc.value.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 在广播变量的运行机制下，封装成广播变量的数据，由 Driver 端以 Executors 为粒度分发，每一个 Executors 接收到广播变量之后，将其交给 BlockManager 管理
+广播分布式数据集 在创建广播变量时, 由于变量的创建本来就在Driver上, 所以Driver直接把数据分发到各个Executor就可以了, 但是由于分布式数据集并不在Driver上, 它需要从各个Executor上拉取数据.
+步骤为:
+Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据 — 目前spark有个pr是关于将Driver获取到数据分布, 然后通知各个Executor进行拉取, 避免只有Drvier组装以后再一个个发送效率过低 Driver把汇总好的全量数据分发给各个Executor, Executors 将接收到的全量数据缓存到存储系统的 BlockManager 中 相比于广播变量的创建, 广播分布式数据集的代价更大, 一是广播分布式数据需要Driver从各个Executor上拉取数据, 多了一步网络开销. 二是分布式数据的体量通常比广播变量大.
+如何让Spark SQL选择Broadcast Joins 配置项 spark.sql.autoBroadcastJoinThreshold 默认值为10MB.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-Broadcast
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-Broadcast</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="广播变量">广播变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-scala" data-lang="scala"><span class="line"><span class="cl"><span class="k">val</span> <span class="n">dict</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="err">“</span><span class="n">spark</span><span class="err">”</span><span class="o">,</span> <span class="err">“</span><span class="n">tune</span><span class="err">”</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">words</span> <span class="k">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="err">“</span><span class="o">~/</span><span class="n">words</span><span class="o">.</span><span class="n">csv</span><span class="err">”</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">keywords</span> <span class="k">=</span> <span class="n">words</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">word</span> <span class="k">=&gt;</span> <span class="n">dict</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">word</span><span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="o">((</span><span class="k">_</span><span class="o">,</span> <span class="mi">1</span><span class="o">)).</span><span class="n">reduceByKey</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="k">_</span><span class="o">).</span><span class="n">collect</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这段代码中的<code>dict</code>变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121611565.png" alt=""></p>
+<p>我们可以将这个dict变量作为广播变量, <strong>分发到每个executor上</strong>, 每个task都从executor上获取数据.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-scala" data-lang="scala"><span class="line"><span class="cl"><span class="k">val</span> <span class="n">dict</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="err">“</span><span class="n">spark</span><span class="err">”</span><span class="o">,</span> <span class="err">“</span><span class="n">tune</span><span class="err">”</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">bc</span> <span class="k">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">broadcast</span><span class="o">(</span><span class="n">dict</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">words</span> <span class="k">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="err">“</span><span class="o">~/</span><span class="n">words</span><span class="o">.</span><span class="n">csv</span><span class="err">”</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">keywords</span> <span class="k">=</span> <span class="n">words</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">word</span> <span class="k">=&gt;</span> <span class="n">bc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">word</span><span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="o">((</span><span class="k">_</span><span class="o">,</span> <span class="mi">1</span><span class="o">)).</span><span class="n">reduceByKey</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="k">_</span><span class="o">).</span><span class="n">collect</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在广播变量的运行机制下，封装成广播变量的数据，由 Driver 端以 Executors 为粒度分发，每一个 Executors 接收到广播变量之后，将其交给 BlockManager 管理</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121611054.png" alt=""></p>
+<h1 id="广播分布式数据集">广播分布式数据集</h1>
+<p>在创建广播变量时, 由于变量的创建本来就在Driver上, 所以Driver直接把数据分发到各个Executor就可以了, 但是由于分布式数据集并不在Driver上, 它需要从各个Executor上拉取数据.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121611262.png" alt=""></p>
+<p>步骤为:</p>
+<ol>
+<li><strong>Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据</strong> — 目前spark有个pr是关于将Driver获取到数据分布, 然后通知各个Executor进行拉取, 避免只有Drvier组装以后再一个个发送效率过低</li>
+<li><strong>Driver把汇总好的全量数据分发给各个Executor, Executors 将接收到的全量数据缓存到存储系统的 BlockManager 中</strong></li>
+</ol>
+<p>相比于广播变量的创建, 广播分布式数据集的代价更大, 一是广播分布式数据需要Driver从各个Executor上拉取数据, 多了一步网络开销. 二是分布式数据的体量通常比广播变量大.</p>
+<h1 id="如何让spark-sql选择broadcast-joins">如何让Spark SQL选择Broadcast Joins</h1>
+<h2 id="配置项">配置项</h2>
+<p><code>spark.sql.autoBroadcastJoinThreshold</code> 默认值为10MB.</p>
+<p>对于参与Join的两张表, 只要任意一张表的尺寸小于10MB, spark就会选择Broadcast Join.</p>
+<p>但是这个size的判断并不是很准,</p>
+<ul>
+<li>在source还未在内存中缓存时, 这时使用文件的大小</li>
+<li>在source已经缓存在内存中, 这时可以直接判断数据的大小</li>
+</ul>
+<p>下面这段代码可以大致判断出文件在运行时的大小</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-scala" data-lang="scala"><span class="line"><span class="cl"><span class="k">val</span> <span class="n">df</span><span class="k">:</span> <span class="kt">DataFrame</span> <span class="o">=</span> <span class="k">_</span>
+</span></span><span class="line"><span class="cl"><span class="n">df</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">count</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">plan</span> <span class="k">=</span> <span class="n">df</span><span class="o">.</span><span class="n">queryExecution</span><span class="o">.</span><span class="n">logical</span>
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="n">estimated</span><span class="k">:</span> <span class="kt">BigInt</span> <span class="o">=</span> <span class="n">spark</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">sessionState</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">executePlan</span><span class="o">(</span><span class="n">plan</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">optimizedPlan</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">stats</span>
+</span></span><span class="line"><span class="cl"><span class="o">.</span><span class="n">sizeInBytes</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="利用api强制广播">利用API强制广播</h2>
+<h3 id="join-hints">Join Hints</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- sql hint
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">select</span><span class="w"> </span><span class="cm">/*+ broadcast(t2) */</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="k">key</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- df hint
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">table1</span><span class="p">.</span><span class="k">join</span><span class="p">(</span><span class="n">table2</span><span class="p">.</span><span class="n">hint</span><span class="p">(</span><span class="s2">&#34;broadcast&#34;</span><span class="p">),</span><span class="w"> </span><span class="n">Seq</span><span class="p">(</span><span class="s2">&#34;key&#34;</span><span class="p">),</span><span class="w"> </span><span class="s2">&#34;inner&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- 函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">import</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">functions</span><span class="p">.</span><span class="n">broadcast</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">table1</span><span class="p">.</span><span class="k">join</span><span class="p">(</span><span class="n">broadcast</span><span class="p">(</span><span class="n">table2</span><span class="p">),</span><span class="w"> </span><span class="n">Seq</span><span class="p">(</span><span class="s2">&#34;key&#34;</span><span class="p">),</span><span class="w"> </span><span class="s2">&#34;inner&#34;</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>如果广播变量大小超过8GB, Spark会直接抛异常终端任务</strong></p>
+<p>并不是所有的Join类型都可以转化为Broadcast Joins</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

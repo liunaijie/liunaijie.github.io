@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/design/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="设计模式-单例模式">
+  <meta property="og:description" content="概念 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
+为什么要使用单例 有些数据在系统中只应该保存一份，当使用多个对象时会造成一些错误。有一些资源访问冲突时也可以使用单例模式来解决。
+实现方式 由于对象只能有一个，所以构造函数的权限必须是private私有的，这样外部就无法通过new来创建实例
+还有一些需要关注的点
+创建对象的线程安全问题 是否支持延迟加载 获取实例方法的性能是否高 饿汉式 优点：写法简单。在类装载时就完成了实例化。线程安全
+缺点：由于在类装载时就完成了实例化，如果从始至终都没有用到这个实例，会造成内存浪费
+class Single { /** * 设置成私有的，保证无法在其它类中使用 new 关键字进行实例化 */ private Single() {} private final static Single INSTANCE = new Single(); /** * 从外界获取实例的唯一方法，从这个方法拿到的实例肯定是全局唯一的 * @return */ public static Single getInstance() { return INSTANCE; } } /** * 与上面的类似，用了静态代码块，不同的代码写法其他完全一样 */ class SingleTest2 { private SingleTest2() {} private static SingleTest2 SINGLE_TEST_2; static { SINGLE_TEST_2 = new SingleTest2(); } public static SingleTest2 getInstance() { return SINGLE_TEST_2; } } 懒汉式 在需要用到实例时才进行初始化，所以不会造成内存浪费，但多线程情况下会出现多个实例的情况">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-10-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-10-14T00:00:00+00:00">
+    <meta property="article:tag" content="Design">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="设计模式-单例模式">
+  <meta name="twitter:description" content="概念 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
+为什么要使用单例 有些数据在系统中只应该保存一份，当使用多个对象时会造成一些错误。有一些资源访问冲突时也可以使用单例模式来解决。
+实现方式 由于对象只能有一个，所以构造函数的权限必须是private私有的，这样外部就无法通过new来创建实例
+还有一些需要关注的点
+创建对象的线程安全问题 是否支持延迟加载 获取实例方法的性能是否高 饿汉式 优点：写法简单。在类装载时就完成了实例化。线程安全
+缺点：由于在类装载时就完成了实例化，如果从始至终都没有用到这个实例，会造成内存浪费
+class Single { /** * 设置成私有的，保证无法在其它类中使用 new 关键字进行实例化 */ private Single() {} private final static Single INSTANCE = new Single(); /** * 从外界获取实例的唯一方法，从这个方法拿到的实例肯定是全局唯一的 * @return */ public static Single getInstance() { return INSTANCE; } } /** * 与上面的类似，用了静态代码块，不同的代码写法其他完全一样 */ class SingleTest2 { private SingleTest2() {} private static SingleTest2 SINGLE_TEST_2; static { SINGLE_TEST_2 = new SingleTest2(); } public static SingleTest2 getInstance() { return SINGLE_TEST_2; } } 懒汉式 在需要用到实例时才进行初始化，所以不会造成内存浪费，但多线程情况下会出现多个实例的情况">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 设计模式-单例模式
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">设计模式-单例模式</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 10 月 14 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/design">#design</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h2 id="概念"><strong>概念</strong></h2>
+<p>一个类只允许创建一个对象（或者实例），那这个类就是一个单例类</p>
+<h2 id="为什么要使用单例"><strong>为什么要使用单例</strong></h2>
+<p>有些数据在系统中只应该保存一份，当使用多个对象时会造成一些错误。有一些资源访问冲突时也可以使用单例模式来解决。</p>
+<h1 id="实现方式"><strong>实现方式</strong></h1>
+<p>由于对象只能有一个，所以构造函数的权限必须是<code>private</code>私有的，这样外部就无法通过<code>new</code>来创建实例</p>
+<p>还有一些需要关注的点</p>
+<ul>
+<li>创建对象的线程安全问题</li>
+<li>是否支持延迟加载</li>
+<li>获取实例方法的性能是否高</li>
+</ul>
+<h2 id="饿汉式"><strong>饿汉式</strong></h2>
+<p>优点：写法简单。在类装载时就完成了实例化。线程安全</p>
+<p>缺点：由于在类装载时就完成了实例化，如果从始至终都没有用到这个实例，会造成内存浪费</p>
+<pre tabindex="0"><code> class Single {
+ /**
+  * 设置成私有的，保证无法在其它类中使用 new 关键字进行实例化
+  */
+ private Single() {}
+ 
+ private final static Single INSTANCE = new Single();
+ 
+     /**
+  * 从外界获取实例的唯一方法，从这个方法拿到的实例肯定是全局唯一的
+  * @return
+  */
+ public static Single getInstance() {
+ return INSTANCE;
+ }
+ 
+ }
+ 
+ /**
+  * 与上面的类似，用了静态代码块，不同的代码写法其他完全一样
+  */
+ class SingleTest2 {
+ 
+ private SingleTest2() {}
+ 
+ private static SingleTest2 SINGLE_TEST_2;
+ 
+ static {
+ SINGLE_TEST_2 = new SingleTest2();
+ }
+
+ public static SingleTest2 getInstance() {
+ return SINGLE_TEST_2;
+ }
+ }
+</code></pre><h2 id="懒汉式"><strong>懒汉式</strong></h2>
+<p>在需要用到实例时才进行初始化，所以不会造成内存浪费，但多线程情况下会出现多个实例的情况</p>
+<pre tabindex="0"><code> /**
+  * 懒汉式的单例模式
+  * 线程不安全
+  */
+ class UnSafeSingle {
+ 
+ private UnSafeSingle() {
+ }
+ 
+ private static UnSafeSingle INSTANCE;
+ 
+ public static UnSafeSingle getInstance() {
+ if (INSTANCE == null) {
+       //这个地方，当多个线程同时进入判断后会造成多个实例
+ INSTANCE = new UnSafeSingle();
+ }
+ return INSTANCE;
+ }
+ 
+ }
+ 
+ /**
+  * 通过加锁的方式实现线程安全的懒汉式单例
+  * 由于获取单例的方法每次都需要进行同步，所以效率不高
+  */
+ class SynchronizedSingle {
+ private SynchronizedSingle() {
+ }
+ 
+ private static SynchronizedSingle INSTANCE;
+ 
+ public static synchronized SynchronizedSingle getInstance() {
+ if (INSTANCE == null) {
+      //由于方法加锁，所以每次只能一个线程访问，不会造成多个实例的情况，但是效率不高
+ INSTANCE = new SynchronizedSingle();
+ }
+ return INSTANCE;
+ }
+ }
+ 
+ /**
+  * 双重检查
+  * 当使用getInstance()方法时不会进行同步，先进行判断。
+  * 由于使用了 volatile 关键字，即便有两个线程同时执行了这个方法，只要有一个线程对变量进行了修改，另外一个线程也能接收到更改的信号
+  */
+ class SafeSingle{
+ 
+ private SafeSingle(){}
+ 
+ private static volatile SafeSingle INSTANCE;
+ 
+ public static SafeSingle getInstance(){
+ if(INSTANCE==null){
+        //使用了双重检查
+ synchronized (SafeSingle.class){
+ if(INSTANCE==null){
+ INSTANCE = new SafeSingle();
+ }
+ }
+ }
+ return INSTANCE;
+ }
+ 
+ }
+</code></pre><h2 id="静态内部类"><strong>静态内部类</strong></h2>
+<p>使用了静态内部类，在外部类方法调用时才会进行初始化也就实现了懒加载，并且在类加载过程中也是线程安全的，不会出现多个实例的情况. 由JVM来保证了类的唯一性.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * 线程安全，实现了懒加载
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">class</span> <span class="nc">Single</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">private</span><span class="w"> </span><span class="nf">Single</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 内部类在getInstance()方法被调用时才会被加载
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">InSingle</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Single</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="nf">getInstance</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">InSingle</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="枚举">枚举</h2>
+<p>枚举能避免多线程产生多个实例的问题，还能防止反序列化重新创建新的对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">enum</span><span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">INSTANCE</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sayHello</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;hello,&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="单例存在的问题">单例存在的问题</h1>
+<p>大部分情况下, 在项目中使用单例来表示一个全局唯一类, 比如配置信息, ID生成器类.</p>
+<p>但是它也存在一些问题:</p>
+<ol>
+<li>
+<p>单例对OOP特性的支持不友好</p>
+<p>OOP的四大特性是封装, 抽象, 继承, 多态. 单例对抽象, 继承, 多态都支持的不是很好.</p>
+<p>假如我们有一个IdGenerator的类来生成一个全局唯一ID. 如果我们使用单例模式, 就会违背了基于接口而非实现的设计原则, 也就违背了抽象特性. 如果我们需要更改不同业务的ID生成算法, 就需要修改所有用到IdGenerator的地方</p>
+</li>
+<li>
+<p>单例会隐藏类之间的依赖关系</p>
+<p>由于单例不需要显示创建, 不需要依赖参数传递, 可以在函数中直接调用. 所以在代码复杂的情况下, 这种调用关系就会非常隐蔽</p>
+</li>
+<li>
+<p>单例对代码的扩展性不友好</p>
+<p>单例类只能有一个对象实例, 如果我们需要在代码中创建两个实例或多个实例, 就需要对代码有比较大的改动</p>
+</li>
+<li>
+<p>单例对代码的可测试性不友好</p>
+</li>
+<li>
+<p>单例不支持有参数的构造函数</p>
+</li>
+</ol>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

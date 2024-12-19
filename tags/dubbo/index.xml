@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dubbo on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/dubbo/</link>
+    <description>Recent content in Dubbo on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 23 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/dubbo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>dubbo笔记</title>
+      <link>https://www.liunaijie.top/coding/micro_service/dubbo%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 23 Jun 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/micro_service/dubbo%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;h2 id=&#34;建立基础项目&#34;&gt;建立基础项目&lt;/h2&gt;&#xA;&lt;p&gt;建立一个&lt;code&gt;maven&lt;/code&gt;项目，然后建立一个&lt;code&gt;api&lt;/code&gt;模块，作为这个项目的总的调用接口&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;learn-dubbo-demo/&#xA;├── simple-api&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo&#34;&gt;https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api&#34;&gt;https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;然后在api项目中创建接口，提供给生产者和消费者调用。&lt;/p&gt;&#xA;&lt;p&gt;我这里定义一个了&lt;code&gt;sayhello()&lt;/code&gt;方法&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

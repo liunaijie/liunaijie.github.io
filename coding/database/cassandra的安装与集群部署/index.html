@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="cassandra的安装与集群部署">
+  <meta property="og:description" content="前提 安装jdk1.8以上，python2.7
+安装Cassandra Cassandra的下载地址：http://cassandra.apache.org/download/ 下载后将文件解压到某目录下， 然后配置环境变量 CASSANDRA_HOME为你解压的目录， path为%CASSANDRA_HOME%\bin 然后用管理员身份运行cmd（不然可能提示权限不够） 进入Cassandra目录下的bin， 执行cassandra 然后如果成功会出一大堆东西，并且不能再输入命令；
+查询状态 再打开一个cmd窗口，原来的不要关闭 进入bin文件夹 执行nodetool status 这是成功状态， 然后输入cqlsh进入编写sql 如果执行cqlsh时出现Can&#39;t detect python version需要到pylib目录下执行python setup.py install
+出现cqlsh&gt;开头就表示你现在正在编写sql；
+查询命令 查看表空间 describe keyspaces； 查看已有表：describe tables; 查看表结构：describe table table_name;
+多节点部署 以上是单个几点的安装，下面是多个节点的集群部署： 修改配置文件：cassandra.yaml cluster_name：集群名称。 如果启动过数据库再修改集群名称需要先执行命令: 进入cqlsh执行 UPDATE system.local SET cluster_name = &#39;你修改后的名称&#39; where key=&#39;local&#39;; 退出cqlsh状态，执行nodetool flush system seeds节点，将每个节点的ip加进去，&#34;x.x.x.x,xx.xx.xx.xx&#34;不用加尖括号！ listen_address改为自己的ip地址 rpc_address改为自己的ip地址 重启数据库。 再次执行cqlsh命令，后面需要加自己的ip">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2017-11-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2017-11-22T00:00:00+00:00">
+    <meta property="article:tag" content="Cassandra">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="cassandra的安装与集群部署">
+  <meta name="twitter:description" content="前提 安装jdk1.8以上，python2.7
+安装Cassandra Cassandra的下载地址：http://cassandra.apache.org/download/ 下载后将文件解压到某目录下， 然后配置环境变量 CASSANDRA_HOME为你解压的目录， path为%CASSANDRA_HOME%\bin 然后用管理员身份运行cmd（不然可能提示权限不够） 进入Cassandra目录下的bin， 执行cassandra 然后如果成功会出一大堆东西，并且不能再输入命令；
+查询状态 再打开一个cmd窗口，原来的不要关闭 进入bin文件夹 执行nodetool status 这是成功状态， 然后输入cqlsh进入编写sql 如果执行cqlsh时出现Can&#39;t detect python version需要到pylib目录下执行python setup.py install
+出现cqlsh&gt;开头就表示你现在正在编写sql；
+查询命令 查看表空间 describe keyspaces； 查看已有表：describe tables; 查看表结构：describe table table_name;
+多节点部署 以上是单个几点的安装，下面是多个节点的集群部署： 修改配置文件：cassandra.yaml cluster_name：集群名称。 如果启动过数据库再修改集群名称需要先执行命令: 进入cqlsh执行 UPDATE system.local SET cluster_name = &#39;你修改后的名称&#39; where key=&#39;local&#39;; 退出cqlsh状态，执行nodetool flush system seeds节点，将每个节点的ip加进去，&#34;x.x.x.x,xx.xx.xx.xx&#34;不用加尖括号！ listen_address改为自己的ip地址 rpc_address改为自己的ip地址 重启数据库。 再次执行cqlsh命令，后面需要加自己的ip">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - cassandra的安装与集群部署
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">cassandra的安装与集群部署</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2017 年 11 月 22 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Cassandra">#Cassandra</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="前提">前提</h1>
+<p>安装jdk1.8以上，python2.7</p>
+<!-- more -->
+<h1 id="安装cassandra">安装Cassandra</h1>
+<p>Cassandra的下载地址：http://cassandra.apache.org/download/
+下载后将文件解压到某目录下，
+然后配置环境变量
+<code>CASSANDRA_HOME</code>为你解压的目录，
+path为<code>%CASSANDRA_HOME%\bin</code>
+然后用管理员身份运行cmd（不然可能提示权限不够）
+进入Cassandra目录下的bin，
+执行<code>cassandra</code>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/SouthEast.png" alt="执行cassandrs">
+然后如果成功会出一大堆东西，并且不能再输入命令；</p>
+<h1 id="查询状态">查询状态</h1>
+<p>再打开一个cmd窗口，原来的不要关闭
+进入bin文件夹
+执行<code>nodetool status</code>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/nodetool.png" alt="nodetool status">
+这是成功状态，
+然后输入<code>cqlsh</code>进入编写sql
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/cqlsh.png" alt="执行cqlsh"></p>
+<p><em>如果执行cqlsh时出现<code>Can't detect python version</code>需要到pylib目录下执行<code>python setup.py install</code></em></p>
+<p>出现cqlsh&gt;开头就表示你现在正在编写sql；</p>
+<h1 id="查询命令">查询命令</h1>
+<p>查看表空间 <code>describe keyspaces</code>；
+查看已有表：<code>describe tables</code>;
+查看表结构：<code>describe table table_name</code>;</p>
+<h1 id="多节点部署">多节点部署</h1>
+<p><strong>以上是单个几点的安装，下面是多个节点的集群部署：</strong>
+修改配置文件：<code>cassandra.yaml</code>
+<code>cluster_name</code>：集群名称。
+如果启动过数据库再修改集群名称需要先执行命令:
+进入cqlsh执行
+<code>UPDATE system.local SET cluster_name = '你修改后的名称' where key='local';</code>
+退出cqlsh状态，执行<code>nodetool flush system</code>
+<code>seeds</code>节点，将每个节点的ip加进去，<code>&quot;x.x.x.x,xx.xx.xx.xx&quot;</code>不用加尖括号！
+<code>listen_address</code>改为自己的ip地址
+<code>rpc_address</code>改为自己的ip地址
+重启数据库。
+再次执行cqlsh命令，后面需要加自己的ip</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

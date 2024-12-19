@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/java/java%E5%AE%B9%E5%99%A8/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="JAVA容器">
+  <meta property="og:description" content="概述 容器主要包括Collection和Map两种，Collection存储对象的集合，而Map存储着键值对。 而Collection下又分为List，Set，和Queue三种。
+源码分析 Map HashMap LinkedHashMap TreeMap Hashtable HashMap 采用数组&#43;链表&#43;红黑树的数据结构(1.8)，查找的效率由哈希O(1)&#43;链表O(n)，改为了哈希O(1)&#43;O(logN)。当链表长度到达8时转换为红黑树，当红黑树上节点的数量降为6时再转换为链表。遍历时的顺序与插入顺序不一致。它的查找效率高。
+LinkedHashMap 它是 hashmap 的子类，在 hashmap 的基础上添加了双向链表。通过链表的方式保证了遍历时顺序与插入时顺序一致。可以在构造函数中设置访问顺序，实现 lru 算法。
+TreeMap 采用红黑树的数据结构。所以在遍历时内部是排好序的。但效率最低。
+Hashtable 采用数组&#43;链表的数据结构。它在可能多线程访问的方法上添加了synchronized关键字，保证了线程的安全性。与HashMap的思路大体相同。
+List ArrayList LinkedList Vector ArrayList 通过数组实现，所以在访问时直接通过下标即可获取，速度快。但插入需要复制数组，速度慢。
+LinkedList 通过链表实现，所以在插入时速度快，但访问时需要通过链表逐个访问，速度慢。
+Vector 通过数组实现，大体与ArrayList相同。但它是线程安全的，通过在方法上添加synchronized关键字来实现。并且它可以设置一个扩容的长度，每次扩容时数组增加我们设置的长度，当没设置是为双倍扩容。ArrayList是1.5倍扩容并且没有设置扩容长度的变量。
+Set HashSet LinkedHashSet TreeSet set 是 map 的子集，当 map 只存储 key，value 为空时就是 set。
+Queue LinkedList PriorityQueue 队列，先进先出原则。通过链表很容易实现，获取头部节点，新增时插入到尾部。而PriorityQueue通过数组进行的实现，并可以实现优先级。
+迭代器">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-08-31T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-08-31T00:00:00+00:00">
+    <meta property="article:tag" content="Java">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JAVA容器">
+  <meta name="twitter:description" content="概述 容器主要包括Collection和Map两种，Collection存储对象的集合，而Map存储着键值对。 而Collection下又分为List，Set，和Queue三种。
+源码分析 Map HashMap LinkedHashMap TreeMap Hashtable HashMap 采用数组&#43;链表&#43;红黑树的数据结构(1.8)，查找的效率由哈希O(1)&#43;链表O(n)，改为了哈希O(1)&#43;O(logN)。当链表长度到达8时转换为红黑树，当红黑树上节点的数量降为6时再转换为链表。遍历时的顺序与插入顺序不一致。它的查找效率高。
+LinkedHashMap 它是 hashmap 的子类，在 hashmap 的基础上添加了双向链表。通过链表的方式保证了遍历时顺序与插入时顺序一致。可以在构造函数中设置访问顺序，实现 lru 算法。
+TreeMap 采用红黑树的数据结构。所以在遍历时内部是排好序的。但效率最低。
+Hashtable 采用数组&#43;链表的数据结构。它在可能多线程访问的方法上添加了synchronized关键字，保证了线程的安全性。与HashMap的思路大体相同。
+List ArrayList LinkedList Vector ArrayList 通过数组实现，所以在访问时直接通过下标即可获取，速度快。但插入需要复制数组，速度慢。
+LinkedList 通过链表实现，所以在插入时速度快，但访问时需要通过链表逐个访问，速度慢。
+Vector 通过数组实现，大体与ArrayList相同。但它是线程安全的，通过在方法上添加synchronized关键字来实现。并且它可以设置一个扩容的长度，每次扩容时数组增加我们设置的长度，当没设置是为双倍扩容。ArrayList是1.5倍扩容并且没有设置扩容长度的变量。
+Set HashSet LinkedHashSet TreeSet set 是 map 的子集，当 map 只存储 key，value 为空时就是 set。
+Queue LinkedList PriorityQueue 队列，先进先出原则。通过链表很容易实现，获取头部节点，新增时插入到尾部。而PriorityQueue通过数组进行的实现，并可以实现优先级。
+迭代器">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - JAVA容器
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">JAVA容器</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 08 月 31 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Java">#Java</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="概述">概述</h1>
+<p>容器主要包括<code>Collection</code>和<code>Map</code>两种，<code>Collection</code>存储对象的集合，而<code>Map</code>存储着键值对。  而<code>Collection</code>下又分为<code>List</code>，<code>Set</code>，和<code>Queue</code>三种。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/JAVA%E5%AE%B9%E5%99%A8%E5%88%86%E7%B1%BB.png" alt="JAVA容器"></p>
+<h1 id="源码分析">源码分析</h1>
+<ul>
+<li>Map
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/08/22/java/HashMap%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">HashMap</a></li>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/08/22/java/LinkedHashMap%E6%BA%90%E7%A0%81/">LinkedHashMap</a></li>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/11/12/java/TreeMap%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">TreeMap</a></li>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/12/20/java/Java%E5%8F%A4%E8%80%81%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E4%B9%8BHashtable/">Hashtable</a></li>
+</ul>
+</li>
+</ul>
+<p>HashMap 采用数组+链表+红黑树的数据结构(1.8)，查找的效率由哈希O(1)+链表O(n)，改为了哈希O(1)+O(logN)。当链表长度到达8时转换为红黑树，当红黑树上节点的数量降为6时再转换为链表。遍历时的顺序与插入顺序不一致。它的查找效率高。</p>
+<p>LinkedHashMap 它是 hashmap 的子类，在 hashmap 的基础上添加了双向链表。通过链表的方式保证了遍历时顺序与插入时顺序一致。可以在构造函数中设置访问顺序，实现 lru 算法。</p>
+<p>TreeMap 采用红黑树的数据结构。所以在遍历时内部是排好序的。但效率最低。</p>
+<p>Hashtable 采用数组+链表的数据结构。它在可能多线程访问的方法上添加了<code>synchronized</code>关键字，保证了线程的安全性。与HashMap的思路大体相同。</p>
+<ul>
+<li>List
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/08/20/java/ArrayList%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">ArrayList</a></li>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/08/21/java/LinkedList%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">LinkedList</a></li>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/12/23/java/Java%E5%8F%A4%E8%80%81%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E4%B9%8BVector/">Vector</a></li>
+</ul>
+</li>
+</ul>
+<p>ArrayList 通过数组实现，所以在访问时直接通过下标即可获取，速度快。但插入需要复制数组，速度慢。</p>
+<p>LinkedList 通过链表实现，所以在插入时速度快，但访问时需要通过链表逐个访问，速度慢。</p>
+<p>Vector 通过数组实现，大体与ArrayList相同。但它是线程安全的，通过在方法上添加<code>synchronized</code>关键字来实现。并且它可以设置一个扩容的长度，每次扩容时数组增加我们设置的长度，当没设置是为双倍扩容。ArrayList是1.5倍扩容并且没有设置扩容长度的变量。</p>
+<ul>
+<li>Set
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/08/26/java/HashSet%E6%BA%90%E7%A0%81/">HashSet</a></li>
+<li><input disabled="" type="checkbox"> LinkedHashSet</li>
+<li><input disabled="" type="checkbox"> TreeSet</li>
+</ul>
+</li>
+</ul>
+<p>set 是 map 的子集，当 map 只存储 key，value 为空时就是 set。</p>
+<ul>
+<li>Queue
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="https://www.liunaijie.top/2019/08/21/java/LinkedList%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">LinkedList</a></li>
+<li><input disabled="" type="checkbox"> PriorityQueue</li>
+</ul>
+</li>
+</ul>
+<p>队列，先进先出原则。通过链表很容易实现，获取头部节点，新增时插入到尾部。而PriorityQueue通过数组进行的实现，并可以实现优先级。</p>
+<ul>
+<li><a href="https://www.liunaijie.top/2019/08/28/java/%E8%BF%AD%E4%BB%A3%E5%99%A8/">迭代器</a></li>
+</ul>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

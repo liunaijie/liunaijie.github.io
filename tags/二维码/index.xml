@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>二维码 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E4%BA%8C%E7%BB%B4%E7%A0%81/</link>
+    <description>Recent content in 二维码 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E4%BA%8C%E7%BB%B4%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>微信、支付宝小程序二码合一</title>
+      <link>https://www.liunaijie.top/coding/project_notes/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E5%AE%9D%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E4%BA%8C%E7%A0%81%E5%90%88%E4%B8%80/</link>
+      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/project_notes/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E5%AE%9D%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E4%BA%8C%E7%A0%81%E5%90%88%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;背景&#34;&gt;背景&lt;/h1&gt;&#xA;&lt;p&gt;随着现在小程序的流行，许多软件也将web页面转移到小程序之中。让用户更方便的使用。当我们做了微信和支付宝两个的小程序后，意味着我们要将两个二维码展示给用户扫码。所以当需要将微信、支付宝小程序二维码合一，或者对其做一些自定义操作时，就不能再使用官方提供的二维码生成接口。&lt;/p&gt;&#xA;&lt;p&gt;微信、支付宝官方也提供了自定义二维码的文档：&lt;/p&gt;&#xA;&lt;p&gt;微信：&lt;a href=&#34;https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html&#34;&gt;https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;支付宝：&lt;a href=&#34;https://docs.alipay.com/mini/introduce/vzd5v0&#34;&gt;https://docs.alipay.com/mini/introduce/vzd5v0&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;所以通过上面的设置就可以实现二维码合一的操作。&lt;/p&gt;&#xA;&lt;h1 id=&#34;原理解析&#34;&gt;原理解析&lt;/h1&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;二维码存储的是一串信息，微信官网二维码里面可能存储的为：&lt;code&gt;https://weixin.com?appid=123&lt;/code&gt;。支付宝二维码存储的可能是：&lt;code&gt;https://alipay.com?appid=abc&lt;/code&gt;。这种有一定规则的信息。&lt;/li&gt;&#xA;&lt;li&gt;我们通过两个的自定义设置，将访问两者小程序的二维码信息进行合一。比如，定义：&lt;code&gt;https://www.abc.com&lt;/code&gt;，让微信和支付宝扫描到这个信息后都跳转到我们的小程序中。那就可以实现二维码合一。&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+    </item>
+  </channel>
+</rss>

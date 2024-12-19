@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>毕业设计 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/</link>
+    <description>Recent content in 毕业设计 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 10 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>网络租车系统</title>
+      <link>https://www.liunaijie.top/coding/project_notes/%E7%BD%91%E7%BB%9C%E7%A7%9F%E8%BD%A6%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Sun, 10 Jun 2018 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/project_notes/%E7%BD%91%E7%BB%9C%E7%A7%9F%E8%BD%A6%E7%B3%BB%E7%BB%9F/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;毕业设计-基于SSM架构的网络租车系统&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;项目来源&#34;&gt;项目来源：&lt;/h1&gt;&#xA;&lt;p&gt;之前就做了一个简易的租车都不能说是项目的项目，就是将数据库中的信息在页面以表格形式展示，输入租车天数，租赁数量确定租车信息。所以毕业设计以此为思路做一个项目。&lt;/p&gt;&#xA;&lt;p&gt;这个项目也是之前做的，也没有进行优化，如果需要代码可以给我发送邮件：liunaijie1996@163.com 。并且希望你能进行一些改进，这才是开源项目的目的，而不是让大家做伸手党。&lt;/p&gt;&#xA;&lt;p&gt;&amp;ndash; 项目代码已经找不到了。。。 -2019-11-11&lt;/p&gt;&#xA;&lt;h1 id=&#34;项目说明&#34;&gt;项目说明：&lt;/h1&gt;&#xA;&lt;p&gt;项目定位是一个租车平台，即将线下租车公司的资源进行整合。让线下租车公司进驻平台，推广平台，获取用户。&lt;/p&gt;&#xA;&lt;p&gt;架构： SSM(spring+springmvc+mybatis) 使用该框架主要是实习期间接触了这个框架（第一次使用框架），觉得这个框架整体较之前写的简单，例如在controller类文件中加注解等方式就可以配置控制层。&#xA;maven：使用maven方式构建项目，整体项目小，不在有lib文件夹，调整jar包只需修改pom文件。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/clickhouse/summingmergetree/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="ClickHouse-SummingMergeTree">
+  <meta property="og:description" content="假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）
+对于这样的查询场景，在ClickHouse中最直接的方法就是使用MergeTree引擎存储数据，然后每次查询通过GROUP BY聚合查询，利用SUM聚合函数汇总结果。
+但是这样存在两个问题：
+存在额外的存储开销：用户不关心明细数据，只关系汇总结果，而我们会一直存储明细数据 额外的查询开销：对于相同的查询，每次都需要走一遍聚合计算 SummingMergeTree引擎可以解决这样的应用场景，它可以按照预先定义的维度进行聚合汇总数据，将同一分组下的多行数据汇总合并成一行，这样即可以减少数据量，也可以减少后期查询的运算量。
+在MergeTree的每个数据分区内，数据会按照ORDER BY表达式排序。主键索引也会按照PRIMARY KEY表达式取值并排序。而且ORDER BY可以替代主键。所以之前一直使用ORDER BY来定义主键。
+如果同时需要定义ORDER BY与PRIMARY KEY，通常只有一种可能，就是明确希望ORDER BY与PRIMARY KEY不同，这种情况只会使用在SummingMergeTree与AggregatingMergeTree时才会出现。因为SummingMergeTree与AggregatingMergeTree都需要根据GROUP BY条件来进行预先聚合，这个时候使用来ORDER BY来定义GROUP BY的字段，所以需要使用PRIMARY KEY来修改主键的定义 示例： 假如我们有一个表，这里面有A，B，C，D，E，F。6个字段，当我们需要按照A，B，C，D字段进行汇总时，则设置为：ORDER BY(A, B, C, D)。但是在查询过程中，我们只会对A字段进行过滤，所以我们只需要对A字段设置主键，这样表的定义就变成了：
+1 2 ORDER BY(A, B, C, D) PRIMARY KEY(A) 如果同时声明PRIMARY KEY与ORDER BY，则需要PRIMARY KEY是ORDER BY的前缀
+定义： 1 ENGINE = SummingMergeTree((col1, col2, ...)) col1, col2为columnar的参数值，这是选填参数，用于设置除主键外其他数值类型字段，以指定被SUM汇总的列字段。如果参数为空，则会将所有非主键的数值类型字段进行SUM汇总。
+总结： 对ORDER BY中字段相同值的记录进行提前聚合。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:tag" content="ClickHouse">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ClickHouse-SummingMergeTree">
+  <meta name="twitter:description" content="假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）
+对于这样的查询场景，在ClickHouse中最直接的方法就是使用MergeTree引擎存储数据，然后每次查询通过GROUP BY聚合查询，利用SUM聚合函数汇总结果。
+但是这样存在两个问题：
+存在额外的存储开销：用户不关心明细数据，只关系汇总结果，而我们会一直存储明细数据 额外的查询开销：对于相同的查询，每次都需要走一遍聚合计算 SummingMergeTree引擎可以解决这样的应用场景，它可以按照预先定义的维度进行聚合汇总数据，将同一分组下的多行数据汇总合并成一行，这样即可以减少数据量，也可以减少后期查询的运算量。
+在MergeTree的每个数据分区内，数据会按照ORDER BY表达式排序。主键索引也会按照PRIMARY KEY表达式取值并排序。而且ORDER BY可以替代主键。所以之前一直使用ORDER BY来定义主键。
+如果同时需要定义ORDER BY与PRIMARY KEY，通常只有一种可能，就是明确希望ORDER BY与PRIMARY KEY不同，这种情况只会使用在SummingMergeTree与AggregatingMergeTree时才会出现。因为SummingMergeTree与AggregatingMergeTree都需要根据GROUP BY条件来进行预先聚合，这个时候使用来ORDER BY来定义GROUP BY的字段，所以需要使用PRIMARY KEY来修改主键的定义 示例： 假如我们有一个表，这里面有A，B，C，D，E，F。6个字段，当我们需要按照A，B，C，D字段进行汇总时，则设置为：ORDER BY(A, B, C, D)。但是在查询过程中，我们只会对A字段进行过滤，所以我们只需要对A字段设置主键，这样表的定义就变成了：
+1 2 ORDER BY(A, B, C, D) PRIMARY KEY(A) 如果同时声明PRIMARY KEY与ORDER BY，则需要PRIMARY KEY是ORDER BY的前缀
+定义： 1 ENGINE = SummingMergeTree((col1, col2, ...)) col1, col2为columnar的参数值，这是选填参数，用于设置除主键外其他数值类型字段，以指定被SUM汇总的列字段。如果参数为空，则会将所有非主键的数值类型字段进行SUM汇总。
+总结： 对ORDER BY中字段相同值的记录进行提前聚合。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - ClickHouse-SummingMergeTree
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">ClickHouse-SummingMergeTree</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 10 月 09 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/ClickHouse">#ClickHouse</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）</p>
+<p>对于这样的查询场景，在ClickHouse中最直接的方法就是使用MergeTree引擎存储数据，然后每次查询通过GROUP BY聚合查询，利用SUM聚合函数汇总结果。</p>
+<p>但是这样存在两个问题：</p>
+<ol>
+<li>存在额外的存储开销：用户不关心明细数据，只关系汇总结果，而我们会一直存储明细数据</li>
+<li>额外的查询开销：对于相同的查询，每次都需要走一遍聚合计算</li>
+</ol>
+<p>SummingMergeTree引擎可以解决这样的应用场景，它可以按照预先定义的维度进行聚合汇总数据，将同一分组下的多行数据汇总合并成一行，这样即可以减少数据量，也可以减少后期查询的运算量。</p>
+<p>在MergeTree的每个数据分区内，数据会按照ORDER BY表达式排序。主键索引也会按照PRIMARY KEY表达式取值并排序。而且ORDER BY可以替代主键。所以之前一直使用ORDER BY来定义主键。</p>
+<pre tabindex="0"><code>如果同时需要定义ORDER BY与PRIMARY KEY，通常只有一种可能，就是明确希望ORDER BY与PRIMARY KEY不同，这种情况只会使用在SummingMergeTree与AggregatingMergeTree时才会出现。因为SummingMergeTree与AggregatingMergeTree都需要根据GROUP BY条件来进行预先聚合，这个时候使用来ORDER BY来定义GROUP BY的字段，所以需要使用PRIMARY KEY来修改主键的定义
+</code></pre><h2 id="示例">示例：</h2>
+<p>假如我们有一个表，这里面有A，B，C，D，E，F。6个字段，当我们需要按照A，B，C，D字段进行汇总时，则设置为：<code>ORDER BY(A, B, C, D)</code>。但是在查询过程中，我们只会对A字段进行过滤，所以我们只需要对A字段设置主键，这样表的定义就变成了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="k">C</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果同时声明PRIMARY KEY与ORDER BY，则需要PRIMARY KEY是ORDER BY的前缀</p>
+<h1 id="定义">定义：</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SummingMergeTree</span><span class="p">((</span><span class="n">col1</span><span class="p">,</span><span class="w"> </span><span class="n">col2</span><span class="p">,</span><span class="w"> </span><span class="p">...))</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>col1, col2为columnar的参数值，这是选填参数，用于设置除主键外其他数值类型字段，以指定被SUM汇总的列字段。如果参数为空，则会将所有非主键的数值类型字段进行SUM汇总。</p>
+<h1 id="总结">总结：</h1>
+<p>对ORDER BY中字段相同值的记录进行提前聚合。</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

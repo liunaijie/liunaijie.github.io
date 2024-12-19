@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数组 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E6%95%B0%E7%BB%84/</link>
+    <description>Recent content in 数组 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 15 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E6%95%B0%E7%BB%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数组</title>
+      <link>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E7%BB%84/</link>
+      <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E7%BB%84/</guid>
+      <description>&lt;h1 id=&#34;数组&#34;&gt;数组&lt;/h1&gt;&#xA;&lt;h2 id=&#34;定义&#34;&gt;定义&lt;/h2&gt;&#xA;&lt;p&gt;它是一种线性数据结构，在内存里是连续的存储区域。在声明数组时需要声明他的初始容量。&lt;/p&gt;&#xA;&lt;p&gt;查找的速度：O(1)，新增的速度：O(n)，删除的速度：O(n)&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/%E6%95%B0%E7%BB%84.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;查找时根据内存地址就可以直接找到对应的数据，而向中间插入和删除时需要将后面的元素挪动位置，所以速度比较慢，为 O(n)&lt;/p&gt;&#xA;&lt;h2 id=&#34;习题&#34;&gt;习题&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.liunaijie.top/2019/06/18/LeetCode/%E9%AB%98%E5%BA%A6%E6%A3%80%E6%9F%A5%E5%99%A8%E2%80%94LeetCode1051/&#34;&gt;高度检查器&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.liunaijie.top/2019/06/16/LeetCode/%E4%B8%89%E8%A7%92%E5%BD%A2%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C%E2%80%94LeetCode120/&#34;&gt;三角形最小路径和&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.liunaijie.top/2019/06/10/LeetCode/%E5%8F%8D%E8%BD%AC%E5%9B%BE%E5%83%8F%E2%80%94LeetCode832/&#34;&gt;反转图像&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.liunaijie.top/2019/04/11/LeetCode/%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97--LeetCode136/&#34;&gt;只出现一次的数字&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

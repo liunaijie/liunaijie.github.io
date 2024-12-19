@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bitcorn on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/bitcorn/</link>
+    <description>Recent content in Bitcorn on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 06 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/bitcorn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>比特币与区块链</title>
+      <link>https://www.liunaijie.top/publish/%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
+      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/publish/%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE/</guid>
+      <description>&lt;p&gt;前段时间看了一个web3的视频, 对区块链有了兴趣, 想了解一下这是什么内容, 底层原理等.&#xA;看了一段时间的材料, 用这篇文章总结一下目前的看法.&#xA;推荐课程:  &lt;a href=&#34;https://www.bilibili.com/video/BV1Vt411X7JF/&#34;&gt;北京大学肖臻老师《区块链技术与应用》公开课&lt;/a&gt;, 这个课程感觉是目前对比特币技术原理讲的最清楚的一门课了.&lt;/p&gt;&#xA;&lt;h1 id=&#34;web3是什么&#34;&gt;Web3是什么&lt;/h1&gt;&#xA;&lt;p&gt;回顾互联网的发展历史, 可以这样来进行划分:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;门户网站, 这时用户看到的信息是由门户网站的编辑来维护, 每个人看到的信息都是一样的, 信息的维护由专门的人来进行维护. 信息的所有权在门户网站.&lt;/li&gt;&#xA;&lt;li&gt;互联网, 这时发展出来各种网络分享平台, 用户上传信息到平台上, 与其他人进行分享. 这里的信息由用户自己创造, 发布. 但是信息的所有权并不在用户手里, 而是在平台方.&lt;/li&gt;&#xA;&lt;li&gt;基于区块链的信息共享平台, 由于区块链是一个公用的信息存储介质, 所以用户自己拥有数据的所有权.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h1 id=&#34;区块链是什么&#34;&gt;区块链是什么&lt;/h1&gt;&#xA;&lt;p&gt;区块链是一个数据结构, 与链表相似&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/202308061427569.png&#34; alt=&#34;&#34;&gt;&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/202308061428506.png&#34; alt=&#34;&#34;&gt;&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/202308061429816.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;这里使用比特币的头节点结构来解释区块链的运行原理.&#xA;在头节点里存储了以下几个字段:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;previous_block_hash (存储了上一个区块链的哈希值, 从而可以构成链表)&lt;/li&gt;&#xA;&lt;li&gt;version (当前节点协议的版本)&lt;/li&gt;&#xA;&lt;li&gt;nonce (随机数)&lt;/li&gt;&#xA;&lt;li&gt;timestamp (生成这个节点的时间)&lt;/li&gt;&#xA;&lt;li&gt;difficulty (生成这个节点的难度)&lt;/li&gt;&#xA;&lt;li&gt;merkle_root (对body内容构建merkle tree后根节点的值)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Body中可以根据我们的实际应用场景存储一些不同的内容&#xA;在这里并没有存储当前Block的ID, 我们需要根据header中的内容进行哈希计算后得到.&#xA;&lt;code&gt;curBlockId= f(header)&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;一个节点的生成规则是: 对当前节点的头部信息做哈希后得到的值能满足某个值(这个值由difficulty决定)&#xA;用公式表达为: &lt;code&gt;hash(header) &amp;lt; N&lt;/code&gt;&#xA;这里的nonce就是在其他信息都固定的情况下来调整最终结果的字段.&#xA;这里还有一个可以修改的值为: merkle_root.&#xA;在body中我们可以接受很多个消息, 将消息取哈希后, 再相邻的两两节点取哈希, 最终得到ROOT节点, 将这个值存储到header中.&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/202308061429737.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;market-tree&#34;&gt;market tree&lt;/h2&gt;&#xA;&lt;p&gt;在比特币的链中，数据结构分为head和body。body存储交易信息，head中存储了由body中交易信息构建的market tree头节点&#xA;在轻节点中不需要存储交易信息，但当交易发生后进行验证时，需要转账方提供交易的信息，然后轻节点计算出哈希表后向其他全节点获取交易链路上其他节点的哈希值，向上计算后得到一个根哈希值，验证与链中的头节点是否一致，如何一致则说明交易已被写入到链中&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

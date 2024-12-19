@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E4%B8%8D%E5%90%8C%E5%9C%BA%E6%99%AF%E4%B8%8B-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9join%E7%AD%96%E7%95%A5/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-如何选择Join策略">
+  <meta property="og:description" content="Spark支持多种Join形式:
+Inner Join 内连接, 取相同的部分 Left Join 左连接, 左表为主 Right Join 右连接 Anti Join 剔除可以和右表Join上的左表部分. 相当于not in. Semi Join 相当于In 到目前为止, 数据关联总共有3中Join的实现方式, 分别是:
+嵌套循环连接(NLJ, Nested Loop Join) 排序归并连接(SMJ, Shuffle Sort Merge Join) 哈希连接(HJ, Hash Join) NLJ的工作原理: 使用两层循环, 将体量较大的表做外层循环, 体量较小的表做内层循环
+NLJ的计算复杂度为O(M*N).
+SMJ的工作原理 SMJ的思路是先排序, 再归并. 两张表先根据Join Key做排序, 然后使用两个游标对排好序的表进行归并关联.
+SMJ的计算复杂度为O(M&#43;N), 但是这个是依赖与排好序的基础上.
+HJ的工作原理 将内表扫描的复杂度降至O(1).
+首先将内表基于既定的哈希函数构建哈希表, 然后外表扫描时使用相同的哈希函数去哈希表中查找.
+所以总体的复杂度为O(M)
+分布式环境下的Join 分布式环境中的数据关联在计算环境依然遵循着NLJ, SMJ和HJ这三种实现方式, 只不过是增加了网络分发这一变数.
+在Spark的分布式计算环境中, 数据在网络中的分发主要有两种形式, 分别是Shuffle和广播.
+如果使用Shuffle的方式来完成分发, 那么外表和内表都需要按照Join Key在集群中做全量的数据分发.
+如果采用广播机制的话, Spark只需要将内表封装到广播变量, 然后在全网进行分发. 结合Shuffle、广播这两种网络分发形式和NLJ, SMJ, HJ这三种计算方式, 对于分布式环境下的数据关联, 组合起来可以有6种Join策略, 分别是:">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-如何选择Join策略">
+  <meta name="twitter:description" content="Spark支持多种Join形式:
+Inner Join 内连接, 取相同的部分 Left Join 左连接, 左表为主 Right Join 右连接 Anti Join 剔除可以和右表Join上的左表部分. 相当于not in. Semi Join 相当于In 到目前为止, 数据关联总共有3中Join的实现方式, 分别是:
+嵌套循环连接(NLJ, Nested Loop Join) 排序归并连接(SMJ, Shuffle Sort Merge Join) 哈希连接(HJ, Hash Join) NLJ的工作原理: 使用两层循环, 将体量较大的表做外层循环, 体量较小的表做内层循环
+NLJ的计算复杂度为O(M*N).
+SMJ的工作原理 SMJ的思路是先排序, 再归并. 两张表先根据Join Key做排序, 然后使用两个游标对排好序的表进行归并关联.
+SMJ的计算复杂度为O(M&#43;N), 但是这个是依赖与排好序的基础上.
+HJ的工作原理 将内表扫描的复杂度降至O(1).
+首先将内表基于既定的哈希函数构建哈希表, 然后外表扫描时使用相同的哈希函数去哈希表中查找.
+所以总体的复杂度为O(M)
+分布式环境下的Join 分布式环境中的数据关联在计算环境依然遵循着NLJ, SMJ和HJ这三种实现方式, 只不过是增加了网络分发这一变数.
+在Spark的分布式计算环境中, 数据在网络中的分发主要有两种形式, 分别是Shuffle和广播.
+如果使用Shuffle的方式来完成分发, 那么外表和内表都需要按照Join Key在集群中做全量的数据分发.
+如果采用广播机制的话, Spark只需要将内表封装到广播变量, 然后在全网进行分发. 结合Shuffle、广播这两种网络分发形式和NLJ, SMJ, HJ这三种计算方式, 对于分布式环境下的数据关联, 组合起来可以有6种Join策略, 分别是:">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-如何选择Join策略
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-如何选择Join策略</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>Spark支持多种Join形式:</p>
+<ul>
+<li>Inner Join 内连接, 取相同的部分</li>
+<li>Left Join 左连接, 左表为主</li>
+<li>Right Join 右连接</li>
+<li>Anti Join 剔除可以和右表Join上的左表部分. 相当于not in.</li>
+<li>Semi Join 相当于In</li>
+</ul>
+<p>到目前为止, 数据关联总共有3中Join的实现方式, 分别是:</p>
+<ul>
+<li>嵌套循环连接(NLJ, Nested Loop Join)</li>
+<li>排序归并连接(SMJ, Shuffle Sort Merge Join)</li>
+<li>哈希连接(HJ, Hash Join)</li>
+</ul>
+<h3 id="nlj的工作原理">NLJ的工作原理:</h3>
+<p>使用两层循环, 将体量较大的表做外层循环, 体量较小的表做内层循环</p>
+<p>NLJ的计算复杂度为O(M*N).</p>
+<h3 id="smj的工作原理">SMJ的工作原理</h3>
+<p>SMJ的思路是先排序, 再归并. 两张表先根据Join Key做排序, 然后使用两个游标对排好序的表进行归并关联.</p>
+<p>SMJ的计算复杂度为O(M+N), 但是这个是依赖与排好序的基础上.</p>
+<h3 id="hj的工作原理">HJ的工作原理</h3>
+<p>将内表扫描的复杂度降至O(1).</p>
+<p>首先将内表基于既定的哈希函数构建哈希表, 然后外表扫描时使用相同的哈希函数去哈希表中查找.</p>
+<p>所以总体的复杂度为O(M)</p>
+<h2 id="分布式环境下的join">分布式环境下的Join</h2>
+<p>分布式环境中的数据关联在计算环境依然遵循着NLJ, SMJ和HJ这三种实现方式, 只不过是增加了网络分发这一变数.</p>
+<p>在Spark的分布式计算环境中, 数据在网络中的分发主要有两种形式, 分别是Shuffle和广播.</p>
+<p>如果使用Shuffle的方式来完成分发, 那么外表和内表都需要按照Join Key在集群中做全量的数据分发.</p>
+<p>如果采用广播机制的话, Spark只需要将内表封装到广播变量, 然后在全网进行分发.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121549891.png" alt=""></p>
+<p>结合Shuffle、广播这两种网络分发形式和NLJ, SMJ, HJ这三种计算方式, 对于分布式环境下的数据关联, 组合起来可以有6种Join策略, 分别是:</p>
+<ul>
+<li>
+<p>CPJ: Cartesian Product Join</p>
+</li>
+<li>
+<p>SMJ: Shuffle Sort Merge Join</p>
+<p>支持所有的连接类型</p>
+</li>
+<li>
+<p>SHJ: Shuffle Hash Join</p>
+<p>支持所有的连接类型</p>
+<ul>
+<li>外表大小至少是内表的3倍</li>
+<li>内表数据分片的平均大小要小于广播变量阈值</li>
+<li>参数spark.sql.join.preferSortMergeJoin=false</li>
+</ul>
+</li>
+<li>
+<p>BNLJ: Broadcast Nested Loop Join</p>
+</li>
+<li>
+<p>BHJ: Broadcast Hash Join</p>
+<ul>
+<li>连接类型不能是全连接(full outer join)</li>
+<li>小表要能够放到广播变量里</li>
+</ul>
+</li>
+</ul>
+<p>从执行性能上, 5中策略从上到下由弱变强.</p>
+<p>相比SMJ, HJ不要求参与Join的两张表有序, 只要小表可以放进内存, 就可以在遍历大表时完成关联计算.</p>
+<h1 id="spark如何选择join策略">Spark如何选择Join策略</h1>
+<h2 id="等值join">等值Join</h2>
+<p>按照 BHJ &gt; SMJ &gt; SHJ 的顺序依次选择Join策略</p>
+<p>BHJ效率最高, 但是需要满足两个条件</p>
+<ol>
+<li>连接类型不能是全连接</li>
+<li>小表足够小, 能够放到广播变量里</li>
+</ol>
+<p>SHJ尽管效率比SMJ高, 但是不稳定, 原因是:</p>
+<p>SHJ需要将两个表都根据Join Key进行重分区, 然后将两个表的相同key分发到相同executor上, 但是这里不能保证小表足够小, 有可能是两个大表, 从而造成OOM.</p>
+<p>而SMJ没有这么多附加条件, 它可以借助磁盘来完成排序和存储.</p>
+<p>所以Spark会优先选择SMJ而不是SHJ.</p>
+<p>并且如果在spark.sql.join.preferSortMergeJoin=true(默认为true)的情况下, Spark也不会去尝试SHJ.</p>
+<h2 id="不等值join">不等值Join</h2>
+<p>不等值Join只能使用NLJ来实现, 因此Spark SQL可以选的策略只剩下BNLJ和CPJ. 选择顺序为BNLJ &gt; CPJ.</p>
+<p>BNLJ的前提是内表足够小, 可以放到广播变量中, 否则只能去选择CPJ.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121551033.png" alt=""></p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

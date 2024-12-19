@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/leetcode/%E5%94%AF%E4%B8%80%E6%91%A9%E5%B0%94%E6%96%AF%E5%AF%86%E7%A0%81%E8%AF%8Dleetcode804/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="唯一摩尔斯密码词—LeetCode804">
+  <meta property="og:description" content="题目描述： 国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: “a” 对应 “.-”, “b” 对应 “-…”, “c” 对应 “-.-.”, 等等。 为了方便，所有26个英文字母对应摩尔斯密码表如下： [&#34;.-&#34;,&#34;-…&#34;,&#34;-.-.&#34;,&#34;-..&#34;,&#34;.&#34;,&#34;..-.&#34;,&#34;–.&#34;,&#34;….&#34;,&#34;..&#34;,&#34;.—&#34;,&#34;-.-&#34;,&#34;.-..&#34;,&#34;–&#34;,&#34;-.&#34;,&#34;—&#34;,&#34;.–.&#34;,&#34;–.-&#34;,&#34;.-.&#34;,&#34;…&#34;,&#34;-&#34;,&#34;..-&#34;,&#34;…-&#34;,&#34;.–&#34;,&#34;-..-&#34;,&#34;-.–&#34;,&#34;–..&#34;] 给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，“cab” 可以写成 “-.-..–…&#34;，(即 “-.-.” &#43; “-…” &#43; “.-“字符串的结合)。我们将这样一个连接过程称作单词翻译。 返回我们可以获得所有词不同单词翻译的数量。 例如: 输入: words = [“gin”, “zen”, “gig”, “msg”] 输出: 2 解释: 各单词翻译如下: “gin” -&gt; “–…-.” “zen” -&gt; “–…-.” “gig” -&gt; “–…–.” “msg” -&gt; “–…–.” 共有 2 种不同翻译, “–…-.” 和 “–…–.”. 注意: 单词列表words 的长度不会超过 100。 每个单词 words[i]的长度范围为 [1, 12]。 每个单词 words[i]只包含小写字母。
+解题思路： 我们首先要根据给出的单词转换成摩尔斯密码
+利用一个数组按照字母顺序存储对应的密码值
+将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接
+这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-06-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-06-02T00:00:00+00:00">
+    <meta property="article:tag" content="LeetCode">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="唯一摩尔斯密码词—LeetCode804">
+  <meta name="twitter:description" content="题目描述： 国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: “a” 对应 “.-”, “b” 对应 “-…”, “c” 对应 “-.-.”, 等等。 为了方便，所有26个英文字母对应摩尔斯密码表如下： [&#34;.-&#34;,&#34;-…&#34;,&#34;-.-.&#34;,&#34;-..&#34;,&#34;.&#34;,&#34;..-.&#34;,&#34;–.&#34;,&#34;….&#34;,&#34;..&#34;,&#34;.—&#34;,&#34;-.-&#34;,&#34;.-..&#34;,&#34;–&#34;,&#34;-.&#34;,&#34;—&#34;,&#34;.–.&#34;,&#34;–.-&#34;,&#34;.-.&#34;,&#34;…&#34;,&#34;-&#34;,&#34;..-&#34;,&#34;…-&#34;,&#34;.–&#34;,&#34;-..-&#34;,&#34;-.–&#34;,&#34;–..&#34;] 给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，“cab” 可以写成 “-.-..–…&#34;，(即 “-.-.” &#43; “-…” &#43; “.-“字符串的结合)。我们将这样一个连接过程称作单词翻译。 返回我们可以获得所有词不同单词翻译的数量。 例如: 输入: words = [“gin”, “zen”, “gig”, “msg”] 输出: 2 解释: 各单词翻译如下: “gin” -&gt; “–…-.” “zen” -&gt; “–…-.” “gig” -&gt; “–…–.” “msg” -&gt; “–…–.” 共有 2 种不同翻译, “–…-.” 和 “–…–.”. 注意: 单词列表words 的长度不会超过 100。 每个单词 words[i]的长度范围为 [1, 12]。 每个单词 words[i]只包含小写字母。
+解题思路： 我们首先要根据给出的单词转换成摩尔斯密码
+利用一个数组按照字母顺序存储对应的密码值
+将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接
+这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 唯一摩尔斯密码词—LeetCode804
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">唯一摩尔斯密码词—LeetCode804</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 06 月 02 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/LeetCode">#LeetCode</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: &ldquo;a&rdquo; 对应 &ldquo;.-&rdquo;, &ldquo;b&rdquo; 对应 &ldquo;-&hellip;&rdquo;, &ldquo;c&rdquo; 对应 &ldquo;-.-.&rdquo;, 等等。
+为了方便，所有26个英文字母对应摩尔斯密码表如下：
+[&quot;.-&quot;,&quot;-&hellip;&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;&ndash;.&quot;,&quot;&hellip;.&quot;,&quot;..&quot;,&quot;.&mdash;&quot;,&quot;-.-&quot;,&quot;.-..&quot;,&quot;&ndash;&quot;,&quot;-.&quot;,&quot;&mdash;&quot;,&quot;.&ndash;.&quot;,&quot;&ndash;.-&quot;,&quot;.-.&quot;,&quot;&hellip;&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;&hellip;-&quot;,&quot;.&ndash;&quot;,&quot;-..-&quot;,&quot;-.&ndash;&quot;,&quot;&ndash;..&quot;]
+给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，&ldquo;cab&rdquo; 可以写成 &ldquo;-.-..&ndash;&hellip;&quot;，(即 &ldquo;-.-.&rdquo; + &ldquo;-&hellip;&rdquo; + &ldquo;.-&ldquo;字符串的结合)。我们将这样一个连接过程称作单词翻译。
+返回我们可以获得所有词不同单词翻译的数量。
+例如:
+输入: words = [&ldquo;gin&rdquo;, &ldquo;zen&rdquo;, &ldquo;gig&rdquo;, &ldquo;msg&rdquo;]
+输出: 2
+解释:
+各单词翻译如下:
+&ldquo;gin&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo;
+&ldquo;zen&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo;
+&ldquo;gig&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo;
+&ldquo;msg&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo;
+共有 2 种不同翻译, &ldquo;&ndash;&hellip;-.&rdquo; 和 &ldquo;&ndash;&hellip;&ndash;.&rdquo;.
+注意:
+单词列表words 的长度不会超过 100。
+每个单词 <code>words[i]</code>的长度范围为 [1, 12]。
+每个单词 <code>words[i]</code>只包含小写字母。</p>
+</blockquote>
+<h1 id="解题思路">解题思路：</h1>
+<p>我们首先要根据给出的单词转换成摩尔斯密码</p>
+<p>利用一个数组按照字母顺序存储对应的密码值</p>
+<p>将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接</p>
+<p>这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。</p>
+<h1 id="代码实现">代码实现：</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * 利用set不能重复的特性
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * 将每个单词获取密码
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * 将密码放到set中，由于不能充分，所以最后获取set的长度即可
+</span></span></span><span class="line"><span class="cl"><span class="cm"> *
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param words
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @return
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">uniqueMorseRepresentations</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#34;.-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-...&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-..&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;..-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;....&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;..&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.---&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.-..&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;---&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.--.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--.-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;...&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;..-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;...-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-..-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--..&#34;</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">pwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">pwd</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">password</span><span class="o">[</span><span class="n">word</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">97</span><span class="o">]</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">set</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">pwd</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">set</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

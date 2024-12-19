@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cassandra on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/cassandra/</link>
+    <description>Recent content in Cassandra on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 22 Nov 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/cassandra/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cassandra的安装与集群部署</title>
+      <link>https://www.liunaijie.top/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Wed, 22 Nov 2017 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</guid>
+      <description>&lt;h1 id=&#34;前提&#34;&gt;前提&lt;/h1&gt;&#xA;&lt;p&gt;安装jdk1.8以上，python2.7&lt;/p&gt;&#xA;&lt;!-- more --&gt;&#xA;&lt;h1 id=&#34;安装cassandra&#34;&gt;安装Cassandra&lt;/h1&gt;&#xA;&lt;p&gt;Cassandra的下载地址：http://cassandra.apache.org/download/&#xA;下载后将文件解压到某目录下，&#xA;然后配置环境变量&#xA;&lt;code&gt;CASSANDRA_HOME&lt;/code&gt;为你解压的目录，&#xA;path为&lt;code&gt;%CASSANDRA_HOME%\bin&lt;/code&gt;&#xA;然后用管理员身份运行cmd（不然可能提示权限不够）&#xA;进入Cassandra目录下的bin，&#xA;执行&lt;code&gt;cassandra&lt;/code&gt;&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/SouthEast.png&#34; alt=&#34;执行cassandrs&#34;&gt;&#xA;然后如果成功会出一大堆东西，并且不能再输入命令；&lt;/p&gt;&#xA;&lt;h1 id=&#34;查询状态&#34;&gt;查询状态&lt;/h1&gt;&#xA;&lt;p&gt;再打开一个cmd窗口，原来的不要关闭&#xA;进入bin文件夹&#xA;执行&lt;code&gt;nodetool status&lt;/code&gt;&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/nodetool.png&#34; alt=&#34;nodetool status&#34;&gt;&#xA;这是成功状态，&#xA;然后输入&lt;code&gt;cqlsh&lt;/code&gt;进入编写sql&#xA;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/cqlsh.png&#34; alt=&#34;执行cqlsh&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;如果执行cqlsh时出现&lt;code&gt;Can&#39;t detect python version&lt;/code&gt;需要到pylib目录下执行&lt;code&gt;python setup.py install&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;出现cqlsh&amp;gt;开头就表示你现在正在编写sql；&lt;/p&gt;&#xA;&lt;h1 id=&#34;查询命令&#34;&gt;查询命令&lt;/h1&gt;&#xA;&lt;p&gt;查看表空间 &lt;code&gt;describe keyspaces&lt;/code&gt;；&#xA;查看已有表：&lt;code&gt;describe tables&lt;/code&gt;;&#xA;查看表结构：&lt;code&gt;describe table table_name&lt;/code&gt;;&lt;/p&gt;&#xA;&lt;h1 id=&#34;多节点部署&#34;&gt;多节点部署&lt;/h1&gt;&#xA;&lt;p&gt;&lt;strong&gt;以上是单个几点的安装，下面是多个节点的集群部署：&lt;/strong&gt;&#xA;修改配置文件：&lt;code&gt;cassandra.yaml&lt;/code&gt;&#xA;&lt;code&gt;cluster_name&lt;/code&gt;：集群名称。&#xA;如果启动过数据库再修改集群名称需要先执行命令:&#xA;进入cqlsh执行&#xA;&lt;code&gt;UPDATE system.local SET cluster_name = &#39;你修改后的名称&#39; where key=&#39;local&#39;;&lt;/code&gt;&#xA;退出cqlsh状态，执行&lt;code&gt;nodetool flush system&lt;/code&gt;&#xA;&lt;code&gt;seeds&lt;/code&gt;节点，将每个节点的ip加进去，&lt;code&gt;&amp;quot;x.x.x.x,xx.xx.xx.xx&amp;quot;&lt;/code&gt;不用加尖括号！&#xA;&lt;code&gt;listen_address&lt;/code&gt;改为自己的ip地址&#xA;&lt;code&gt;rpc_address&lt;/code&gt;改为自己的ip地址&#xA;重启数据库。&#xA;再次执行cqlsh命令，后面需要加自己的ip&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

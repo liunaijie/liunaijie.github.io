@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/database/mysql%E7%9A%84ibtmp1%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Mysql的ibtmp1文件过大">
+  <meta property="og:description" content="今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。
+查看磁盘占用 使用命令
+1 du -h --max-depth=1 查看磁盘占用情况，我是在根目录下执行的命令，后面的max-depth=1指定深入目录的层数，为1就指定1层。然后经过排查后发现了这个文件是Mysql的ibtmp1文件。
+ibtmp1是什么 我们使用的Mysql版本是5.7.24。ibtmp1文件是 MySQL5.7的新特性,MySQL5.7使用了独立的临时表空间来存储临时表数据，但不能是压缩表。临时表空间在实例启动的时候进行创建，shutdown的时候进行删除。即为所有非压缩的innodb临时表提供一个独立的表空间，默认的临时表空间文件为ibtmp1。
+解决 Mysql创建的这个文件肯定不能在Mysql还运行时就直接删了，否则可能会出问题。重启Mysql会重置这个文件，但是后面如果不加以限制肯定还会让磁盘爆满。所以说要找一个能彻底解决的办法。
+修改my.cnf配置文件
+这个文件我是在/etc/my.cnf下，有的可能在/etc/mysql/my.cnf下，先找到这个文件然后在后面添加innodb_temp_data_file_path = ibtmp1:12M:autoextend:max:5G这句
+限制这个文件最大增加到5G。
+设置innodb_fast_shutdown参数
+进入mysql命令行，执行SET GLOBAL innodb_fast_shutdown = 0;命令
+然后重启Mysql即可。
+原因 刚才说的了这个文件是临时表空间。那肯定是使用了临时表。那么什么情况下会使用临时表呢。
+GROUP BY 无索引字段或GROUP BY&#43; ORDER BY 的子句字段不一样时 order by 与distinct 共用，其中distinct与order by里的字段不一致（主键字段除外） UNION查询（MySQL5.7后union all已不使用临时表） insert into select …from … 所以在平常写sql时还是要多注意一下。
+参考文章 http://mysql.taobao.org/monthly/2019/04/01/
+https://cloud.tencent.com/developer/article/1491411
+https://zhuanlan.zhihu.com/p/66847189">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-08-21T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-08-21T00:00:00+00:00">
+    <meta property="article:tag" content="MySQL">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Mysql的ibtmp1文件过大">
+  <meta name="twitter:description" content="今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。
+查看磁盘占用 使用命令
+1 du -h --max-depth=1 查看磁盘占用情况，我是在根目录下执行的命令，后面的max-depth=1指定深入目录的层数，为1就指定1层。然后经过排查后发现了这个文件是Mysql的ibtmp1文件。
+ibtmp1是什么 我们使用的Mysql版本是5.7.24。ibtmp1文件是 MySQL5.7的新特性,MySQL5.7使用了独立的临时表空间来存储临时表数据，但不能是压缩表。临时表空间在实例启动的时候进行创建，shutdown的时候进行删除。即为所有非压缩的innodb临时表提供一个独立的表空间，默认的临时表空间文件为ibtmp1。
+解决 Mysql创建的这个文件肯定不能在Mysql还运行时就直接删了，否则可能会出问题。重启Mysql会重置这个文件，但是后面如果不加以限制肯定还会让磁盘爆满。所以说要找一个能彻底解决的办法。
+修改my.cnf配置文件
+这个文件我是在/etc/my.cnf下，有的可能在/etc/mysql/my.cnf下，先找到这个文件然后在后面添加innodb_temp_data_file_path = ibtmp1:12M:autoextend:max:5G这句
+限制这个文件最大增加到5G。
+设置innodb_fast_shutdown参数
+进入mysql命令行，执行SET GLOBAL innodb_fast_shutdown = 0;命令
+然后重启Mysql即可。
+原因 刚才说的了这个文件是临时表空间。那肯定是使用了临时表。那么什么情况下会使用临时表呢。
+GROUP BY 无索引字段或GROUP BY&#43; ORDER BY 的子句字段不一样时 order by 与distinct 共用，其中distinct与order by里的字段不一致（主键字段除外） UNION查询（MySQL5.7后union all已不使用临时表） insert into select …from … 所以在平常写sql时还是要多注意一下。
+参考文章 http://mysql.taobao.org/monthly/2019/04/01/
+https://cloud.tencent.com/developer/article/1491411
+https://zhuanlan.zhihu.com/p/66847189">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Mysql的ibtmp1文件过大
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Mysql的ibtmp1文件过大</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 08 月 21 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/MySQL">#MySQL</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。</p>
+<h1 id="查看磁盘占用">查看磁盘占用</h1>
+<p>使用命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">du -h --max-depth<span class="o">=</span><span class="m">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看磁盘占用情况，我是在根目录下执行的命令，后面的<code>max-depth=1</code>指定深入目录的层数，为1就指定1层。然后经过排查后发现了这个文件是<code>Mysql</code>的<code>ibtmp1</code>文件。</p>
+<h1 id="ibtmp1是什么">ibtmp1是什么</h1>
+<p>我们使用的<code>Mysql</code>版本是5.7.24。<code>ibtmp1</code>文件是 MySQL5.7的新特性,MySQL5.7使用了独立的临时表空间来存储临时表数据，但不能是压缩表。临时表空间在实例启动的时候进行创建，shutdown的时候进行删除。即为所有非压缩的innodb临时表提供一个独立的表空间，默认的临时表空间文件为ibtmp1。</p>
+<h1 id="解决">解决</h1>
+<p><code>Mysql</code>创建的这个文件肯定不能在<code>Mysql</code>还运行时就直接删了，否则可能会出问题。重启<code>Mysql</code>会重置这个文件，但是后面如果不加以限制肯定还会让磁盘爆满。所以说要找一个能彻底解决的办法。</p>
+<ul>
+<li>
+<p>修改<code>my.cnf</code>配置文件</p>
+<p>这个文件我是在<code>/etc/my.cnf</code>下，有的可能在<code>/etc/mysql/my.cnf</code>下，先找到这个文件然后在后面添加<code>innodb_temp_data_file_path = ibtmp1:12M:autoextend:max:5G</code>这句</p>
+<p>限制这个文件最大增加到5G。</p>
+</li>
+<li>
+<p>设置<code>innodb_fast_shutdown</code>参数</p>
+<p>进入<code>mysql</code>命令行，执行<code>SET GLOBAL innodb_fast_shutdown = 0;</code>命令</p>
+</li>
+</ul>
+<p>然后重启<code>Mysql</code>即可。</p>
+<h1 id="原因">原因</h1>
+<p>刚才说的了这个文件是临时表空间。那肯定是使用了临时表。那么什么情况下会使用临时表呢。</p>
+<ul>
+<li><strong>GROUP BY 无索引字段或GROUP  BY+ ORDER  BY 的子句字段不一样时</strong></li>
+<li><strong>order by  与distinct 共用，其中distinct与order by里的字段不一致（主键字段除外）</strong></li>
+<li><strong>UNION查询（MySQL5.7后union all已不使用临时表）</strong></li>
+<li><strong>insert into select &hellip;from &hellip;</strong></li>
+</ul>
+<p>所以在平常写sql时还是要多注意一下。</p>
+<h1 id="参考文章">参考文章</h1>
+<p><a href="http://mysql.taobao.org/monthly/2019/04/01/">http://mysql.taobao.org/monthly/2019/04/01/</a></p>
+<p><a href="https://cloud.tencent.com/developer/article/1491411">https://cloud.tencent.com/developer/article/1491411</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/66847189">https://zhuanlan.zhihu.com/p/66847189</a></p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

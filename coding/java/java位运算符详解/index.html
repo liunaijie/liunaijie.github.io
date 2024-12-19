@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/java/java%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6%E8%AF%A6%E8%A7%A3/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Java位运算符详解">
+  <meta property="og:description" content="前言 之前了解过位运算符，左移&lt;&lt;等于乘以2，右移&gt;&gt;等于除以2。但是我在看jdk源码的时候发现了一个&gt;&gt;&gt;三个符号的，不明白这是什么意思，就去搜了一下，发现还挺多的知识点的，就整理了一下。
+首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。
+先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：
+类型 字节数 位数 大小范围 byte 1 8 -2^8^~2^8^-1 short 2 16 -2^16^~2^16^-1 int 4 32 -2^32^~2^32^-1 long 8 64 -2^64^~2^64^-1 float 4 double 8 char 2 16 一个char类型可以存储一个汉字 boolean 1 true or false 移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：&lt;&lt;左移运算符，&gt;&gt;带符号右移运算符，&gt;&gt;&gt;无符号右移运算符。这三种操作符都只能作用于long,int,short,byte这四种基本整形类型上和char类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。
+在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：0000 0000表示0，0111 1111这个表示最大值(2^8^-1)，再进行加一后就变成了1000 0000这时就变成了最小值(-2^8^)。再加一后变成1000 0001这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-12-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-12-24T00:00:00+00:00">
+    <meta property="article:tag" content="Java">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java位运算符详解">
+  <meta name="twitter:description" content="前言 之前了解过位运算符，左移&lt;&lt;等于乘以2，右移&gt;&gt;等于除以2。但是我在看jdk源码的时候发现了一个&gt;&gt;&gt;三个符号的，不明白这是什么意思，就去搜了一下，发现还挺多的知识点的，就整理了一下。
+首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。
+先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：
+类型 字节数 位数 大小范围 byte 1 8 -2^8^~2^8^-1 short 2 16 -2^16^~2^16^-1 int 4 32 -2^32^~2^32^-1 long 8 64 -2^64^~2^64^-1 float 4 double 8 char 2 16 一个char类型可以存储一个汉字 boolean 1 true or false 移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：&lt;&lt;左移运算符，&gt;&gt;带符号右移运算符，&gt;&gt;&gt;无符号右移运算符。这三种操作符都只能作用于long,int,short,byte这四种基本整形类型上和char类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。
+在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：0000 0000表示0，0111 1111这个表示最大值(2^8^-1)，再进行加一后就变成了1000 0000这时就变成了最小值(-2^8^)。再加一后变成1000 0001这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Java位运算符详解
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Java位运算符详解</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 12 月 24 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Java">#Java</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="前言">前言</h1>
+<p>之前了解过位运算符，左移<code>&lt;&lt;</code>等于乘以2，右移<code>&gt;&gt;</code>等于除以2。但是我在看jdk源码的时候发现了一个<code>&gt;&gt;&gt;</code>三个符号的，不明白这是什么意思，就去搜了一下，发现还挺多的知识点的，就整理了一下。</p>
+<p>首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。</p>
+<p>先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：</p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>字节数</th>
+          <th>位数</th>
+          <th>大小范围</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>byte</td>
+          <td>1</td>
+          <td>8</td>
+          <td>-2^8^~2^8^-1</td>
+      </tr>
+      <tr>
+          <td>short</td>
+          <td>2</td>
+          <td>16</td>
+          <td>-2^16^~2^16^-1</td>
+      </tr>
+      <tr>
+          <td>int</td>
+          <td>4</td>
+          <td>32</td>
+          <td>-2^32^~2^32^-1</td>
+      </tr>
+      <tr>
+          <td>long</td>
+          <td>8</td>
+          <td>64</td>
+          <td>-2^64^~2^64^-1</td>
+      </tr>
+      <tr>
+          <td>float</td>
+          <td>4</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>double</td>
+          <td>8</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>char</td>
+          <td>2</td>
+          <td>16</td>
+          <td>一个char类型可以存储一个汉字</td>
+      </tr>
+      <tr>
+          <td>boolean</td>
+          <td>1</td>
+          <td></td>
+          <td>true or false</td>
+      </tr>
+  </tbody>
+</table>
+<p>移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：<code>&lt;&lt;</code>左移运算符，<code>&gt;&gt;</code>带符号右移运算符，<code>&gt;&gt;&gt;</code>无符号右移运算符。这三种操作符都只能作用于<code>long</code>,<code>int</code>,<code>short</code>,<code>byte</code>这四种基本整形类型上和<code>char</code>类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。</p>
+<p>在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：<code>0000 0000</code>表示0，<code>0111 1111</code>这个表示最大值(2^8^-1)，再进行加一后就变成了<code>1000 0000</code>这时就变成了最小值(-2^8^)。再加一后变成<code>1000 0001</code>这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。</p>
+<h1 id="左移操作符">左移操作符<code>&lt;&lt;</code></h1>
+<p>左移操作符<code>&lt;&lt;</code>是将数据转换为二进制后，<strong>向左移动若干位，高位丢弃，低位补零</strong>。</p>
+<p>首先我们可以利用java中的方法获取一个数的二进制：<code>Integer.toBinaryString(int val)</code>。</p>
+<p>然后我们看下面这个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">10</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;左移前的二进制:&#34;</span><span class="o">+</span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">a</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="n">2</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;左移后的二进制:&#34;</span><span class="o">+</span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;左移后的十进制:&#34;</span><span class="o">+</span><span class="n">a</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>首先定义一个数，值为10，打印它的二进制(1010)，然后进行左移操作2位。打印移位后的结果和二进制。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nl">左移前的二进制</span><span class="p">:</span><span class="n">1010</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nl">左移后的二进制</span><span class="p">:</span><span class="n">101000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nl">左移后的十进制</span><span class="p">:</span><span class="n">40</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看出，将原来的二进制向左移动了两位，后面进行了补零。40=10 * 2 * 2。所以一次左移等于将这个数扩大了两倍。再来看一个负数的左移：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">8</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;左移前的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="n">2</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;左移后的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;左移后的十进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们定义了一个负数（-8），打印出它的二进制，进行左移2位，左移后打印它的二进制，再将10进制打印出来查看。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">左移前的二进制</span><span class="err">：</span><span class="n">11111111111111111111111111111000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">左移后的二进制</span><span class="err">：</span><span class="n">11111111111111111111111111100000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">左移后的十进制</span><span class="err">：</span><span class="o">-</span><span class="n">32</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以明显的看出二进制向左移动了两位，前面的位置丢弃，后面的位置补零。转换为10进制也符合我们之前的运算：-32 = -8 * 2 *2。</p>
+<h1 id="带符号右移操作符">带符号右移操作符<code>&gt;&gt;</code></h1>
+<p>刚才的左移中，它向左移动，高位进行了丢弃，低位进行补零。但是右移操作时有一个符号位，操作不当将造成答案与预期结果不同。</p>
+<p>带符号右移就是在**向右移动若干位，低位进行丢弃，高位按照符号位进行填补。**对于正数做右移操作时，高位补充<code>0</code>；负数进行右移时，高位补充<code>1</code>。</p>
+<p>再来用例子证明一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">1024</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;a右移前的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">a</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">4</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;a右移后的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;a右移后的十进制:&#34;</span><span class="o">+</span><span class="n">a</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">70336</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;b右移前的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">b</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">4</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;b右移后的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;b右移后的十进制:&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>定义了两个变量，a=1024，然后向右移动4位。b=-70336也向右移动4位。分别将它们的移动前后二进制和十进制打印出来查看。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">a右移前的二进制</span><span class="err">：</span><span class="n">10000000000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">a右移后的二进制</span><span class="err">：</span><span class="n">1000000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nl">a右移后的十进制</span><span class="p">:</span><span class="n">64</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b右移前的二进制</span><span class="err">：</span><span class="n">11111111111111101110110101000000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b右移后的二进制</span><span class="err">：</span><span class="n">11111111111111111110111011010100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nl">b右移后的十进制</span><span class="p">:</span><span class="o">-</span><span class="n">4396</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>a原来的二进制向右移动后，低位被丢弃，高位补充符号位也就是0。b原来的二进制向右移动后，低位被丢弃，高位补充符号位1。这也符号我们之前的运算规律：
+1024 / 2^4^ =16 ；-70336/ 2^4^ = -4396。</p>
+<h1 id="无符号右移操作符">无符号右移操作符<code>&gt;&gt;&gt;</code></h1>
+<p>刚才的带符号右移操作符，我们在向右移动时带着高位的符号，正数填充0，负数填充0。现在不带符号的右移操作符大体与右移操作符一致，只不过不再区分正负数，结果都是<strong>高位补零，低位丢弃。</strong></p>
+<p>再用例子来证明一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">1024</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;a右移前的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">a</span><span class="w"> </span><span class="o">&gt;&gt;&gt;=</span><span class="w"> </span><span class="n">4</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;a右移后的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;a右移后的十进制:&#34;</span><span class="o">+</span><span class="n">a</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">70336</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;b右移前的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">b</span><span class="w"> </span><span class="o">&gt;&gt;&gt;=</span><span class="w"> </span><span class="n">4</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;b右移后的二进制：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;b右移后的十进制:&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>还是刚才带符号右移的例子：这次我们仅仅把操作符换成无符号的右移操作符。</p>
+<p>按照定义，其实在正数时不会有变化，因为在带符号的右移中正数也是高位补零。只不过当值为负数时会有变化，让我们看一下输出是不是符合猜想。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">a右移前的二进制</span><span class="err">：</span><span class="n">10000000000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">a右移后的二进制</span><span class="err">：</span><span class="n">1000000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nl">a右移后的十进制</span><span class="p">:</span><span class="n">64</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b右移前的二进制</span><span class="err">：</span><span class="n">11111111111111101110110101000000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">b右移后的二进制</span><span class="err">：</span><span class="n">1111111111111110111011010100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nl">b右移后的十进制</span><span class="p">:</span><span class="n">268431060</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>确实正数没有变化，验证了我们的猜想。然后是负数，这次向右移动时高位进行了补零，低位丢弃。改变后的数值不再符合我们之前的规律。</p>
+<p>在无符号右移中，当值为正数时，依然符合之前的规律移动一位相当于除以2。但是当值为负数时不再符合规律。</p>
+<h1 id="当移位的位数超过数值所占用的位数会怎么样">当移位的位数超过数值所占用的位数会怎么样？</h1>
+<p>这个问题很有意思，我们刚刚都仅仅移动了2位或者4位，如果我们超过了int的位数也就是32位后会怎么样？我们如果对一个正数左移32位，低位补零补充了32次就变成0了，就如同下面代码所写的一样，最终a的结果会是什么。会变成0吗？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">10</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">a</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="n">32</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>经过我们运行后发现a的结果最终没变还是10。我们如果改成左移33位，它的结果会变成<code>20</code>。那么它的运算规律会不会是当超过位数后仅仅移动对位数的余数呢？比如对int做操作，它实际是运算 <code>位数%32</code>次。</p>
+<p>经过多次试验发现答案确实就是这个猜想，当对int类型处理时，右移<code>x</code>位的运算为<code>x%32</code>位。</p>
+<h1 id="对其他类型也是一样吗">对其他类型也是一样吗？</h1>
+<p>我们刚才都是用的int类型，那么对于<code>byte</code>,<code>short</code>,<code>char</code>,<code>long</code>都一样吗？</p>
+<p>先看一下byte类型。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">byte</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	 </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作前：&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	 </span><span class="n">b</span><span class="w"> </span><span class="o">&gt;&gt;&gt;=</span><span class="w"> </span><span class="n">6</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	 </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作后：&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>定义了byte的值为-1，即<code>1111 1111</code>，然后无符号右移6位，高位补零，低位丢弃，那么应该变成<code>0000 0011</code>也就是是3。让我们运行一下这段代码看一下打印出来的信息是不是3呢？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">操作前</span><span class="err">：</span><span class="o">-</span><span class="n">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">操作后</span><span class="err">：</span><span class="o">-</span><span class="n">1</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行结果与我们预期的结果不一致！</p>
+<p>我们将它的二进制也一起打印出来看一下究竟：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">byte</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作前十进制：&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作前二进制：&#34;</span><span class="o">+</span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">b</span><span class="w"> </span><span class="o">&gt;&gt;&gt;=</span><span class="w"> </span><span class="n">6</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作后二进制：&#34;</span><span class="o">+</span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作后十进制：&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这时再看一下运行结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">操作前十进制</span><span class="err">：</span><span class="o">-</span><span class="n">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">操作前二进制</span><span class="err">：</span><span class="n">11111111111111111111111111111111</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">操作后二进制</span><span class="err">：</span><span class="n">11111111111111111111111111111111</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">操作后十进制</span><span class="err">：</span><span class="o">-</span><span class="n">1</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>原来，<strong>Java在对<code>byte</code>,<code>short</code>,<code>char</code>这三种类型进行移位操作前，会将其先转型为<code>int</code>类型，然后再进行位操作</strong>。由于我们有进行了重新赋值将其赋值为原来的<code>byte</code>类型，所以又进行了从<code>int</code>到<code>byte</code>的先下转型，也就是截断。我们对上面的例子进行一下修改可以更直观的发现运行过程：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="kt">byte</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作前十进制：&#34;</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作前二进制：&#34;</span><span class="o">+</span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;进行无符号右移6位后的十进制：&#34;</span><span class="o">+</span><span class="p">(</span><span class="n">b</span><span class="o">&gt;&gt;&gt;</span><span class="n">6</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;操作后二进制：&#34;</span><span class="o">+</span><span class="n">Integer</span><span class="p">.</span><span class="na">toBinaryString</span><span class="p">(</span><span class="n">b</span><span class="o">&gt;&gt;&gt;</span><span class="n">6</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这里我没有使用<code>=</code>进行重新赋值，而是计算完成后直接打印十进制和二进制的结果。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">操作前十进制</span><span class="err">：</span><span class="o">-</span><span class="n">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">操作前二进制</span><span class="err">：</span><span class="n">11111111111111111111111111111111</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">进行无符号右移6位后的十进制</span><span class="err">：</span><span class="n">67108863</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">操作后二进制</span><span class="err">：</span><span class="n">11111111111111111111111111</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>从打印结果中可以明显的看出是先转换为int类型，然后进行位运算，位运算结束后由于重新赋值所以进行的截断。</p>
+<p>对于<code>long</code>类型，它是64位，不用先转换。</p>
+<h1 id="总结">总结</h1>
+<p>移位符是Java中的基本操作符，实际支持的类型只有<code>int</code>和<code>long</code>。在对<code>byte</code>,<code>short</code>,<code>char</code>类型进行移位操作时，都会先将其转换为<code>int</code>类型再进行操作。左移<code>&lt;&lt;</code>操作符相当于乘以2。带符号右移操作符<code>&gt;&gt;</code>相当于除以2。在Java中使用位运算符会比乘<code>*</code>,除<code>/</code>运算符更高效一些。而无符号右移符<code>&gt;&gt;&gt;</code>在移动时高位补零，低位丢弃，在正数时仍然相当于除以2，但是在负数时结果却是变大了(由负数变为正数)。</p>
+<h1 id="参考">参考</h1>
+<p><a href="https://juejin.im/post/5dff47416fb9a0162f62271c">https://juejin.im/post/5dff47416fb9a0162f62271c</a></p>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

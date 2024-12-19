@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/algorithm/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="算法与数据结构">
+  <meta property="og:description" content="最近在看极客时间覃超的《算法面试通关 40 讲》，也一起看了一些数据结构，正好在这里进行一下整理。
+主要分为数据结构和算法两大章节，每个章节里面都会先结合自己的理解对它的定义进行一下解释，然后会拿出例题来进行实战。
+数据结构 数组 链表 队列 先入先出（first in first out FIFO）
+习题：用栈实现队列
+普通队列 优先队列 堆栈 后入先出(last in first out LIFO)
+习题：用队列实现栈
+树 链表是一种特殊的树，当每个链表节点的链表变成多个时就变成了树
+二叉搜索树（binary search tree BST） 性质：
+左子树上所有节点的值均小于它的根节点的值 右子树上所有节点的值均大于它的根节点的值； 左，右子树也分别满足以上性质 AVL,红黑树学习
+红黑树 手写红黑树的简单实现
+B 树 B&#43;树 MySQL 的 Innodb 中使用的索引就是采用的 B&#43;树的数据结构进行存储的。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-10-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-10-15T00:00:00+00:00">
+    <meta property="article:tag" content="算法与数据结构">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="算法与数据结构">
+  <meta name="twitter:description" content="最近在看极客时间覃超的《算法面试通关 40 讲》，也一起看了一些数据结构，正好在这里进行一下整理。
+主要分为数据结构和算法两大章节，每个章节里面都会先结合自己的理解对它的定义进行一下解释，然后会拿出例题来进行实战。
+数据结构 数组 链表 队列 先入先出（first in first out FIFO）
+习题：用栈实现队列
+普通队列 优先队列 堆栈 后入先出(last in first out LIFO)
+习题：用队列实现栈
+树 链表是一种特殊的树，当每个链表节点的链表变成多个时就变成了树
+二叉搜索树（binary search tree BST） 性质：
+左子树上所有节点的值均小于它的根节点的值 右子树上所有节点的值均大于它的根节点的值； 左，右子树也分别满足以上性质 AVL,红黑树学习
+红黑树 手写红黑树的简单实现
+B 树 B&#43;树 MySQL 的 Innodb 中使用的索引就是采用的 B&#43;树的数据结构进行存储的。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 算法与数据结构
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">算法与数据结构</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 10 月 15 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e7%ae%97%e6%b3%95%e4%b8%8e%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84">#算法与数据结构</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>最近在看极客时间覃超的<a href="https://time.geekbang.org/course/intro/100019701">《算法面试通关 40 讲》</a>，也一起看了一些数据结构，正好在这里进行一下整理。</p>
+<p>主要分为数据结构和算法两大章节，每个章节里面都会先结合自己的理解对它的定义进行一下解释，然后会拿出例题来进行实战。</p>
+<h1 id="数据结构">数据结构</h1>
+<h2 id="数组httpswwwliunaijietop20191015算法与数据结构数组"><a href="https://www.liunaijie.top/2019/10/15/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E7%BB%84/">数组</a></h2>
+<h2 id="链表httpswwwliunaijietop20191015算法与数据结构链表"><a href="https://www.liunaijie.top/2019/10/15/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E9%93%BE%E8%A1%A8/">链表</a></h2>
+<h2 id="队列">队列</h2>
+<p>先入先出（first in first out FIFO）</p>
+<p>习题：<a href="https://www.liunaijie.top/2019/11/24/LeetCode/%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97-LeetCode232/">用栈实现队列</a></p>
+<h3 id="普通队列">普通队列</h3>
+<h3 id="优先队列">优先队列</h3>
+<h2 id="堆栈">堆栈</h2>
+<p>后入先出(last in first out LIFO)</p>
+<p>习题：<a href="https://www.liunaijie.top/2019/11/24/LeetCode/%E7%94%A8%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E6%A0%88-LeetCode225/">用队列实现栈</a></p>
+<h2 id="树">树</h2>
+<p>链表是一种特殊的树，当每个链表节点的链表变成多个时就变成了树</p>
+<h3 id="二叉搜索树binary-search-tree-bst">二叉搜索树（binary search tree BST）</h3>
+<p>性质：</p>
+<ul>
+<li>左子树上所有节点的值均小于它的根节点的值</li>
+<li>右子树上所有节点的值均大于它的根节点的值；</li>
+<li>左，右子树也分别满足以上性质</li>
+</ul>
+<p><a href="https://www.liunaijie.top/2019/12/09/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%EF%BC%8C%E7%BA%A2%E9%BB%91%E6%A0%91%E5%AD%A6%E4%B9%A0">AVL,红黑树学习</a></p>
+<h3 id="红黑树">红黑树</h3>
+<p><a href="https://www.liunaijie.top/2019/12/24/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%89%8B%E5%86%99%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0">手写红黑树的简单实现</a></p>
+<h3 id="b-树">B 树</h3>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/B%E6%A0%91.png" alt="B树"></p>
+<h3 id="b树">B+树</h3>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/B%2B%E6%A0%91.png" alt="B+树"></p>
+<p>MySQL 的 Innodb 中使用的索引就是采用的 B+树的数据结构进行存储的。</p>
+<h3 id="字典树">字典树</h3>
+<h3 id="图">图</h3>
+<p>由于没有用到，暂时也不去做深入的了解。</p>
+<p>附图：来自<a href="https://www.bigocheatsheet.com/">https://www.bigocheatsheet.com/</a>的一张不同数据结构在不同情况下的查找，新增等操作的时间复杂度</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/big-o-cheat-sheet-poster.png" alt="不同数据结构的时间复杂度"></p>
+<h1 id="算法">算法</h1>
+<h2 id="排序">排序</h2>
+<h3 id="冒泡排序">冒泡排序</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">*冒泡排序
+</span></span></span><span class="line"><span class="cl"><span class="cm">*比较相邻的两个元素，如果第一个比第二个大则将两个交换顺序
+</span></span></span><span class="line"><span class="cl"><span class="cm">*i&lt;numbers.length 控制排序轮数 一般为数组长度减1次，因为最后一次循环只剩下一个数组元素，不需要对比，同时数组已经完成排序了
+</span></span></span><span class="line"><span class="cl"><span class="cm">*j&lt;numbers.length-i  因为经过一个排序后，最大（或最小）的元素都已经放到了数组的最后一位，下次不用再进行比较。所以长度改变
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">bubbleSort</span><span class="p">(</span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">numbers</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">numbers</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">numbers</span><span class="p">.</span><span class="na">length</span><span class="o">-</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">numbers</span><span class="o">[</span><span class="n">j</span><span class="o">]&gt;</span><span class="n">numbers</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="n">1</span><span class="o">]</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">temp</span><span class="o">=</span><span class="n">numbers</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">numbers</span><span class="o">[</span><span class="n">j</span><span class="o">]=</span><span class="n">numbers</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="n">1</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">numbers</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="n">1</span><span class="o">]=</span><span class="n">temp</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="快速排序">快速排序</h3>
+<h3 id="选择排序">选择排序</h3>
+<p>首先找到数组中最小的元素，其次，将它与数组第一个元素交换位置</p>
+<p>然后，在剩下的元素中找到最小的元素，将它与数组第二个元素交换位置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">selectSort</span><span class="p">(</span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">array</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">       </span><span class="kt">int</span><span class="w"> </span><span class="n">minIndex</span><span class="w"> </span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">array</span><span class="o">[</span><span class="n">j</span><span class="o">]&lt;</span><span class="n">array</span><span class="o">[</span><span class="n">minIndex</span><span class="o">]</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">minIndex</span><span class="o">=</span><span class="n">j</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">temp</span><span class="o">=</span><span class="n">array</span><span class="o">[</span><span class="n">minIndex</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">array</span><span class="o">[</span><span class="n">minIndex</span><span class="o">]=</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="n">temp</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>不会访问索引左侧的元素（j++）</p>
+<p>需要 N 次交换，(n-1)+(n-2)+&hellip;+2+1 ≈ (N^2^)/2 次比较</p>
+<p>数组有序或者混乱时的速度完全一致。</p>
+<h3 id="直接插入排序">直接插入排序</h3>
+<p>将数组中的元素依次与前面已经排好序的元素相比较，如果选择的元素比已排序的元素小，则交换。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sore</span><span class="p">(</span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">nums</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="o">=</span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&gt;</span><span class="n">0</span><span class="p">;</span><span class="n">j</span><span class="o">--</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]&lt;</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="n">1</span><span class="o">]</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="n">1</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="n">1</span><span class="o">]=</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>不会访问索引右侧的元素（j&ndash;）</p>
+<p>当数组有序时比混乱时速度快。</p>
+<h2 id="查找">查找</h2>
+<h3 id="二分查找">二分查找</h3>
+<h3 id="广度优先遍历bfs">广度优先遍历（BFS)</h3>
+<p>打个比方，给出父节点后对树进行遍历，使用 bfs 先去遍历完所有的子节点，再去遍历所有的孙子节点，然后这样一层一层的进行遍历。</p>
+<p><a href="https://www.liunaijie.top/2020/03/03/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%9A%84%E5%87%A0%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F/#%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E9%81%8D%E5%8E%86">树的几种遍历方式</a></p>
+<h3 id="深度优先遍历dfs">深度优先遍历（DFS）</h3>
+<p><a href="https://www.liunaijie.top/2020/03/03/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%9A%84%E5%87%A0%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F/#%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E9%81%8D%E5%8E%86">树的几种遍历方式</a></p>
+<h2 id="lru-算法">LRU 算法</h2>
+<p>最近最少使用（least recently used）</p>
+<p><a href="https://www.liunaijie.top/2020/02/26/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%94%A8%E5%8D%95%E9%93%BE%E8%A1%A8%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0LRU%E7%AE%97%E6%B3%95/">用单链表简单实现LRU算法</a></p>
+<h2 id="递归">递归</h2>
+<h2 id="分治">分治</h2>
+<p>将一个大问题，分隔成许多小问题，然后小问题的答案组合成大问题最终的答案。</p>
+<h2 id="位运算">位运算</h2>
+<table>
+  <thead>
+      <tr>
+          <th>符号</th>
+          <th>描述</th>
+          <th>运算规则</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>&amp;</td>
+          <td>与</td>
+          <td>两个位都为 1 时，结果为 1</td>
+      </tr>
+      <tr>
+          <td>|</td>
+          <td>或</td>
+          <td>两个位都为 0 时，结果为 0</td>
+      </tr>
+      <tr>
+          <td>^</td>
+          <td>异或</td>
+          <td>两个位相同位为 0，相异为 1</td>
+      </tr>
+      <tr>
+          <td>~</td>
+          <td>取反</td>
+          <td>0 变 1，1 变 0</td>
+      </tr>
+      <tr>
+          <td>&laquo;</td>
+          <td>左移</td>
+          <td>将二进位全部左移若干位，高位丢弃，低位补 0</td>
+      </tr>
+      <tr>
+          <td>&raquo;</td>
+          <td>右移</td>
+          <td>二进位全部右移若干位，对无符号数，高位补 0</td>
+      </tr>
+  </tbody>
+</table>
+<p>再记录一些高级的位运行：</p>
+<ul>
+<li>x&amp;1 == 1 or ==0 判断奇偶性</li>
+<li>x=x&amp;(x-1) 清零最低位的 1</li>
+<li>x&amp;-x 得到最低位的 1</li>
+<li>将 x 最右边的 n 位清零 <code>x&amp;(~0&lt;&lt;n)</code></li>
+<li>获取 x 的第 n 位值 <code>(x&gt;&gt;n)&amp;1</code></li>
+<li>获取 x 的第 n 位的幂值 <code>x&amp;(1&lt;&lt;(n-1))</code></li>
+<li>将第 n 位设置为 1 <code>x|(1&lt;&lt;n)</code></li>
+<li>将第 n 为设置为0 <code>x&amp;(~(1&lt;&lt;n))</code></li>
+<li>将 x 最高位至第 n 位（含）清零 <code>x&amp;((1&lt;&lt;n)-1)</code></li>
+<li>将第 n 位至第 0 位（含）清零 <code>x&amp;(~((1&lt;&lt;(n+1))-1))</code></li>
+</ul>
+<h2 id="贪心算法">贪心算法</h2>
+<p>只取当前的最优解，这个解可能并不是最终的最终解。</p>
+<p>比如我们有18 块钱，然后拆分成最少的金额张数，金额面值分别是 10元，9元，1元。如果使用贪心算法第一次会先使用一张10元的(这是第一次的最优解)，然后再 8 张 1 元的(还剩8元，不够9元)。但是最少的拆分方法是两张 9 元的。所以使用贪心算法有可能并不是全局最优解。</p>
+<h2 id="动态规划">动态规划</h2>
+<h2 id="布隆过滤器bloom-filterhttpswwwliunaijietop20191015算法与数据结构布隆过滤器"><a href="https://www.liunaijie.top/2019/10/15/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">布隆过滤器（Bloom Filter）</a></h2>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

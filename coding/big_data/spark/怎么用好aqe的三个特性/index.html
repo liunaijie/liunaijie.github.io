@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E6%80%8E%E4%B9%88%E7%94%A8%E5%A5%BDaqe%E7%9A%84%E4%B8%89%E4%B8%AA%E7%89%B9%E6%80%A7/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="Spark-怎么用好AQE的三个特性">
+  <meta property="og:description" content="在2.0版本之前, Spark SQL仅仅支持启发式、静态的优化过程, 启发式的优化又叫RBO(Rule Based Optimization, 基于规则的优化), 它基于一些规则和策略实现, 如谓词下推、列剪枝. 这些规则和策略来源于数据库领域已有的应用经验. 启发式的优化是一种经验主义.
+经验主义的弊端是对待相似的问题和场景都使用同一种套路.
+在2.2版本中推出了CBO(Cost Based Optimization, 基于成本的优化), 特点是“实事求是”, 基于数据表的统计信息(如表大小、数据列分布)来选择优化策略. CBO支持的统计信息很丰富, 比如数据表的行数、每列的基数(Cardinality)、空间值、最大值、最小值和直方图等等. 因为有统计数据做支持, 所以CBO选择的优化策略往往优于RBO选择的优化规则.
+但是CBO也有三个方面的缺点: 窄、慢、静.
+窄 : 指的是适用面太窄, CBO仅支持注册到Hive Metastore的数据表 慢: 指的是统计信息的搜集效率比较低. 对于注册到Hive Metastore的数据表, 开发者需要调用ANALYZE TABLE COMPUTE STATISTICS语句收集统计信息, 而各类信息的收集会消耗大量时间 静: 指的是静态优化, 这一点与RBO一样, CBO结合各类统计信息指定执行计划, 一旦执行计划交付运行, CBO的使命就算完成了. 也就是说如果在运行时数据分布发送动态变化, CBO先前制定的执行计划并不会跟着调整、适配 AQE是什么 Spark在3.0推出了AQE(Adaptive Query Execution, 自适应查询执行). AQE是Spark SQL的一种动态优化机制, 在运行时, 每当Shuffle Map阶段执行完毕, AQE都会结合这个阶段的统计信息, 基于既定的规则动态的调整、修正尚未执行的逻辑计划和物理计划, 来完成对原始查询语句的运行时优化.
+AQE的优化机制触发的时机是Shuffle Map阶段执行完毕. 也就是说, AQE优化的频次与执行计划中Shuffle的次数一致. 如果查询语句没有引入Shuffle操作, 那么Spark SQL是不会触发AQE的.
+AQE依赖的统计信息是什么: AQE赖以优化的统计信息与CBO不同, 这些统计信息并不是关于某张表或是哪个列, 而是Shuffle Map阶段输出的中间文件. 每个Map Task都会输出以data为后缀的数据文件, 还有以index为结尾的索引文件, 这些文件统称为中间文件. 每个data文件的大小、空文件数量与占比、每个Reduce Task对于的分区大小, 所有这些基于中间文件的统计值构成了AQE进行优化的信息来源.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spark-怎么用好AQE的三个特性">
+  <meta name="twitter:description" content="在2.0版本之前, Spark SQL仅仅支持启发式、静态的优化过程, 启发式的优化又叫RBO(Rule Based Optimization, 基于规则的优化), 它基于一些规则和策略实现, 如谓词下推、列剪枝. 这些规则和策略来源于数据库领域已有的应用经验. 启发式的优化是一种经验主义.
+经验主义的弊端是对待相似的问题和场景都使用同一种套路.
+在2.2版本中推出了CBO(Cost Based Optimization, 基于成本的优化), 特点是“实事求是”, 基于数据表的统计信息(如表大小、数据列分布)来选择优化策略. CBO支持的统计信息很丰富, 比如数据表的行数、每列的基数(Cardinality)、空间值、最大值、最小值和直方图等等. 因为有统计数据做支持, 所以CBO选择的优化策略往往优于RBO选择的优化规则.
+但是CBO也有三个方面的缺点: 窄、慢、静.
+窄 : 指的是适用面太窄, CBO仅支持注册到Hive Metastore的数据表 慢: 指的是统计信息的搜集效率比较低. 对于注册到Hive Metastore的数据表, 开发者需要调用ANALYZE TABLE COMPUTE STATISTICS语句收集统计信息, 而各类信息的收集会消耗大量时间 静: 指的是静态优化, 这一点与RBO一样, CBO结合各类统计信息指定执行计划, 一旦执行计划交付运行, CBO的使命就算完成了. 也就是说如果在运行时数据分布发送动态变化, CBO先前制定的执行计划并不会跟着调整、适配 AQE是什么 Spark在3.0推出了AQE(Adaptive Query Execution, 自适应查询执行). AQE是Spark SQL的一种动态优化机制, 在运行时, 每当Shuffle Map阶段执行完毕, AQE都会结合这个阶段的统计信息, 基于既定的规则动态的调整、修正尚未执行的逻辑计划和物理计划, 来完成对原始查询语句的运行时优化.
+AQE的优化机制触发的时机是Shuffle Map阶段执行完毕. 也就是说, AQE优化的频次与执行计划中Shuffle的次数一致. 如果查询语句没有引入Shuffle操作, 那么Spark SQL是不会触发AQE的.
+AQE依赖的统计信息是什么: AQE赖以优化的统计信息与CBO不同, 这些统计信息并不是关于某张表或是哪个列, 而是Shuffle Map阶段输出的中间文件. 每个Map Task都会输出以data为后缀的数据文件, 还有以index为结尾的索引文件, 这些文件统称为中间文件. 每个data文件的大小、空文件数量与占比、每个Reduce Task对于的分区大小, 所有这些基于中间文件的统计值构成了AQE进行优化的信息来源.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Spark-怎么用好AQE的三个特性
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Spark-怎么用好AQE的三个特性</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Spark">#Spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>在2.0版本之前, Spark SQL仅仅支持启发式、静态的优化过程, 启发式的优化又叫RBO(Rule Based Optimization, 基于规则的优化), 它基于一些规则和策略实现, 如谓词下推、列剪枝. 这些规则和策略来源于数据库领域已有的应用经验. <strong>启发式的优化是一种经验主义.</strong></p>
+<p>经验主义的弊端是对待相似的问题和场景都使用同一种套路.</p>
+<p>在2.2版本中推出了CBO(Cost Based Optimization, 基于成本的优化), 特点是“实事求是”, 基于数据表的统计信息(如表大小、数据列分布)来选择优化策略. CBO支持的统计信息很丰富, 比如数据表的行数、每列的基数(Cardinality)、空间值、最大值、最小值和直方图等等. 因为有统计数据做支持, 所以CBO选择的优化策略往往优于RBO选择的优化规则.</p>
+<p>但是CBO也有三个方面的缺点: 窄、慢、静.</p>
+<ul>
+<li>窄 : 指的是适用面太窄, CBO仅支持注册到Hive Metastore的数据表</li>
+<li>慢: 指的是统计信息的搜集效率比较低. 对于注册到Hive Metastore的数据表, 开发者需要调用ANALYZE TABLE COMPUTE STATISTICS语句收集统计信息, 而各类信息的收集会消耗大量时间</li>
+<li>静: 指的是静态优化, 这一点与RBO一样, CBO结合各类统计信息指定执行计划, 一旦执行计划交付运行, CBO的使命就算完成了. 也就是说如果在运行时数据分布发送动态变化, CBO先前制定的执行计划并不会跟着调整、适配</li>
+</ul>
+<h1 id="aqe是什么">AQE是什么</h1>
+<p>Spark在3.0推出了AQE(Adaptive Query Execution, 自适应查询执行). AQE是Spark SQL的一种动态优化机制, 在运行时, 每当Shuffle Map阶段执行完毕, AQE都会结合这个阶段的统计信息, 基于既定的规则动态的调整、修正尚未执行的逻辑计划和物理计划, 来完成对原始查询语句的运行时优化.</p>
+<p><strong>AQE的优化机制触发的时机是Shuffle Map阶段执行完毕. 也就是说, AQE优化的频次与执行计划中Shuffle的次数一致.</strong> 如果查询语句没有引入Shuffle操作, 那么Spark SQL是不会触发AQE的.</p>
+<h2 id="aqe依赖的统计信息是什么">AQE依赖的统计信息是什么:</h2>
+<p>AQE赖以优化的统计信息与CBO不同, 这些统计信息并不是关于某张表或是哪个列, 而是<strong>Shuffle Map阶段输出的中间文件</strong>. 每个Map Task都会输出以data为后缀的数据文件, 还有以index为结尾的索引文件, 这些文件统称为中间文件. 每个data文件的大小、空文件数量与占比、每个Reduce Task对于的分区大小, 所有这些基于中间文件的统计值构成了AQE进行优化的信息来源.</p>
+<p>AQE还会<strong>从运行时获取统计信息</strong>, 在条件允许的情况下, 优化决策会分别作用到逻辑计划和物理计划.</p>
+<p>AQE既定的规则和策略主要有4个, 分为1个逻辑优化规则和3个物理优化策略
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202308121609085.png" alt=""></p>
+<h2 id="如何用好aqe">如何用好AQE</h2>
+<p>首先回顾一下AQE动态优化的过程:</p>
+<ul>
+<li>Join策略调整 : 如果某张表在过滤之后, 尺寸小于广播变量阈值, 这张表参与的数据关联就会从Shuffle Sort Merge Join降级(Demote)为执行效率更高的Broadcast Hash Join.</li>
+<li>自动分区合并 : 在Shuffle之后, Reduce Task数据分布参差不齐, AQE将自动合并过小的数据分区</li>
+<li>自动倾斜处理 : 结合配置项, AQE自动拆分Reduce阶段过大的数据分区, 降低单个Reduce Task的工作负载</li>
+</ul>
+<h3 id="join策略调整">Join策略调整</h3>
+<p>这个特性设计了一个逻辑规则和一个物理策略, 它们分别是DemoteBroadcastHashJoin和OptimizeLocalShuffleReader.</p>
+<p>DemoteBroadcastHashJoin规则的作用, 是把Shuffle Joins降级为Broadcast Joins. 需要注意的是, 这个规则仅适用于Shuffle Sort Merge Join这种关联机制, 其他机制如Shuffle Hash Join、Shuffle Nested Loop Join都不支持. 对于参与Join的两张表来说, 在它们分别完成了Shuffle Map阶段的计算之后, DemoteBroadcastJoin会判断中间文件是否满足如下条件</p>
+<ul>
+<li>中间文件尺寸总和小于广播阈值 spark.sql.autoBroadcastJoinThreshold</li>
+<li>空文件占比小于配置项 spark.sql.adaptive.nonEmptyPartitionRatioForBroadcastJoin</li>
+</ul>
+<p>只要有任意一张表的统计信息满足这两个条件, Shuffle Sort Merge Join就会降级为Broadcast Hash Join.</p>
+<p>AQE依赖的统计信息来自于Shuffle Map阶段生成的中间文件, 这意味着AQE在开始优化之前, Shuffle操作就已经执行过半了.</p>
+<p>OptimizeLocalShuffleReader物理策略可以在大表已经完成Shuffle Map阶段后, 不再进行网络分发, 将Reduce Task改为就地读取本地节点的中间文件, 完成与小表的关联操作.</p>
+<p>OptimizeLocalShuffleRead物理策略的生效由一个配置项<code>spark.sql.adaptive.localShuffleRead.enable</code> 决定, 默认值为True.</p>
+<h3 id="自动分区合并">自动分区合并</h3>
+<p>在Reduce阶段, 当Reduce Task从全网把数据拉回, AQE按照分区编号的顺序, 依次把小于目标尺寸的分区合并在一起.</p>
+<p>目标分区尺寸由以下两个参数共同决定:</p>
+<ul>
+<li>spark.sql.adaptive.advisoryPartitionSizeInBytes 由开发者指定分区合并后的推荐尺寸</li>
+<li>spark.sql.adaptive.coalescePartitions.minPartitionNum 最小分区数量, 分区合并后, 分区数不能小于该值</li>
+</ul>
+<p>在Shuffle Map阶段完成之后, AQE优化机制被触发, CoalesceShufflePartitions策略“无条件”地被添加到新的物理计划中. 读取配置项、计算目标分区大小、依序合并相邻分区这些计算逻辑, 在Tungsten WSCG的作用下融合进“手写代码”于Reduce阶段执行.</p>
+<h3 id="自动倾斜处理">自动倾斜处理</h3>
+<p>于自动分区合并相反, 自动倾斜处理的操作是“拆”, 在Reduce阶段, 当Reduce Task所需处理的分区尺寸大于一定阈值时, 利用OptimizeSkewedJoin策略, AQE会把大分区拆分成多个小分区.</p>
+<p>倾斜分区和拆分粒度由以下配置项决定:</p>
+<ul>
+<li>spark.sql.adaptive.skewJoin.skewedPartitionFactor 判断倾斜的膨胀系数</li>
+<li>spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes 判断倾斜的最低阈值</li>
+<li>spark.sql.adaptive.advisoryPartitionSizeInBytes 以字节为单位, 定义拆分粒度</li>
+</ul>
+<p>自动倾斜处理的拆分操作也是在Reduce阶段执行的. 在同一个Executor内部, 本该由一个Task去处理的大分区, 被AQE拆分成多个小分区并交由多个Task去计算. 这样Task之间的计算负载就可以得到平衡. 但是, 这并没有解决Executors之间的负载均衡问题.</p>
+<p>这里的拆分只是将一次执行的大任务分成多个小任务, 但是这些任务还都是在一个Executor上执行的, 从总体来看, 还是存在单个Executor的倾斜问题.</p>
+<p>问题:</p>
+<ol>
+<li>
+<p>对于Join的两张表, 如果表1有倾斜, 表2不存在倾斜, 那么只需要对表1进行拆分, 但是这时为了保证关联关系不被破坏, 还需要对表2对应的数据分区做复制.</p>
+</li>
+<li>
+<p>如果两张表都存在倾斜. 这时将表1拆分为2份, 表2拆分为2份. 为了不破坏逻辑上的关联关系</p>
+<p>表1、表2拆分出来的分区还要各自复制一份.</p>
+<p>当左表拆除M个分区, 右表拆分出N个分区, 那么每张表都需要保持M*N份分区数据, 才能保证关联逻辑的一致性. 当M, N逐渐变大时, AQE处理数据倾斜所需要的计算开销将会面临失控的风险</p>
+</li>
+</ol>
+<p>总的来说, 当应用中的数据倾斜比较简单, 比如虽然有倾斜但数据分布相对均匀, 或是关联计算中只有一边有倾斜, 我们完全可以依赖AQE的自动倾斜处理机制. 但是, 在应用中倾斜十分复杂时就需要衡量AQE的自动倾斜处理与手动处理倾斜之间的关系.</p>
+<h2 id="aqe小结">AQE小结</h2>
+<p>AQE是Spark SQL的一种动态优化策略, 它的诞生解决了RBO、CBO, 这些启发式、静态优化机制的局限性.</p>
+<p>AQE在Shuffle Map阶段执行完毕, 都会结合这个阶段的统计信息, 根据既定的规则和策略动态的调整、修正尚未执行的逻辑计划和物理计划, 从而完成对原始查询语句的运行时优化. 因此, 只有当查询语句会引入Shuffle操作时, Spark SQL才会触发AQE.</p>
+<p>AQE支持的三种优化特性分别是Join策略调整、自动分区合并和自动倾斜处理</p>
+<p>关于Join策略调整, DemoteBroadcastHashJoin规则仅仅适用于Shuffle Sort Merge Join这种关联机制, 对于其他Shuffle Joins类型, AQE暂不支持把它们转化为Broadcast Joins. 其次, 为了确保AQE的Join策略调整正常运行, 要确保spark.sql.adaptive.localShuffleReader.enabled配置为开启状态</p>
+<p>关于自动分区合并, 在Shuffle Map阶段完成之后, 结合分区推荐尺寸与分区数量限制, AQE会自动帮我们完成分区合并的计算过程</p>
+<p>关于AQE的自动倾斜处理, 它只能以Task为粒度缓解数据倾斜, 并不能解决不同Executors之间的负载均衡问题.</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

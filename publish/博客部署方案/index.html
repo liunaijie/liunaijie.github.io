@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="博客自动部署方案">
+  <meta property="og:description" content="趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.
+之前是使用Hexo来作为博客的生成框架, 现在迁移到了Hugo, 迁移的一个原因是Hexo中无法过滤掉没有Title的文件, 导致生产了很多空白页面, 而Hugo则可以过滤掉没有Title的文件, 从而避免了这个问题.
+另外的一个原因是Hugo的性能比Hexo要高, 在生成静态页面时, Hugo的速度更快. 现在博客的主题也只想要一个简洁的样式, 所以就选择了Hugo的Minima主题, 简单修改了一下, 就完成了迁移.
+写作记录方面 我最开始是使用Typora来写作, 及时渲染, 但是Typora后来开始收费, 又尝试了Notion, 但是Notion的速度太慢, 慢慢就换到了现在使用的Obsidian.
+这个目前来说绝对是写作神器, 配合各种插件, 可以方便的写作, 任务安排/查看, 画流程图等等. 再配合Remote Sync插件, 可以非常方便的进行多端同步.
+以下是其中一些步骤的记录:
+Obsidian同步 使用Obsidian也有官方同步方案, 但是需要收费, 作为一名白嫖党, 肯定是不愿意花这个钱的, 所以就使用Remote-Sync来进行数据同步, 按照文档配置一下即可完成, 非常简单. Remote-Sync的同步方案有多种, 我最后选择了One Drive的同步方案, 原因有以下几点:
+这个国内也可以正常访问, 速度也很快 注册账号就有一些免费空间, 而同步的数据仅仅是一些文字, 图片. 总的体积也不会很大, 免费空间也足够使用了 在手机端也可以使用(这个就过滤掉了Git的同步方案, 因为手机端无法使用Git, 所以就只能使用OneDrive的同步方案了) 同时我有一台NAS, 在NAS上也会通过Cloud-Sync将数据从OneDrive云盘下载, 来进行数据备份, 再配合定时任务来监测是否有文件变动, 有变动则进行Git的提交. Git提交后则会触发Github Action来进行博客的构建和发布流程.
+NAS同步 使用Obsidian写作时, 我博客的内容仅仅是一个同步内容的子文件夹, 使用Cloud-Sync可以指定要同步哪个文件夹到NAS的哪个目录上. 同时我博客的其他代码, 配置等, 我是没有放到Obsidian中的, 所以会有两个文件夹, 一个存放Obsidian中的文章内容, 一个存放博客的源文件. 然后通过软链将文件关联到源文件下.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="publish">
+    <meta property="article:published_time" content="2024-12-19T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-19T00:00:00+00:00">
+    <meta property="article:tag" content="Blog">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="博客自动部署方案">
+  <meta name="twitter:description" content="趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.
+之前是使用Hexo来作为博客的生成框架, 现在迁移到了Hugo, 迁移的一个原因是Hexo中无法过滤掉没有Title的文件, 导致生产了很多空白页面, 而Hugo则可以过滤掉没有Title的文件, 从而避免了这个问题.
+另外的一个原因是Hugo的性能比Hexo要高, 在生成静态页面时, Hugo的速度更快. 现在博客的主题也只想要一个简洁的样式, 所以就选择了Hugo的Minima主题, 简单修改了一下, 就完成了迁移.
+写作记录方面 我最开始是使用Typora来写作, 及时渲染, 但是Typora后来开始收费, 又尝试了Notion, 但是Notion的速度太慢, 慢慢就换到了现在使用的Obsidian.
+这个目前来说绝对是写作神器, 配合各种插件, 可以方便的写作, 任务安排/查看, 画流程图等等. 再配合Remote Sync插件, 可以非常方便的进行多端同步.
+以下是其中一些步骤的记录:
+Obsidian同步 使用Obsidian也有官方同步方案, 但是需要收费, 作为一名白嫖党, 肯定是不愿意花这个钱的, 所以就使用Remote-Sync来进行数据同步, 按照文档配置一下即可完成, 非常简单. Remote-Sync的同步方案有多种, 我最后选择了One Drive的同步方案, 原因有以下几点:
+这个国内也可以正常访问, 速度也很快 注册账号就有一些免费空间, 而同步的数据仅仅是一些文字, 图片. 总的体积也不会很大, 免费空间也足够使用了 在手机端也可以使用(这个就过滤掉了Git的同步方案, 因为手机端无法使用Git, 所以就只能使用OneDrive的同步方案了) 同时我有一台NAS, 在NAS上也会通过Cloud-Sync将数据从OneDrive云盘下载, 来进行数据备份, 再配合定时任务来监测是否有文件变动, 有变动则进行Git的提交. Git提交后则会触发Github Action来进行博客的构建和发布流程.
+NAS同步 使用Obsidian写作时, 我博客的内容仅仅是一个同步内容的子文件夹, 使用Cloud-Sync可以指定要同步哪个文件夹到NAS的哪个目录上. 同时我博客的其他代码, 配置等, 我是没有放到Obsidian中的, 所以会有两个文件夹, 一个存放Obsidian中的文章内容, 一个存放博客的源文件. 然后通过软链将文件关联到源文件下.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 博客自动部署方案
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">博客自动部署方案</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2024 年 12 月 19 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/blog">#blog</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.</p>
+<p>之前是使用<code>Hexo</code>来作为博客的生成框架, 现在迁移到了<code>Hugo</code>, 迁移的一个原因是<code>Hexo</code>中无法过滤掉没有<code>Title</code>的文件, 导致生产了很多空白页面, 而<code>Hugo</code>则可以过滤掉没有<code>Title</code>的文件, 从而避免了这个问题.<br>
+另外的一个原因是<code>Hugo</code>的性能比<code>Hexo</code>要高, 在生成静态页面时, <code>Hugo</code>的速度更快. <br>
+现在博客的主题也只想要一个简洁的样式, 所以就选择了<code>Hugo</code>的<code>Minima</code>主题, 简单修改了一下, 就完成了迁移.</p>
+<h1 id="写作记录方面">写作记录方面</h1>
+<p>我最开始是使用<code>Typora</code>来写作, 及时渲染, 但是<code>Typora</code>后来开始收费, 又尝试了<code>Notion</code>, 但是<code>Notion</code>的速度太慢, 慢慢就换到了现在使用的<code>Obsidian</code>.<br>
+这个目前来说绝对是写作神器, 配合各种插件, 可以方便的写作, 任务安排/查看, 画流程图等等. <br>
+再配合<code>Remote Sync</code>插件, 可以非常方便的进行多端同步.</p>
+<p>以下是其中一些步骤的记录:</p>
+<h1 id="obsidian同步">Obsidian同步</h1>
+<p>使用<code>Obsidian</code>也有官方同步方案, 但是需要收费, 作为一名白嫖党, 肯定是不愿意花这个钱的, 所以就使用<code>Remote-Sync</code>来进行数据同步, 按照文档配置一下即可完成, 非常简单.
+<code>Remote-Sync</code>的同步方案有多种, 我最后选择了<code>One Drive</code>的同步方案, 原因有以下几点:</p>
+<ol>
+<li>这个国内也可以正常访问, 速度也很快</li>
+<li>注册账号就有一些免费空间, 而同步的数据仅仅是一些文字, 图片. 总的体积也不会很大, 免费空间也足够使用了</li>
+<li>在手机端也可以使用(这个就过滤掉了Git的同步方案, 因为手机端无法使用Git, 所以就只能使用<code>OneDrive</code>的同步方案了)</li>
+</ol>
+<p>同时我有一台<code>NAS</code>, 在<code>NAS</code>上也会通过<code>Cloud-Sync</code>将数据从<code>OneDrive</code>云盘下载, 来进行数据备份, 再配合定时任务来监测是否有文件变动, 有变动则进行<code>Git</code>的提交.
+<code>Git</code>提交后则会触发<code>Github Action</code>来进行博客的构建和发布流程.</p>
+<h1 id="nas同步">NAS同步</h1>
+<p>使用<code>Obsidian</code>写作时, 我博客的内容仅仅是一个同步内容的子文件夹, 使用<code>Cloud-Sync</code>可以指定要同步哪个文件夹到<code>NAS</code>的哪个目录上.
+同时我博客的其他代码, 配置等, 我是没有放到<code>Obsidian</code>中的, 所以会有两个文件夹, 一个存放<code>Obsidian</code>中的文章内容, 一个存放博客的源文件.
+然后通过软链将文件关联到源文件下.</p>
+<p>同步任务可以设置每天定时同步, 同步完成后再跟一个任务来检查博客文件是否有变动, 如果有变动, 则自动提交到<code>Github</code>
+检查变更的脚本内容为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="nv">now</span><span class="o">=</span><span class="k">$(</span>date +%Y-%m-%d<span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;git status -s&#34;</span> <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+</span></span><span class="line"><span class="cl">    git add .
+</span></span><span class="line"><span class="cl">    git commit -m  <span class="s2">&#34;update files on </span><span class="nv">$now</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    git push
+</span></span><span class="line"><span class="cl"><span class="k">else</span> 
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;no changes on </span><span class="nv">$now</span><span class="s2">&#34;</span>    
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="github-action">Github Action.</h1>
+<p>其实博客的部署也可以在<code>NAS</code>上运行, 但是我不想在<code>NAS</code>上安装相关的依赖, 就使用了<code>Github Action</code>来完成此任务.
+我的仓库中有两个分支</p>
+<ul>
+<li><code>hugo</code> : 是<code>markdown</code>文件和<code>hugo</code>的配置文件</li>
+<li><code>master</code> : 生成的<code>html</code>文件</li>
+</ul>
+<p>使用<code>Github</code>的<code>user-name.github.io</code>仓库, 并关联到自己的域名上, 从而实现无服务器部署.</p>
+<p><strong>设置私钥</strong>
+设置私钥到<code>user-name.github.io</code>仓库下，打开该仓库，找到<code>setting/secrets/New repository secret</code>将本地<code>~/.ssh/id_ras</code>文件复制进来，名称可以随便取，不过在下面使用的时候需要对应起来，比如我用了<code>ACTION_DEPLOY_KEY</code>这个名称。需要勾选 <code>Allow write access</code> 。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20210123154250.png" alt=""></p>
+<p><strong>Action配置文件</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Deploy Blog</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">hexo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu-latest</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Checkout source</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">   
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l">hexo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Setup Node.js</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/setup-node@v3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">node - version</span><span class="p">:</span><span class="w"> </span><span class="l">stable</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Install required libs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          npm install hexo-deployer-git --save          
+</span></span></span><span class="line"><span class="cl"><span class="sd">          npm install hexo-generator-feed --save</span><span class="w">          
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Verify Node.js version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">node - v   </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Setup hexo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">ACTION_DEPLOY_KEY</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.ACTION_DEPLOY_KEY }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          mkdir -p ~/.ssh/
+</span></span></span><span class="line"><span class="cl"><span class="sd">          echo &#34;$ACTION_DEPLOY_KEY&#34; &gt; ~/.ssh/id_rsa
+</span></span></span><span class="line"><span class="cl"><span class="sd">          chmod 600 ~/.ssh/id_rsa
+</span></span></span><span class="line"><span class="cl"><span class="sd">          ssh-keyscan github.com &gt;&gt; ~/.ssh/known_hosts
+</span></span></span><span class="line"><span class="cl"><span class="sd">          git config --global user.email &#34;liunaijie1996@163.com&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">          git config --global user.name &#34;Jarvis&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">          npm install hexo-cli -g
+</span></span></span><span class="line"><span class="cl"><span class="sd">          npm install </span><span class="w">          
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Hexo deploy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          hexo clean
+</span></span></span><span class="line"><span class="cl"><span class="sd">          hexo g
+</span></span></span><span class="line"><span class="cl"><span class="sd">          hexo d</span><span class="w">          
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>一个流程图大致是这样:
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202411251431188.png" alt=""></p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

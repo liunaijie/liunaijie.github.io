@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/publish/%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E5%9C%A8spark%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="一段代码在Spark中的执行过程">
+  <meta property="og:description" content="一段代码在Spark中的执行过程 假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 select name, age, sum(price * volume) revenue from ( select * from tx ) tx inner join ( select name, age, userId from user where age &lt; 30 and gender in (&#39;M&#39;) ) user on tx.userId = user.userId group by 1,2 ; 提交任务 这里的提交一般有两种方式, 一种是client模式, 一种是cluster模式">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="publish">
+    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Spark">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="一段代码在Spark中的执行过程">
+  <meta name="twitter:description" content="一段代码在Spark中的执行过程 假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 select name, age, sum(price * volume) revenue from ( select * from tx ) tx inner join ( select name, age, userId from user where age &lt; 30 and gender in (&#39;M&#39;) ) user on tx.userId = user.userId group by 1,2 ; 提交任务 这里的提交一般有两种方式, 一种是client模式, 一种是cluster模式">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 一段代码在Spark中的执行过程
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">一段代码在Spark中的执行过程</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 04 月 01 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/spark">#spark</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="一段代码在spark中的执行过程">一段代码在Spark中的执行过程</h1>
+<p>假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">select</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">volume</span><span class="p">)</span><span class="w"> </span><span class="n">revenue</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">tx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">tx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">select</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">userId</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w"> </span><span class="k">user</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">where</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="k">user</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">on</span><span class="w"> </span><span class="n">tx</span><span class="p">.</span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">user</span><span class="p">.</span><span class="n">userId</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="提交任务">提交任务</h1>
+<p>这里的提交一般有两种方式, 一种是client模式, 一种是cluster模式</p>
+<ul>
+<li>client</li>
+</ul>
+<p>这种模式的意思是将提交作业的机器作为Driver来管理任务</p>
+<ul>
+<li>cluster</li>
+</ul>
+<p>这种模式会在Yarn集群中选择一个机器来作为Driver</p>
+<p>在生产环境下我们一般都会使用Cluster模式来提交任务</p>
+<h1 id="分解任务">分解任务</h1>
+<p>在Driver上根据我们的代码逻辑, 将作业进行Stage切分, 然后将任务派发到Executor上</p>
+<h2 id="生成逻辑计划">生成逻辑计划</h2>
+<p>首先使用Altur4来将我们的代码转换成逻辑树, <strong>如果我们写的代码有问题, 比如少写了一个括号, 少写了一个关键字等等可能会造成无法构建逻辑树时, 会在这里抛出错误.</strong></p>
+<p>假如我们在查询字段中少写了一个逗号, 造成了as这样的语义, 也是在这样生成的</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674407.png" alt=""></p>
+<p><strong>得到Unresolved Logical Plan</strong></p>
+<h2 id="然后使用catalyst进行优化">然后使用Catalyst进行优化</h2>
+<ol>
+<li>
+<p>结合Schema信息, 来确定计划中的表名, 字段名, 字段类型是否与实际数据一致 <strong>如果我们查询一个不存在的字段, 或者字段类型转换错误等错误会在这里抛出</strong></p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674408.png" alt=""></p>
+<p><strong>得到Analyzed Logical Plan</strong></p>
+</li>
+<li>
+<p>根据既定规则进行优化</p>
+<ol>
+<li>列剪裁</li>
+<li>谓词下推</li>
+<li>常量替换</li>
+</ol>
+<p>我们可能仅仅需要表中的几个字段, 对于列式存储的数据, 我们可以只查询这几列, 从而减少数据扫描量, 降低IO, 提升效率</p>
+<p>谓词下推指的是可以将过滤条件下推到可以下推的最下一层, 比如这里的条件过滤, 可以在扫描文件时一起进行过滤, 从而减少源文件大小. 但是要注意的是要保证下推之后不能对结果有影响.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674409.png" alt=""></p>
+<p><strong>得到Optimized Logical Plan,</strong> 至此逻辑计划已经生成, 下面是物理计划</p>
+</li>
+<li>
+<p>生成可以执行的物理计划</p>
+<p>逻辑计划生成之后, 只是说明了这个任务需要怎么执行, 但是没有说如何去执行. 上面的Optimized Logical Plan说明了两个表需要进行Inner Join, 但是并没有说明需要shuffle还是broadcast, 需要SMJ还是HJ或者NLJ等等.</p>
+<p>所以首先根据既定的规则, 将逻辑计划转换为可以执行的物理计划, 规则有下面这些</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674410.png" alt=""></p>
+</li>
+<li>
+<p>再次生成物理计划</p>
+<p>上一步将逻辑计划转换成了可以执行的物理计划, 但是有些物理计划要想执行需要满足一系列的先决条件, 这一步就是检查物理计划的执行条件是否全部满足, 如果不满足则进行优化.</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674411.png" alt=""></p>
+<p>完成之后就生成了最终去执行的物理计划</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674412.png" alt=""></p>
+</li>
+</ol>
+<h2 id="tungsten优化">Tungsten优化</h2>
+<p>物理计划生成之后可以之间使用, 但是使用Tungsten可以再进行一轮优化. Tungsten主要优化两个方面:</p>
+<ul>
+<li>数据结构设计</li>
+<li>全阶段代码生成(Whole Stage Code Generation, WSCG)</li>
+</ul>
+<p>数据结构设计主要是使用更加紧凑的二进制来进行数据存储</p>
+<p>主要看一下WSCG, 这一步是在Stage中将可以合并的算子进行合并.</p>
+<p>还以上面的代码为例, 上面对用户表进行了扫描, 过滤, 然后构建一个投影(Project), 之后再进行Shuffle, 由于Shuffle切分Stage. 所以在第一个Stage就包括这几步:</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674413.png" alt=""></p>
+<p>WSCG可以优化成这样:</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1649318674414.png" alt=""></p>
+<p>将这三步揉合到一起, 从而只需要扫描和计算一次.</p>
+<h1 id="调度和执行">调度和执行</h1>
+<p>Driver根据配置中的executor数量, 内存, CPU等配置向Yarn申请所需要的Executor. 并将最终的物理计划进行划分, 封装成Task分发到Executor上.</p>
+<p>Executor中的线程池拿到Task之后开始运行任务.</p>
+<p>Driver会监控Executor的执行情况, 如果遇到可以重试的错误会将这个任务再次分发到其他节点进行执行.</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

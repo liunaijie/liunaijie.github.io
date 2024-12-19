@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Picgo on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/picgo/</link>
+    <description>Recent content in Picgo on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 28 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/picgo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用github和picgo创建图床</title>
+      <link>https://www.liunaijie.top/coding/tools/%E5%88%A9%E7%94%A8github%E5%92%8Cpicgo%E5%88%9B%E5%BB%BA%E5%9B%BE%E5%BA%8A/</link>
+      <pubDate>Fri, 28 Jun 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/tools/%E5%88%A9%E7%94%A8github%E5%92%8Cpicgo%E5%88%9B%E5%BB%BA%E5%9B%BE%E5%BA%8A/</guid>
+      <description>&lt;p&gt;在写博客的时候需要存储一些图片，网上有一些图床工具，有免费的也有收费的。免费的肯定没有保障，我就看到很多人使用一些免费的图床，然后提供方不再提供后图床就挂了。所以我准备使用github作为图床存储，有一定的网络延迟，但也可以接受。&lt;/p&gt;&#xA;&lt;h1 id=&#34;前期准备&#34;&gt;前期准备：&lt;/h1&gt;&#xA;&lt;p&gt;下载并安装&lt;a href=&#34;https://github.com/Molunerfinn/PicGo&#34;&gt;picgo&lt;/a&gt;，选择自己系统对应的版本下载安装即可。&lt;/p&gt;&#xA;&lt;h1 id=&#34;注册github&#34;&gt;注册github&lt;/h1&gt;&#xA;&lt;h2 id=&#34;创建存储图片的项目&#34;&gt;创建存储图片的项目&lt;/h2&gt;&#xA;&lt;p&gt;这里要注意的是把项目设置成&lt;em&gt;公开&lt;/em&gt;的，不用设置私有，不然我们图片是无法访问的。&lt;/p&gt;&#xA;&lt;p&gt;这里的图片其他人都是可以查看的，注意不要放一些与自己隐私相关的东西哦。。。&lt;/p&gt;&#xA;&lt;h2 id=&#34;生成github的token&#34;&gt;生成github的token&lt;/h2&gt;&#xA;&lt;p&gt;打开&lt;code&gt;github&lt;/code&gt;-&amp;gt;&lt;code&gt;setting&lt;/code&gt;-&amp;gt;&lt;code&gt;developer settings&lt;/code&gt;-&amp;gt;&lt;code&gt;personal access tokens&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/1561714944899.jpg&#34; alt=&#34;设置的路径&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;点击生成新的token&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/1561715301721.jpg&#34; alt=&#34;token设置&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;这里我们填写我们这个token的名称和权限，权限就只选repo就可以。&lt;/p&gt;&#xA;&lt;p&gt;点击生成token，这时候会显示一串字符，这个信息只出现一次以后是看不到的，所以我们要把它保存下来。&lt;/p&gt;&#xA;&lt;h1 id=&#34;picgo设置&#34;&gt;picgo设置&lt;/h1&gt;&#xA;&lt;p&gt;然后就是设置picgo了。&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/1561715524096.jpg&#34; alt=&#34;picgo设置&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;仓库名称添加自己创建的仓库名称即可，分支就默认写master，token是我们上一步获取到的token&lt;/p&gt;&#xA;&lt;p&gt;最后就是自定义域名了，一般的规律是&lt;code&gt;https://raw.githubusercontent.com/你的github名称/仓库名称/分支名称(默认就是master)&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;也可以先预上传一张图片，然后新标签页打卡，查看图片地址，去掉图片名即可。&lt;/p&gt;&#xA;&lt;p&gt;然后将github设置成默认图床就可以了&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

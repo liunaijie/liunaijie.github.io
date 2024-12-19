@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/database/mongodb/%E5%86%99%E6%93%8D%E4%BD%9C%E4%BA%8B%E5%8A%A1/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="mongo-写操作事务">
+  <meta property="og:description" content="什么是writeConcern writeConcern决定一个写操作落到多少个节点上才算成功。writeConcern的取值包括：
+0：发起写操作，不关心是否成功； 1~集群最大数据节点数，写操作需要被复制到指定节点数才算成功 majority：写操作需要被复制到大多数节点才算成功。 发起写操作的程序将阻塞到写操作到达指定的节点数为止 默认行为： 3节点复制集不做任何特定设置（默认值）时的操作如下图所示：
+大多数节点确认模式： `w:“majority”
+当写的操作被大多数节点写入成功后才返回
+全部节点确认模式 w:&#34;all&#34; 设置后需要当所有的节点都将数据写入后才返回
+journal writeConcern可以决定写操作到达多少个节点才算成功，journal则定义如何才算成功。取值包括：
+true:写操作落到journal文件中才算成功 false：写操作到达内存即算作成功 实验 在复制集测试writeConcern参数
+db.test.insert({count:1,{writeConcern:{w:&#34;majority&#34;}}}) db.test.insert({count:1,{writeConcern:{w:&#34;3&#34;}}}) db.test.insert({count:1,{writeConcern:{w:&#34;4&#34;}}}) 正常情况下，是可以正常返回的，可以手动修改配置，模拟延迟环境。 修改复制延迟参数：
+conf=rs.conf() conf.members[i].slaveDelay=5 # 将第i个节点设置5秒的复制延迟 conf.members[i].priority=0 # 由于延迟所以不能设置为主节点 rs.reconfig(conf) # 启用配置 设置超过延迟时间后失败：
+db.test.inser({count:3},{writeConcern:{w:&#34;majority&#34;,wtimeout:3000}}) #当大多数节点写入成功就算成功，超过3秒后如果未返回则失败 注意事项： 我们假设使用上面的配置，对节点启用5秒的延迟写入，并且等待超时时间为3秒，那么会返回下面的信息：
+WriteResult({ &#34;nInserted&#34;:1, &#34;writeConcernError&#34; :{ ... } }) 可以看到上面有个属性nInserted，这个属性表示已经成功写入了多个个节点，这里表示已经成功写入了1个节点，并不是全部的节点都没有这个数据。所以这是需要注意的地方
+注意事项 虽然多于办事的writeConcern都是安全的，但通常只会设置majority，这是因为等待写入延迟时间最短的选择 不要将writeConcern等于总节点数，因为一旦有一个节点故障，所有写操作都将失败 writeConcern虽然会增加写操作延迟时间，但并不会显著增加集群压力，因此无论是否等待，写操作最终都会复制到所有节点上。设置writeConcern只是让写操作复制后再返回而已 应对重要数据应用{w:&#34;majority&#34;}，普通数据可以应用{w:1}以确保最佳性能">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2020-04-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-04-14T00:00:00+00:00">
+    <meta property="article:tag" content="Mongo">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="mongo-写操作事务">
+  <meta name="twitter:description" content="什么是writeConcern writeConcern决定一个写操作落到多少个节点上才算成功。writeConcern的取值包括：
+0：发起写操作，不关心是否成功； 1~集群最大数据节点数，写操作需要被复制到指定节点数才算成功 majority：写操作需要被复制到大多数节点才算成功。 发起写操作的程序将阻塞到写操作到达指定的节点数为止 默认行为： 3节点复制集不做任何特定设置（默认值）时的操作如下图所示：
+大多数节点确认模式： `w:“majority”
+当写的操作被大多数节点写入成功后才返回
+全部节点确认模式 w:&#34;all&#34; 设置后需要当所有的节点都将数据写入后才返回
+journal writeConcern可以决定写操作到达多少个节点才算成功，journal则定义如何才算成功。取值包括：
+true:写操作落到journal文件中才算成功 false：写操作到达内存即算作成功 实验 在复制集测试writeConcern参数
+db.test.insert({count:1,{writeConcern:{w:&#34;majority&#34;}}}) db.test.insert({count:1,{writeConcern:{w:&#34;3&#34;}}}) db.test.insert({count:1,{writeConcern:{w:&#34;4&#34;}}}) 正常情况下，是可以正常返回的，可以手动修改配置，模拟延迟环境。 修改复制延迟参数：
+conf=rs.conf() conf.members[i].slaveDelay=5 # 将第i个节点设置5秒的复制延迟 conf.members[i].priority=0 # 由于延迟所以不能设置为主节点 rs.reconfig(conf) # 启用配置 设置超过延迟时间后失败：
+db.test.inser({count:3},{writeConcern:{w:&#34;majority&#34;,wtimeout:3000}}) #当大多数节点写入成功就算成功，超过3秒后如果未返回则失败 注意事项： 我们假设使用上面的配置，对节点启用5秒的延迟写入，并且等待超时时间为3秒，那么会返回下面的信息：
+WriteResult({ &#34;nInserted&#34;:1, &#34;writeConcernError&#34; :{ ... } }) 可以看到上面有个属性nInserted，这个属性表示已经成功写入了多个个节点，这里表示已经成功写入了1个节点，并不是全部的节点都没有这个数据。所以这是需要注意的地方
+注意事项 虽然多于办事的writeConcern都是安全的，但通常只会设置majority，这是因为等待写入延迟时间最短的选择 不要将writeConcern等于总节点数，因为一旦有一个节点故障，所有写操作都将失败 writeConcern虽然会增加写操作延迟时间，但并不会显著增加集群压力，因此无论是否等待，写操作最终都会复制到所有节点上。设置writeConcern只是让写操作复制后再返回而已 应对重要数据应用{w:&#34;majority&#34;}，普通数据可以应用{w:1}以确保最佳性能">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - mongo-写操作事务
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">mongo-写操作事务</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2020 年 04 月 14 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Mongo">#Mongo</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="什么是writeconcern">什么是writeConcern</h1>
+<p>writeConcern决定一个写操作落到多少个节点上才算成功。writeConcern的取值包括：</p>
+<ul>
+<li>0：发起写操作，不关心是否成功；</li>
+<li>1~集群最大数据节点数，写操作需要被复制到指定节点数才算成功</li>
+<li>majority：写操作需要被复制到大多数节点才算成功。 发起写操作的程序将阻塞到写操作到达指定的节点数为止</li>
+</ul>
+<h2 id="默认行为">默认行为：</h2>
+<p>3节点复制集不做任何特定设置（默认值）时的操作如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1585393042221.jpg" alt="https://raw.githubusercontent.com/liunaijie/images/master/1585393042221.jpg"></p>
+<h2 id="大多数节点确认模式">大多数节点确认模式：</h2>
+<p>`w:&ldquo;majority&rdquo;</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1585393318539.jpg" alt="https://raw.githubusercontent.com/liunaijie/images/master/1585393318539.jpg"></p>
+<p>当写的操作被大多数节点写入成功后才返回</p>
+<h2 id="全部节点确认模式">全部节点确认模式</h2>
+<p><code>w:&quot;all&quot;</code>
+设置后需要当所有的节点都将数据写入后才返回</p>
+<h1 id="journal">journal</h1>
+<p>writeConcern可以决定写操作到达多少个节点才算成功，journal则定义如何才算成功。取值包括：</p>
+<ul>
+<li>true:写操作落到journal文件中才算成功</li>
+<li>false：写操作到达内存即算作成功</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/1585393755601.jpg" alt="https://raw.githubusercontent.com/liunaijie/images/master/1585393755601.jpg"></p>
+<h1 id="实验">实验</h1>
+<p>在复制集测试<code>writeConcern</code>参数</p>
+<pre tabindex="0"><code>db.test.insert({count:1,{writeConcern:{w:&#34;majority&#34;}}})
+db.test.insert({count:1,{writeConcern:{w:&#34;3&#34;}}})
+db.test.insert({count:1,{writeConcern:{w:&#34;4&#34;}}})
+</code></pre><p>正常情况下，是可以正常返回的，可以手动修改配置，模拟延迟环境。 修改复制延迟参数：</p>
+<pre tabindex="0"><code>conf=rs.conf()
+conf.members[i].slaveDelay=5 # 将第i个节点设置5秒的复制延迟
+conf.members[i].priority=0 # 由于延迟所以不能设置为主节点
+rs.reconfig(conf)  # 启用配置
+</code></pre><p><strong>设置超过延迟时间后失败：</strong></p>
+<pre tabindex="0"><code>db.test.inser({count:3},{writeConcern:{w:&#34;majority&#34;,wtimeout:3000}}) #当大多数节点写入成功就算成功，超过3秒后如果未返回则失败
+</code></pre><p>注意事项： 我们假设使用上面的配置，对节点启用5秒的延迟写入，并且等待超时时间为3秒，那么会返回下面的信息：</p>
+<pre tabindex="0"><code>WriteResult({
+    &#34;nInserted&#34;:1,
+    &#34;writeConcernError&#34; :{
+        ...
+    }
+})
+</code></pre><p>可以看到上面有个属性<code>nInserted</code>，这个属性表示已经成功写入了多个个节点，这里表示已经成功写入了1个节点，并不是全部的节点都没有这个数据。所以这是需要注意的地方</p>
+<h1 id="注意事项">注意事项</h1>
+<ul>
+<li>虽然多于办事的<code>writeConcern</code>都是安全的，但通常只会设置<code>majority</code>，这是因为等待写入延迟时间最短的选择</li>
+<li>不要将writeConcern等于总节点数，因为一旦有一个节点故障，所有写操作都将失败</li>
+<li><code>writeConcern</code>虽然会增加写操作延迟时间，但并不会显著增加集群压力，因此无论是否等待，写操作最终都会复制到所有节点上。设置<code>writeConcern</code>只是让写操作复制后再返回而已</li>
+<li>应对重要数据应用<code>{w:&quot;majority&quot;}</code>，普通数据可以应用<code>{w:1}</code>以确保最佳性能</li>
+</ul>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

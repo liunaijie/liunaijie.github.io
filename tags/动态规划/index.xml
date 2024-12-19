@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>动态规划 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</link>
+    <description>Recent content in 动态规划 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 15 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>乘积为正数的最长子数组长度-LeetCode1567</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E4%B9%98%E7%A7%AF%E4%B8%BA%E6%AD%A3%E6%95%B0%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E6%95%B0%E7%BB%84%E9%95%BF%E5%BA%A6-leetcode1567/</link>
+      <pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E4%B9%98%E7%A7%AF%E4%B8%BA%E6%AD%A3%E6%95%B0%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E6%95%B0%E7%BB%84%E9%95%BF%E5%BA%A6-leetcode1567/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/maximum-length-of-subarray-with-positive-product/&#34;&gt;https://leetcode-cn.com/problems/maximum-length-of-subarray-with-positive-product/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;给定一个整数数组nums, 求乘积为正数的最长子数组的长度&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入: [1, -2, -3, 4]&lt;/p&gt;&#xA;&lt;p&gt;输出: 4&lt;/p&gt;&#xA;&lt;p&gt;数组本身乘积就是正数&lt;/p&gt;&#xA;&lt;p&gt;示例2:&lt;/p&gt;&#xA;&lt;p&gt;输入: [0, 1, -2, -3, -4]&lt;/p&gt;&#xA;&lt;p&gt;输出: 3&lt;/p&gt;&#xA;&lt;p&gt;最长乘积为整数的子数组为[1, -2, -3]&lt;/p&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>乘积最大子数组-LeetCode152</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-leetcode152/</link>
+      <pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E4%B9%98%E7%A7%AF%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84-leetcode152/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/maximum-product-subarray/&#34;&gt;https://leetcode-cn.com/problems/maximum-product-subarray/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;给你一个整数数组nums, 请你找出数组中成绩最大的非空连续子数组(该子数组中至少包含一个数字), 并返回该子数组所对应的乘积.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入: [2, 3, -2, 4]&lt;/p&gt;&#xA;&lt;p&gt;输出: 6&lt;/p&gt;&#xA;&lt;p&gt;子数组 [2, 3]得到最大乘积6&lt;/p&gt;&#xA;&lt;p&gt;输入 [-2, 0 -,1]&lt;/p&gt;&#xA;&lt;p&gt;输出: 0&lt;/p&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>最大子数组和-LeetCode53</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C-leetcode53/</link>
+      <pubDate>Thu, 14 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C-leetcode53/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/maximum-subarray/&#34;&gt;https://leetcode-cn.com/problems/maximum-subarray/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;给你一个整数数组nums, 请你找出一个具有最大和的连续子数组(子数组最少包含一个元素), 返回其最大和&lt;/p&gt;&#xA;&lt;p&gt;子数组是数组中的一个连续部分&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入: nums =[-2, 1, -3, 4, -1, 2, 1, -5, 4]&lt;/p&gt;&#xA;&lt;p&gt;输出: 6&lt;/p&gt;&#xA;&lt;p&gt;连续子数组 [4, -1, 2, 1]的和最大, 为6.&lt;/p&gt;&#xA;&lt;p&gt;示例2:&lt;/p&gt;&#xA;&lt;p&gt;输入: nums = [1]&lt;/p&gt;&#xA;&lt;p&gt;输出: 1&lt;/p&gt;&#xA;&lt;p&gt;示例3:&lt;/p&gt;&#xA;&lt;p&gt;输入: nums = [5, 4, -1, 7, 8]&lt;/p&gt;&#xA;&lt;p&gt;输出: 23&lt;/p&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>打家劫舍—LeetCode198</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D-leetcode198/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D-leetcode198/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/house-robber/&#34;&gt;https://leetcode-cn.com/problems/house-robber/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;你是一个专业的小偷, 计划偷窃沿街的房屋, 每间房内都藏有一定的现金, 影响你偷窃的唯一限制因素是相邻的房屋装有相互连通的防盗系统. 如果两间相邻的房屋在同一晚上被小偷闯入, 系统会自动报警.&lt;/p&gt;&#xA;&lt;p&gt;给定一个代表每个访问存放金额的非负整数数组, 计算你在不触发警报装置的情况下, 一夜之内能够偷窃到的最高金额.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入: [1, 2, 3, 1]&lt;/p&gt;&#xA;&lt;p&gt;输出: 4&lt;/p&gt;&#xA;&lt;p&gt;偷窃1号和3号. 得到1+3 = 4.&lt;/p&gt;&#xA;&lt;p&gt;示例2:&lt;/p&gt;&#xA;&lt;p&gt;输入: [2, 7, 9, 3, 1]&lt;/p&gt;&#xA;&lt;p&gt;输出: 12&lt;/p&gt;&#xA;&lt;p&gt;偷窃1号, 3号和5号. 得到2+9+1 = 12.&lt;/p&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>打家劫舍2-LeetCode213</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D2-leetcode213/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D2-leetcode213/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/house-robber-ii/&#34;&gt;https://leetcode-cn.com/problems/house-robber-ii/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;你是一个专业的小偷, 计划偷窃沿街的房屋, 每间房内都藏有一定的现金. 这个地方所有的房屋都 围成一圈, 这意味着第一个房屋和最后一个房屋是紧挨着的. 同时, 相邻的房屋装有相互连通的防盗系统, 如果两间相邻的房屋在同一晚上被小偷闯入, 系统会自动报警 .&lt;/p&gt;&#xA;&lt;p&gt;给定一个代表每个房屋存放金额的非负整数数组, 计算你在不触动警报装置的情况下,今晚能够偷窃到的最高金额.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入：nums = [2,3,2]&lt;/p&gt;&#xA;&lt;p&gt;输出：3&lt;/p&gt;&#xA;&lt;p&gt;你不能先偷窃 1 号房屋（金额 = 2），然后偷窃 3 号房屋（金额 = 2）, 因为他们是相邻的。&lt;/p&gt;&#xA;&lt;p&gt;示例2:&lt;/p&gt;&#xA;&lt;p&gt;输入：nums = [1,2,3,1]&lt;/p&gt;&#xA;&lt;p&gt;输出：4&lt;/p&gt;&#xA;&lt;p&gt;你可以先偷窃 1 号房屋（金额 = 1），然后偷窃 3 号房屋（金额 = 3）.    偷窃到的最高金额 = 1 + 3 = 4 .&lt;/p&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>删除并获取点数-LeetCode740</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E5%88%A0%E9%99%A4%E5%B9%B6%E8%8E%B7%E5%8F%96%E7%82%B9%E6%95%B0-leetcode740/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E5%88%A0%E9%99%A4%E5%B9%B6%E8%8E%B7%E5%8F%96%E7%82%B9%E6%95%B0-leetcode740/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/delete-and-earn/&#34;&gt;https://leetcode-cn.com/problems/delete-and-earn/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;给你一个整数数组nums, 可以对他进行一些操作. 每次操作中, 选择任意一个nums[i], 删除它然后获取nums[i]的点数. 同时还需要删除所有 等于nums[i]-1和nums[i]+1的元素. 例如删除3, 那么得到3个点数, 同时需要在数组中删除所有的2和4.&lt;/p&gt;&#xA;&lt;p&gt;开始时拥有0个点数, 求你能通过这些操作获取的最大点数.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入: nums = [3, 4, 2]&lt;/p&gt;&#xA;&lt;p&gt;输出: 6&lt;/p&gt;&#xA;&lt;p&gt;删除4和2.得到6点.&lt;/p&gt;&#xA;&lt;p&gt;删除4获取4个点数, 同时3也被删除.&lt;/p&gt;&#xA;&lt;p&gt;还剩下2, 然后删除2再得到2个点数.&lt;/p&gt;&#xA;&lt;p&gt;示例2:&lt;/p&gt;&#xA;&lt;p&gt;输入: nums = [2, 2, 3, 3, 3, 4]&lt;/p&gt;&#xA;&lt;p&gt;输出: 9&lt;/p&gt;&#xA;&lt;p&gt;删除3, 总共可以得到9个点数(3*3). 同时删除2和4.&lt;/p&gt;&#xA;&lt;p&gt;最终得到9个点数.&lt;/p&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>使用最小花费爬楼梯-LeetCode746</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E4%BD%BF%E7%94%A8%E6%9C%80%E5%B0%8F%E8%8A%B1%E8%B4%B9%E7%88%AC%E6%A5%BC%E6%A2%AF-leetcode746/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E4%BD%BF%E7%94%A8%E6%9C%80%E5%B0%8F%E8%8A%B1%E8%B4%B9%E7%88%AC%E6%A5%BC%E6%A2%AF-leetcode746/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/min-cost-climbing-stairs/&#34;&gt;https://leetcode-cn.com/problems/min-cost-climbing-stairs/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;给定一个整数数组cost, 其中&lt;code&gt;cost[i]&lt;/code&gt;表示从楼梯第i个台阶向上爬需要支付的费用. 每次只能向上爬一个或两个台阶.&lt;/p&gt;&#xA;&lt;p&gt;可以从下标0或下标1的台阶开始爬楼梯.&lt;/p&gt;&#xA;&lt;p&gt;求到达楼梯顶部的最低花费&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例1:&lt;/p&gt;&#xA;&lt;p&gt;输入 cost = [10, 15, 20]&lt;/p&gt;&#xA;&lt;p&gt;输出: 15&lt;/p&gt;&#xA;&lt;p&gt;从下标1开始爬, 向上2格. 到达楼梯顶部.&lt;/p&gt;&#xA;&lt;p&gt;示例2:&lt;/p&gt;&#xA;&lt;p&gt;输入：cost = [1,100,1,1,1,100,1,1,100,1]&#xA;输出：6&#xA;你将从下标为 0 的台阶开始。&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;支付 1 ，向上爬两个台阶，到达下标为 2 的台阶。&lt;/li&gt;&#xA;&lt;li&gt;支付 1 ，向上爬两个台阶，到达下标为 4 的台阶。&lt;/li&gt;&#xA;&lt;li&gt;支付 1 ，向上爬两个台阶，到达下标为 6 的台阶。&lt;/li&gt;&#xA;&lt;li&gt;支付 1 ，向上爬一个台阶，到达下标为 7 的台阶。&lt;/li&gt;&#xA;&lt;li&gt;支付 1 ，向上爬两个台阶，到达下标为 9 的台阶。&lt;/li&gt;&#xA;&lt;li&gt;支付 1 ，向上爬一个台阶，到达楼梯顶部。&#xA;总花费为 6&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>爬楼梯-LeetCode70</title>
+      <link>https://www.liunaijie.top/coding/algorithm/leetcode/%E7%88%AC%E6%A5%BC%E6%A2%AF-leetcode70/</link>
+      <pubDate>Sat, 16 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/algorithm/leetcode/%E7%88%AC%E6%A5%BC%E6%A2%AF-leetcode70/</guid>
+      <description>&lt;h1 id=&#34;题目描述&#34;&gt;题目描述&lt;/h1&gt;&#xA;&lt;p&gt;链接: &lt;a href=&#34;https://leetcode-cn.com/problems/climbing-stairs/&#34;&gt;https://leetcode-cn.com/problems/climbing-stairs/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;假设你正在爬楼梯。需要 n 阶你才能到达楼顶。&lt;/p&gt;&#xA;&lt;p&gt;每次你可以爬 1 或 2 个台阶。问你有多少种不同的方法可以爬到楼顶？&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;示例 1：&lt;/p&gt;&#xA;&lt;p&gt;输入： 2&#xA;输出： 2&#xA;有两种方法可以爬到楼顶。&lt;/p&gt;&#xA;&lt;p&gt;第一种: 1 阶 + 1 阶&lt;/p&gt;&#xA;&lt;p&gt;第二种: 2 阶&lt;/p&gt;&#xA;&lt;p&gt;示例 2：&lt;/p&gt;&#xA;&lt;p&gt;输入： 3&lt;/p&gt;&#xA;&lt;p&gt;输出： 3&lt;/p&gt;&#xA;&lt;p&gt;有三种方法可以爬到楼顶。&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;1 阶 + 1 阶 + 1 阶&lt;/li&gt;&#xA;&lt;li&gt;1 阶 + 2 阶&lt;/li&gt;&#xA;&lt;li&gt;2 阶 + 1 阶&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;/blockquote&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Airflow on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/airflow/</link>
+    <description>Recent content in Airflow on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 09 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/airflow/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Airflow调度系统</title>
+      <link>https://www.liunaijie.top/coding/big_data/airflow%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Sat, 09 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/big_data/airflow%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F/</guid>
+      <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;&#xA;&lt;p&gt;我们组内使用Airflow来做日常的任务调度也有一年多的时间了, 今天写这篇文章来对Airflow进行一下记录.&lt;/p&gt;&#xA;&lt;h1 id=&#34;组件&#34;&gt;组件&lt;/h1&gt;&#xA;&lt;p&gt;Airflow需要的几个基础组件为:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;airflow-scheduler&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;airflow-webserver&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;airflow-worker&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;airflow-flower&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;mysql(也可以使用其他数据库)&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;redis(也可以使用其他消息队列)&lt;/p&gt;&#xA;&lt;p&gt;前缀为airflow的是airflow的内部组件, 除此之外还需要数据库和一个消息队列&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

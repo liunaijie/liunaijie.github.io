@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>微信小程序 on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/</link>
+    <description>Recent content in 微信小程序 on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 15 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>微信小程序支付</title>
+      <link>https://www.liunaijie.top/coding/project_notes/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E4%BB%98/</link>
+      <pubDate>Fri, 15 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/project_notes/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E4%BB%98/</guid>
+      <description>&lt;p&gt;微信小程序支付流程：&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://pay.weixin.qq.com/wiki/doc/api/img/wxa-7-2.jpg&#34; alt=&#34;wxa-7-2&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;根据流程图，我们支付的流程应该是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;用户在微信小程序点击下单，小程序请求我们自己的后台程序&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;后台在接收到下单请求后，先进行自己的业务逻辑，生成预订单，然后请求微信的下单接口。微信接口对我们请求进行校验，通过后返回 prepay_id(预付款 id)。&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;在这里要获取小程序用户的 openid。一般在下单前就获取到了，或者在这里再进行访问微信接口进行获取&lt;/li&gt;&#xA;&lt;li&gt;发送请求时需要经过签名等操作&lt;/li&gt;&#xA;&lt;li&gt;在向微信请求时，参数中有一个通知地址，支付成功后微信会向这个地址发送通知。&lt;/li&gt;&#xA;&lt;li&gt;拿到 prepay_id 后，需要再次签名。然后将数据返回给小程序&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;微信小程序获取到请求响应，响应数据里面有预付款 id，然后通过微信提供的支付方法进行付款。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;付款成功后，微信会向下单时提供的通知地址发送通知。通知数据里面有实际付款金额等信息。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+    </item>
+  </channel>
+</rss>

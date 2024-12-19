@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kylin on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/kylin/</link>
+    <description>Recent content in Kylin on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 19 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/kylin/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>大数据分析工具之-kylin</title>
+      <link>https://www.liunaijie.top/coding/big_data/kylin/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E4%B9%8B-kylin/</link>
+      <pubDate>Sun, 19 Jul 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/big_data/kylin/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E4%B9%8B-kylin/</guid>
+      <description>&lt;h1 id=&#34;kylin是什么&#34;&gt;kylin是什么&lt;/h1&gt;&#xA;&lt;p&gt;在进行数据分析时，随着数据量的提升，处理时间基本也是线性增长。kylin是一个预处理框架，它将一些预先定义的复杂分析预先完成并进行存储，预处理完成后，再次进行请求时，kylin可以进行亚秒级别的响应。&lt;/p&gt;&#xA;&lt;p&gt;它是一个分析型数据仓库（也是OLAP引擎），为Hadoop提供标准SQL支持大部分查询功能&lt;/p&gt;&#xA;&lt;p&gt;可以接入kafka等实时流处理数据，从而可以在妙极延迟下进行实时数据等多维分析。&lt;/p&gt;&#xA;&lt;p&gt;处理引擎可以选用MapReduce和Spark。&lt;/p&gt;&#xA;&lt;p&gt;于BI工具无缝整合，可以接入Tableau，PowerBI/Excel，SuperSet等可视化分析工具。&lt;/p&gt;&#xA;&lt;p&gt;我总结出来的观点呢就是：当我们的数据量非常大之后，每次查询都需要花费很多时间，这时我们将查询结果缓存起来，后面查询从这个缓存里面查询速度就会非常快。在kylin中，将结果缓存到hbase表中。&lt;/p&gt;&#xA;&lt;p&gt;这里需要预先设置一些维度和度量，所以说适合一些固定报表等一些维度固定的场景，如果说维度的组合太多或者变化很频繁，可能不是很适用。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

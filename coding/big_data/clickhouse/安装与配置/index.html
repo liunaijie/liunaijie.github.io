@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/clickhouse/%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="ClickHouse安装与配置">
+  <meta property="og:description" content="安装 1 2 3 4 5 docker run -d --name clickhouse-server \\ -p 8123:8123 -p 9000:9000 \\ -v &lt;CONFIG_PATH&gt;:/etc/clickhouse-server/ \\ -v &lt;DATA_PATH&gt;:/var/lib/clickhouse/ yandex/clickhouse-server 拉取并将Clickhouse的8123端口, 9000端口映射到本机.
+Clickhouse的默认配置文件路径为/etc/clickhouse-server/ , 默认文件存储位置为/var/lib/clickhouse/
+MySQL连接Clickhouse Clickhouse默认开放了9004端口, mysql client可以通过这个端口查询Clickhouse的数据.
+开启Tabix 在配置文件中, 将Tabix的注释打开.
+1 2 &lt;!-- 这里默认被注释掉, 打开后即可使用Tabix来进行查询 --&gt; &lt;http_server_default_response&gt;&lt;![CDATA[&lt;html ng-app=&#34;SMI2&#34;&gt;&lt;head&gt;&lt;base href=&#34;&lt;http://ui.tabix.io/&gt;&#34;&gt;&lt;/head&gt;&lt;body&gt;&lt;div ui-view=&#34;&#34; class=&#34;content-ui&#34;&gt;&lt;/div&gt;&lt;script src=&#34;&lt;http://loader.tabix.io/master.js&gt;&#34;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;]]&gt;&lt;/http_server_default_response&gt; 设置分布式表 由于Clickhouse的分布式表依赖zookeeper, 所以需要先配置zookeeper.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 &lt;zookeeper-servers&gt; &lt;node index=&#34;1&#34;&gt; &lt;host&gt;10.0.55.17&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;2&#34;&gt; &lt;host&gt;10.0.10.23&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;3&#34;&gt; &lt;host&gt;10.0.55.16&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;/zookeeper-servers&gt; 集群配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 &lt;remote_servers&gt; &lt;clusterA&gt; &lt;shard&gt; &lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip001&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;replica&gt; &lt;host&gt;ip002&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;2&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip003&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;replica&gt; &lt;host&gt;ip004&lt;/host&gt; &lt;port&gt;9440&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;/clusterA&gt; &lt;clusterB&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip001&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip002&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip003&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip004&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt;	&lt;/clusterB&gt; &lt;/remote_servers&gt; 配置的意思:">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
+    <meta property="article:tag" content="ClickHouse">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ClickHouse安装与配置">
+  <meta name="twitter:description" content="安装 1 2 3 4 5 docker run -d --name clickhouse-server \\ -p 8123:8123 -p 9000:9000 \\ -v &lt;CONFIG_PATH&gt;:/etc/clickhouse-server/ \\ -v &lt;DATA_PATH&gt;:/var/lib/clickhouse/ yandex/clickhouse-server 拉取并将Clickhouse的8123端口, 9000端口映射到本机.
+Clickhouse的默认配置文件路径为/etc/clickhouse-server/ , 默认文件存储位置为/var/lib/clickhouse/
+MySQL连接Clickhouse Clickhouse默认开放了9004端口, mysql client可以通过这个端口查询Clickhouse的数据.
+开启Tabix 在配置文件中, 将Tabix的注释打开.
+1 2 &lt;!-- 这里默认被注释掉, 打开后即可使用Tabix来进行查询 --&gt; &lt;http_server_default_response&gt;&lt;![CDATA[&lt;html ng-app=&#34;SMI2&#34;&gt;&lt;head&gt;&lt;base href=&#34;&lt;http://ui.tabix.io/&gt;&#34;&gt;&lt;/head&gt;&lt;body&gt;&lt;div ui-view=&#34;&#34; class=&#34;content-ui&#34;&gt;&lt;/div&gt;&lt;script src=&#34;&lt;http://loader.tabix.io/master.js&gt;&#34;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;]]&gt;&lt;/http_server_default_response&gt; 设置分布式表 由于Clickhouse的分布式表依赖zookeeper, 所以需要先配置zookeeper.
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 &lt;zookeeper-servers&gt; &lt;node index=&#34;1&#34;&gt; &lt;host&gt;10.0.55.17&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;2&#34;&gt; &lt;host&gt;10.0.10.23&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;node index=&#34;3&#34;&gt; &lt;host&gt;10.0.55.16&lt;/host&gt; &lt;port&gt;2181&lt;/port&gt; &lt;/node&gt; &lt;/zookeeper-servers&gt; 集群配置 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 &lt;remote_servers&gt; &lt;clusterA&gt; &lt;shard&gt; &lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip001&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;replica&gt; &lt;host&gt;ip002&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;2&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip003&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;replica&gt; &lt;host&gt;ip004&lt;/host&gt; &lt;port&gt;9440&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;/clusterA&gt; &lt;clusterB&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip001&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip002&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip003&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt; &lt;shard&gt; &lt;weight&gt;1&lt;/weight&gt; &lt;internal_replication&gt;false&lt;/internal_replication&gt; &lt;replica&gt; &lt;host&gt;ip004&lt;/host&gt; &lt;port&gt;9000&lt;/port&gt; &lt;/replica&gt; &lt;/shard&gt;	&lt;/clusterB&gt; &lt;/remote_servers&gt; 配置的意思:">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - ClickHouse安装与配置
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">ClickHouse安装与配置</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2022 年 10 月 09 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/ClickHouse">#ClickHouse</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="安装">安装</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run -d --name clickhouse-server <span class="se">\\</span>
+</span></span><span class="line"><span class="cl"> -p 8123:8123 -p 9000:9000 <span class="se">\\</span>
+</span></span><span class="line"><span class="cl"> -v &lt;CONFIG_PATH&gt;:/etc/clickhouse-server/ <span class="se">\\</span>
+</span></span><span class="line"><span class="cl"> -v &lt;DATA_PATH&gt;:/var/lib/clickhouse/ 
+</span></span><span class="line"><span class="cl">yandex/clickhouse-server
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>拉取并将Clickhouse的8123端口, 9000端口映射到本机.</p>
+<p>Clickhouse的默认配置文件路径为<code>/etc/clickhouse-server/</code> , 默认文件存储位置为<code>/var/lib/clickhouse/</code></p>
+<h1 id="mysql连接clickhouse">MySQL连接Clickhouse</h1>
+<p>Clickhouse默认开放了9004端口, mysql client可以通过这个端口查询Clickhouse的数据.</p>
+<h1 id="开启tabix">开启Tabix</h1>
+<p>在配置文件中, 将Tabix的注释打开.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!-- 这里默认被注释掉, 打开后即可使用Tabix来进行查询 --&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;http_server_default_response&gt;</span><span class="cp">&lt;![CDATA[&lt;html ng-app=&#34;SMI2&#34;&gt;&lt;head&gt;&lt;base href=&#34;&lt;http://ui.tabix.io/&gt;&#34;&gt;&lt;/head&gt;&lt;body&gt;&lt;div ui-view=&#34;&#34; class=&#34;content-ui&#34;&gt;&lt;/div&gt;&lt;script src=&#34;&lt;http://loader.tabix.io/master.js&gt;&#34;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;]]&gt;</span><span class="nt">&lt;/http_server_default_response&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="设置分布式表">设置分布式表</h1>
+<p>由于Clickhouse的分布式表依赖zookeeper, 所以需要先配置zookeeper.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;zookeeper-servers&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;1&#34;</span><span class="nt">&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;host&gt;</span>10.0.55.17<span class="nt">&lt;/host&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;/node&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;2&#34;</span><span class="nt">&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;host&gt;</span>10.0.10.23<span class="nt">&lt;/host&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;/node&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;node</span> <span class="na">index=</span><span class="s">&#34;3&#34;</span><span class="nt">&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;host&gt;</span>10.0.55.16<span class="nt">&lt;/host&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;port&gt;</span>2181<span class="nt">&lt;/port&gt;</span>  
+</span></span><span class="line"><span class="cl">	 <span class="nt">&lt;/node&gt;</span>   
+</span></span><span class="line"><span class="cl"> <span class="nt">&lt;/zookeeper-servers&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="集群配置">集群配置</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;remote_servers&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;clusterA&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;shard&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="c">&lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="c">&lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;internal_replication&gt;</span>false<span class="nt">&lt;/internal_replication&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip001<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip002<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/shard&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;shard&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;weight&gt;</span>2<span class="nt">&lt;/weight&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;internal_replication&gt;</span>false<span class="nt">&lt;/internal_replication&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip003<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip004<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9440<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/shard&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/clusterA&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;clusterB&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;shard&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;internal_replication&gt;</span>false<span class="nt">&lt;/internal_replication&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip001<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/shard&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;shard&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;internal_replication&gt;</span>false<span class="nt">&lt;/internal_replication&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip002<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/shard&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;shard&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;internal_replication&gt;</span>false<span class="nt">&lt;/internal_replication&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip003<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/shard&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;shard&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;internal_replication&gt;</span>false<span class="nt">&lt;/internal_replication&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;replica&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;host&gt;</span>ip004<span class="nt">&lt;/host&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&lt;port&gt;</span>9000<span class="nt">&lt;/port&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;/replica&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/shard&gt;</span>		
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;/clusterB&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/remote_servers&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置的意思:</p>
+<p>创建一个名称为<code>clusterA</code>和<code>clusterB</code> 两个集群, 公用ip001, ip002, ip003, ip004这4台机器.</p>
+<p>在<code>clusterA</code>中, 有2个分片, 每个分片都有一个备份.</p>
+<ul>
+<li>分片1: 权重为1, 总权重为3 (1+2), 也就是每3条记录会有1条写入这个分片. 这个分片下有机器ip001, ip002.</li>
+<li>分片2: 权重为2, 每3条记录会有2条记录写入这个分片. 这个分片下有机器ip003, ip004.</li>
+</ul>
+<p>在clusterB中, 有4个分片, 每个分片没有备份.</p>
+<ul>
+<li>分片1: 权重为1, 机器为ip001</li>
+<li>分片2: 权重为1, 机器为ip002</li>
+<li>分片3: 权重为1, 机器为ip003</li>
+<li>分片4: 权重为1, 机器为ip004</li>
+</ul>
+<p>从这个配置中我们可以看出, 我们可以在相同的机器上配置多个集群</p>
+<p>这个配置我们也可以从主配置文件中抽离, 放到单独的配置文件中.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!-- config.xml 里 --&gt;</span>
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;remote_servers</span> <span class="na">incl=</span><span class="s">&#34;clickhouse_remote_servers&#34;</span> <span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这句的意思是去读取<code>clickhouse_remote_servers</code>这个节点下的信息, 所以新的集群配置必须在这个节点下. 新建的集群配置文件:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;yandex&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;clickhouse_remote_servers&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;clusterA&gt;</span>
+</span></span><span class="line"><span class="cl">					...
+</span></span><span class="line"><span class="cl">				<span class="nt">&lt;/clusterA&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="nt">&lt;clusterB&gt;</span>
+</span></span><span class="line"><span class="cl">					...
+</span></span><span class="line"><span class="cl">				<span class="nt">&lt;/clusterB&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/clickhouse_remote_servers&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/yandex&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>分布式表的创建语句为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">db</span><span class="p">.]</span><span class="k">table_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CLUSTER</span><span class="w"> </span><span class="n">clusterName</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name1</span><span class="w"> </span><span class="p">[</span><span class="n">type1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">DEFAULT</span><span class="o">|</span><span class="n">MATERIALIZED</span><span class="o">|</span><span class="k">ALIAS</span><span class="w"> </span><span class="n">expr1</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name2</span><span class="w"> </span><span class="p">[</span><span class="n">type2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">DEFAULT</span><span class="o">|</span><span class="n">MATERIALIZED</span><span class="o">|</span><span class="k">ALIAS</span><span class="w"> </span><span class="n">expr2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Distributed</span><span class="p">(</span><span class="n">clusterName</span><span class="p">,</span><span class="w"> </span><span class="k">database</span><span class="p">,</span><span class="w"> </span><span class="k">table</span><span class="p">,</span><span class="w"> </span><span class="n">sharding_key</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">[</span><span class="n">SETTINGS</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个语句将在集群<code>clusterName</code>上创建一个表, 并根据<code>sharding_key</code>做数据分片</p>
+<h1 id="其他配置">其他配置</h1>
+<p>主配置文件为: <code>/etc/clickhouse-server/config.xml</code></p>
+<ul>
+<li>数据存放
+<ul>
+<li>path — 文件存放位置</li>
+<li>tmp_path — 查询临时结果存放位置. 默认为/var/lib/clickhouse/tmp/</li>
+</ul>
+</li>
+<li>端口
+<ul>
+<li>http_port</li>
+<li>tcp_port</li>
+<li>mysql_port — mysql协议的端口</li>
+<li>interserver_http_port — 内部数据交互端口, 副本之间通过这个端口进行通信和数据交换</li>
+</ul>
+</li>
+<li>连接
+<ul>
+<li>max_connections</li>
+<li>max_concurrent_queries — MergeTree引擎同时处理的请求最大数量</li>
+</ul>
+</li>
+<li>用户与权限
+<ul>
+<li>user_directories/users_xml — Clickhouse默认的用户配置在users.xml中, 可以直接在这个配置文件上进行改动, 或者在users.d文件夹下创建其他用户专属的xml配置文件, 具体设置项很多, 具体可以查看 <a href="https://clickhouse.com/docs/en/operations/access-rights/"></a><a href="https://clickhouse.com/docs/en/operations/access-rights/">https://clickhouse.com/docs/en/operations/access-rights/</a></li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

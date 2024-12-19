@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MySQL on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/mysql/</link>
+    <description>Recent content in MySQL on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 30 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于Docker的MySQL主从复制环境搭建</title>
+      <link>https://www.liunaijie.top/coding/database/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+      <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/database/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+      <description>&lt;h1 id=&#34;1-前言&#34;&gt;1. 前言&lt;/h1&gt;&#xA;&lt;p&gt;之前的程序架构可能是这样的一种形式：&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20200130131404.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;当程序体量扩大后，我们进行扩展，可能会扩展多个后台服务实例，但数据库还是只有一个，所以系统的瓶颈还是在数据库上面，所以这次的主要任务就是对数据库进行扩展，主要形式为：扩展多台数据库实例，实现读写分离，对于一些写的任务分配到主数据库，对于读的任务使用子数据库进行读取。从而提高系统性能。&lt;/p&gt;&#xA;&lt;p&gt;修改后的架构如下所示：&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/%E6%88%AA%E5%B1%8F2020-01-3017.03.05.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>MySQL知识整理</title>
+      <link>https://www.liunaijie.top/coding/database/mysql%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 19 Sep 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/database/mysql%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/</guid>
+      <description>&lt;p&gt;推荐看一下极客时间上面的一篇教程，《&lt;a href=&#34;https://time.geekbang.org/column/intro/100020801&#34;&gt;MySQL实战 45 讲&lt;/a&gt;》。&lt;/p&gt;&#xA;&lt;h1 id=&#34;基本架构&#34;&gt;基本架构&lt;/h1&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/liunaijie/images/master/20191110151145.png&#34; alt=&#34;MySQL基本架构&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;引擎层采用插件式。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mysql的ibtmp1文件过大</title>
+      <link>https://www.liunaijie.top/coding/database/mysql%E7%9A%84ibtmp1%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/coding/database/mysql%E7%9A%84ibtmp1%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7/</guid>
+      <description>&lt;p&gt;今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。&lt;/p&gt;&#xA;&lt;h1 id=&#34;查看磁盘占用&#34;&gt;查看磁盘占用&lt;/h1&gt;&#xA;&lt;p&gt;使用命令&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;du -h --max-depth&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;p&gt;查看磁盘占用情况，我是在根目录下执行的命令，后面的&lt;code&gt;max-depth=1&lt;/code&gt;指定深入目录的层数，为1就指定1层。然后经过排查后发现了这个文件是&lt;code&gt;Mysql&lt;/code&gt;的&lt;code&gt;ibtmp1&lt;/code&gt;文件。&lt;/p&gt;&#xA;&lt;h1 id=&#34;ibtmp1是什么&#34;&gt;ibtmp1是什么&lt;/h1&gt;&#xA;&lt;p&gt;我们使用的&lt;code&gt;Mysql&lt;/code&gt;版本是5.7.24。&lt;code&gt;ibtmp1&lt;/code&gt;文件是 MySQL5.7的新特性,MySQL5.7使用了独立的临时表空间来存储临时表数据，但不能是压缩表。临时表空间在实例启动的时候进行创建，shutdown的时候进行删除。即为所有非压缩的innodb临时表提供一个独立的表空间，默认的临时表空间文件为ibtmp1。&lt;/p&gt;&#xA;&lt;h1 id=&#34;解决&#34;&gt;解决&lt;/h1&gt;&#xA;&lt;p&gt;&lt;code&gt;Mysql&lt;/code&gt;创建的这个文件肯定不能在&lt;code&gt;Mysql&lt;/code&gt;还运行时就直接删了，否则可能会出问题。重启&lt;code&gt;Mysql&lt;/code&gt;会重置这个文件，但是后面如果不加以限制肯定还会让磁盘爆满。所以说要找一个能彻底解决的办法。&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;修改&lt;code&gt;my.cnf&lt;/code&gt;配置文件&lt;/p&gt;&#xA;&lt;p&gt;这个文件我是在&lt;code&gt;/etc/my.cnf&lt;/code&gt;下，有的可能在&lt;code&gt;/etc/mysql/my.cnf&lt;/code&gt;下，先找到这个文件然后在后面添加&lt;code&gt;innodb_temp_data_file_path = ibtmp1:12M:autoextend:max:5G&lt;/code&gt;这句&lt;/p&gt;&#xA;&lt;p&gt;限制这个文件最大增加到5G。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;设置&lt;code&gt;innodb_fast_shutdown&lt;/code&gt;参数&lt;/p&gt;&#xA;&lt;p&gt;进入&lt;code&gt;mysql&lt;/code&gt;命令行，执行&lt;code&gt;SET GLOBAL innodb_fast_shutdown = 0;&lt;/code&gt;命令&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;然后重启&lt;code&gt;Mysql&lt;/code&gt;即可。&lt;/p&gt;&#xA;&lt;h1 id=&#34;原因&#34;&gt;原因&lt;/h1&gt;&#xA;&lt;p&gt;刚才说的了这个文件是临时表空间。那肯定是使用了临时表。那么什么情况下会使用临时表呢。&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;GROUP BY 无索引字段或GROUP  BY+ ORDER  BY 的子句字段不一样时&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;order by  与distinct 共用，其中distinct与order by里的字段不一致（主键字段除外）&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;UNION查询（MySQL5.7后union all已不使用临时表）&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;insert into select &amp;hellip;from &amp;hellip;&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;所以在平常写sql时还是要多注意一下。&lt;/p&gt;&#xA;&lt;h1 id=&#34;参考文章&#34;&gt;参考文章&lt;/h1&gt;&#xA;&lt;p&gt;&lt;a href=&#34;http://mysql.taobao.org/monthly/2019/04/01/&#34;&gt;http://mysql.taobao.org/monthly/2019/04/01/&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://cloud.tencent.com/developer/article/1491411&#34;&gt;https://cloud.tencent.com/developer/article/1491411&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/66847189&#34;&gt;https://zhuanlan.zhihu.com/p/66847189&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

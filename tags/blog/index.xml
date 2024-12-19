@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Jarvis`s library</title>
+    <link>https://www.liunaijie.top/tags/blog/</link>
+    <description>Recent content in Blog on Jarvis`s library</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 19 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.liunaijie.top/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>博客自动部署方案</title>
+      <link>https://www.liunaijie.top/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Thu, 19 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/</guid>
+      <description>&lt;p&gt;趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.&lt;/p&gt;&#xA;&lt;p&gt;之前是使用&lt;code&gt;Hexo&lt;/code&gt;来作为博客的生成框架, 现在迁移到了&lt;code&gt;Hugo&lt;/code&gt;, 迁移的一个原因是&lt;code&gt;Hexo&lt;/code&gt;中无法过滤掉没有&lt;code&gt;Title&lt;/code&gt;的文件, 导致生产了很多空白页面, 而&lt;code&gt;Hugo&lt;/code&gt;则可以过滤掉没有&lt;code&gt;Title&lt;/code&gt;的文件, 从而避免了这个问题.&lt;br&gt;&#xA;另外的一个原因是&lt;code&gt;Hugo&lt;/code&gt;的性能比&lt;code&gt;Hexo&lt;/code&gt;要高, 在生成静态页面时, &lt;code&gt;Hugo&lt;/code&gt;的速度更快. &lt;br&gt;&#xA;现在博客的主题也只想要一个简洁的样式, 所以就选择了&lt;code&gt;Hugo&lt;/code&gt;的&lt;code&gt;Minima&lt;/code&gt;主题, 简单修改了一下, 就完成了迁移.&lt;/p&gt;&#xA;&lt;h1 id=&#34;写作记录方面&#34;&gt;写作记录方面&lt;/h1&gt;&#xA;&lt;p&gt;我最开始是使用&lt;code&gt;Typora&lt;/code&gt;来写作, 及时渲染, 但是&lt;code&gt;Typora&lt;/code&gt;后来开始收费, 又尝试了&lt;code&gt;Notion&lt;/code&gt;, 但是&lt;code&gt;Notion&lt;/code&gt;的速度太慢, 慢慢就换到了现在使用的&lt;code&gt;Obsidian&lt;/code&gt;.&lt;br&gt;&#xA;这个目前来说绝对是写作神器, 配合各种插件, 可以方便的写作, 任务安排/查看, 画流程图等等. &lt;br&gt;&#xA;再配合&lt;code&gt;Remote Sync&lt;/code&gt;插件, 可以非常方便的进行多端同步.&lt;/p&gt;&#xA;&lt;p&gt;以下是其中一些步骤的记录:&lt;/p&gt;&#xA;&lt;h1 id=&#34;obsidian同步&#34;&gt;Obsidian同步&lt;/h1&gt;&#xA;&lt;p&gt;使用&lt;code&gt;Obsidian&lt;/code&gt;也有官方同步方案, 但是需要收费, 作为一名白嫖党, 肯定是不愿意花这个钱的, 所以就使用&lt;code&gt;Remote-Sync&lt;/code&gt;来进行数据同步, 按照文档配置一下即可完成, 非常简单.&#xA;&lt;code&gt;Remote-Sync&lt;/code&gt;的同步方案有多种, 我最后选择了&lt;code&gt;One Drive&lt;/code&gt;的同步方案, 原因有以下几点:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;这个国内也可以正常访问, 速度也很快&lt;/li&gt;&#xA;&lt;li&gt;注册账号就有一些免费空间, 而同步的数据仅仅是一些文字, 图片. 总的体积也不会很大, 免费空间也足够使用了&lt;/li&gt;&#xA;&lt;li&gt;在手机端也可以使用(这个就过滤掉了Git的同步方案, 因为手机端无法使用Git, 所以就只能使用&lt;code&gt;OneDrive&lt;/code&gt;的同步方案了)&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;同时我有一台&lt;code&gt;NAS&lt;/code&gt;, 在&lt;code&gt;NAS&lt;/code&gt;上也会通过&lt;code&gt;Cloud-Sync&lt;/code&gt;将数据从&lt;code&gt;OneDrive&lt;/code&gt;云盘下载, 来进行数据备份, 再配合定时任务来监测是否有文件变动, 有变动则进行&lt;code&gt;Git&lt;/code&gt;的提交.&#xA;&lt;code&gt;Git&lt;/code&gt;提交后则会触发&lt;code&gt;Github Action&lt;/code&gt;来进行博客的构建和发布流程.&lt;/p&gt;&#xA;&lt;h1 id=&#34;nas同步&#34;&gt;NAS同步&lt;/h1&gt;&#xA;&lt;p&gt;使用&lt;code&gt;Obsidian&lt;/code&gt;写作时, 我博客的内容仅仅是一个同步内容的子文件夹, 使用&lt;code&gt;Cloud-Sync&lt;/code&gt;可以指定要同步哪个文件夹到&lt;code&gt;NAS&lt;/code&gt;的哪个目录上.&#xA;同时我博客的其他代码, 配置等, 我是没有放到&lt;code&gt;Obsidian&lt;/code&gt;中的, 所以会有两个文件夹, 一个存放&lt;code&gt;Obsidian&lt;/code&gt;中的文章内容, 一个存放博客的源文件.&#xA;然后通过软链将文件关联到源文件下.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

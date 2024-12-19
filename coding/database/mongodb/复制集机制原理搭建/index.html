@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/database/mongodb/%E5%A4%8D%E5%88%B6%E9%9B%86%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86%E6%90%AD%E5%BB%BA/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="mongo-复制集机制">
+  <meta property="og:description" content="原理 MongoDB复制集的主要意义在于实现服务高可用 它的现实依赖于两个方面的功能：
+数据写入时将数据迅速的复制到另一个独立节点上 在接受写入的节点发生故障时自动选举出一个新的替代节点 在实现高可用的同时，复制集实现了其他几个附加功能：
+数据分发：将数据从一个区域复制到另一个区域，减少另一个区域的读延迟 读写分离：不同类型的压力分别在不同的节点上执行 异地容灾：在数据中心故障时快速切换到异地 典型的复制集结构： 一个典型的复制集由3个以上具有投票权的节点组成，包括：
+一个主节点（PRIMARY） 接受写入操作和选举时投票
+两个（或多个）从节点（SECONDARY） 复制主节点上的新数据和选举时投票 大部分分布式都需要奇数节点，因为投票时可以避免相同票数的情况
+数据如何复制的 当一个修改操作，无论是插入，更新或删除，到达主节点时，它对数据的操作将被记录下来（经过一些必要的转换），这些记录称为oplog。 当接到通过主节点上打开tailable游标不断获取新进入主节点的oplog，并在自己的数据上回放，依次保存跟主节点上的数据一致。
+通过选举完成故障恢复 具有投票权的节点之间两两互相发送心跳 当5次心跳未收到时判断为节点失联 如果失联的是主节点，从节点会发起选举，选出新的主节点 如果失联的是从节点则不会产生新的选举 选举基于 RAST一致性算法 实现，选举成功的必要条件是大多数投票节点存活 复制集中最多可以有50个节点，但具有投票权的节点最多7个 影响选举的因素 整个集群必须有大多数节点存活 被选举为主节点的节点必须： 能够与多数节点建立连接 具有较新的oplog 具有较高的优先级（优先级可以配置） 复制集节点有以下常见的选配项： 是否具有投票权（v参数） 有则参与投票 优先级（priority参数） 优先级越高的节点的节点越优先成为主节点。优先级为0的节点无法成为主节点 隐藏(hidden参数) 复制数据，但对应用不可见。隐藏节点可以拥有投票权，但优先级必须为0，即不能成为主节点。备份 延迟（slaveDelay参数） 复制n秒之前的数据，保存与主节点的时间差。容错 注意事项 增加节点不会增加系统写性能！ 因为写的操作都是在主节点完成，增加节点并不能改变主节点的性能，所以不会增加系统的写性能。甚至会降低性能，因为当写请求发送到从节点，从节点需要将请求发送给主节点来完成，完成后再通过oplog发送给所有从节点。 但增加节点可以增加系统读性能 搭建 准备配置文件 systemLog: destination: file path: /data/db1/mongod.log #日志存放位置 logAppend: true storage: db: /data/db1 #数据存储位置 net: bindIp: 0.0.0.0 #开启其他机器访问 port: 28017 #端口 relication: replSetName: rs0 #集群名称 processManagement: fork: true #将进程作为后台进程 启动 指定配置文件启动：mongod -f /data/db1/mongod.conf">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2020-04-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-04-14T00:00:00+00:00">
+    <meta property="article:tag" content="Mongo">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="mongo-复制集机制">
+  <meta name="twitter:description" content="原理 MongoDB复制集的主要意义在于实现服务高可用 它的现实依赖于两个方面的功能：
+数据写入时将数据迅速的复制到另一个独立节点上 在接受写入的节点发生故障时自动选举出一个新的替代节点 在实现高可用的同时，复制集实现了其他几个附加功能：
+数据分发：将数据从一个区域复制到另一个区域，减少另一个区域的读延迟 读写分离：不同类型的压力分别在不同的节点上执行 异地容灾：在数据中心故障时快速切换到异地 典型的复制集结构： 一个典型的复制集由3个以上具有投票权的节点组成，包括：
+一个主节点（PRIMARY） 接受写入操作和选举时投票
+两个（或多个）从节点（SECONDARY） 复制主节点上的新数据和选举时投票 大部分分布式都需要奇数节点，因为投票时可以避免相同票数的情况
+数据如何复制的 当一个修改操作，无论是插入，更新或删除，到达主节点时，它对数据的操作将被记录下来（经过一些必要的转换），这些记录称为oplog。 当接到通过主节点上打开tailable游标不断获取新进入主节点的oplog，并在自己的数据上回放，依次保存跟主节点上的数据一致。
+通过选举完成故障恢复 具有投票权的节点之间两两互相发送心跳 当5次心跳未收到时判断为节点失联 如果失联的是主节点，从节点会发起选举，选出新的主节点 如果失联的是从节点则不会产生新的选举 选举基于 RAST一致性算法 实现，选举成功的必要条件是大多数投票节点存活 复制集中最多可以有50个节点，但具有投票权的节点最多7个 影响选举的因素 整个集群必须有大多数节点存活 被选举为主节点的节点必须： 能够与多数节点建立连接 具有较新的oplog 具有较高的优先级（优先级可以配置） 复制集节点有以下常见的选配项： 是否具有投票权（v参数） 有则参与投票 优先级（priority参数） 优先级越高的节点的节点越优先成为主节点。优先级为0的节点无法成为主节点 隐藏(hidden参数) 复制数据，但对应用不可见。隐藏节点可以拥有投票权，但优先级必须为0，即不能成为主节点。备份 延迟（slaveDelay参数） 复制n秒之前的数据，保存与主节点的时间差。容错 注意事项 增加节点不会增加系统写性能！ 因为写的操作都是在主节点完成，增加节点并不能改变主节点的性能，所以不会增加系统的写性能。甚至会降低性能，因为当写请求发送到从节点，从节点需要将请求发送给主节点来完成，完成后再通过oplog发送给所有从节点。 但增加节点可以增加系统读性能 搭建 准备配置文件 systemLog: destination: file path: /data/db1/mongod.log #日志存放位置 logAppend: true storage: db: /data/db1 #数据存储位置 net: bindIp: 0.0.0.0 #开启其他机器访问 port: 28017 #端口 relication: replSetName: rs0 #集群名称 processManagement: fork: true #将进程作为后台进程 启动 指定配置文件启动：mongod -f /data/db1/mongod.conf">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - mongo-复制集机制
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">mongo-复制集机制</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2020 年 04 月 14 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Mongo">#Mongo</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="原理">原理</h1>
+<p>MongoDB复制集的主要意义在于实现服务高可用 它的现实依赖于两个方面的功能：</p>
+<ul>
+<li>数据写入时将数据迅速的复制到另一个独立节点上</li>
+<li>在接受写入的节点发生故障时自动选举出一个新的替代节点</li>
+</ul>
+<p>在实现高可用的同时，复制集实现了其他几个附加功能：</p>
+<ul>
+<li>数据分发：将数据从一个区域复制到另一个区域，减少另一个区域的读延迟</li>
+<li>读写分离：不同类型的压力分别在不同的节点上执行</li>
+<li>异地容灾：在数据中心故障时快速切换到异地</li>
+</ul>
+<h2 id="典型的复制集结构">典型的复制集结构：</h2>
+<p>一个典型的复制集由3个以上具有投票权的节点组成，包括：</p>
+<ul>
+<li>
+<p>一个主节点（PRIMARY） 接受写入操作和选举时投票</p>
+</li>
+<li>
+<p>两个（或多个）从节点（SECONDARY） 复制主节点上的新数据和选举时投票 大部分分布式都需要奇数节点，因为投票时可以避免相同票数的情况</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200327175458.png" alt="https://raw.githubusercontent.com/liunaijie/images/master/20200327175458.png"></p>
+</li>
+</ul>
+<h3 id="数据如何复制的">数据如何复制的</h3>
+<p>当一个修改操作，无论是插入，更新或删除，到达主节点时，它对数据的操作将被记录下来（经过一些必要的转换），这些记录称为oplog。 当接到通过主节点上打开tailable游标不断获取新进入主节点的oplog，并在自己的数据上回放，依次保存跟主节点上的数据一致。</p>
+<h3 id="通过选举完成故障恢复">通过选举完成故障恢复</h3>
+<ul>
+<li>具有投票权的节点之间两两互相发送心跳</li>
+<li>当5次心跳未收到时判断为节点失联</li>
+<li>如果失联的是主节点，从节点会发起选举，选出新的主节点</li>
+<li>如果失联的是从节点则不会产生新的选举</li>
+<li>选举基于 RAST一致性算法 实现，选举成功的必要条件是大多数投票节点存活</li>
+<li>复制集中最多可以有50个节点，但具有投票权的节点最多7个</li>
+</ul>
+<h3 id="影响选举的因素">影响选举的因素</h3>
+<ul>
+<li>整个集群必须有大多数节点存活</li>
+<li>被选举为主节点的节点必须：
+<ul>
+<li>能够与多数节点建立连接</li>
+<li>具有较新的oplog</li>
+<li>具有较高的优先级（优先级可以配置）</li>
+</ul>
+</li>
+</ul>
+<h3 id="复制集节点有以下常见的选配项">复制集节点有以下常见的选配项：</h3>
+<ul>
+<li>是否具有投票权（v参数） 有则参与投票</li>
+<li>优先级（priority参数） 优先级越高的节点的节点越优先成为主节点。优先级为0的节点无法成为主节点</li>
+<li>隐藏(hidden参数) 复制数据，但对应用不可见。隐藏节点可以拥有投票权，但优先级必须为0，即不能成为主节点。<strong>备份</strong></li>
+<li>延迟（slaveDelay参数） 复制n秒之前的数据，保存与主节点的时间差。<strong>容错</strong></li>
+</ul>
+<h1 id="注意事项">注意事项</h1>
+<ul>
+<li>增加节点不会增加系统写性能！ 因为写的操作都是在主节点完成，增加节点并不能改变主节点的性能，所以不会增加系统的写性能。甚至会降低性能，因为当写请求发送到从节点，从节点需要将请求发送给主节点来完成，完成后再通过oplog发送给所有从节点。 但增加节点可以增加系统读性能</li>
+</ul>
+<h1 id="搭建">搭建</h1>
+<h2 id="准备配置文件">准备配置文件</h2>
+<pre tabindex="0"><code>systemLog:
+    destination: file
+    path: /data/db1/mongod.log #日志存放位置
+    logAppend: true
+storage:
+    db: /data/db1 #数据存储位置
+net:
+    bindIp: 0.0.0.0 #开启其他机器访问
+    port: 28017 #端口
+relication:
+    replSetName: rs0 #集群名称
+processManagement:
+    fork: true #将进程作为后台进程
+</code></pre><h2 id="启动">启动</h2>
+<p>指定配置文件启动：<code>mongod -f /data/db1/mongod.conf</code></p>
+<h2 id="配置复制集">配置复制集</h2>
+<p>进入Mongo shell中</p>
+<pre tabindex="0"><code>rs.initiate({
+    _id:&#34;rs0&#34;,
+    members:[{
+        _id:0,
+        host:&#34;localhost:28017&#34;
+        },{
+        _id:1,
+        host:&#34;localhost:28018&#34;
+        },{
+        _id:2,
+        host:&#34;localhost:28019&#34;
+        }]
+})
+</code></pre><p>设置各个实例的ip地址和端口</p>
+<h2 id="验证">验证</h2>
+<p>登录主节点进行写入，登录从节点进行读取，在登录从节点后如果直接进行读取会报错，需要先执行以下命令：</p>
+<pre tabindex="0"><code>rs.test.find() # 报错
+rs.slaveOk()
+re.test.find() # 返回结果
+</code></pre>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

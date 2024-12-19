@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/devops/git/git%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="git使用笔记">
+  <meta property="og:description" content="安装 mac 通过brew安装 1 brew install git 通过安装包安装 去官网下载mac系统的安装包，下载完成后安装即可
+windows 去官网下载Windows系统的安装包，除了选择安装目录时修改为自己想要的目录，其他一直点击next即可
+配置 安装完git后我们需要配置个人信息，姓名和邮箱，这些信息在以后提交时都会显示在提交信息中
+1 2 3 4 5 6 # 全局配置 整体有效 git config --global user.name &#34;提交时显示的名字&#34; git config --global user.email &#34;提交时显示的邮箱&#34; # 局部配置 对单个项目有效，如果进行了局部配置，会覆盖全局配置 git config --local user.name &#34;提交时显示的名字&#34; git config --local user.email &#34;提交时显示的邮箱&#34; 配置完成后我们可以通过命令来查看我们的配置信息，例如下面这就会显示我们配置的名称
+1 git config user.name 常用命令 初始化 1 git init 添加文件 1 git add test.md 提交注释 1 git commit -m &#39;注释内容&#39; 关联远程仓库 1 git remote add [shortname] [url]	查看当前的远程库 1 2 3 4 5 6 7 git remote origin # 也可添加 -v 选项 显示对应的克隆地址 git remote -v origin git://github.com/schacon/ticgit.git (fetch) origin git://github.com/schacon/ticgit.git (push) 推送到远程仓库 1 2 # remote-name默认为origin ，branch-name默认为master git push [remote-name] [branch-name] 从远程仓库拉取代码 git pull">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-05-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-05-29T00:00:00+00:00">
+    <meta property="article:tag" content="Git">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="git使用笔记">
+  <meta name="twitter:description" content="安装 mac 通过brew安装 1 brew install git 通过安装包安装 去官网下载mac系统的安装包，下载完成后安装即可
+windows 去官网下载Windows系统的安装包，除了选择安装目录时修改为自己想要的目录，其他一直点击next即可
+配置 安装完git后我们需要配置个人信息，姓名和邮箱，这些信息在以后提交时都会显示在提交信息中
+1 2 3 4 5 6 # 全局配置 整体有效 git config --global user.name &#34;提交时显示的名字&#34; git config --global user.email &#34;提交时显示的邮箱&#34; # 局部配置 对单个项目有效，如果进行了局部配置，会覆盖全局配置 git config --local user.name &#34;提交时显示的名字&#34; git config --local user.email &#34;提交时显示的邮箱&#34; 配置完成后我们可以通过命令来查看我们的配置信息，例如下面这就会显示我们配置的名称
+1 git config user.name 常用命令 初始化 1 git init 添加文件 1 git add test.md 提交注释 1 git commit -m &#39;注释内容&#39; 关联远程仓库 1 git remote add [shortname] [url]	查看当前的远程库 1 2 3 4 5 6 7 git remote origin # 也可添加 -v 选项 显示对应的克隆地址 git remote -v origin git://github.com/schacon/ticgit.git (fetch) origin git://github.com/schacon/ticgit.git (push) 推送到远程仓库 1 2 # remote-name默认为origin ，branch-name默认为master git push [remote-name] [branch-name] 从远程仓库拉取代码 git pull">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - git使用笔记
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">git使用笔记</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 05 月 29 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/git">#git</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="安装">安装</h1>
+<h2 id="mac">mac</h2>
+<h3 id="通过brew安装">通过<code>brew</code>安装</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">brew install git
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="通过安装包安装">通过安装包安装</h3>
+<p>去官网下载mac系统的安装包，下载完成后安装即可</p>
+<h2 id="windows">windows</h2>
+<p>去官网下载Windows系统的安装包，除了选择安装目录时修改为自己想要的目录，其他一直点击next即可</p>
+<h1 id="配置">配置</h1>
+<p>安装完git后我们需要配置个人信息，姓名和邮箱，这些信息在以后提交时都会显示在提交信息中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># 全局配置 整体有效</span>
+</span></span><span class="line"><span class="cl">git config --global user.name <span class="s2">&#34;提交时显示的名字&#34;</span>
+</span></span><span class="line"><span class="cl">git config --global user.email <span class="s2">&#34;提交时显示的邮箱&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 局部配置 对单个项目有效，如果进行了局部配置，会覆盖全局配置</span>
+</span></span><span class="line"><span class="cl">git config --local user.name <span class="s2">&#34;提交时显示的名字&#34;</span>
+</span></span><span class="line"><span class="cl">git config --local user.email <span class="s2">&#34;提交时显示的邮箱&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置完成后我们可以通过命令来查看我们的配置信息，例如下面这就会显示我们配置的名称</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git config user.name
+</span></span></code></pre></td></tr></table>
+</div>
+</div><!-- more -->
+<h1 id="常用命令">常用命令</h1>
+<h2 id="初始化">初始化</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git init
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="添加文件">添加文件</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git add test.md
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="提交注释">提交注释</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git commit -m <span class="s1">&#39;注释内容&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="关联远程仓库">关联远程仓库</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git remote add <span class="o">[</span>shortname<span class="o">]</span> <span class="o">[</span>url<span class="o">]</span>	
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="查看当前的远程库">查看当前的远程库</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git remote
+</span></span><span class="line"><span class="cl">origin
+</span></span><span class="line"><span class="cl"><span class="c1"># 也可添加 -v 选项 显示对应的克隆地址</span>
+</span></span><span class="line"><span class="cl">git remote -v
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">origin  git://github.com/schacon/ticgit.git <span class="o">(</span>fetch<span class="o">)</span>
+</span></span><span class="line"><span class="cl">origin  git://github.com/schacon/ticgit.git <span class="o">(</span>push<span class="o">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="推送到远程仓库">推送到远程仓库</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="c1"># remote-name默认为origin ，branch-name默认为master</span>
+</span></span><span class="line"><span class="cl">git push <span class="o">[</span>remote-name<span class="o">]</span> <span class="o">[</span>branch-name<span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="从远程仓库拉取代码">从远程仓库拉取代码</h1>
+<p><code>git pull</code></p>
+<h1 id="修改注释">修改注释</h1>
+<p>这个主要分为以下几种情况</p>
+<ul>
+<li>修改未推送到远程分支的上一次注释</li>
+<li>修改已经推送到远程分支上的上一次注释</li>
+<li>修改历史提交过的注释</li>
+<li>修改已经推送到远程分支上的历史注释</li>
+</ul>
+<ol>
+<li>先来看修改最近一次提交的注释</li>
+</ol>
+<p>使用<code>git commit --amend</code>命令</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20190828172200.png" alt=""></p>
+<p>然后再出来的编辑页面，编辑注释信息，然后保存</p>
+<ol start="2">
+<li>修改历史提交的注释</li>
+</ol>
+<p>首先使用<code>git rebase -i HEAD~5</code>，这里的5表示向前推5次。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20190828172433.png" alt=""></p>
+<p>然后在出来的页面中选择要修改从那一次，将前面的<code>pick</code>修改为<code>edit</code>。然后保存退出。</p>
+<p>这是再次执行<code>git commit --amend</code>就会修改我们刚刚选择的那个注释了，修改完成后保存。</p>
+<p>这时查看我们刚刚修改的那个变成了日志的最后一次提交了，所以我们要将其修改回原来的时间状态。</p>
+<p>使用<code>git rebase --continue</code>命令即可</p>
+<ol start="3">
+<li>这时如果之前的提交注释都没有推送到远程上就完成了，但是如果推送到远程上，还需要将我们的注释修改推送到远程。</li>
+</ol>
+<p>使用<code>git push --force</code>强制推送，这时要注意我们这时候推送上去的会覆盖原来的代码，所以最好在提交之前做一次拉取更新。</p>
+<h2 id="删除关联远程仓库">删除关联远程仓库</h2>
+<p><code>shellgit remote rm [orgin_name]</code></p>
+<h3 id="添加远程仓库地址">添加远程仓库地址</h3>
+<p><code>git remote add upstream xxx</code></p>
+<h3 id="修改远程仓库地址">修改远程仓库地址</h3>
+<p><code>git remote set-url origin xxx</code></p>
+<h3 id="查看远程分支"><strong>查看远程分支</strong></h3>
+<p><code>git branch -a</code></p>
+<h3 id="删除远程分支"><strong>删除远程分支</strong></h3>
+<p><code>git push origin --delete &lt;branchName&gt;</code></p>
+<h3 id="取消与远程分支的关联">取消与远程分支的关联</h3>
+<p><code>git branch --unset-upstream</code></p>
+<h3 id="推送到远程的新分支">推送到远程的新分支</h3>
+<p><code>git push origin upstream-master-local:upstream-master-upstream</code></p>
+<p>将本地的<code>upstream-master-local</code>分支推送到<code>origin</code>的<code>upstream-master-upstream</code>分支</p>
+<h3 id="缓存区操作">缓存区操作</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 将当前改变存储到缓存区内</span>
+</span></span><span class="line"><span class="cl">git stash save ‘msg’
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看缓存区列表</span>
+</span></span><span class="line"><span class="cl">git stash list
+</span></span><span class="line"><span class="cl"><span class="c1"># 从列表中恢复第一个</span>
+</span></span><span class="line"><span class="cl">git stash pop
+</span></span><span class="line"><span class="cl"><span class="c1"># 从列表中恢复某一个 stash@{0}</span>
+</span></span><span class="line"><span class="cl">git stash apply stash@<span class="o">{</span>0<span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除某个缓存信息</span>
+</span></span><span class="line"><span class="cl">git stash drop stash@<span class="o">{</span>0<span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 清空缓存区</span>
+</span></span><span class="line"><span class="cl">git stash clear
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="参考">参考</h1>
+<p><a href="https://git-scm.com/book/zh/v1/Git-%E5%9F%BA%E7%A1%80-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8">https://git-scm.com/book/zh/v1/Git-%E5%9F%BA%E7%A1%80-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8</a></p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

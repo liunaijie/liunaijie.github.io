@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/image_process/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E5%85%A5%E9%97%A8-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="图像处理入门-基础概念">
+  <meta property="og:description" content="最近买了台相机, 出去拍了一些照片, 然后突然想到AI来做照片的处理,优化等. 所以找了一些课程来学习一下图像处理的基础知识. 目前从这些课程中学习: https://www.bilibili.com/video/BV1Kh411X7Qv?p=3 https://www.bilibili.com/video/BV1R84y1f79o?p=1 https://www.bilibili.com/video/BV1tT4y1Y7Ak/?spm_id_from=333.788&amp;vd_source=f7b0753424ba1b445914c36a2cbf1439
+基础概念 像素 一张图片在计算机中使用二维数组表示array[m][n]，二维数组的的大小m*n就表示照片的像素 相同的照片尺寸下，一张图片的像素越高，则显示的细节越多。 以这个照片为例，左侧图片的像素为2*2，右侧照片像素为4*4, 当放大某个细节时，右侧照片能给出更多的细节。 灰度值 二维数组中填充值的范围，对于黑白照片，灰度值的范围是0-255. 白色为255，黑色为0. array[m][n]=k, 0&lt;=k&lt;=255
+直方图 查看图片中灰度值的分布情况，横坐标是灰度值，纵坐标表示该灰度值出现的频率。 要注意的是，一个照片只有一个直方图，但一个直方图并不对应唯一的一张照片
+使用直方图可以直观的展示出图像中各个灰度值的分布情况，占比情况。
+图像增强 灰度变换 代数运算 空间域滤波 频域滤波 灰度变换 简单，常用的空间域图像增强方法 对输入图像像素的灰度级进行变换 $s=f(r)$, r/s 输入/输出灰度级 f(): 灰度变换函数，这个函数可以是线性变换, 也可以是非线性变换.
+线性变换 $s = Ar&#43;B$ 当A&gt;1时, 相当于做灰度拉伸, 变换完的图像会比原来的图片亮. 当A&lt;1时, 相当于做灰度压缩, 变换完的图像会比原来的图片暗.
+在线性变换中, 还可以进行分段线性变换 $$ s= \begin{cases} f1(x), \quad 0 &lt;r&lt;a \ f2(x), \quad a\leq r&lt; b \ f3(r), \quad b\leq r&lt; N \end{cases} $$
+可以对感兴趣的灰度区域进行突出, 对不感兴趣的灰度区域进行抑制.
+非线性变换 对数变换 $s = c * log(1&#43;r)$ 在灰度级比较小(暗)时做拉伸, 在灰度值大(亮)时做压缩, 可以使暗的图像更加亮">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2023-09-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-09-11T00:00:00+00:00">
+    <meta property="article:tag" content="图像处理">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="图像处理入门-基础概念">
+  <meta name="twitter:description" content="最近买了台相机, 出去拍了一些照片, 然后突然想到AI来做照片的处理,优化等. 所以找了一些课程来学习一下图像处理的基础知识. 目前从这些课程中学习: https://www.bilibili.com/video/BV1Kh411X7Qv?p=3 https://www.bilibili.com/video/BV1R84y1f79o?p=1 https://www.bilibili.com/video/BV1tT4y1Y7Ak/?spm_id_from=333.788&amp;vd_source=f7b0753424ba1b445914c36a2cbf1439
+基础概念 像素 一张图片在计算机中使用二维数组表示array[m][n]，二维数组的的大小m*n就表示照片的像素 相同的照片尺寸下，一张图片的像素越高，则显示的细节越多。 以这个照片为例，左侧图片的像素为2*2，右侧照片像素为4*4, 当放大某个细节时，右侧照片能给出更多的细节。 灰度值 二维数组中填充值的范围，对于黑白照片，灰度值的范围是0-255. 白色为255，黑色为0. array[m][n]=k, 0&lt;=k&lt;=255
+直方图 查看图片中灰度值的分布情况，横坐标是灰度值，纵坐标表示该灰度值出现的频率。 要注意的是，一个照片只有一个直方图，但一个直方图并不对应唯一的一张照片
+使用直方图可以直观的展示出图像中各个灰度值的分布情况，占比情况。
+图像增强 灰度变换 代数运算 空间域滤波 频域滤波 灰度变换 简单，常用的空间域图像增强方法 对输入图像像素的灰度级进行变换 $s=f(r)$, r/s 输入/输出灰度级 f(): 灰度变换函数，这个函数可以是线性变换, 也可以是非线性变换.
+线性变换 $s = Ar&#43;B$ 当A&gt;1时, 相当于做灰度拉伸, 变换完的图像会比原来的图片亮. 当A&lt;1时, 相当于做灰度压缩, 变换完的图像会比原来的图片暗.
+在线性变换中, 还可以进行分段线性变换 $$ s= \begin{cases} f1(x), \quad 0 &lt;r&lt;a \ f2(x), \quad a\leq r&lt; b \ f3(r), \quad b\leq r&lt; N \end{cases} $$
+可以对感兴趣的灰度区域进行突出, 对不感兴趣的灰度区域进行抑制.
+非线性变换 对数变换 $s = c * log(1&#43;r)$ 在灰度级比较小(暗)时做拉伸, 在灰度值大(亮)时做压缩, 可以使暗的图像更加亮">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 图像处理入门-基础概念
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">图像处理入门-基础概念</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2023 年 09 月 11 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e5%9b%be%e5%83%8f%e5%a4%84%e7%90%86">#图像处理</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>最近买了台相机, 出去拍了一些照片, 然后突然想到AI来做照片的处理,优化等. 所以找了一些课程来学习一下图像处理的基础知识.
+目前从这些课程中学习:
+<a href="https://www.bilibili.com/video/BV1Kh411X7Qv?p=3">https://www.bilibili.com/video/BV1Kh411X7Qv?p=3</a>
+<a href="https://www.bilibili.com/video/BV1R84y1f79o?p=1">https://www.bilibili.com/video/BV1R84y1f79o?p=1</a>
+<a href="https://www.bilibili.com/video/BV1tT4y1Y7Ak/?spm_id_from=333.788&amp;vd_source=f7b0753424ba1b445914c36a2cbf1439">https://www.bilibili.com/video/BV1tT4y1Y7Ak/?spm_id_from=333.788&amp;vd_source=f7b0753424ba1b445914c36a2cbf1439</a></p>
+<h1 id="基础概念">基础概念</h1>
+<h3 id="像素">像素</h3>
+<p>一张图片在计算机中使用二维数组表示<code>array[m][n]</code>，二维数组的的大小<code>m*n</code>就表示照片的像素
+相同的照片尺寸下，一张图片的像素越高，则显示的细节越多。
+以这个照片为例，左侧图片的像素为<code>2*2</code>，右侧照片像素为<code>4*4</code>, 当放大某个细节时，右侧照片能给出更多的细节。
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202309112132448.png" alt=""></p>
+<h3 id="灰度值">灰度值</h3>
+<p>二维数组中填充值的范围，对于黑白照片，灰度值的范围是0-255. 白色为255，黑色为0.
+<code>array[m][n]=k,  0&lt;=k&lt;=255</code></p>
+<h3 id="直方图">直方图</h3>
+<p>查看图片中灰度值的分布情况，横坐标是灰度值，纵坐标表示该灰度值出现的频率。
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202309112133842.png" alt="">
+<strong>要注意的是，一个照片只有一个直方图，但一个直方图并不对应唯一的一张照片</strong></p>
+<p>使用直方图可以直观的展示出图像中各个灰度值的分布情况，占比情况。</p>
+<h2 id="图像增强">图像增强</h2>
+<ul>
+<li>灰度变换</li>
+<li>代数运算</li>
+<li>空间域滤波</li>
+<li>频域滤波</li>
+</ul>
+<h3 id="灰度变换">灰度变换</h3>
+<ul>
+<li>简单，常用的空间域图像增强方法</li>
+<li>对输入图像像素的灰度级进行变换
+$s=f(r)$,  r/s 输入/输出灰度级</li>
+</ul>
+<p>f(): 灰度变换函数，这个函数可以是线性变换, 也可以是非线性变换.</p>
+<h4 id="线性变换">线性变换</h4>
+<p>$s = Ar+B$
+当A&gt;1时, 相当于做灰度拉伸, 变换完的图像会比原来的图片亮.
+当A&lt;1时, 相当于做灰度压缩, 变换完的图像会比原来的图片暗.</p>
+<p>在线性变换中, 还可以进行<strong>分段线性变换</strong>
+$$
+s=
+\begin{cases}
+f1(x), \quad 0 &lt;r&lt;a \
+f2(x), \quad a\leq r&lt; b \
+f3(r), \quad b\leq r&lt; N
+\end{cases}
+$$</p>
+<p>可以对感兴趣的灰度区域进行突出, 对不感兴趣的灰度区域进行抑制.</p>
+<h4 id="非线性变换">非线性变换</h4>
+<h5 id="对数变换">对数变换</h5>
+<p>$s = c * log(1+r)$
+在灰度级比较小(暗)时做拉伸, 在灰度值大(亮)时做压缩, 可以使暗的图像更加亮</p>
+<h5 id="幂次变换">幂次变换</h5>
+<p>$s = c * r^n$
+在n&gt;1时
+在灰度值比较大(亮)时做拉伸,在灰度值小(暗)时做压缩
+在n&lt;1时
+在灰度级比较小(暗)时做拉伸, 在灰度值大(亮)时做压缩</p>
+<h5 id="直方图均衡">直方图均衡</h5>
+<p>假设我们使用函数<code>f()</code>来对图像做灰度变换, 那么变换公式为: $D_B=f(D_A), D_A:变换前的灰度值,D_B变换后的灰度值$
+我们使用$H(D)$表示灰度直方图, 那么在使用<code>f()</code>做变化之后, 变换后图像的灰度直方图为:
+$$H_B(D_B)=\frac{H_A(D_A)}{f\prime(D_A)}$$
+灰度变换后图像直方图是:<em>变换前直方图</em>与<em>变化函数导数</em>之比</p>
+<p>直方图均衡是希望将图像的</p>
+<ul>
+<li>每个灰度级都拥有像素</li>
+<li>直方图分布均匀
+如果要达到这个要求, 那么就需要使得
+$$H_B(D_B)=\frac{A_0}{D_m} \quad \quad  A_0代表图像像素总数,D_m代表灰度级$$
+而我们又知道
+$$H_B(D_B)=\frac{H_A(D_A)}{f\prime(D_A)}$$
+所以我们可以推导出<code>f()</code>的表达式, 即:
+$$D_B=f(D_A)=\frac{D_m}{A_0}* \sum_{0}^{D_A}H_A(D_A)$$</li>
+</ul>
+<h3 id="代数运算">代数运算</h3>
+<ul>
+<li>加法运算</li>
+<li>减法运算</li>
+<li>乘法运算</li>
+</ul>
+<h4 id="加法运算">加法运算</h4>
+<p>两幅或多幅图像相加
+$C(x,y)=A(x,y)+B(x,y)$</p>
+<p>可以用来去除叠加性噪声</p>
+<h4 id="减法运算">减法运算</h4>
+<p>两幅图像相减
+$C(x,y)=A(x,y)-B(x,y)$</p>
+<p>可以用来</p>
+<ul>
+<li>分割特定区域</li>
+<li>检测场景变化 (通过前后图像相减, 得到变化的值)</li>
+</ul>
+<h4 id="乘法运算">乘法运算</h4>
+<p>两幅图像相乘
+$C(x,y)=A(x,y)*B(x,y)$</p>
+<p>可以用来获取图像中特点的部分</p>
+<h3 id="空间域滤波">空间域滤波</h3>
+<p>$$y(j,i)=\sum_{m}\sum_{n}h(m,n)x(j+m,i+n)$$
+<strong>均值滤波器:</strong>
+$$h(m,n) =
+\left[
+\begin{matrix}
+1 &amp; 1 &amp; 1 \
+1 &amp; 1 &amp; 1 \
+1 &amp; 1 &amp; 1 \
+\end{matrix}
+\right]
+*
+\frac{1}{9}
+$$
+<strong>高斯低通滤波器:</strong>
+$$h(m,n) =
+\left[
+\begin{matrix}
+1 &amp; 2 &amp; 1 \
+2 &amp; 4 &amp; 2 \
+1 &amp; 2 &amp; 1 \
+\end{matrix}
+\right]
+*
+\frac{1}{16}
+$$
+<em>可以使图像平滑</em></p>
+<p><strong>中值滤波器</strong>
+先邻域内像素(包括原像素)灰度排序, 然后取中间值
+它可以</p>
+<ul>
+<li>使突出的点更接近它周边的点</li>
+<li>消除孤立的亮度或暗点
+去除噪声的同时, 比较好的保留边缘
+能够有效去除脉冲噪声</li>
+</ul>
+<p><strong>高通滤波</strong>
+使图像锐化</p>
+<ul>
+<li>突出图像的细节特征</li>
+<li>增强图像模糊的边缘</li>
+<li>增强高频</li>
+<li>突出边缘</li>
+</ul>
+<p>一阶</p>
+<ul>
+<li>Robert算子</li>
+<li>Prewitt算子</li>
+<li>Sobel算子
+二阶</li>
+<li>Laplace算子</li>
+</ul>
+<p>一阶导数可以检测图像中的某像素点是否在边缘上
+二阶导数可以判断一个边缘像素点在亮的一侧还是在暗的一侧</p>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

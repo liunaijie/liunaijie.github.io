@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/coding/project_notes/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E4%BB%98/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="微信小程序支付">
+  <meta property="og:description" content="微信小程序支付流程：
+根据流程图，我们支付的流程应该是：
+用户在微信小程序点击下单，小程序请求我们自己的后台程序
+后台在接收到下单请求后，先进行自己的业务逻辑，生成预订单，然后请求微信的下单接口。微信接口对我们请求进行校验，通过后返回 prepay_id(预付款 id)。
+在这里要获取小程序用户的 openid。一般在下单前就获取到了，或者在这里再进行访问微信接口进行获取 发送请求时需要经过签名等操作 在向微信请求时，参数中有一个通知地址，支付成功后微信会向这个地址发送通知。 拿到 prepay_id 后，需要再次签名。然后将数据返回给小程序 微信小程序获取到请求响应，响应数据里面有预付款 id，然后通过微信提供的支付方法进行付款。
+付款成功后，微信会向下单时提供的通知地址发送通知。通知数据里面有实际付款金额等信息。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="coding">
+    <meta property="article:published_time" content="2019-03-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-03-15T00:00:00+00:00">
+    <meta property="article:tag" content="微信小程序">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="微信小程序支付">
+  <meta name="twitter:description" content="微信小程序支付流程：
+根据流程图，我们支付的流程应该是：
+用户在微信小程序点击下单，小程序请求我们自己的后台程序
+后台在接收到下单请求后，先进行自己的业务逻辑，生成预订单，然后请求微信的下单接口。微信接口对我们请求进行校验，通过后返回 prepay_id(预付款 id)。
+在这里要获取小程序用户的 openid。一般在下单前就获取到了，或者在这里再进行访问微信接口进行获取 发送请求时需要经过签名等操作 在向微信请求时，参数中有一个通知地址，支付成功后微信会向这个地址发送通知。 拿到 prepay_id 后，需要再次签名。然后将数据返回给小程序 微信小程序获取到请求响应，响应数据里面有预付款 id，然后通过微信提供的支付方法进行付款。
+付款成功后，微信会向下单时提供的通知地址发送通知。通知数据里面有实际付款金额等信息。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 微信小程序支付
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">微信小程序支付</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2019 年 03 月 15 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e5%be%ae%e4%bf%a1%e5%b0%8f%e7%a8%8b%e5%ba%8f">#微信小程序</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <p>微信小程序支付流程：</p>
+<p><img src="https://pay.weixin.qq.com/wiki/doc/api/img/wxa-7-2.jpg" alt="wxa-7-2"></p>
+<p>根据流程图，我们支付的流程应该是：</p>
+<ol>
+<li>
+<p>用户在微信小程序点击下单，小程序请求我们自己的后台程序</p>
+</li>
+<li>
+<p>后台在接收到下单请求后，先进行自己的业务逻辑，生成预订单，然后请求微信的下单接口。微信接口对我们请求进行校验，通过后返回 prepay_id(预付款 id)。</p>
+<ul>
+<li>在这里要获取小程序用户的 openid。一般在下单前就获取到了，或者在这里再进行访问微信接口进行获取</li>
+<li>发送请求时需要经过签名等操作</li>
+<li>在向微信请求时，参数中有一个通知地址，支付成功后微信会向这个地址发送通知。</li>
+<li>拿到 prepay_id 后，需要再次签名。然后将数据返回给小程序</li>
+</ul>
+</li>
+<li>
+<p>微信小程序获取到请求响应，响应数据里面有预付款 id，然后通过微信提供的支付方法进行付款。</p>
+</li>
+<li>
+<p>付款成功后，微信会向下单时提供的通知地址发送通知。通知数据里面有实际付款金额等信息。</p>
+</li>
+</ol>
+<p>我之前写过的下单代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">devicePay</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="n">String</span><span class="w"> </span><span class="n">deviceCode</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">money</span><span class="p">,</span><span class="n">String</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ResultBean</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResultBean</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	</span><span class="cm">/*自身业务逻辑代码*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	</span><span class="c1">//判断设备是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Device</span><span class="w"> </span><span class="n">isExist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceDao</span><span class="p">.</span><span class="na">selectByDeviceCode</span><span class="p">(</span><span class="n">deviceCode</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">isExist</span><span class="o">==</span><span class="kc">null</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">           </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AppException</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">DEVICE_NOT_EXIST</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	</span><span class="c1">//判断用户是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userDao</span><span class="p">.</span><span class="na">getId</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="n">userId</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">user</span><span class="o">==</span><span class="kc">null</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AppException</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">USER_NOT_EXIST</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">uuid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="na">randomUUID</span><span class="p">().</span><span class="na">toString</span><span class="p">().</span><span class="na">substring</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="n">8</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">nowTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateUtils</span><span class="p">.</span><span class="na">getNowTimestamp</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//生成订单编号</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">historyCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nowTime</span><span class="o">+</span><span class="n">uuid</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">DeviceHistory</span><span class="w"> </span><span class="n">deviceHistory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeviceHistory</span><span class="p">(</span><span class="n">historyCode</span><span class="p">,</span><span class="n">deviceCode</span><span class="p">,</span><span class="n">userId</span><span class="p">,</span><span class="n">money</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="k">new</span><span class="w"> </span><span class="n">DateUtils</span><span class="p">().</span><span class="na">getNowTime</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	</span><span class="c1">//新建一个订单    </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	</span><span class="n">deviceHistoryDao</span><span class="p">.</span><span class="na">insertDeviceHistory</span><span class="p">(</span><span class="n">deviceHistory</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="cm">/*构建微信下单请求参数*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;appid&#34;</span><span class="p">,</span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APPID</span><span class="p">);</span><span class="c1">//appid</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;mch_id&#34;</span><span class="p">,</span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">MCH_ID</span><span class="p">);</span><span class="c1">//商户号</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;nonce_str&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">generateNonceStr</span><span class="p">());</span><span class="c1">//随机字符串</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;sign_type&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">WXPayConstants</span><span class="p">.</span><span class="na">SignType</span><span class="p">.</span><span class="na">MD5</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="c1">//签名类型</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;body&#34;</span><span class="p">,</span><span class="n">isExist</span><span class="p">.</span><span class="na">getDeviceName</span><span class="p">());</span><span class="c1">//商品描述</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;out_trade_no&#34;</span><span class="p">,</span><span class="n">historyCode</span><span class="p">);</span><span class="c1">//商户订单号，不能重复</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;trade_type&#34;</span><span class="p">,</span><span class="s">&#34;JSAPI&#34;</span><span class="p">);</span><span class="c1">//小程序支付都填写 JSAPI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;notify_url&#34;</span><span class="p">,</span><span class="s">&#34;https://xxxxx/pay/complete/&#34;</span><span class="o">+</span><span class="n">historyCode</span><span class="p">);</span><span class="c1">//通知地址，不能传递参数</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">totalFee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">money</span><span class="o">*</span><span class="n">100</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;total_fee&#34;</span><span class="p">,</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">totalFee</span><span class="p">));</span><span class="c1">//金额，以分为单位</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;openid&#34;</span><span class="p">,</span><span class="n">user</span><span class="p">.</span><span class="na">getOpenId</span><span class="p">());</span><span class="c1">//小程序支付时，这个必须填，为用户唯一的编号 openid</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//先进行签名</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">generateSignature</span><span class="p">(</span><span class="n">map</span><span class="p">,</span><span class="w"> </span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APIKEY</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;sign&#34;</span><span class="p">,</span><span class="n">sign</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//转换为xml格式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">xml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">generateSignedXml</span><span class="p">(</span><span class="n">map</span><span class="p">,</span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APIKEY</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//统一下单接口</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">resultXml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HttpUtil</span><span class="p">.</span><span class="na">sendPostXml</span><span class="p">(</span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">PAY_API_URL</span><span class="p">,</span><span class="n">xml</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">resultMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">xmlToMap</span><span class="p">(</span><span class="n">resultXml</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//判断是否请求成功</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">RETURN_CODE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;return_code&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">return_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">resultMap</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">RETURN_CODE</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">return_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resultMap</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">RETURN_CODE</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;SUCCESS&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">return_code</span><span class="p">)){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AppException</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">FAIL</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//判断签名是否正确</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">isSignatureValid</span><span class="p">(</span><span class="n">resultMap</span><span class="p">,</span><span class="w"> </span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APIKEY</span><span class="p">,</span><span class="w"> </span><span class="n">WXPayConstants</span><span class="p">.</span><span class="na">SignType</span><span class="p">.</span><span class="na">MD5</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AppException</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">SIGN_FAIL</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//获取prepay_id（预付单信息）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">prepayId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resultMap</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&#34;prepay_id&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">timeStamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">getCurrentTimestamp</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">nonceStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">generateNonceStr</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">Package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;prepay_id=&#34;</span><span class="o">+</span><span class="n">prepayId</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Map</span><span class="w"> </span><span class="n">paySignMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">paySignMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;appId&#34;</span><span class="p">,</span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APPID</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">paySignMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;timeStamp&#34;</span><span class="p">,</span><span class="n">timeStamp</span><span class="p">);</span><span class="c1">//时间戳</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">paySignMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;nonceStr&#34;</span><span class="p">,</span><span class="n">nonceStr</span><span class="p">);</span><span class="c1">//随机字符串</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">paySignMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;package&#34;</span><span class="p">,</span><span class="n">Package</span><span class="p">);</span><span class="c1">//固定格式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">paySignMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;signType&#34;</span><span class="p">,</span><span class="s">&#34;MD5&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//再次生成签名（含有预付单信息）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">paySign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WXPayUtil</span><span class="p">.</span><span class="na">generateSignature</span><span class="p">(</span><span class="n">paySignMap</span><span class="p">,</span><span class="w"> </span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APIKEY</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">JSONObject</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JSONObject</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">json</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;paySign&#34;</span><span class="p">,</span><span class="n">paySign</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">json</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;timeStamp&#34;</span><span class="p">,</span><span class="n">timeStamp</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">json</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;nonceStr&#34;</span><span class="p">,</span><span class="n">nonceStr</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">json</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;Package&#34;</span><span class="p">,</span><span class="n">Package</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">json</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;appId&#34;</span><span class="p">,</span><span class="n">GlobalParas</span><span class="p">.</span><span class="na">APPID</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="c1">//返回信息</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">result</span><span class="p">.</span><span class="na">setStatus</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">result</span><span class="p">.</span><span class="na">setCode</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">SELECT_SUCCESS</span><span class="p">.</span><span class="na">getCode</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">result</span><span class="p">.</span><span class="na">setMsg</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">SELECT_SUCCESS</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">result</span><span class="p">.</span><span class="na">setData</span><span class="p">(</span><span class="n">json</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AppException</span><span class="p">(</span><span class="n">ResultEnums</span><span class="p">.</span><span class="na">UN_KNOW_ERROR</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>​	用户在小程序调起支付后发送到后台，发送到程序后台。后台再去调用微信支付的接口。先将所需传递的数据进行签名然后调用统一下单api，成功返回一个预付单编号（prepay_id）。将预付单编号与一些数据再次签名生成签名信息，返回小程序签名和一些数据。小程序前台调用下单接口。</p>
+<p>统一下单api：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_1</p>
+<p>​	里面有一些必须的参数：（小程序id，商户号，随机字符串，签名，商品描述，商户订单号，标价金额（以分为单位），通知地址(支付成功后微信后台会向这个地址发送信息，我们可以在这个接口实现更新订单状态)，交易类型（小程序填写&quot;JSAPI&quot;））。参数需要为xml格式的。</p>
+<p>​	其中随机字符串，签名我们可以利用微信提供的<code>wxPayUtil</code>类中的方法</p>
+<p>​	返回信息也是xml格式。我们可以利用<code>wxPayUtils</code>里面的方法进行map与xml转换。判断返回信息中的<code>return_code</code>是否为<code>success</code>。然后获取<code>prepay_id</code>。</p>
+<p>​	再次签名。所需appid，时间戳，随机字符串，package等参数。将签名后的数据与参数一同返回前台。前台根据这些参数调起支付。</p>
+<p>​	支付成功后会微信会请求我们第一次签名时设置的通知地址，我们可以在那个里面实现将订单状态修改为完成或其他业务逻辑。</p>
+<p>​	微信sdk下载地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=11_1</p>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
