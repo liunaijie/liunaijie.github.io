@@ -1,0 +1,106 @@
+baseURL : 'https://www.liunaijie.top/'
+languageCode : 'zh-cn'
+title : 'Jarvis`s library'
+
+taxonomies:
+  category: categories
+  tag: tags
+  about: about
+
+pagination:
+  pagerSize: 10
+
+theme: minima
+
+defaultContentLanguage: 'zh-cn'
+
+
+params:
+  subtitle:
+  defaultTheme: system
+  # Specify the default color theme, available values: light, sand, rock, system.
+
+  displayDate: true
+
+  displayDescription: true
+
+  selectable: true
+
+  social:
+    - name: "email"
+      url: "mailto:jarvis@apache.org"
+    - name: "github"
+      url: "https://github.com/liunaijie"
+    - name: "rss"
+      url: "index.xml"
+
+  math:
+    enable: true
+    provider: katex
+
+  diagram:
+    enable: true
+    provider: mermaid
+
+  comment:
+    enable: false
+
+
+  search:
+    enable: true
+    provider: fuse
+    title: Search
+    placeholder: Enter keywords
+
+    fuse:
+    # See also https://fusejs.io
+      keys:
+        - title
+        - permalink
+        - summary
+        - content
+      distance: 100
+      location: 0
+      threshold: 0.6
+      ignoreLocation: false
+      isCaseSensitive: false
+      includeScore: false
+      includeMatches: false
+      minMatchCharLength: 1
+      shouldSort: true
+      findAllMatches: false
+
+menu:
+  main:
+    - identifier: home
+      name: Home
+      weight: 1
+    - identifier: tags
+      name: Tags
+      weight: 2
+    - identifier: search
+      name: Search
+      weight: 3
+    - identifier: about
+      name: About Me
+      weight: 4
+
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+markup:
+# **DO NOT EDIT** anything below. 
+# Because unlike other Hugo themes, the way Minima uses to do syntax
+# highlighting depends strongly on configurations below, so that the
+# color theme of code blocks changes with the blog color theme, instead
+# of being static like you may have seen on other Hugo themes.
+  highlight:
+    lineNos: true
+    noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true

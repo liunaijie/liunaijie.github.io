@@ -1,0 +1,3 @@
+---
+related-project: "[[../algorithm|algorithm]]"
+---

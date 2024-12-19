@@ -1,0 +1,22 @@
+{{ define "main" }}
+<main class="container mx-auto">
+  {{ if eq .Paginator.PageNumber 1 }}
+  <h3 class="text-center sm:text-left mt-6 mb-4 text-2xl font-bold">{{ T "recent" }}</h3>
+  {{ else }}
+  <h3 class="mt-6 mb-4 text-2xl font-bold">{{ T "older" }}</h3>
+  {{ end }}
+  <div>
+    {{ $paginator := .Paginate (where .Site.RegularPages "Kind" "page") }}
+    {{ range $paginator.Pages }}
+    {{ if ne .Page.Layout "search" }}
+    {{ partial "item.html" . }}
+    {{ end }}
+    {{ end }}
+    {{ partial "paginator.html" . }}
+  </div>
+  {{ if .Site.Params.friends.feeds }}
+  <h3 class="mt-6 mb-6 text-2xl font-semibold">{{ .Site.Params.friends.title }}</h3>
+  <div id="friends"></div>
+  {{ end }}
+</main>
+{{ end }}

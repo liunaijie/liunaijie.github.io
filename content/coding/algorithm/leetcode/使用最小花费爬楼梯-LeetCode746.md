@@ -1,0 +1,71 @@
+---
+title: 使用最小花费爬楼梯-LeetCode746
+date: 2022-04-13
+categories:
+  - notes
+tags:
+  - 动态规划
+  - LeetCode
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+---
+
+# 题目描述
+
+链接: https://leetcode-cn.com/problems/min-cost-climbing-stairs/
+
+给定一个整数数组cost, 其中`cost[i]`表示从楼梯第i个台阶向上爬需要支付的费用. 每次只能向上爬一个或两个台阶.
+
+可以从下标0或下标1的台阶开始爬楼梯.
+
+求到达楼梯顶部的最低花费
+
+> 示例1:
+>
+> 输入 cost = \[10, 15, 20]
+>
+> 输出: 15
+>
+> 从下标1开始爬, 向上2格. 到达楼梯顶部.
+>
+> 示例2:
+>
+> 输入：cost = \[1,100,1,1,1,100,1,1,100,1]
+> 	输出：6
+> 	你将从下标为 0 的台阶开始。
+>
+> - 支付 1 ，向上爬两个台阶，到达下标为 2 的台阶。
+> - 支付 1 ，向上爬两个台阶，到达下标为 4 的台阶。
+> - 支付 1 ，向上爬两个台阶，到达下标为 6 的台阶。
+> - 支付 1 ，向上爬一个台阶，到达下标为 7 的台阶。
+> - 支付 1 ，向上爬两个台阶，到达下标为 9 的台阶。
+> - 支付 1 ，向上爬一个台阶，到达楼梯顶部。
+> 总花费为 6
+>
+
+<!--more-->
+
+# 解题思路
+
+动态规划, 在楼顶时, 可能从n-1或n-2层上来的, 所以到达楼顶的最低花费为 到达n-1层的最小花费加n-1层的cost 和 到达n-2层的最小花费加n-2层的花费的最小值. 
+
+`f(n) = min(f(n-1) + cost[n-1], f(n-2) + cost[n-2])`
+
+来看一下边界条件:
+
+我们可以从下标0或下标1开始爬, 这时不需要额外花费, 所以f(0)=f(1)=0.
+
+## 代码实现
+
+```java
+	public int minCostClimbingStairs(int[] cost) {
+		    int[] res = new int[cost.length + 1];
+		    		res[0] = res[1] = 0;
+		    		for (int i = 2; i <= cost.length; i++) {
+		    		    			res[i] = Math.min(cost[i - 1] + res[i - 1], cost[i - 2] + res[i - 2]);
+		    		}
+		    		return res[cost.length];
+	}
+```
+
+# 相关题目
+

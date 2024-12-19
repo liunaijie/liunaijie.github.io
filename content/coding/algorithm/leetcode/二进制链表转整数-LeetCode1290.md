@@ -1,0 +1,79 @@
+---
+title: 二进制链表转整数-LeetCode1290
+date: 2019-02-21
+categories:
+  - notes
+tags:
+  - LeetCode
+related-project: "[[Blog-Posts/coding/algorithm/leetcode/leetcode|leetcode]]"
+---
+
+# 题目描述
+
+> 给你一个单链表的引用结点 `head`。链表中每个结点的值不是 0 就是 1。已知此链表是一个整数数字的二进制表示形式。
+>
+> 请你返回该链表所表示数字的 **十进制值** 。
+>
+> **示例 1：**
+>
+> ![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/12/15/graph-1.png)
+>
+> ```
+> 输入：head = \[1,0,1]
+> 输出：5
+> 解释：二进制数 (101) 转化为十进制数 (5)
+> ```
+>
+> **示例 2：**
+>
+> ```
+> 输入：head = \[0]
+> 输出：0
+> ```
+>
+> **示例 3：**
+>
+> ```
+> 输入：head = \[1]
+> 输出：1
+> ```
+>
+> **示例 4：**
+>
+> ```
+> 输入：head = \[1,0,0,1,0,0,1,1,1,0,0,0,0,0,0]
+> 输出：18880
+> ```
+>
+> **示例 5：**
+>
+> ```
+> 输入：head = \[0,0]
+> 输出：0
+> ```
+>
+> **提示：**
+>
+> - 链表不为空。
+> - 链表的结点总数不超过 `30`。
+> - 每个结点的值不是 `0` 就是 `1`。
+
+<!--more-->
+
+# 解题思路
+
+二进制链表我们把它写成数字其实就是二进制，我们要做的就是将二进制转换为10进制。
+
+代码实现：
+
+```java
+public int getDecimalValue(ListNode head) {
+  int sum = 0;
+  while (head != null) {
+    sum = sum * 2 + head.val;
+    head = head.next;
+  }
+  return sum;
+}
+```
+
