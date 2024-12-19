@@ -25,11 +25,7 @@ jobs:
         run: hugo
 
       - name: Deploy Web
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          PERSONAL_TOKEN: ${{ secrets.ACTION_DEPLOY_KEY }}
-          EXTERNAL_REPOSITORY: liunaijie/liunaijie.github.io
-          PUBLISH_BRANCH: master
-          PUBLISH_DIR: ./public
-          commit_message: ${{ github.event.head_commit.message }}
-
+          github_token: ${{ secrets.ACTION_DEPLOY_KEY }}
+          publish_dir: ./public
