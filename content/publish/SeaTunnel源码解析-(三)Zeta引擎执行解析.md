@@ -4,7 +4,7 @@ date: 2024-11-25
 categories:
   - publish
 tags:
-  - seatunnel
+  - SeaTunnel
 ---
 # 这篇文章会聊些什么
 SeaTunnel作为一款数据集成工具, 那么它最终的目的是来做数据同步的, 可以将数据从某个存储同步到另外一个存储中. 

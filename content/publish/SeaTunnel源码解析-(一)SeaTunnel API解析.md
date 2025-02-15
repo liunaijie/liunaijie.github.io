@@ -4,7 +4,7 @@ date: 2024-11-25
 categories:
   - coding
 tags:
-  - seatunnel
+  - SeaTunnel
 ---
 # 从接口定义来看SeaTunnel
 

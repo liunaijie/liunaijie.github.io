@@ -4,7 +4,7 @@ date: 2024-11-25
 categories:
   - publish
 tags:
-  - seatunnel
+  - SeaTunnel
 ---
 # 省流
 
