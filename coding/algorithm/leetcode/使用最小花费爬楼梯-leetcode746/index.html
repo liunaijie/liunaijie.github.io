@@ -174,8 +174,7 @@
 <li>支付 1 ，向上爬两个台阶，到达下标为 9 的台阶。</li>
 <li>支付 1 ，向上爬一个台阶，到达楼梯顶部。
 总花费为 6</li>
-</ul>
-</blockquote>
+</ul></blockquote>
 <h1 id="解题思路">解题思路</h1>
 <p>动态规划, 在楼顶时, 可能从n-1或n-2层上来的, 所以到达楼顶的最低花费为 到达n-1层的最小花费加n-1层的cost 和 到达n-2层的最小花费加n-2层的花费的最小值.</p>
 <p><code>f(n) = min(f(n-1) + cost[n-1], f(n-2) + cost[n-2])</code></p>
@@ -261,7 +260,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

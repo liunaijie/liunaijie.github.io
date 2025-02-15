@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/publish/%E4%B8%80%E9%81%93%E6%99%BA%E5%8A%9B%E9%A2%98-25%E5%8C%B9%E9%A9%AC-5%E6%9D%A1%E8%B5%9B%E9%81%93-%E9%80%89%E5%87%BA%E8%B7%91%E7%9A%84%E6%9C%80%E5%BF%AB%E7%9A%845%E5%8C%B9%E9%A9%AC-%E8%87%B3%E5%B0%91%E9%9C%80%E8%A6%81%E8%B7%91%E5%87%A0%E6%AC%A1/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="一道智力题, 25匹马, 5条赛道, 选出跑的最快的5匹马, 至少需要跑几次">
+  <meta property="og:description" content="引言 最近在网上冲浪的刷博客的时候, 看到一个题目.
+总共有25匹马, 一共有5个赛道, 现在要选出跑的最快的5匹马, 至少需要比赛几次?
+这个问题刚看到的时候, 看了一眼下面的答案就略过去了, 但是后面突然回想到这道题, 然后没有想通为什么是这样, 特此记录一下.
+首先这个问题有一些潜在的限制, 例如没有计时器, 不然全跑一遍计时一次, 看成绩取top5就好了. 现在是每次只能跑5匹马, 知道这一轮的排序.
+我们一步一步的来解决这个问题.
+首先想如果将top5, 修改为top1. 需要怎么安排? 是不是可以将25匹马, 5匹一组跑一次, 每组选出跑的最快的一匹, 再跑一轮, 这一轮的第一名就是top1了.
+当需要Top1时, 共需要5&#43;1=6次
+Ok, 到此我们先将上面的结果梳理一下, 将25匹马进行一下编号, 分为5组, 组编号为A,B,C,D,E, 组内的编号为1-5. 组内按照速度排序1-5, 每组按照顺序排序A-E
+此时, A1&gt;A2&gt;A3&gt;A4&gt;A5, A1&gt;B1&gt;C1&gt;D1&gt;E1. 但是我们不能知道A2, B1的关系.
+如果继续取top2, 需要怎么安排. 首先我们已经取出来了Top1. 那么剩下的人里面怎么取第二名呢. 最简单的方法是在跑一遍, 但是这样很明显的就会多跑. 我们现在已经有A1&gt;A2&gt;A3&gt;A4&gt;A5, A1&gt;B1&gt;C1&gt;D1&gt;E1. 这两个已知的排序. 是不是可以让A2, B1两匹马跑一次就可以得到谁是第二名了. 因为A2&gt;A3, 如果A2&lt;B1, 那么可证A3&lt;B1.
+当需要Top2时, 共需要6&#43;1=7次
+OK, 根据这个我们想一下, A2,B1是怎么找到的, 是不是从A1为起点, 查找走1步可以到达的节点. 如果继续取Top3, 需要怎么安排. 假设我们已经让A2, B1跑了一轮, 得到他们两个之间的排名. 我们假设他们两个的第一名是A2. A2就是全局第二名. 此时全局第三要怎么找呢? B2有资格参赛吗? 是不是没有资格, 因为前面还有B1. 所以仅需要B1和A3进行比赛就可以了. 同理如果B1得到第一名, 那么A3也没有资格参赛, 这时需要对C1, B2, A2进行比赛就可以了.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="publish">
+    <meta property="article:published_time" content="2025-02-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-02-12T00:00:00+00:00">
+    <meta property="article:tag" content="智力题">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="一道智力题, 25匹马, 5条赛道, 选出跑的最快的5匹马, 至少需要跑几次">
+  <meta name="twitter:description" content="引言 最近在网上冲浪的刷博客的时候, 看到一个题目.
+总共有25匹马, 一共有5个赛道, 现在要选出跑的最快的5匹马, 至少需要比赛几次?
+这个问题刚看到的时候, 看了一眼下面的答案就略过去了, 但是后面突然回想到这道题, 然后没有想通为什么是这样, 特此记录一下.
+首先这个问题有一些潜在的限制, 例如没有计时器, 不然全跑一遍计时一次, 看成绩取top5就好了. 现在是每次只能跑5匹马, 知道这一轮的排序.
+我们一步一步的来解决这个问题.
+首先想如果将top5, 修改为top1. 需要怎么安排? 是不是可以将25匹马, 5匹一组跑一次, 每组选出跑的最快的一匹, 再跑一轮, 这一轮的第一名就是top1了.
+当需要Top1时, 共需要5&#43;1=6次
+Ok, 到此我们先将上面的结果梳理一下, 将25匹马进行一下编号, 分为5组, 组编号为A,B,C,D,E, 组内的编号为1-5. 组内按照速度排序1-5, 每组按照顺序排序A-E
+此时, A1&gt;A2&gt;A3&gt;A4&gt;A5, A1&gt;B1&gt;C1&gt;D1&gt;E1. 但是我们不能知道A2, B1的关系.
+如果继续取top2, 需要怎么安排. 首先我们已经取出来了Top1. 那么剩下的人里面怎么取第二名呢. 最简单的方法是在跑一遍, 但是这样很明显的就会多跑. 我们现在已经有A1&gt;A2&gt;A3&gt;A4&gt;A5, A1&gt;B1&gt;C1&gt;D1&gt;E1. 这两个已知的排序. 是不是可以让A2, B1两匹马跑一次就可以得到谁是第二名了. 因为A2&gt;A3, 如果A2&lt;B1, 那么可证A3&lt;B1.
+当需要Top2时, 共需要6&#43;1=7次
+OK, 根据这个我们想一下, A2,B1是怎么找到的, 是不是从A1为起点, 查找走1步可以到达的节点. 如果继续取Top3, 需要怎么安排. 假设我们已经让A2, B1跑了一轮, 得到他们两个之间的排名. 我们假设他们两个的第一名是A2. A2就是全局第二名. 此时全局第三要怎么找呢? B2有资格参赛吗? 是不是没有资格, 因为前面还有B1. 所以仅需要B1和A3进行比赛就可以了. 同理如果B1得到第一名, 那么A3也没有资格参赛, 这时需要对C1, B2, A2进行比赛就可以了.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 一道智力题, 25匹马, 5条赛道, 选出跑的最快的5匹马, 至少需要跑几次
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">一道智力题, 25匹马, 5条赛道, 选出跑的最快的5匹马, 至少需要跑几次</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2025 年 02 月 12 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/%e6%99%ba%e5%8a%9b%e9%a2%98">#智力题</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="引言">引言</h1>
+<p>最近在网上冲浪的刷博客的时候, 看到一个题目.</p>
+<blockquote>
+<p>总共有25匹马, 一共有5个赛道, 现在要选出跑的最快的5匹马, 至少需要比赛几次?</p></blockquote>
+<p>这个问题刚看到的时候, 看了一眼下面的答案就略过去了, 但是后面突然回想到这道题, 然后没有想通为什么是这样, 特此记录一下.</p>
+<p>首先这个问题有一些潜在的限制, 例如没有计时器, 不然全跑一遍计时一次, 看成绩取top5就好了. 现在是每次只能跑5匹马, 知道这一轮的排序.</p>
+<p>我们一步一步的来解决这个问题.</p>
+<h3 id="首先想如果将top5-修改为top1-需要怎么安排">首先想如果将top5, 修改为top1. 需要怎么安排?</h3>
+<p>是不是可以将25匹马, 5匹一组跑一次, 每组选出跑的最快的一匹, 再跑一轮, 这一轮的第一名就是top1了.</p>
+<p><strong>当需要Top1时, 共需要5+1=6次</strong></p>
+<p>Ok, 到此我们先将上面的结果梳理一下, 将25匹马进行一下编号, 分为5组, 组编号为<code>A,B,C,D,E</code>, 组内的编号为<code>1-5</code>. 组内按照速度排序<code>1-5</code>, 每组按照顺序排序<code>A-E</code></p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121011982.png" alt="image.png"></p>
+<p>此时, <code>A1&gt;A2&gt;A3&gt;A4&gt;A5</code>, <code>A1&gt;B1&gt;C1&gt;D1&gt;E1</code>.
+但是我们不能知道<code>A2, B1</code>的关系.</p>
+<h3 id="如果继续取top2-需要怎么安排">如果继续取top2, 需要怎么安排.</h3>
+<p>首先我们已经取出来了<code>Top1</code>. 那么剩下的人里面怎么取第二名呢.
+最简单的方法是在跑一遍, 但是这样很明显的就会多跑.
+我们现在已经有<code>A1&gt;A2&gt;A3&gt;A4&gt;A5</code>, <code>A1&gt;B1&gt;C1&gt;D1&gt;E1</code>. 这两个已知的排序.
+是不是可以让<code>A2, B1</code>两匹马跑一次就可以得到谁是第二名了.
+因为<code>A2&gt;A3</code>, 如果<code>A2&lt;B1</code>, 那么可证<code>A3&lt;B1</code>.</p>
+<p><strong>当需要Top2时, 共需要6+1=7次</strong></p>
+<p>OK, 根据这个我们想一下, <code>A2,B1</code>是怎么找到的, 是不是从<code>A1</code>为起点, 查找走<code>1</code>步可以到达的节点.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121032685.png" alt="image.png"></p>
+<h3 id="如果继续取top3-需要怎么安排">如果继续取Top3, 需要怎么安排.</h3>
+<p>假设我们已经让<code>A2, B1</code>跑了一轮, 得到他们两个之间的排名.
+我们假设他们两个的第一名是<code>A2</code>. <code>A2</code>就是全局第二名.
+此时全局第三要怎么找呢?
+<code>B2</code>有资格参赛吗? 是不是没有资格, 因为前面还有<code>B1</code>. 所以仅需要<code>B1</code>和<code>A3</code>进行比赛就可以了.
+同理如果<code>B1</code>得到第一名, 那么<code>A3</code>也没有资格参赛, 这时需要对<code>C1, B2, A2</code>进行比赛就可以了.</p>
+<p>等一下, 这样的安排是最少的次数吗? 现在是争夺第二名的比赛中仅有两匹马, 争夺第三名有两匹或者三匹马比赛.
+要找到前三, 需要在第二名的比赛后再额外比赛一次, 我们现在第二名和第三名的比赛要参加的马总数是4或者5, 没有超过5条赛道, 是不是可以合并成一次比赛决出2,3名?</p>
+<p>我们从<code>A1</code>出发, 走<code>2</code>步, 所有可能到达的节点有:
+<code>A2, A3, B1, B2, C1</code>
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121033234.png" alt="image.png"></p>
+<p>此时, 共有<code>A2, A3, B1, B2, C1</code>共5匹马,  而我们正好有5条赛道, 正好可以一次完赛.
+这次完赛的第一,第二名, 正是我们全局的第二, 第三名. 可以自己证明一下.</p>
+<p><strong>当需要Top3时, 共需要6+1=7次</strong></p>
+<h3 id="如果继续取top4-需要怎么安排">如果继续取Top4, 需要怎么安排.</h3>
+<p>我们首先按照之前的规律, 选出哪些马, 有资格争夺前四
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121040856.png" alt="image.png"></p>
+<p>在Top3的比赛中, 共有5匹马进行比赛. <code>A2, A3, B1, B2, C1</code>. 完赛后, 我们就可以对他们之间再次进行排序.
+这里面的第一,第二名名就是全局的第二,第三名.
+这次比赛中的第三名, 能否作为全局的第四名呢?
+这个是不可以的, 例如:
+此次比赛<code>A2&gt;A3&gt;B1</code>. 我们能说<code>B1</code>是全局第四吗? 此时<code>A4</code>会不会比他快呢? 需要比赛一场才知道, 此时仅需要对<code>B1, A4</code>进行比赛即可.</p>
+<p>我们根据上面的情况罗列一下第七轮比赛所有可能的结果:</p>
+<ul>
+<li>
+<p>A2, A3是第二, 第三名
+此时争夺第四的资格只有<code>A4, B1</code>两匹马
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121056931.png" alt="image.png"></p>
+</li>
+<li>
+<p><code>A2, B1</code>是二三名
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121105079.png" alt="image.png">
+这时, 争夺第四资格的有<code>A3,B2,C1</code>三匹马.
+而<code>A3, B2, C1</code>的排序我们在上一轮中, 就可以得到了. 所以这一轮就可以省略掉. 不需要进行比赛了</p>
+</li>
+<li>
+<p><code>B1,B2</code>是二三名
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121108568.png" alt="image.png">
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121108568.png" alt="">
+这时, 争夺第四资格的有<code>A2,B3,C1</code>三匹马</p>
+</li>
+<li>
+<p><code>B1, C2</code>是二三名
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121120489.png" alt="image.png"></p>
+</li>
+</ul>
+<p>这时, 争夺第四资格的有<code>A2,B2,C2, D1</code>四匹马</p>
+<p>至此, 我们已经整理完成所有可能的情况, 最多也只有4匹马有参赛资格, 只需要一次就可以完赛.</p>
+<p><strong>当需要Top4时, 最少需要7次, 最多需要8次</strong></p>
+<h3 id="如果继续取top5-需要怎么安排">如果继续取Top5, 需要怎么安排.</h3>
+<p>我们还是首先列出来, 有哪些马有资格争夺前五
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121508687.png" alt="image.png">
+我们按照Top4的经验, 再来看下在已知Top3的情况下, 该如何安排.</p>
+<ul>
+<li>
+<p><code>A2, A3</code>是第二, 第三名
+此时有资格去与<code>B1, B2, C1</code>争夺前五比赛资格的只有<code>A4,A5</code>
+而他们正好只有5匹, 正好可以构成一组
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502121120528.png" alt=""></p>
+</li>
+<li>
+<p><code>A2, B1</code>是二三名
+我们假设<code>A2</code>第二, <code>B1</code>第三.
+还剩下<code>A3, B2, C1</code>三匹马
+如果在第七轮中, <code>A2&gt;B1&gt;A3&gt;B2&gt;C1</code>. 此时<code>A3</code>就是第四名, 第五名的争夺资格只有<code>A4, B2</code>两匹马.
+那么如果是<code>A2&gt;B1&gt;B2&gt;A3&gt;C1</code>.  此时仅需对<code>A3, B3</code>进行比赛, 就能找出第五名
+如果是<code>A2&gt;B1&gt;C1&gt;A3&gt;B2</code>, 此时抉择第五名就需要<code>C2, D1, A3</code>进行比赛了.
+其他情况不再证明, 都是少于5匹马, 可以仅比赛一轮就能完成.
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502122237301.png" alt="image.png"></p>
+</li>
+<li>
+<p><code>B1,B2</code>是二三名
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502122244158.png" alt="image.png">
+如果在第七轮比赛中, <code>B1&gt;B2&gt;C1&gt;A2&gt;A3</code>. 此时前五的资格就需要对<code>A2,B3,C2,D1</code>四匹马进行比赛. 也仅需要一轮即可.
+其他情况更加简单, 不在讨论.</p>
+</li>
+<li>
+<p><code>B1, C2</code>是二三名
+此时是最复杂的情况.
+当<code>B1&gt;C2</code>时, 第三名可能是<code>A2</code>或者<code>B2</code>. 但是我们仍然无法确定它是不是全局的第四, 因为没有与<code>D1</code>进行比赛
+我们首先进行一轮<code>A2,B2,C2,D1</code>的比赛, 得到第一名.
+假如第一名是<code>D1</code>, 此时他是全局第四, 要得到全局第五还需要进行一轮比赛, 让<code>D2,E1</code>与刚刚这一轮的第二名比赛即可
+假如第一名是<code>A2/B2/C2</code>任意一名, 则还需要进行一轮<code>A3/B3/C3</code>与第二名的比赛即可
+<img src="https://raw.githubusercontent.com/liunaijie/images/master/202502122302597.png" alt="image.png"></p>
+</li>
+</ul>
+<p><strong>当需要Top5时, 最少是需要8次比赛的. 最多情况下, 进行9次比赛就可以找出top5</strong></p>
+<h1 id="总结一下">总结一下</h1>
+<p>这道题如果用图的方式来表示, 更加容易理解, 经过前6轮比赛, 可以得到一组关系, 一个根节点, 然后找剩下的最近的4个节点. 每次查找充分利用5条赛道的条件, 得到更多的参数, 从而优化下一次的结果.</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://juejin.cn/post/7077545879384637447">https://juejin.cn/post/7077545879384637447</a></li>
+</ul>
+
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

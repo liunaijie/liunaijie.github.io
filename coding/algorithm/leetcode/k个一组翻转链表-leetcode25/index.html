@@ -141,8 +141,7 @@ k 是一个正整数，它的值小于或等于链表的长度。
 当 k = 3 时，应当返回: 3-&gt;2-&gt;1-&gt;4-&gt;5
 说明 :
 你的算法只能使用常数的额外空间。
-你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换</p>
-</blockquote>
+你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换</p></blockquote>
 <h1 id="解题思路">解题思路</h1>
 <p>首先根据 k，分隔每一组。将这一组反转，将下面的一组递归调用函数，然后将这一组的最后一个节点（就是参数中的头结点）与下一组反转后的头结点相连接。</p>
 <h1 id="代码">代码</h1>
@@ -235,14 +234,12 @@ k 是一个正整数，它的值小于或等于链表的长度。
 <blockquote>
 <p>给定一个链表：1-&gt;2-&gt;3-&gt;4-&gt;5
 当 k = 2 时，应当返回: 1-&gt;3-&gt;2-&gt;5-&gt;4
-当 k = 3 时，应当返回: 1-&gt;2-&gt;5-&gt;4-&gt;3</p>
-</blockquote>
+当 k = 3 时，应当返回: 1-&gt;2-&gt;5-&gt;4-&gt;3</p></blockquote>
 <p>这道题需要先转换一下思路：如果给定的是这样：</p>
 <blockquote>
 <p>给定一个链表：5-&gt;4-&gt;3-&gt;2-&gt;1
 当 k = 2 时，应当返回: 4-&gt;5-&gt;2-&gt;3-&gt;1
-当 k = 3 时，应当返回: 3-&gt;4-&gt;5-&gt;2-&gt;1</p>
-</blockquote>
+当 k = 3 时，应当返回: 3-&gt;4-&gt;5-&gt;2-&gt;1</p></blockquote>
 <p>是不是就和我们刚刚做的题目一样了。所以我们要做的是先将链表反转，然后进行 k 个一组反转，最后再将链表反转回来。最终的代码如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -323,7 +320,7 @@ k 是一个正整数，它的值小于或等于链表的长度。
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

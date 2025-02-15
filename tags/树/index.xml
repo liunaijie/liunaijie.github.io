@@ -48,7 +48,7 @@
       <link>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/%E5%B0%86%E9%93%BE%E8%A1%A8%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%A0%91/</link>
       <pubDate>Sun, 15 Dec 2019 00:00:00 +0000</pubDate>
       <guid>https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/%E5%B0%86%E9%93%BE%E8%A1%A8%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%A0%91/</guid>
-      <description>&lt;h1 id=&#34;题目来源&#34;&gt;题目来源&lt;/h1&gt;&#xA;&lt;p&gt;今天做了个题：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;将一个链表里的数据组装树形结构，链表里的数据已经满足树形结构要求&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这道题描述的很简单，但是有很多种情况。他只说了链表数据满足树形结构要求，并没有说明数据到底是什么样的，也就是题目参数具有多样性，这样其实我们给出一种解决方案就可以。而且也只要求将链表转换为树，并没有说是什么树。所以这道题说难也难，说简单也简单。&lt;/p&gt;&#xA;&lt;h1 id=&#34;解题思路&#34;&gt;解题思路&lt;/h1&gt;&#xA;&lt;p&gt;最近也将平衡二叉树的原理看了一下，正好借着这道题将代码手写一下。&lt;/p&gt;&#xA;&lt;p&gt;我写了一个平衡二叉树的插入方法。我们不管链表里面的数据是如何排序的，我们只要调用树的插入方法即可。在插入方法内部实现树的平衡。&lt;/p&gt;&#xA;&lt;p&gt;所以我们这道题也就转换成了手写平衡二叉树的插入过程。&lt;/p&gt;</description>
+      <description>&lt;h1 id=&#34;题目来源&#34;&gt;题目来源&lt;/h1&gt;&#xA;&lt;p&gt;今天做了个题：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;将一个链表里的数据组装树形结构，链表里的数据已经满足树形结构要求&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;这道题描述的很简单，但是有很多种情况。他只说了链表数据满足树形结构要求，并没有说明数据到底是什么样的，也就是题目参数具有多样性，这样其实我们给出一种解决方案就可以。而且也只要求将链表转换为树，并没有说是什么树。所以这道题说难也难，说简单也简单。&lt;/p&gt;&#xA;&lt;h1 id=&#34;解题思路&#34;&gt;解题思路&lt;/h1&gt;&#xA;&lt;p&gt;最近也将平衡二叉树的原理看了一下，正好借着这道题将代码手写一下。&lt;/p&gt;&#xA;&lt;p&gt;我写了一个平衡二叉树的插入方法。我们不管链表里面的数据是如何排序的，我们只要调用树的插入方法即可。在插入方法内部实现树的平衡。&lt;/p&gt;&#xA;&lt;p&gt;所以我们这道题也就转换成了手写平衡二叉树的插入过程。&lt;/p&gt;</description>
     </item>
     <item>
       <title>AVL，红黑树学习</title>

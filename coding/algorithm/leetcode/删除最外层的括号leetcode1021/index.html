@@ -160,8 +160,7 @@
 提示：
 S.length &lt;= 10000
 S[i] 为 &ldquo;(&rdquo; 或 &ldquo;)&rdquo;
-S 是一个有效括号字符串</p>
-</blockquote>
+S 是一个有效括号字符串</p></blockquote>
 <h1 id="解题思路">解题思路：</h1>
 <p>字符串S是一个有效括号字符串，那么我们可以先进行原语化分解，然后再对每个原语进行去除最外层括号。</p>
 <p>进行原语分解的时候我们可以定义一个值和一个字符串，遇到左括号这个值加一并将左括号添加到这个字符串上，遇到右括号这个值减一并且将右括号添加到字符串上，当这个值变成0并且字符串的长度为2的倍数时就可以认为这个字符串是一个原语。</p>
@@ -279,7 +278,7 @@ S 是一个有效括号字符串</p>
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

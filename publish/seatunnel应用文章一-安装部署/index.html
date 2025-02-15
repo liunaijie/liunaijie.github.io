@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/publish/seatunnel%E5%BA%94%E7%94%A8%E6%96%87%E7%AB%A0%E4%B8%80-%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="SeaTunnel应用文章(一)-安装部署">
+  <meta property="og:description" content="前言 这篇文章会介绍一下, SeaTunnel如何在不同环境下进行安装部署, 以及一些可以去调节的参数配置. 这里仅设计Zeta引擎的相关内容, Spark, Flink引擎的提交不需要搭建集群, 所以不会涉及.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="publish">
+    <meta property="article:published_time" content="2024-12-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-24T00:00:00+00:00">
+    <meta property="article:tag" content="SeaTunnel">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SeaTunnel应用文章(一)-安装部署">
+  <meta name="twitter:description" content="前言 这篇文章会介绍一下, SeaTunnel如何在不同环境下进行安装部署, 以及一些可以去调节的参数配置. 这里仅设计Zeta引擎的相关内容, Spark, Flink引擎的提交不需要搭建集群, 所以不会涉及.">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - SeaTunnel应用文章(一)-安装部署
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">SeaTunnel应用文章(一)-安装部署</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2024 年 12 月 24 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/SeaTunnel">#SeaTunnel</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="前言">前言</h1>
+<p>这篇文章会介绍一下, <code>SeaTunnel</code>如何在不同环境下进行安装部署, 以及一些可以去调节的参数配置.
+这里仅设计<code>Zeta</code>引擎的相关内容, <code>Spark</code>, <code>Flink</code>引擎的提交不需要搭建集群, 所以不会涉及.</p>
+<h1 id="seatunnel的集群原理">SeaTunnel的集群原理</h1>
+<p>我想先提一下<code>SeaTunnel</code>的集群工作原理, 再来将如何安装, 这样在后面安装的时候就可以了解每一个步骤是干什么用的.
+当启动多个节点搭建集群时, 主要的一件事情就是组网. 只有组网成功, 才能构成一个集群, 当多个节点构成一个集群后, 才能去选举.
+<code>SeaTunnel</code>依赖<code>hazelcast</code>这样一个分布式内存组件来进行组网和选举, 没有引入类似<code>Zookeeper</code>这样的额外组件, 也没有自己去实现单独的通信机制, 复用了<code>hazelcast</code>的功能.
+所以搭建<code>SeaTunnel</code>集群其实就是如何去搭建<code>hazelcast</code>的集群.</p>
+<h1 id="配置文件说明">配置文件说明</h1>
+<p>在集群部署时, 总共会用到一下几类配置文件:</p>
+<ul>
+<li><code>hazelcast</code>的配置 - 用于组网
+<ul>
+<li><code>hazelcast.yaml</code> 混合模式下使用的配置文件</li>
+<li><code>hazelcast-master.yaml</code> 分离模式下, <code>master</code>使用的配置文件</li>
+<li><code>hazelcast-worker.yaml</code> 分离模式下, <code>worker</code>使用的配置文件</li>
+<li><code>hazelcast-client.yaml</code> 命令行提交时, 客户端使用的配置文件</li>
+</ul>
+</li>
+<li><code>seatunnel</code>的配置 - 用于设置<code>Zeta</code>引擎的一些功能
+<ul>
+<li><code>seatunnel.yaml</code> 设置<code>Zeta</code>引擎功能的一些配置文件</li>
+</ul>
+</li>
+<li><code>log4j</code>的配置 - 用于设置日志的输出
+<ul>
+<li><code>log4j2.properties</code> 集群使用的日志配置文件</li>
+<li><code>log4j2_client.properties</code> 命令行提交任务时, 客户端使用的配置文件</li>
+</ul>
+</li>
+<li><code>jvm</code>的配置
+<ul>
+<li><code>jvm_options</code> 混合模式下, 会添加到<code>jvm</code>的配置</li>
+<li><code>jvm_master_options</code> 分离模型下, 会添加到<code>master</code>的<code>jvm</code>配置</li>
+<li><code>jvm_worker_options</code> 分离模型下, 会添加到<code>worker</code>的<code>jvm</code>配置</li>
+</ul>
+</li>
+</ul>
+<p>如果需要集成<code>Flink</code>, <code>Spark</code>, 你还需要注意下这个配置文件</p>
+<ul>
+<li><code>seatunnel-env.sh</code> 设置<code>Flink</code>, <code>Spark</code>的安装路径</li>
+</ul>
+<h2 id="hazelcast相关配置">hazelcast相关配置</h2>
+<p>在<code>hazelcast</code>中, 一个节点, 根据是否需要存储数据, 分为数据节点和精简节点.
+顾名思义数据节点会分布式的存储数据, 而精简节点不会去存储数据, 仅会去执行任务. 在<code>SeaTunnel</code>中使用该特性来在主从分离架构中区分<code>master</code>节点和<code>worker</code>节点.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">hazelcast</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cluster-name</span><span class="p">:</span><span class="w"> </span><span class="l">seatunnel  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">network</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">rest-api</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">endpoint-groups</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">CLUSTER_WRITE</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">DATA</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">join</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">tcp-ip</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">member-list</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">localhost  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">auto-increment</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">5801</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">properties</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.invocation.max.retry.count</span><span class="p">:</span><span class="w"> </span><span class="m">20</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.tcp.join.port.try.count</span><span class="p">:</span><span class="w"> </span><span class="m">30</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.logging.type</span><span class="p">:</span><span class="w"> </span><span class="l">log4j2  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.operation.generic.thread.count</span><span class="p">:</span><span class="w"> </span><span class="m">50</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.heartbeat.failuredetector.type</span><span class="p">:</span><span class="w"> </span><span class="l">phi-accrual  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.heartbeat.interval.seconds</span><span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.max.no.heartbeat.seconds</span><span class="p">:</span><span class="w"> </span><span class="m">180</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.heartbeat.phiaccrual.failuredetector.threshold</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.heartbeat.phiaccrual.failuredetector.sample.size</span><span class="p">:</span><span class="w"> </span><span class="m">200</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">hazelcast.heartbeat.phiaccrual.failuredetector.min.std.dev.millis</span><span class="p">:</span><span class="w"> </span><span class="m">100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">member-attributes</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">	  </span><span class="nt">group</span><span class="p">:</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">		  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">string    </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l">platform  </span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个是一个官方提供的配置文件.
+这里一个有这几个配置项:</p>
+<ul>
+<li>
+<p><code>cluster-name</code>
+当需要连接到一个集群时, 名称必须一致.
+你如果需要在一个或一组机器上部署多个集群, 则只有名称一致的才会加入一个集群, 名称不一致时不会进入一个集群</p>
+</li>
+<li>
+<p><code>network.rest-api</code>
+这个选项, 不要去修改.
+这个选项开启后, 就可以在外部通过<code>rest-api</code>来提交任务, 查询状态等等.</p>
+</li>
+</ul>
+<blockquote>
+<p>在<code>2.3.9</code>版本中, 引入了<code>Jetty</code>来作为<code>rest-api</code>的实现, 所以这部分功能可能在后续的几个版本中移除掉, 当移除后, 这部分可以删除. 就目前版本来说, 不需要变动</p></blockquote>
+<ul>
+<li>
+<p><code>network.port</code>
+这个是<code>hazelcast</code>对外交互的端口, <code>hazelast</code>的默认端口是<code>5701</code>, 在<code>seatunnel</code>中修改为<code>5801</code>, 如果这个端口被占用, 可以修改为其他端口.
+<code>auto-increment</code>这个配置, 推荐设置为<code>false</code>, 否则当设置的端口被占用后, 会递增100个端口进行尝试, 在生产环节中, 不要去修改, 否则你的端口很可能就变成随机的了.
+如果在同一个机器上启动多个实例, 这里就需要人工去修改.</p>
+</li>
+<li>
+<p><code>network.join</code> 这个是最重要的一个配置, 这里就是如何去组网的关键配置.
+这个部分在不同的部署策略上, 有所不同, 具体需要设置成什么, 在下面具体部署时再看详细的设置.</p>
+</li>
+<li>
+<p><code>member-attributes</code> 对这个/这组节点添加属性, 后续在提交任务时, 可以根据这个值来选择相应的节点去运行任务 (这一部分, 具体文档可以参考 <a href="https://seatunnel.apache.org/docs/2.3.8/seatunnel-engine/resource-isolation/">https://seatunnel.apache.org/docs/2.3.8/seatunnel-engine/resource-isolation/</a>)</p>
+</li>
+</ul>
+<h1 id="混合部署vs分离部署">混合部署VS分离部署</h1>
+<p>在2.3.6版本中,推出了主从分离部署的架构, 推出这个架构要解决的问题是在混合部署中, <code>master</code>节点即负责任务的分配, 管理工作, 也需要进行任务的同步工作. 当<code>master</code>负载较高后, 对整体的集群都会有影响.
+采用主从分离架构后, master, worker的工作职责分离开来, 不太容易产生高负载的情况, 但需要有一个备用master节点在没出问题时空闲在那里, 出问题后会接管master的状态. 这个资源的使用与集群的稳定性相比, 问题不大.
+推荐使用分离模式来进行部署.</p>
+<h1 id="物理机部署">物理机部署</h1>
+<p>这里以在本地部署两个服务, 一个master服务, 一个worker服务为例, 讲述下如何在物理机环境下进行部署.
+需要改动的文件有:</p>
+<ul>
+<li>`hazelcast-master.yaml</li>
+<li><code>hazelcast-worker.yaml</code></li>
+<li><code>hazelcast-client.yaml</code>
+在一个机器上部署两个服务, 就需要将其中一个服务的端口修改为一个不同的端口, 这里将<code>worker</code>的端口修改为<code>5901</code>, 而<code>master</code>仍然使用<code>5801</code>端口.
+<code>hazelcast-master.yaml</code>的配置文件为:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">xxx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">join</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nt">tcp-ip</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nt">member-list</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span>- <span class="l">localhost:5801</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span>- <span class="l">localhost:5901</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">port</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nt">auto-increment</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">5801</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">xxx</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>hazelcast-worker.yaml</code>的配置文件为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">xxx</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">join</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nt">tcp-ip</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="nt">member-list</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span>- <span class="l">localhost:5801</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span>- <span class="l">localhost:5901</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nt">port</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nt">auto-increment</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">5901</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="l">xxx</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后运行这两个命令:</p>
+<pre tabindex="0"><code>./bin/seatunnel-cluster.sh -r master
+./bin/seatunnel-cluster.sh -r worker
+</code></pre><p>分别查看两个<code>logs/seatunnel-engine-master.log</code>和<code>logs/seatunnel-engine-worker.log</code>日志文件, 检查是否部署成功, 是否有报错信息.</p>
+<p>然后修改<code>hazelcast-client.yaml</code>配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">hazelcast-client</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cluster-name</span><span class="p">:</span><span class="w"> </span><span class="l">seatunnel  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">properties</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">hazelcast.logging.type</span><span class="p">:</span><span class="w"> </span><span class="l">log4j2  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">connection-strategy</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">connection-retry</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cluster-connect-timeout-millis</span><span class="p">:</span><span class="w"> </span><span class="m">3000</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">network</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">cluster-members</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">localhost:5801</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">localhost:5901</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>修改完成后, 使用<code>./bin/seatunnel.sh -c &lt;要提交的配置文件&gt;</code> 即可将该任务提交到集群中运行.</p>
+<h1 id="k8s环境部署">K8S环境部署</h1>
+<p>在K8S中部署, 与物理机部署, 不同的点主要是K8S中<code>pod</code>重启后, <code>IP</code>地址就会变化, 当使用<code>TCP/IP</code>的方式配置时, 就无法指定每个节点的地址.
+要解决这个问题有两种方式:</p>
+<ol>
+<li>使用<code>StatefulSet</code>来进行部署, 在结合<code>headless service</code>, 可以实现固定域名来实现<code>member-list</code>不需要改动</li>
+<li>使用<code>K8S</code>的组网方式, 不需要指定每个节点的<code>IP/域名</code>.
+个人经验是推荐使用第二种<code>K8S</code>的组网方式, 更加简洁一点</li>
+</ol>
+<p>需要修改的地方为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">join</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">kubernetes</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service-dns</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;将headless的域名填到这里即可&gt;  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service-port</span><span class="p">:</span><span class="w"> </span><span class="m">5801</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">port</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">auto-increment</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">5801</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>另外有一个地方可以去修改一下, 默认设置中, 日志会打印到文件中, 如果<code>pod</code>的磁盘容量有限, 或者日志采集服务无法对文件进行采集, 可以将打印方式修改为<code>Console</code>, 这样部署完成后可以直接运行命令<code>kubectl logs xxx-pod</code>来查看日志, 不需要再进入容器查看文件.
+具体修改的文件为:</p>
+<ul>
+<li><code>log4j2.properties</code>
+将<code>rootLogger.appenderRef.consoleStdout.ref</code>, <code>rootLogger.appenderRef.consoleStderr.ref</code>配置前的注释打开, 将<code>rootLogger.appenderRef.file.ref</code>配置添加注释, 从而将日志打印到控制台</li>
+</ul>
+<p>提交任务, 一种是进入到容器内, 执行<code>seatunnel.sh</code>命令去提交任务.
+而另外一种方式则是使用<code>Rest API</code>来提交任务</p>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

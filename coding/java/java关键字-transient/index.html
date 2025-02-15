@@ -146,8 +146,7 @@ Java 提供自动序列化，需要以java.io.Serializable接口的实例来标�
 <blockquote>
 <p>Java 提供自动序列化，需要以<code>java.io.Serializable</code>接口的实例来标明对象。实现接口将类别标明为“可序列化”，然后Java在内部处理序列化。在<code>Serializable</code>接口上并没有预先定义序列化的方法，但可序列化类别可任意定义某些特定名称和签署的方法，如果这些方法有定义了，可被调用运行序列化/反序列化部分过程。该语言允许开发人员以另一个<code>Externalizable</code>接口，更彻底地实现并覆盖序列化过程，这个接口包括了保存和恢复对象状态的两种特殊方法。</p>
 <p>在默认情况下有三个主要原因使对象无法被序列化。其一，在序列化状态下并不是所有的对象都能获取到有用的语义。例如，<code>Thread</code>对象绑定到当前Java虚拟机的状态，对<code>Thread</code>对象状态的反序列化环境来说，没有意义。其二，对象的序列化状态构成其类别兼容性缔结（compatibility contract）的某一部分。在维护可序列化类别之间的兼容性时，需要额外的精力和考量。所以，使类别可序列化需要慎重的设计决策而非默认情况。其三，序列化允许访问类别的永久私有成员，包含敏感信息（例如，密码）的类别不应该是可序列化的，也不能外部化。上述三种情形，必须实现<code>Serializable</code>接口来访问Java内部的序列化机制。标准的编码方法将字段简单转换为字节流。</p>
-<p>原生类型以及永久和非静态的对象引用，会被编码到字节流之中。序列化对象引用的每个对象，若其中未标明为<code>transient</code>的字段，也必须被序列化；如果整个过程中，引用到的任何永久对象不能序列化，则这个过程会失败。开发人员可将对象标记为暂时的，或针对对象重新定义的序列化，来影响序列化的处理过程，以截断引用图的某些部分而不序列化。Java并不使用构造函数来序列化对象。</p>
-</blockquote>
+<p>原生类型以及永久和非静态的对象引用，会被编码到字节流之中。序列化对象引用的每个对象，若其中未标明为<code>transient</code>的字段，也必须被序列化；如果整个过程中，引用到的任何永久对象不能序列化，则这个过程会失败。开发人员可将对象标记为暂时的，或针对对象重新定义的序列化，来影响序列化的处理过程，以截断引用图的某些部分而不序列化。Java并不使用构造函数来序列化对象。</p></blockquote>
 <p>从上面的最后一段可以了解，如果没有添加<code>transient</code>关键字，则会被进行序列化。也就是说添加了这个关键字后就不会被序列化。</p>
 <p>接下来我们将用一个例子来测试一下</p>
 <h1 id="简单例子">简单例子</h1>
@@ -407,7 +406,7 @@ Java 提供自动序列化，需要以java.io.Serializable接口的实例来标�
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

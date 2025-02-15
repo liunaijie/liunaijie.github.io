@@ -153,8 +153,7 @@
 <p>输入: &ldquo;pwwkew&rdquo;
 输出: 3
 解释: 因为无重复字符的最长子串是 &ldquo;wke&rdquo;，所以其长度为 3。
-请注意，你的答案必须是 子串 的长度，&ldquo;pwke&rdquo; 是一个子序列，不是子串。</p>
-</blockquote>
+请注意，你的答案必须是 子串 的长度，&ldquo;pwke&rdquo; 是一个子序列，不是子串。</p></blockquote>
 <p>要注意这个题目最后要求返回的是长度，并不是最长的子串内容是什么</p>
 <h1 id="解题思路">解题思路</h1>
 <p>先来分析一下我的做法，我将字符串遍历，然后添加到一个新字符串中。如果字符没有出现在字符串中就添加，当字符串已经出现在字符串中后，从出现位置开始截取，然后与后面的内容再进行拼接，最后比较字符串的长度与预设值，取最大值作为新的长度。</p>
@@ -349,7 +348,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

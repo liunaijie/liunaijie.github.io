@@ -184,8 +184,7 @@ int len = removeElement(nums, val);</p>
 // 根据你的函数返回的长度, 它会打印出数组中 该长度范围内 的所有元素。
 for (int i = 0; i &lt; len; i++) {
 print(nums[i]);
-}</p>
-</blockquote>
+}</p></blockquote>
 <h1 id="解题思路">解题思路</h1>
 <h2 id="双指针法">双指针法</h2>
 <p>我们可以利用快慢指针，开始时<code>i,j</code>两个指针都在左侧，然后<code>j</code>右移，如果元素与给定值相同则继续向前走，直到遇到不相同的值，然后将这个值赋值到<code>i</code>的位置上，然后<code>i,j</code>再一起向前走，最后<code>i</code>左侧的内容即为需要保留的元素。</p>
@@ -274,7 +273,7 @@ print(nums[i]);
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.140.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Seatunnel on Jarvis`s library</title>
+    <title>SeaTunnel on Jarvis`s library</title>
     <link>https://www.liunaijie.top/tags/seatunnel/</link>
-    <description>Recent content in Seatunnel on Jarvis`s library</description>
+    <description>Recent content in SeaTunnel on Jarvis`s library</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 25 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 24 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.liunaijie.top/tags/seatunnel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SeaTunnel应用文章(一)-安装部署</title>
+      <link>https://www.liunaijie.top/publish/seatunnel%E5%BA%94%E7%94%A8%E6%96%87%E7%AB%A0%E4%B8%80-%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Tue, 24 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://www.liunaijie.top/publish/seatunnel%E5%BA%94%E7%94%A8%E6%96%87%E7%AB%A0%E4%B8%80-%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
+      <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;&#xA;&lt;p&gt;这篇文章会介绍一下, &lt;code&gt;SeaTunnel&lt;/code&gt;如何在不同环境下进行安装部署, 以及一些可以去调节的参数配置.&#xA;这里仅设计&lt;code&gt;Zeta&lt;/code&gt;引擎的相关内容, &lt;code&gt;Spark&lt;/code&gt;, &lt;code&gt;Flink&lt;/code&gt;引擎的提交不需要搭建集群, 所以不会涉及.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>SeaTunnel源码解析-(二)Zeta引擎源码讲解</title>
       <link>https://www.liunaijie.top/publish/seatunnel%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E4%BA%8Czeta%E5%BC%95%E6%93%8E%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3/</link>
