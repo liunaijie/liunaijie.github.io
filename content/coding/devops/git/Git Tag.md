@@ -4,7 +4,7 @@ date: 2022-03-09
 categories:
   - notes
 tags:
-  - git
+  - Git
 ---
 
 Git commit是一次文件提交.

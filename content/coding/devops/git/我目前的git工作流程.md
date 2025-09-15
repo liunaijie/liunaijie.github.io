@@ -4,7 +4,7 @@ date: 2020-06-20
 categories:
   - notes
 tags:
-  - git
+  - Git
 ---
 
 好久没写博客了。。。

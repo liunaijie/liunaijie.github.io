@@ -4,7 +4,7 @@ date: 2019-05-29
 categories:
   - notes
 tags:
-  - git
+  - Git
 ---
 
 # 安装

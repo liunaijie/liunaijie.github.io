@@ -4,7 +4,7 @@ date: 2021-07-04
 categories:
   - publish
 tags:
-  - git
+  - Git
 ---
 这篇文章记录下使用`Git`时的一些进阶操作, 命令.
 

@@ -4,7 +4,7 @@ date: 2020-05-08
 categories:
   - notes
 tags:
-  - git
+  - Git
 ---
 
 # 背景
