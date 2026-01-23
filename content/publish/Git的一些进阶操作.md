@@ -60,7 +60,7 @@ if [[ "$result" = 0 ]] ; then
 	exit 0
 else
 
-echo "
+	echo "
 	....
 	will auto update code style and commit it
 	....
