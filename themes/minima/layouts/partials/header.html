@@ -11,11 +11,9 @@
         whitespace-nowrap overflow-x-auto overflow-y-hidden">
         {{ range .Site.Menus.main }}
         <li class="ml-2 mr-2">
-          {{ if eq .Identifier "home" }}
-          <a href='{{ relLangURL "" }}'>{{ T .Identifier | default .Name }}</a>
-          {{ else }}
-          <a href="{{ relLangURL .Identifier }}">{{ T .Identifier | default .Name }}</a>
-          {{ end }}
+          <a href="{{ .URL | relLangURL }}">
+            {{ T .Identifier | default .Name }}
+          </a>
         </li>
         {{ end }}
       </ul>

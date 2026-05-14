@@ -9,9 +9,9 @@
     <div class="text-sm font-bold whitespace-nowrap">{{ .Date | time.Format (T "timeformat") }}</div>
     {{ end }}
   </div>
-  {{ if .Site.Params.displayDescription }}
-  <p class="text-base mb-2">
-    {{ .Description | markdownify | safeHTML }}
-  </p>
+  {{ if in .RawContent "<!--more-->" }}
+  <div class="post-summary">
+    {{ .Summary | plainify }}
+  </div>
   {{ end }}
 </div>

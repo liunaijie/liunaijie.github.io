@@ -1,0 +1,19 @@
+{{ define "main" }}
+<main class="container mx-auto">
+  <h3 class="text-center sm:text-left mt-6 mb-4 text-2xl font-bold">All</h3>
+
+  <div>
+    {{ $paginator := .Paginate .Site.RegularPages }}
+
+    {{ range $paginator.Pages }}
+      {{ if ne .Page.Layout "search" }}
+        <div class="mb-8">
+          {{ partial "item.html" . }}
+        </div>
+      {{ end }}
+    {{ end }}
+
+    {{ partial "paginator.html" . }}
+  </div>
+</main>
+{{ end }}

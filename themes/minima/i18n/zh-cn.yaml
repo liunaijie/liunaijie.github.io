@@ -15,6 +15,8 @@ tags:
   other: 标签
 series:
   other: 系列
+all:
+  other: 全部
 
 timeformat:
   other: 2006 年 01 月 02 日

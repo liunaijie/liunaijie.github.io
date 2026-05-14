@@ -11,7 +11,9 @@
         <a href="#{{ .Key }}">{{ .Key }}</a>
       </h3>
       {{ range .Pages }}
-      {{ partial "item.html" . }}
+      <div class="post-item mb-8">
+        {{ partial "item.html" . }}
+      </div>
       {{ end }}
     {{ end }}
   </div>
