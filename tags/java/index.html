@@ -29,11 +29,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  <link rel="stylesheet" href="/minima.1b6413fe51eb67cdaa53f332ceccde456b597ee0f7989f361139a3b5134553f2.css" integrity="sha256-G2QT/lHrZ82qU/MyzszeRWtZfuD3mJ82ETmjtRNFU/I=">
   
   
   
-  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  <script defer type="text/javascript" src="/minima.d4f3288dc16236e2bb2b7a6e53f8f5e0c59b5aed645dc2c32b76fd3ae85f7f00.js" integrity="sha256-1PMojcFiNuK7K3puU/j14MWbWu1kXcLDK3b9OuhffwA="></script>
   
   
   
@@ -67,27 +67,27 @@
         whitespace-nowrap overflow-x-auto overflow-y-hidden">
         
         <li class="ml-2 mr-2">
-          
-          <a href='/'>首页</a>
-          
+          <a href="/">
+            Posts
+          </a>
         </li>
         
         <li class="ml-2 mr-2">
-          
-          <a href="/tags">标签</a>
-          
+          <a href="/all/">
+            全部
+          </a>
         </li>
         
         <li class="ml-2 mr-2">
-          
-          <a href="/search">搜索</a>
-          
+          <a href="/tags/">
+            标签
+          </a>
         </li>
         
         <li class="ml-2 mr-2">
-          
-          <a href="/about">关于</a>
-          
+          <a href="/about/">
+            关于
+          </a>
         </li>
         
       </ul>
@@ -111,7 +111,8 @@
         <a href="#2022">2022</a>
       </h3>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E4%B8%AD%E7%9A%84%E9%94%81/">Java中的锁</a>
@@ -121,18 +122,16 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
-  
 </div>
+      </div>
       
     
       <h3 class="text-3xl font-bold mb-4 mt-8">
         <a href="#2020">2020</a>
       </h3>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast%E4%B8%8Efail-safe/">什么是fail-fast与fail-safe</a>
@@ -142,18 +141,28 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    fail-fast与fail-safe 在Collection集合的各个类中，有线程安全和线程不安全这2大类的版本。
+对于线程不安全的类，并发情况下可能会出现fail-fast情况；而线程安全的类，可能出现fail-safe的情况。
+**快速失败（fail—fast）**是java集合中的一种机制， 在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出Concurrent Modification Exception。
+**安全失败（fail-sage）**保存了该集合对象的一个快照副本。你可以并发读取，不会抛出异常，但是不保证你遍历读取的值和当前集合对象的状态是一致的！
+fail-fast 来看一下线程不安全的类ArrayList，它实现fail-fast主要靠一个字段modCount。来从头认识一下它。
+首先找到引用它的地方：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 public boolean add(E e) { ensureCapacityInternal(size + 1); // Increments modCount!! elementData[size++] = e; return true; } private void ensureCapacityInternal(int minCapacity) { ensureExplicitCapacity(calculateCapacity(elementData, minCapacity)); } private void ensureExplicitCapacity(int minCapacity) { modCount++; // overflow-conscious code if (minCapacity - elementData.length &gt; 0) grow(minCapacity); } public E remove(int index) { rangeCheck(index); modCount++; E oldValue = elementData(index); int numMoved = size - index - 1; if (numMoved &gt; 0) System.arraycopy(elementData, index+1, elementData, index, numMoved); elementData[--size] = null; // clear to let GC do its work return oldValue; } 可以看出，在增加元素，删除元素时都会对modCount值加一。当我们查看更新，查找的代码时并没有找到对modCount的修改。
+modCount字段翻译过来就是修改次数，再结合上面的代码可以了解到只有在结构发生变化，数量增减的时候才会修改。查找不会对结构发生变化也不用修改，至于更新操作，虽然它修改了值，但是在结构上总体的数量没有改变，结构上指的是：是谁不重要，有就行。
+
+  </div>
   
 </div>
+      </div>
       
     
       <h3 class="text-3xl font-bold mb-4 mt-8">
         <a href="#2019">2019</a>
       </h3>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6%E8%AF%A6%E8%A7%A3/">Java位运算符详解</a>
@@ -163,13 +172,20 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    前言 之前了解过位运算符，左移&lt;&lt;等于乘以2，右移&gt;&gt;等于除以2。但是我在看jdk源码的时候发现了一个&gt;&gt;&gt;三个符号的，不明白这是什么意思，就去搜了一下，发现还挺多的知识点的，就整理了一下。
+首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。
+先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：
+类型 字节数 位数 大小范围 byte 1 8 -2^8^~2^8^-1 short 2 16 -2^16^~2^16^-1 int 4 32 -2^32^~2^32^-1 long 8 64 -2^64^~2^64^-1 float 4 double 8 char 2 16 一个char类型可以存储一个汉字 boolean 1 true or false 移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：&lt;&lt;左移运算符，&gt;&gt;带符号右移运算符，&gt;&gt;&gt;无符号右移运算符。这三种操作符都只能作用于long,int,short,byte这四种基本整形类型上和char类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。
+在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：0000 0000表示0，0111 1111这个表示最大值(2^8^-1)，再进行加一后就变成了1000 0000这时就变成了最小值(-2^8^)。再加一后变成1000 0001这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E5%8F%A4%E8%80%81%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E4%B9%8Bvector/">Java古老的集合类之Vector</a>
@@ -179,13 +195,17 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    今天继续来看一下Java中古老的集合类-Vector
+变量 1 2 3 4 5 6 //容器存储实体的底层数据结构，Vector也是使用数组来进行存储的 protected Object[] elementData; //实体的数量 protected int elementCount; //每次扩容时增加的长度，当为0是扩容原数组长度的两倍 protected int capacityIncrement; 从上面的变量可以得知，Vector也是使用数组来进行底层的数据存储，并且还设置了扩容容量。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E5%85%B3%E9%94%AE%E5%AD%97-transient/">Java关键字-transient</a>
@@ -195,13 +215,22 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    最近在看源码的时候看到一个关键字transient，之前对这个字没有印象，所以就去看了一下它的作用。
+transient的作用 首先放上来着维基百科的解释：
+Java 提供自动序列化，需要以java.io.Serializable接口的实例来标明对象。实现接口将类别标明为“可序列化”，然后Java在内部处理序列化。在Serializable接口上并没有预先定义序列化的方法，但可序列化类别可任意定义某些特定名称和签署的方法，如果这些方法有定义了，可被调用运行序列化/反序列化部分过程。该语言允许开发人员以另一个Externalizable接口，更彻底地实现并覆盖序列化过程，这个接口包括了保存和恢复对象状态的两种特殊方法。
+在默认情况下有三个主要原因使对象无法被序列化。其一，在序列化状态下并不是所有的对象都能获取到有用的语义。例如，Thread对象绑定到当前Java虚拟机的状态，对Thread对象状态的反序列化环境来说，没有意义。其二，对象的序列化状态构成其类别兼容性缔结（compatibility contract）的某一部分。在维护可序列化类别之间的兼容性时，需要额外的精力和考量。所以，使类别可序列化需要慎重的设计决策而非默认情况。其三，序列化允许访问类别的永久私有成员，包含敏感信息（例如，密码）的类别不应该是可序列化的，也不能外部化。上述三种情形，必须实现Serializable接口来访问Java内部的序列化机制。标准的编码方法将字段简单转换为字节流。
+原生类型以及永久和非静态的对象引用，会被编码到字节流之中。序列化对象引用的每个对象，若其中未标明为transient的字段，也必须被序列化；如果整个过程中，引用到的任何永久对象不能序列化，则这个过程会失败。开发人员可将对象标记为暂时的，或针对对象重新定义的序列化，来影响序列化的处理过程，以截断引用图的某些部分而不序列化。Java并不使用构造函数来序列化对象。
+从上面的最后一段可以了解，如果没有添加transient关键字，则会被进行序列化。也就是说添加了这个关键字后就不会被序列化。
+接下来我们将用一个例子来测试一下
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E5%8F%A4%E8%80%81%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E4%B9%8Bhashtable/">Java古老的集合类之Hashtable</a>
@@ -211,13 +240,24 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    Hashtable虽然现在不经常被用到，但是它作为Java最早的集合类，今天来看一下它的源码。
+首先说明一个问题，在Java中大部分都是驼峰式写法，但是Hasbtable并没有采用这种写法。
+继承与实现关系 1 2 3 public class Hashtable&lt;K,V&gt; extends Dictionary&lt;K,V&gt; implements Map&lt;K,V&gt;, Cloneable, java.io.Serializable {} 可以看出它继承的是Dictionary与HashMap并不是同一个父类。但是它也实现了Map，Cloneable，Serializable接口。说明它可以被克隆，可以执行序列化。
+变量 1 2 3 4 5 6 7 8 9 private transient Entry&lt;?,?&gt;[] table; private transient int count; private int threshold; private float loadFactor; private transient int modCount = 0; 来一个一个的解释每一个变量的意义：
+table 与HashMap一样，利用数组作为底层的存储容器，并且添加了关键字transient。这个关键字的意思是在进行序列化的时候不会被序列化。这个关键字具体可以看一下这篇文章。
+count 表示容器中存储的数量
+threshold 扩容阈值，当容器中的数量到达这个值后会进行扩容机制。这个值默认情况下为 （capacity* loadFactor）
+loadFactor 扩容系数，默认为0.75f。
+modCount 修改次数，当增加或删除时，这个值会进行加一。表示这个容器结构修改的次数。这个变量在迭代，序列化等操作、多线程的操作下都尽量保证了安全性。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E6%B3%A8%E8%A7%A3/">Java注解</a>
@@ -227,13 +267,19 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？
+什么是注解 我们在日常开发中，比如 java 中的@Override，在 springboot 中用到的@SpringBootApplication等一系列标注在类或者方法上的注解。我们添加上注解后会有对应的事件处理，比如我们的@Override注解标明这个方法是重写了父类或者接口的方法，当参数不一致、返回类型不一致等不符合重写的要求时，编译器会报错。类似的@SpringBootApplication也是标明这个项目的一个 springboot 项目，默认会启动一个 tomcat 容器等。
+注解是从 jdk5 开始引入的新特性。
+注解的语法 1 public @interface FirstAnnotation {} 通过@interface即可声明一个注解。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/stringbuilder%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8/">StringBuilder为什么线程不安全?</a>
@@ -243,13 +289,19 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。
+之前问string 相关问题，只了解了 string 不可变，stringbuffer 线程安全，stringbuilder 线程不安全。但却没有搞清楚为什么是不安全的，今天就去看了一下 stringbuilder 的源码，来了解一下原因。
+首先来测试一下多线程下的不安全问题：
+1 2 3 4 5 6 7 8 9 10 public static void main(String[] args) { StringBuilder stringBuilder = new StringBuilder(); for (int i = 0; i &lt; 100000; i++) { new Thread(() -&gt; stringBuilder.append(&#34;a&#34;)).start(); } System.out.println(stringBuilder.length()); } 这个方法最终的理想结果应该是 100000，但是当我们多运行几次，发现他的结果出错了！结果变成了99999或者更小的数值。有时候甚至还抛出了数组越界异常（概率极小）。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/treemap%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">TreeMap源码学习</a>
@@ -259,13 +311,19 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    之前看过了HashMap,LinkedHashMap的源码，这次来看一下TreeMap的源码。
+从这个名字就能看出，TreeMap底层使用的是树来进行存储的。
+变量 1 2 3 4 5 6 7 8 9 //比较器，用于左右子树的判断。 //正常情况下，左子树为 1，父节点为 2，右子树为 3。如果比较器设置 3&lt;1&lt;2。则左子树为3，父节点为 1，右子树为 2。 private final Comparator&lt;? super K&gt; comparator; //根节点 private transient Entry&lt;K,V&gt; root; //容量 private transient int size = 0; //修改的次数，在迭代和序列化时用到 private transient int modCount = 0; 看一下 root 节点的数据结构:
+1 2 3 4 5 6 7 8 9 10 static final class Entry&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; { K key; V value; Entry&lt;K,V&gt; left; Entry&lt;K,V&gt; right; Entry&lt;K,V&gt; parent; boolean color = BLACK; ... } 由于有一个color=BLACK属性，所以底层数据结构应该是红黑树
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E7%BA%BF%E7%A8%8B/">JAVA线程</a>
@@ -275,13 +333,20 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    基础概念 线程的所有状态：
+这些状态都在 Thread中的State枚举中定义：
+1 2 3 4 5 6 7 8 9 10 11 12 13 public enum State { //表示刚刚创建的线程，这种线程还没开始执行 NEW, //在 start() 方法调用后，线程开始执行，此时状态处于 RUNABLE RUNNABLE, //如果线程在执行过程中遇到 synchronized 同步块，就会进入 BLOCKED 阻塞状态，直到获取请求的锁 BLOCKED, //等待状态，WAITING 会无时间限制的等待，TIMED_WAITING 会有时间限制 WAITING, TIMED_WAITING, //线程执行完毕，表示结束 TERMINATED; } 初始线程 Thread类
+Runable接口
+Thread类中调用start()方法之后会让线程执行run()方法，而run()方法中又是对Runable实例的调用
+1 2 3 4 5 6 7 8 9 /* What will be run. */ private Runnable target; @Override public void run() { if (target != null) { target.run(); } } 
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/">JAVA知识整理</a>
@@ -291,13 +356,16 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    JAVA基础 类的初始化顺序 静态变量和静态语句块会优先于实例变量和普通语句块
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 public static String s = &#34;静态变量&#34;; static { System.out.println(&#34;静态语句块&#34;); } public String z = &#34;实例变量&#34;; { System.out.println(&#34;普通语句块&#34;); } public InitClass(){ System.out.println(&#34;构造函数&#34;); } 父类（静态变量，静态语句块） 子类（静态变量，静态语句块） 父类（实例变量，普通语句块） 父类（构造函数） 子类（实例变量，普通语句块） 子类（构造函数） 
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E5%AE%B9%E5%99%A8/">JAVA容器</a>
@@ -307,13 +375,11 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
-  
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/%E8%BF%AD%E4%BB%A3%E5%99%A8/">迭代器</a>
@@ -323,13 +389,20 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    迭代器 在java中主要有两种迭代器，Iterator和ListIterator。这两个都是接口。先来看一下这两个接口有什么区别
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 public interface Iterator&lt;E&gt; { boolean hasNext(); E next(); default void remove() { throw new UnsupportedOperationException(&#34;remove&#34;); } default void forEachRemaining(Consumer&lt;? super E&gt; action) { Objects.requireNonNull(action); while (hasNext()) action.accept(next()); } } Iterator主要有四个方法。判断有没有下一个元素、获取下一个元素，删除元素和forEachRemaining方法。
+再来看一下ListIterator
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 public interface ListIterator&lt;E&gt; extends Iterator&lt;E&gt; { boolean hasNext(); E next(); boolean hasPrevious(); E previous(); int nextIndex(); int previousIndex(); void remove(); void set(E e); void add(E e); } 我们可以看到他是继承了Iterator。除了上面的两个方法还多了好几个方法。判断是否有上一个元素，获取上一个元素的值，获取上一个元素的索引，获取上一个元素的索引。除了移除还有添加和更新的方法。
+他们在不同的类里面都有自己的实现，之前看ArrayList，HashMap的时候把这一块给跳过了，现在来看一下他们是如何实现的。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/hashset%E6%BA%90%E7%A0%81/">HashSet源码</a>
@@ -339,13 +412,11 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
-  
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/linkedhashmap%E6%BA%90%E7%A0%81/">LinkedHashMap源码</a>
@@ -355,13 +426,20 @@
     
   </div>
   
-  <p class="text-base mb-2">
+  <div class="post-summary">
     
-  </p>
+LinkedHashMap继承了HashMap类，实现了Map接口。
+他与HashMap的主要区别就是使用链表存储了每个节点的顺序。这样就能保证有序。
+来看一下他的节点情况：
+1 2 3 4 5 6 static class Entry&lt;K,V&gt; extends HashMap.Node&lt;K,V&gt; { Entry&lt;K,V&gt; before, after; Entry(int hash, K key, V value, Node&lt;K,V&gt; next) { super(hash, key, value, next); } } 从这里可以看出他使用了两个变量，before，after存储这个节点的前后顺序。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/hashmap%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">HashMap源码学习</a>
@@ -371,13 +449,17 @@
     
   </div>
   
-  <p class="text-base mb-2">
+  <div class="post-summary">
     
-  </p>
+画了一张结构图，欢迎指正。
+变量 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 /** * The default initial capacity - MUST be a power of two. * 默认的容量，容量必须是2的幂 */ static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; // aka 16 /** * The maximum capacity, used if a higher value is implicitly specified * by either of the constructors with arguments. * MUST be a power of two &lt;= 1&lt;&lt;30. * 最大的容量值 2的30次幂 */ static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30; /** * The load factor used when none specified in constructor. * 默认的负载系数 */ static final float DEFAULT_LOAD_FACTOR = 0.75f; /** * The bin count threshold for using a tree rather than list for a * bin. Bins are converted to trees when adding an element to a * bin with at least this many nodes. The value must be greater * than 2 and should be at least 8 to mesh with assumptions in * tree removal about conversion back to plain bins upon * shrinkage. * 链表的长度到达8之后转换为红黑树 */ static final int TREEIFY_THRESHOLD = 8; /** * The bin count threshold for untreeifying a (split) bin during a * resize operation. Should be less than TREEIFY_THRESHOLD, and at * most 6 to mesh with shrinkage detection under removal. */ static final int UNTREEIFY_THRESHOLD = 6; /** * The smallest table capacity for which bins may be treeified. * (Otherwise the table is resized if too many nodes in a bin.) * Should be at least 4 * TREEIFY_THRESHOLD to avoid conflicts * between resizing and treeification thresholds. * */ static final int MIN_TREEIFY_CAPACITY = 64; // 存储的容器 transient Node&lt;K,V&gt;[] table; /** * Holds cached entrySet(). Note that AbstractMap fields are used * for keySet() and values(). */ transient Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet; /** * The number of key-value mappings contained in this map. */ transient int size; /** * The number of times this HashMap has been structurally modified * Structural modifications are those that change the number of mappings in * the HashMap or otherwise modify its internal structure (e.g., * rehash). This field is used to make iterators on Collection-views of * the HashMap fail-fast. (See ConcurrentModificationException). * 结构修改的次数，每次增加和删除都修改这个数值 */ transient int modCount; /** * The next size value at which to resize (capacity * load factor). * * @serial */ // (The javadoc description is true upon serialization. // Additionally, if the table array has not been allocated, this // field holds the initial array capacity, or zero signifying // DEFAULT_INITIAL_CAPACITY.) // 扩容的阈值，当键值对的数量超过这个值就会扩容 int threshold; /** * The load factor for the hash table. * 负载系数 */ final float loadFactor; 
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/linkedlist%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">LinkedList源码学习</a>
@@ -387,13 +469,18 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    LinkedList使用了链表实现，相比ArrayList来说，插入更快，查看较慢。
+首先看一下使用的链表结构
+1 2 3 4 5 6 7 8 9 10 11 private static class Node&lt;E&gt; { E item; Node&lt;E&gt; next; Node&lt;E&gt; prev; Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) { this.item = element; this.next = next; this.prev = prev; } } 每个Node节点存储一个元素，item表示这个元素的值，prev表示上一个元素，如果已经的第一个了那么为null。同理，next表示的是下一个元素，当插入新元素时会改变上一个元素的next值指向自己，这样就把这个链表串起来了。
+变量 1 2 3 4 5 6 // 元素的数量 transient int size = 0; // 指向第一个元素 transient Node&lt;E&gt; first; // 指向最后一个元素 transient Node&lt;E&gt; last; 
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/arraylist%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">ArrayList源码学习</a>
@@ -403,13 +490,16 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
+  <div class="post-summary">
+    变量 1 2 3 4 5 private static final int DEFAULT_CAPACITY = 10; private static final Object[] EMPTY_ELEMENTDATA = {}; private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; transient Object[] elementData; private int size; DEFAULT_CAPACITY：默认的容量，当我们不指定容量时默认容量是10 EMPTY_ELEMENTDATA：空的数据集 DEFAULTCAPACITY_EMPTY_ELEMENTDATA：同上面的一样，都是空的数据集 elementData：保存的元素 size：元素长度，实际存储的元素数量 构造方法： 无参的构造方法 1 2 3 public ArrayList() { this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA; } 很简单的一句话，将保存元素的变量进行初始化。
+
+  </div>
   
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java_socket%E5%9F%BA%E7%A1%80/">Java Socket基础</a>
@@ -419,18 +509,16 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
-  
 </div>
+      </div>
       
     
       <h3 class="text-3xl font-bold mb-4 mt-8">
         <a href="#2017">2017</a>
       </h3>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/java%E5%AE%9E%E7%8E%B0%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98%E7%AE%97%E6%B3%95/">Java实现经典问题算法</a>
@@ -440,13 +528,11 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
-  
 </div>
+      </div>
       
-      <div>
+      <div class="post-item mb-8">
+        <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/java/list%E5%BE%AA%E7%8E%AF%E6%B7%BB%E5%8A%A0%E7%9B%B8%E5%90%8C%E7%9A%84map/">list循环添加相同的map</a>
@@ -456,11 +542,8 @@
     
   </div>
   
-  <p class="text-base mb-2">
-    
-  </p>
-  
 </div>
+      </div>
       
     
   </div>

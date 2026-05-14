@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/all/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="All">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="website">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="All">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - All
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.1b6413fe51eb67cdaa53f332ceccde456b597ee0f7989f361139a3b5134553f2.css" integrity="sha256-G2QT/lHrZ82qU/MyzszeRWtZfuD3mJ82ETmjtRNFU/I=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.d4f3288dc16236e2bb2b7a6e53f8f5e0c59b5aed645dc2c32b76fd3ae85f7f00.js" integrity="sha256-1PMojcFiNuK7K3puU/j14MWbWu1kXcLDK3b9OuhffwA="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          <a href="/">
+            Posts
+          </a>
+        </li>
+        
+        <li class="ml-2 mr-2">
+          <a href="/all/">
+            全部
+          </a>
+        </li>
+        
+        <li class="ml-2 mr-2">
+          <a href="/tags/">
+            标签
+          </a>
+        </li>
+        
+        <li class="ml-2 mr-2">
+          <a href="/about/">
+            关于
+          </a>
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<main class="container mx-auto">
+  <h3 class="text-center sm:text-left mt-6 mb-4 text-2xl font-bold">All</h3>
+
+  <div>
+    
+
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/micro_service/dubbo%E7%AC%94%E8%AE%B0/">dubbo笔记</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 23 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    建立基础项目 建立一个maven项目，然后建立一个api模块，作为这个项目的总的调用接口
+learn-dubbo-demo/ ├── simple-api https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo
+https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
+然后在api项目中创建接口，提供给生产者和消费者调用。
+我这里定义一个了sayhello()方法
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%88%A0%E9%99%A4%E6%9C%80%E5%A4%96%E5%B1%82%E7%9A%84%E6%8B%AC%E5%8F%B7leetcode1021/">删除最外层的括号—LeetCode1021</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 22 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 有效括号字符串为空 (&quot;&quot;)、&quot;(&quot; + A + &ldquo;)&rdquo; 或 A + B，其中 A 和 B 都是有效的括号字符串，+ 代表字符串的连接。 例如，&quot;&quot;，&quot;()&quot;，&quot;(())()&quot; 和 &ldquo;(()(()))&rdquo; 都是有效的括号字符串。 如果有效字符串 S 非空，且不存在将其拆分为 S = A+B 的方法，我们称其为原语（primitive），其中 A 和 B 都是非空有效括号字符串。 给出一个非空有效字符串 S，考虑将其进行原语化分解，使得：S = P_1 + P_2 + &hellip; + P_k，其中 P_i 是有效括号字符串原语。 对 S 进行原语化分解，删除分解中每个原语字符串的最外层括号，返回 S 。 示例 1： 输入：&quot;(()())(())&quot; 输出：&quot;()()()&quot; 解释： 输入字符串为 &ldquo;(()())(())&quot;，原语化分解得到 &ldquo;(()())&rdquo; + &ldquo;(())&quot;， 删除每个部分中的最外层括号后得到 &ldquo;()()&rdquo; + &ldquo;()&rdquo; = &ldquo;()()()&quot;。 示例 2： 输入：&rdquo;(()())(())(()(()))&rdquo; 输出：&rdquo;()()()()(())&quot; 解释： 输入字符串为 &ldquo;(()())(())(()(()))&quot;，原语化分解得到 &ldquo;(()())&rdquo; + &ldquo;(())&rdquo; + &ldquo;(()(()))&quot;， 删除每隔部分中的最外层括号后得到 &ldquo;()()&rdquo; + &ldquo;()&rdquo; + &ldquo;()(())&rdquo; = &ldquo;()()()()(())&quot;。 示例 3： 输入：&rdquo;()()&rdquo; 输出：&rdquo;&quot; 解释： 输入字符串为 &ldquo;()()&quot;，原语化分解得到 &ldquo;()&rdquo; + &ldquo;()&quot;， 删除每个部分中的最外层括号后得到 &quot;&rdquo; + &quot;&rdquo; = &ldquo;&quot;。 提示： S.length &lt;= 10000 S[i] 为 &ldquo;(&rdquo; 或 &ldquo;)&rdquo; S 是一个有效括号字符串
+解题思路： 字符串S是一个有效括号字符串，那么我们可以先进行原语化分解，然后再对每个原语进行去除最外层括号。
+进行原语分解的时候我们可以定义一个值和一个字符串，遇到左括号这个值加一并将左括号添加到这个字符串上，遇到右括号这个值减一并且将右括号添加到字符串上，当这个值变成0并且字符串的长度为2的倍数时就可以认为这个字符串是一个原语。
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%A2%9E%E5%87%8F%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8Dleetcode942/">增减字符串匹配—LeetCode942</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 20 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E9%AB%98%E5%BA%A6%E6%A3%80%E6%9F%A5%E5%99%A8leetcode1051/">高度检查器—LeetCode1051</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 18 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。 请你返回至少有多少个学生没有站在正确位置数量。该人数指的是：能让所有学生以 非递减 高度排列的必要移动人数。 示例： 输入：[1,1,4,2,1,3] 输出：3 解释： 高度为 4、3 和最后一个 1 的学生，没有站在正确的位置。 提示： 1 &lt;= heights.length &lt;= 100 1 &lt;= heights[i] &lt;= 100
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E4%B8%89%E8%A7%92%E5%BD%A2%E7%9A%84%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C-leetcode120/">三角形最小路径和—LeetCode120</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 16 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
+例如，给定三角形：
+[ [2], [3,4], [6,5,7], [4,1,8,3] ] 自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。
+说明：
+如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。
+题目中有一句话，每一步只能移动到下一行中相邻的结点中，所以在m行n列时，下一步的落地只能在m+1行n列或者m+1行n+1列中。
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88leetcode17/">电话号码的字母组合—LeetCode17</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 15 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。 示例: 输入：&ldquo;23&rdquo; 输出：[&ldquo;ad&rdquo;, &ldquo;ae&rdquo;, &ldquo;af&rdquo;, &ldquo;bd&rdquo;, &ldquo;be&rdquo;, &ldquo;bf&rdquo;, &ldquo;cd&rdquo;, &ldquo;ce&rdquo;, &ldquo;cf&rdquo;]. 说明: 尽管上面的答案是按字典序排列的，但是你可以任意选择答案输出的顺序。
+题目解读： 这个问题的场景就是我们的手机9宫格按键，当我们按下按键时计算出所有的字母组合，当我们按下第一个按键时，现在的组合次数为该按键对应的字母个数(m)。当我们再一次按下一个按键时，现在的次数变成了这一次按键对应的字母个数与上一次的次数相乘(m*n)
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%8F%8D%E8%BD%AC%E5%9B%BE%E5%83%8Fleetcode832/">反转图像—LeetCode832</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 10 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。 示例 1: 输入: [[1,1,0],[1,0,1],[0,0,0]] 输出:[[1,0,0],[0,1,0],[1,1,1]] 解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]； 然后反转图片: [[1,0,0],[0,1,0],[1,1,1]] 示例 2: 输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]] 输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]] 说明: 1 &lt;= A.length = A[0].length &lt;= 20 0 &lt;= A[i][j] &lt;= 1
+解题思路： 将每一行进行翻转就是顺序转换，然后再进行反转图片就是将0转换为1，1转换为0，我们可以用 x=1-x来实现
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E8%87%AA%E9%99%A4%E6%95%B0leetcode728/">自除数—LeetCode728</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 04 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 自除数 是指可以被它包含的每一位数除尽的数。 例如，128 是一个自除数，因为 128 % 1 == 0，128 % 2 == 0，128 % 8 == 0。 还有，自除数不允许包含 0 。 给定上边界和下边界数字，输出一个列表，列表的元素是边界（含边界）内所有的自除数。 示例 1： 输入： 上边界left = 1, 下边界right = 22 输出： [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] 注意： 每个输入参数的边界满足 1 &lt;= left &lt;= right &lt;= 10000。
+解读： 判断一个数能不能被他的每一位除尽，那就要取出每一位数，进行计算，并且自除数不允许包含0，所以如果有0则直接判断不是自除数
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%83%BD%E5%90%A6%E8%BF%94%E5%9B%9E%E7%BB%88%E7%82%B9leetcode657/">机器人能否返回终点—LeetCode657</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 03 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 在二维平面上，有一个机器人从原点 (0, 0) 开始。给出它的移动顺序，判断这个机器人在完成移动后是否在 (0, 0) 处结束。 移动顺序由字符串表示。字符 move[i] 表示其第 i 次移动。机器人的有效动作有 R（右），L（左），U（上）和 D（下）。如果机器人在完成所有动作后返回原点，则返回 true。否则，返回 false。 注意：机器人“面朝”的方向无关紧要。 “R” 将始终使机器人向右移动一次，“L” 将始终向左移动等。此外，假设每次移动机器人的移动幅度相同。 示例 1: 输入: &ldquo;UD&rdquo; 输出: true 解释：机器人向上移动一次，然后向下移动一次。所有动作都具有相同的幅度，因此它最终回到它开始的原点。因此，我们返回 true。 示例 2: 输入: &ldquo;LL&rdquo; 输出: false 解释：机器人向左移动两次。它最终位于原点的左侧，距原点有两次 “移动” 的距离。我们返回 false，因为它在移动结束时没有返回原点。
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%94%AF%E4%B8%80%E6%91%A9%E5%B0%94%E6%96%AF%E5%AF%86%E7%A0%81%E8%AF%8Dleetcode804/">唯一摩尔斯密码词—LeetCode804</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 02 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    题目描述： 国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: &ldquo;a&rdquo; 对应 &ldquo;.-&rdquo;, &ldquo;b&rdquo; 对应 &ldquo;-&hellip;&rdquo;, &ldquo;c&rdquo; 对应 &ldquo;-.-.&rdquo;, 等等。 为了方便，所有26个英文字母对应摩尔斯密码表如下： [&quot;.-&quot;,&quot;-&hellip;&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;&ndash;.&quot;,&quot;&hellip;.&quot;,&quot;..&quot;,&quot;.&mdash;&quot;,&quot;-.-&quot;,&quot;.-..&quot;,&quot;&ndash;&quot;,&quot;-.&quot;,&quot;&mdash;&quot;,&quot;.&ndash;.&quot;,&quot;&ndash;.-&quot;,&quot;.-.&quot;,&quot;&hellip;&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;&hellip;-&quot;,&quot;.&ndash;&quot;,&quot;-..-&quot;,&quot;-.&ndash;&quot;,&quot;&ndash;..&quot;] 给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，&ldquo;cab&rdquo; 可以写成 &ldquo;-.-..&ndash;&hellip;&quot;，(即 &ldquo;-.-.&rdquo; + &ldquo;-&hellip;&rdquo; + &ldquo;.-&ldquo;字符串的结合)。我们将这样一个连接过程称作单词翻译。 返回我们可以获得所有词不同单词翻译的数量。 例如: 输入: words = [&ldquo;gin&rdquo;, &ldquo;zen&rdquo;, &ldquo;gig&rdquo;, &ldquo;msg&rdquo;] 输出: 2 解释: 各单词翻译如下: &ldquo;gin&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo; &ldquo;zen&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo; &ldquo;gig&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo; &ldquo;msg&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo; 共有 2 种不同翻译, &ldquo;&ndash;&hellip;-.&rdquo; 和 &ldquo;&ndash;&hellip;&ndash;.&rdquo;. 注意: 单词列表words 的长度不会超过 100。 每个单词 words[i]的长度范围为 [1, 12]。 每个单词 words[i]只包含小写字母。
+解题思路： 我们首先要根据给出的单词转换成摩尔斯密码
+利用一个数组按照字母顺序存储对应的密码值
+将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接
+这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+
+    
+
+<div class="mt-6 flex justify-between font-semibold">
+  
+  <a href="/all/page/22/">← 上一页</a>
+  
+
+  
+  <a href="/all/page/24/">下一页 →</a>
+  
+</div>
+
+
+  </div>
+</main>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
