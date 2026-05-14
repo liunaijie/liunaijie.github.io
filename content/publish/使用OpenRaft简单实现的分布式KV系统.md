@@ -1,12 +1,11 @@
 ---
-title: 博客自动部署方案
+title: 使用OpenRaft简单实现的分布式KV系统
 date: 2026-05-12
 categories:
   - publish
 tags:
   - blog
 ---
-# TL&DR
 简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 [OpenRaft](https://github.com/databendlabs/openraft)。  
 这个项目没有自己从零实现一套 Raft 协议，而是把更多精力放在工程落地上。
 
@@ -15,7 +14,6 @@ tags:
 > 如果我基于 OpenRaft 做一个真正能跑起来的分布式 KV，除了把库接进来之外，还需要补齐哪些能力？
 
 这篇文章就围绕这个问题展开，结合仓库 [distribute_kv_openraft](https://github.com/liunaijie/distribute_kv_openraft)的实现，复盘一个最小可运行 Raft KV 系统该怎么实现，以及OpenRaft系统中的组件功能。
-
 <!--more-->
 
 # OpenRaft 是什么

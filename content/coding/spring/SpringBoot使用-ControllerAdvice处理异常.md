@@ -2,7 +2,7 @@
 title: SpringBoot使用@ControllerAdvice处理异常
 date: 2019-11-24
 categories:
-  - publish
+  - notes
 tags:
   - Spring
 ---
