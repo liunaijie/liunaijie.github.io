@@ -7,15 +7,7 @@
   <meta property="og:url" content="https://www.liunaijie.top/publish/%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88/">
   <meta property="og:site_name" content="Jarvis`s library">
   <meta property="og:title" content="博客自动部署方案">
-  <meta property="og:description" content="趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.
-之前是使用Hexo来作为博客的生成框架, 现在迁移到了Hugo, 迁移的一个原因是Hexo中无法过滤掉没有Title的文件, 导致生产了很多空白页面, 而Hugo则可以过滤掉没有Title的文件, 从而避免了这个问题.
-另外的一个原因是Hugo的性能比Hexo要高, 在生成静态页面时, Hugo的速度更快. 现在博客的主题也只想要一个简洁的样式, 所以就选择了Hugo的Minima主题, 简单修改了一下, 就完成了迁移.
-写作记录方面 我最开始是使用Typora来写作, 及时渲染, 但是Typora后来开始收费, 又尝试了Notion, 但是Notion的速度太慢, 慢慢就换到了现在使用的Obsidian.
-这个目前来说绝对是写作神器, 配合各种插件, 可以方便的写作, 任务安排/查看, 画流程图等等. 再配合Remote Sync插件, 可以非常方便的进行多端同步.
-以下是其中一些步骤的记录:
-Obsidian同步 使用Obsidian也有官方同步方案, 但是需要收费, 作为一名白嫖党, 肯定是不愿意花这个钱的, 所以就使用Remote-Sync来进行数据同步, 按照文档配置一下即可完成, 非常简单. Remote-Sync的同步方案有多种, 我最后选择了One Drive的同步方案, 原因有以下几点:
-这个国内也可以正常访问, 速度也很快 注册账号就有一些免费空间, 而同步的数据仅仅是一些文字, 图片. 总的体积也不会很大, 免费空间也足够使用了 在手机端也可以使用(这个就过滤掉了Git的同步方案, 因为手机端无法使用Git, 所以就只能使用OneDrive的同步方案了) 同时我有一台NAS, 在NAS上也会通过Cloud-Sync将数据从OneDrive云盘下载, 来进行数据备份, 再配合定时任务来监测是否有文件变动, 有变动则进行Git的提交. Git提交后则会触发Github Action来进行博客的构建和发布流程.
-NAS同步 使用Obsidian写作时, 我博客的内容仅仅是一个同步内容的子文件夹, 使用Cloud-Sync可以指定要同步哪个文件夹到NAS的哪个目录上. 同时我博客的其他代码, 配置等, 我是没有放到Obsidian中的, 所以会有两个文件夹, 一个存放Obsidian中的文章内容, 一个存放博客的源文件. 然后通过软链将文件关联到源文件下.">
+  <meta property="og:description" content="趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
     <meta property="article:section" content="publish">
@@ -26,15 +18,7 @@ NAS同步 使用Obsidian写作时, 我博客的内容仅仅是一个同步内容
   
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="博客自动部署方案">
-  <meta name="twitter:description" content="趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.
-之前是使用Hexo来作为博客的生成框架, 现在迁移到了Hugo, 迁移的一个原因是Hexo中无法过滤掉没有Title的文件, 导致生产了很多空白页面, 而Hugo则可以过滤掉没有Title的文件, 从而避免了这个问题.
-另外的一个原因是Hugo的性能比Hexo要高, 在生成静态页面时, Hugo的速度更快. 现在博客的主题也只想要一个简洁的样式, 所以就选择了Hugo的Minima主题, 简单修改了一下, 就完成了迁移.
-写作记录方面 我最开始是使用Typora来写作, 及时渲染, 但是Typora后来开始收费, 又尝试了Notion, 但是Notion的速度太慢, 慢慢就换到了现在使用的Obsidian.
-这个目前来说绝对是写作神器, 配合各种插件, 可以方便的写作, 任务安排/查看, 画流程图等等. 再配合Remote Sync插件, 可以非常方便的进行多端同步.
-以下是其中一些步骤的记录:
-Obsidian同步 使用Obsidian也有官方同步方案, 但是需要收费, 作为一名白嫖党, 肯定是不愿意花这个钱的, 所以就使用Remote-Sync来进行数据同步, 按照文档配置一下即可完成, 非常简单. Remote-Sync的同步方案有多种, 我最后选择了One Drive的同步方案, 原因有以下几点:
-这个国内也可以正常访问, 速度也很快 注册账号就有一些免费空间, 而同步的数据仅仅是一些文字, 图片. 总的体积也不会很大, 免费空间也足够使用了 在手机端也可以使用(这个就过滤掉了Git的同步方案, 因为手机端无法使用Git, 所以就只能使用OneDrive的同步方案了) 同时我有一台NAS, 在NAS上也会通过Cloud-Sync将数据从OneDrive云盘下载, 来进行数据备份, 再配合定时任务来监测是否有文件变动, 有变动则进行Git的提交. Git提交后则会触发Github Action来进行博客的构建和发布流程.
-NAS同步 使用Obsidian写作时, 我博客的内容仅仅是一个同步内容的子文件夹, 使用Cloud-Sync可以指定要同步哪个文件夹到NAS的哪个目录上. 同时我博客的其他代码, 配置等, 我是没有放到Obsidian中的, 所以会有两个文件夹, 一个存放Obsidian中的文章内容, 一个存放博客的源文件. 然后通过软链将文件关联到源文件下.">
+  <meta name="twitter:description" content="趁着这次博客迁移, 更新记录下当前博客的写作, 同步, 发布方案.">
 
   
   
@@ -297,7 +281,6 @@ NAS同步 使用Obsidian写作时, 我博客的内容仅仅是一个同步内容
 </div>
 </div><p>一个流程图大致是这样:
 <img src="https://raw.githubusercontent.com/liunaijie/images/master/202411251431188.png" alt=""></p>
-
     </article>
   </main>
   

@@ -113,6 +113,22 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/tools/%E5%88%A9%E7%94%A8github%E5%92%8Cpicgo%E5%88%9B%E5%BB%BA%E5%9B%BE%E5%BA%8A/">利用github和picgo创建图床</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 28 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/micro_service/dubbo%E7%AC%94%E8%AE%B0/">dubbo笔记</a>
     
     
@@ -299,31 +315,6 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   
   <div class="post-summary">
     题目描述： 在二维平面上，有一个机器人从原点 (0, 0) 开始。给出它的移动顺序，判断这个机器人在完成移动后是否在 (0, 0) 处结束。 移动顺序由字符串表示。字符 move[i] 表示其第 i 次移动。机器人的有效动作有 R（右），L（左），U（上）和 D（下）。如果机器人在完成所有动作后返回原点，则返回 true。否则，返回 false。 注意：机器人“面朝”的方向无关紧要。 “R” 将始终使机器人向右移动一次，“L” 将始终向左移动等。此外，假设每次移动机器人的移动幅度相同。 示例 1: 输入: &ldquo;UD&rdquo; 输出: true 解释：机器人向上移动一次，然后向下移动一次。所有动作都具有相同的幅度，因此它最终回到它开始的原点。因此，我们返回 true。 示例 2: 输入: &ldquo;LL&rdquo; 输出: false 解释：机器人向左移动两次。它最终位于原点的左侧，距原点有两次 “移动” 的距离。我们返回 false，因为它在移动结束时没有返回原点。
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%94%AF%E4%B8%80%E6%91%A9%E5%B0%94%E6%96%AF%E5%AF%86%E7%A0%81%E8%AF%8Dleetcode804/">唯一摩尔斯密码词—LeetCode804</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 02 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述： 国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: &ldquo;a&rdquo; 对应 &ldquo;.-&rdquo;, &ldquo;b&rdquo; 对应 &ldquo;-&hellip;&rdquo;, &ldquo;c&rdquo; 对应 &ldquo;-.-.&rdquo;, 等等。 为了方便，所有26个英文字母对应摩尔斯密码表如下： [&quot;.-&quot;,&quot;-&hellip;&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;&ndash;.&quot;,&quot;&hellip;.&quot;,&quot;..&quot;,&quot;.&mdash;&quot;,&quot;-.-&quot;,&quot;.-..&quot;,&quot;&ndash;&quot;,&quot;-.&quot;,&quot;&mdash;&quot;,&quot;.&ndash;.&quot;,&quot;&ndash;.-&quot;,&quot;.-.&quot;,&quot;&hellip;&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;&hellip;-&quot;,&quot;.&ndash;&quot;,&quot;-..-&quot;,&quot;-.&ndash;&quot;,&quot;&ndash;..&quot;] 给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，&ldquo;cab&rdquo; 可以写成 &ldquo;-.-..&ndash;&hellip;&quot;，(即 &ldquo;-.-.&rdquo; + &ldquo;-&hellip;&rdquo; + &ldquo;.-&ldquo;字符串的结合)。我们将这样一个连接过程称作单词翻译。 返回我们可以获得所有词不同单词翻译的数量。 例如: 输入: words = [&ldquo;gin&rdquo;, &ldquo;zen&rdquo;, &ldquo;gig&rdquo;, &ldquo;msg&rdquo;] 输出: 2 解释: 各单词翻译如下: &ldquo;gin&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo; &ldquo;zen&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo; &ldquo;gig&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo; &ldquo;msg&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo; 共有 2 种不同翻译, &ldquo;&ndash;&hellip;-.&rdquo; 和 &ldquo;&ndash;&hellip;&ndash;.&rdquo;. 注意: 单词列表words 的长度不会超过 100。 每个单词 words[i]的长度范围为 [1, 12]。 每个单词 words[i]只包含小写字母。
-解题思路： 我们首先要根据给出的单词转换成摩尔斯密码
-利用一个数组按照字母顺序存储对应的密码值
-将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接
-这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。
 
   </div>
   

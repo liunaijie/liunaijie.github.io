@@ -113,6 +113,29 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/big_data/clickhouse/clickhouse1-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B/">ClickHouse(1)-写入过程</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2021 年 02 月 14 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    前言 这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程
+MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。
+先看一下要创建这个引擎的DDL语句：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 CREATE TABLE [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster] ( name1 [type1] [DEFAULT|MATERIALIZED|ALIAS expr1] [TTL expr1], name2 [type2] [DEFAULT|MATERIALIZED|ALIAS expr2] [TTL expr2], ... INDEX index_name1 expr1 TYPE type1(...) GRANULARITY value1, INDEX index_name2 expr2 TYPE type2(...) GRANULARITY value2 ) ENGINE = MergeTree() ORDER BY expr [PARTITION BY expr] [PRIMARY KEY expr] [SAMPLE BY expr] [TTL expr [DELETE|TO DISK &#39;xxx&#39;|TO VOLUME &#39;xxx&#39;], ...] [SETTINGS name=value, ...] 
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/devops/maven/">maven</a>
     
     
@@ -286,22 +309,6 @@ L D R E O E I I E C I H N T S G
     背景 当参与到开源项目开发后，我们需要先将代码fork到自己的仓库，对代码进行修改后再提交pr。
 如果在这中间原仓库有提交过代码，我们这边是无法得知的，所以我们需要在提pr前先进行merge操作，先将原仓库的内容更新下来再进行提交。
 大体流程如下所示： 
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/database/mongodb/%E8%AF%BB%E6%93%8D%E4%BD%9C%E4%BA%8B%E5%8A%A1/">mongo-读操作事务</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 04 月 14 日</div>
-    
   </div>
   
 </div>

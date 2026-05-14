@@ -113,6 +113,22 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/devops/git/git-tag/">GitTag</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2022 年 03 月 09 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/java/java-class-loader/">Java Class Loader</a>
     
     
@@ -299,27 +315,9 @@
     
   </div>
   
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/big_data/clickhouse/clickhouse1-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B/">ClickHouse(1)-写入过程</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2021 年 02 月 14 日</div>
-    
-  </div>
-  
   <div class="post-summary">
-    前言 这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程
-MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。
-先看一下要创建这个引擎的DDL语句：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 CREATE TABLE [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster] ( name1 [type1] [DEFAULT|MATERIALIZED|ALIAS expr1] [TTL expr1], name2 [type2] [DEFAULT|MATERIALIZED|ALIAS expr2] [TTL expr2], ... INDEX index_name1 expr1 TYPE type1(...) GRANULARITY value1, INDEX index_name2 expr2 TYPE type2(...) GRANULARITY value2 ) ENGINE = MergeTree() ORDER BY expr [PARTITION BY expr] [PRIMARY KEY expr] [SAMPLE BY expr] [TTL expr [DELETE|TO DISK &#39;xxx&#39;|TO VOLUME &#39;xxx&#39;], ...] [SETTINGS name=value, ...] 
+    这篇文章记录下使用Git时的一些进阶操作, 命令.
+
   </div>
   
 </div>
