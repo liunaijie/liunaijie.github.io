@@ -156,7 +156,8 @@
 输出：[&ldquo;o&rdquo;,&ldquo;l&rdquo;,&ldquo;l&rdquo;,&ldquo;e&rdquo;,&ldquo;h&rdquo;]
 示例 2：</p>
 <p>输入：[&ldquo;H&rdquo;,&ldquo;a&rdquo;,&ldquo;n&rdquo;,&ldquo;n&rdquo;,&ldquo;a&rdquo;,&ldquo;h&rdquo;]
-输出：[&ldquo;h&rdquo;,&ldquo;a&rdquo;,&ldquo;n&rdquo;,&ldquo;n&rdquo;,&ldquo;a&rdquo;,&ldquo;H&rdquo;]</p></blockquote>
+输出：[&ldquo;h&rdquo;,&ldquo;a&rdquo;,&ldquo;n&rdquo;,&ldquo;n&rdquo;,&ldquo;a&rdquo;,&ldquo;H&rdquo;]</p>
+</blockquote>
 <p>这个题目的要求是在O(1)的空间复杂度下完成反转</p>
 <h1 id="解题思路">解题思路</h1>
 <p>不能使用额外的空间，又需要将数组反转，我们可以将第一个与最后一个进行反转，然后第二个与倒数第二个进行反转</p>
@@ -180,7 +181,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="o">[</span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">s</span><span class="o">[</span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -240,7 +241,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

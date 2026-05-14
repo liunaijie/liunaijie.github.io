@@ -149,7 +149,7 @@
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">TransportServer</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kt">void</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">InterruptedException</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kt">void</span><span class="w"> </span><span class="nf">stop</span><span class="p">();</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>消费者调用来创建一个连接</p>
@@ -177,9 +177,9 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">Transport</span><span class="w"> </span><span class="nf">createTransport</span><span class="p">(</span><span class="n">SocketAddress</span><span class="w"> </span><span class="n">address</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">timeout</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">TimeoutException</span><span class="p">,</span><span class="w"> </span><span class="n">InterruptedException</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nd">@Override</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kt">void</span><span class="w"> </span><span class="nf">close</span><span class="p">();</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Transport</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Transport</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="cm">/**
 </span></span></span><span class="line"><span class="cl"><span class="cm">	 * 发送请求命令
 </span></span></span><span class="line"><span class="cl"><span class="cm">	 *
@@ -188,7 +188,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">CompletableFuture</span><span class="o">&lt;</span><span class="n">Command</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">sendRequest</span><span class="p">(</span><span class="n">Command</span><span class="w"> </span><span class="n">request</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>发送一个<code>Command</code>然后使用<code>future</code>来实现异步。</p>
@@ -218,7 +218,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//创建时间初始化时自动指定</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">this</span><span class="p">.</span><span class="na">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">nanoTime</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>同时我们使用信号量来实现对客户端请求的限流。同时将<code>future</code>使用容器存储起来。</p>
@@ -357,7 +357,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">scheduledFuture</span><span class="p">.</span><span class="na">cancel</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">scheduledExecutorService</span><span class="p">.</span><span class="na">shutdown</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="netty实现">netty实现</h2>
@@ -409,7 +409,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">byteBuf</span><span class="p">.</span><span class="na">writeInt</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="na">getVersion</span><span class="p">());</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这时信息到达生产者，就需要进行解析了。</p>
@@ -468,7 +468,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">protected</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="nf">decodeHeader</span><span class="p">(</span><span class="n">ChannelHandlerContext</span><span class="w"> </span><span class="n">channelHandlerContext</span><span class="p">,</span><span class="w"> </span><span class="n">ByteBuf</span><span class="w"> </span><span class="n">byteBuf</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这个与上面不同的地方是，上面的编码信息是对请求的编码，只会在消费者发送到生产者时用到。而这个解码是对<code>Command</code>的解码，在生产者接收消费者的请求，消费者接收生产者的响应时都会用到。这两个请求有一个不同的地方是头部信息是不一样的，所以这里定义为抽象类。</p>
@@ -503,9 +503,9 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">protected</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="nf">decodeHeader</span><span class="p">(</span><span class="n">ChannelHandlerContext</span><span class="w"> </span><span class="n">channelHandlerContext</span><span class="p">,</span><span class="w"> </span><span class="n">ByteBuf</span><span class="w"> </span><span class="n">byteBuf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Header</span><span class="p">(</span><span class="n">byteBuf</span><span class="p">.</span><span class="na">readLong</span><span class="p">(),</span><span class="n">byteBuf</span><span class="p">.</span><span class="na">readInt</span><span class="p">());</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ResponseDecoder</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">CommandDecoder</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ResponseDecoder</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">CommandDecoder</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="nd">@Override</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kd">protected</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="nf">decodeHeader</span><span class="p">(</span><span class="n">ChannelHandlerContext</span><span class="w"> </span><span class="n">channelHandlerContext</span><span class="p">,</span><span class="w"> </span><span class="n">ByteBuf</span><span class="w"> </span><span class="n">byteBuf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="kt">long</span><span class="w"> </span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byteBuf</span><span class="p">.</span><span class="na">readLong</span><span class="p">();</span><span class="w">
@@ -517,7 +517,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">String</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">msgBytes</span><span class="p">,</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResponseHeader</span><span class="p">(</span><span class="n">requestId</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="p">,</span><span class="w"> </span><span class="n">code</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>这里的读取顺序必须与写入时的顺序一致！</strong></p>
@@ -555,7 +555,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">			</span><span class="n">byteBuf</span><span class="p">.</span><span class="na">writeBytes</span><span class="p">(</span><span class="n">responseHeader</span><span class="p">.</span><span class="na">getMsg</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">responseHeader</span><span class="p">.</span><span class="na">getMsg</span><span class="p">().</span><span class="na">getBytes</span><span class="p">(</span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">));</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这个类是继承自<code>CommandEncoder</code>也就是第一步中的类。在他的基础上又多了响应信息头部的编码。</p>
@@ -640,7 +640,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

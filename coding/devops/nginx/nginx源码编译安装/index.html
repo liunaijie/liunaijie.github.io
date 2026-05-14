@@ -353,106 +353,106 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">#user  nobody;  ## 指定nginx的用户，默认为nobody 我们也可以修改为root
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">worker_processes</span>  <span class="mi">1</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">worker_processes</span>  <span class="mi">1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1"># 以下几个配置都是指定日志文件和启动的id路径，不用管它
 </span></span></span><span class="line"><span class="cl"><span class="c1">#error_log  logs/error.log;
 </span></span></span><span class="line"><span class="cl"><span class="c1">#error_log  logs/error.log  notice;
 </span></span></span><span class="line"><span class="cl"><span class="c1">#error_log  logs/error.log  info;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">#pid        logs/nginx.pid;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">events</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1"># http模块，这是我们主要进行配置的地方
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">http</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">http</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">default_type</span>  <span class="s">application/octet-stream</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1"># 设置访问日志的格式，log_format 是命令 main是这个格式的名称后面直接用名称就知道是这个格式了 再后面的就是具体的日志格式了
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="nv">$server_port</span>  <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="nv">$server_port</span>  <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
 </span></span><span class="line"><span class="cl">                      <span class="s">&#39;</span><span class="nv">$status</span> <span class="nv">$body_bytes_sent</span> <span class="s">&#34;</span><span class="nv">$http_referer&#34;</span> <span class="s">&#39;</span>
 </span></span><span class="line"><span class="cl">                      <span class="s">&#39;&#34;</span><span class="nv">$http_user_agent&#34;</span> <span class="s">&#34;</span><span class="nv">$http_x_forwarded_for&#34;&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="c1"># 指定访问日志的存储路径和日志格式
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">access_log</span>  <span class="s">logs/access.log</span>  <span class="s">main</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">access_log</span>  <span class="s">logs/access.log</span>  <span class="s">main</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="c1"># ip黑名单(从其他配置文件中读取配置)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">include</span> <span class="s">ip_deny.conf</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">include</span> <span class="s">ip_deny.conf</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	
 </span></span><span class="line"><span class="cl">    <span class="kn">server_tokens</span> <span class="no">off</span><span class="p">;</span> <span class="c1"># 关闭nginx版本号
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">tcp_nopush</span>     <span class="no">on</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">#keepalive_timeout  0;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="kn">gzip</span>  <span class="no">on</span><span class="p">;</span> <span class="c1"># 开启gzip压缩
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1"># 负载均衡的配置，这个配置也值得拿出来单独记录，我这里就是简单的配置了一下
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">upstream</span> <span class="s">users</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">upstream</span> <span class="s">users</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">         <span class="kn">server</span> <span class="n">192.168.0.13</span><span class="p">:</span><span class="mi">8001</span> <span class="s">weight=2</span><span class="p">;</span> <span class="c1">#权重为2 3次访问中会有两次到这个机器上去
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>         <span class="kn">server</span> <span class="n">192.168.0.14</span><span class="p">:</span><span class="mi">8001</span> <span class="s">weight=1</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">         <span class="kn">server</span> <span class="n">192.168.0.14</span><span class="p">:</span><span class="mi">8001</span> <span class="s">weight=1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">     <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1"># 设置无法通过其他域名,ip访问(即除了我们配置的server_name所有请求都会被阻拦)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">listen</span> <span class="mi">80</span> <span class="s">default</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">server_name</span> <span class="s">_name_</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">return</span> <span class="mi">403</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1"># liunaijie page settings
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">#
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="c1">#
+</span></span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">listen</span>       <span class="mi">80</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="c1"># server_name 可以配置多个域名
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">server_name</span> <span class="s">www.liunaijie.top</span> <span class="s">liunaijie.top</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">        <span class="kn">server_name</span> <span class="s">www.liunaijie.top</span> <span class="s">liunaijie.top</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="c1"># 强制将http重定向到https
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">https://www.liunaijie.top</span><span class="nv">$request_uri?</span> <span class="s">permanent</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">        <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">https://www.liunaijie.top</span><span class="nv">$request_uri?</span> <span class="s">permanent</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1"># HTTPS server
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">#
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">server</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="c1">#
+</span></span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">access_log</span>  <span class="s">logs/liunaijie.log</span>  <span class="s">main</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">listen</span>       <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">server_name</span>  <span class="s">www.liunaijie.top</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">charset</span> <span class="s">utf-8</span><span class="p">;</span> <span class="c1"># 设置文件编码格式
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">ssl_certificate</span>      <span class="s">/usr/top.pem</span><span class="p">;</span> <span class="c1">#这两个是https的ssl证书路径
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">ssl_certificate_key</span>  <span class="s">/usr/key</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">        <span class="kn">ssl_certificate</span>      <span class="s">/usr/top.pem</span><span class="p">;</span> <span class="c1">#这两个是https的ssl证书路径
+</span></span></span><span class="line"><span class="cl">        <span class="kn">ssl_certificate_key</span>  <span class="s">/usr/key</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">ssl_session_timeout</span> <span class="mi">5m</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">ssl_ciphers</span> <span class="s">ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">ssl_protocols</span> <span class="s">TLSv1.2</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="c1"># location是指定对域名下访问路径的处理
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="c1"># 什么都不写表示直接访问域名
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kn">access_log</span> <span class="s">logs/blog.log</span> <span class="s">main</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">            <span class="kn">access_log</span> <span class="s">logs/blog.log</span> <span class="s">main</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">            <span class="kn">root</span>   <span class="s">html</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">         <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        
 </span></span><span class="line"><span class="cl">		<span class="c1"># 对 /videos 开启文件访问
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kn">location</span> <span class="s">/videos</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="s">/videos</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="kn">alias</span> <span class="s">/aaa/bbb/ccc/ddd/videos</span><span class="p">;</span> <span class="c1"># 指定文件夹
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="kn">autoindex</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#开启索引
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="kn">autoindex_localtime</span> <span class="no">on</span><span class="p">;</span> <span class="c1"># 显示时间
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="kn">autoindex_exact_size</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#显示文件大小
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">                <span class="kn">autoindex</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#开启索引
+</span></span></span><span class="line"><span class="cl">                <span class="kn">autoindex_localtime</span> <span class="no">on</span><span class="p">;</span> <span class="c1"># 显示时间
+</span></span></span><span class="line"><span class="cl">                <span class="kn">autoindex_exact_size</span> <span class="no">on</span><span class="p">;</span> <span class="c1">#显示文件大小
+</span></span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">		
 </span></span><span class="line"><span class="cl">        <span class="c1"># 这个是对我写的项目的一个配置
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>         <span class="kn">location</span> <span class="s">/users</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">         <span class="kn">location</span> <span class="s">/users</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">             <span class="c1"># 下面三行是开启 websocket 配置
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">             <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">             <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">             <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">&#34;upgrade&#34;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">             <span class="kn">proxy_pass</span> <span class="s">http://users</span><span class="p">;</span> <span class="c1">#开启负载均衡
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="c1"># 解决跨域
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Origin&#39;</span> <span class="s">&#39;</span><span class="nv">$http_origin&#39;</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">             <span class="c1"># 解决跨域
+</span></span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Origin&#39;</span> <span class="s">&#39;</span><span class="nv">$http_origin&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Methods&#39;</span> <span class="s">&#39;GET,</span> <span class="s">POST,</span> <span class="s">OPTIONS&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Headers&#39;</span> <span class="s">&#39;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">             <span class="kn">add_header</span> <span class="s">&#39;Access-Control-Allow-Credentials&#39;</span> <span class="s">&#39;true&#39;</span><span class="p">;</span>
@@ -527,7 +527,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

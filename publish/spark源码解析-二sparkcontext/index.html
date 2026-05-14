@@ -169,7 +169,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">tuple</span><span class="p">.</span><span class="na">_1</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tuple</span><span class="p">.</span><span class="na">_2</span><span class="p">());</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">spark</span><span class="p">.</span><span class="na">stop</span><span class="p">();</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>在这里是手动创建了SparkSession, SparkContext由SparkSession间接完成创建.</p>
@@ -488,9 +488,9 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">appStatusSource</span><span class="p">.</span><span class="na">foreach</span><span class="p">(</span><span class="n">_env</span><span class="p">.</span><span class="na">metricsSystem</span><span class="p">.</span><span class="na">registerSource</span><span class="p">(</span><span class="n">_</span><span class="p">))</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">_plugins</span><span class="p">.</span><span class="na">foreach</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="na">registerMetrics</span><span class="p">(</span><span class="n">applicationId</span><span class="p">))</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">...</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>通过<code>SparkContext.createTaskScheduler(this, master)</code>创建了<code>SchedulerBackend</code>与<code>TaskScheduler</code>. 之后又创建了<code>DAGScheduler</code>.
@@ -668,7 +668,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SparkException</span><span class="p">(</span><span class="s">&#34;External scheduler cannot be instantiated&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里其实是对我们任务提交类型的判断, 从而选择不同的实现类.
@@ -716,7 +716,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">dagScheduler</span><span class="p">.</span><span class="na">runJob</span><span class="p">(</span><span class="n">rdd</span><span class="p">,</span><span class="w"> </span><span class="n">cleanedFunc</span><span class="p">,</span><span class="w"> </span><span class="n">partitions</span><span class="p">,</span><span class="w"> </span><span class="n">callSite</span><span class="p">,</span><span class="w"> </span><span class="n">resultHandler</span><span class="p">,</span><span class="w"> </span><span class="n">localProperties</span><span class="p">.</span><span class="na">get</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">progressBar</span><span class="p">.</span><span class="na">foreach</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="na">finishAll</span><span class="p">())</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">rdd</span><span class="p">.</span><span class="na">doCheckpoint</span><span class="p">()</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="dagscheduler">DAGScheduler</h2>
@@ -770,7 +770,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">exception</span><span class="p">.</span><span class="na">setStackTrace</span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="na">getStackTrace</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">callerStackTrace</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="n">exception</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>在<code>DAGScheduler</code>里又调用了<code>submitJob</code></p>
@@ -811,7 +811,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">rdd</span><span class="p">,</span><span class="w"> </span><span class="n">func2</span><span class="p">,</span><span class="w"> </span><span class="n">partitions</span><span class="p">.</span><span class="na">toArray</span><span class="p">,</span><span class="w"> </span><span class="n">callSite</span><span class="p">,</span><span class="w"> </span><span class="n">waiter</span><span class="p">,</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Utils</span><span class="p">.</span><span class="na">cloneProperties</span><span class="p">(</span><span class="n">properties</span><span class="p">)))</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">waiter</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>向<code>eventProcessLoop</code>发送了<code>JobSubmitted</code>的消息, 消息内包含了任务的基础信息.
@@ -829,7 +829,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="n">JobSubmitted</span><span class="p">(</span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">rdd</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="p">,</span><span class="w"> </span><span class="n">partitions</span><span class="p">,</span><span class="w"> </span><span class="n">callSite</span><span class="p">,</span><span class="w"> </span><span class="n">listener</span><span class="p">,</span><span class="w"> </span><span class="n">properties</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">dagScheduler</span><span class="p">.</span><span class="na">handleJobSubmitted</span><span class="p">(</span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">rdd</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="p">,</span><span class="w"> </span><span class="n">partitions</span><span class="p">,</span><span class="w"> </span><span class="n">callSite</span><span class="p">,</span><span class="w"> </span><span class="n">listener</span><span class="p">,</span><span class="w"> </span><span class="n">properties</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">...</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>当<code>DagScheduler</code>收到消息后, 做模式匹配, 我们上面提交的<code>JobSubmitter</code>消息会调用<code>handleJobSubmitter</code>方法来处理.</p>
@@ -900,7 +900,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">SparkListenerJobStart</span><span class="p">(</span><span class="n">job</span><span class="p">.</span><span class="na">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">jobSubmissionTime</span><span class="p">,</span><span class="w"> </span><span class="n">stageInfos</span><span class="p">,</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Utils</span><span class="p">.</span><span class="na">cloneProperties</span><span class="p">(</span><span class="n">properties</span><span class="p">)))</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">submitStage</span><span class="p">(</span><span class="n">finalStage</span><span class="p">)</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>根据传入的RDD获取最后一步的<code>Stage</code>信息, 最后调用<code>submitStage</code>方法.
@@ -946,7 +946,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">stageIdToStage</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stage</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nf">updateJobIdStageIdMaps</span><span class="p">(</span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">stage</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">stage</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>其实我们知道Spark里根据是否需要做Shuffle来划分Stage, 那么这里就会根据一个RDD的所有依赖做划分, 这个切分就是在这里根据RDD的dependency信息做的.
@@ -999,7 +999,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">abortStage</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;No active job for stage &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stage</span><span class="p">.</span><span class="na">id</span><span class="p">,</span><span class="w"> </span><span class="n">None</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>当收到<code>finialStage</code>后, 可以看到做的事情是先获取<code>Parent Stage</code>. 当<code>Parent Stage</code>为空时才会提交自身的Stage, 不然会先计算<code>Parent Stage</code>.
@@ -1324,7 +1324,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">submitWaitingChildStages</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这段代码上面的部分是如何去创建<code>Task</code>, 当<code>tasks</code>不为空是会调用<code>taskScheduler.submitTask</code>来提交Task. <code>Task</code>的信息是通过<code>sparkContext.broadcast</code>来广播到每个executor上的.
@@ -1399,7 +1399,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">hasReceivedTask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">backend</span><span class="p">.</span><span class="na">reviveOffers</span><span class="p">()</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>创建完<code>TaskSetManager</code>后, 调用了<code>SchedulerBackend.reviverOffers</code>.
@@ -1468,17 +1468,17 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">override</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">reviveOffers</span><span class="p">():</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Utils</span><span class="p">.</span><span class="na">tryLogNonFatalError</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">driverEndpoint</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">ReviveOffers</span><span class="p">)</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">override</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="n">receive</span><span class="p">:</span><span class="w"> </span><span class="n">PartialFunction</span><span class="o">[</span><span class="n">Any</span><span class="p">,</span><span class="w"> </span><span class="n">Unit</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">override</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="n">receive</span><span class="p">:</span><span class="w"> </span><span class="n">PartialFunction</span><span class="o">[</span><span class="n">Any</span><span class="p">,</span><span class="w"> </span><span class="n">Unit</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">...</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="n">ReviveOffers</span><span class="w"> </span><span class="o">=&gt;</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">	  </span><span class="n">makeOffers</span><span class="p">()</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">...</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">makeOffers</span><span class="p">():</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">makeOffers</span><span class="p">():</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// Make sure no executor is killed while some task is launching on it  </span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">val</span><span class="w"> </span><span class="n">taskDescs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">withLock</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// Filter out executors under killing  </span><span class="w">
@@ -1491,9 +1491,9 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">taskDescs</span><span class="p">.</span><span class="na">nonEmpty</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">launchTasks</span><span class="p">(</span><span class="n">taskDescs</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">launchTasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">:</span><span class="w"> </span><span class="n">Seq</span><span class="o">[</span><span class="n">Seq</span><span class="o">[</span><span class="n">TaskDescription</span><span class="o">]]</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">launchTasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">:</span><span class="w"> </span><span class="n">Seq</span><span class="o">[</span><span class="n">Seq</span><span class="o">[</span><span class="n">TaskDescription</span><span class="o">]]</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">task</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tasks</span><span class="p">.</span><span class="na">flatten</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">serializedTask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TaskDescription</span><span class="p">.</span><span class="na">encode</span><span class="p">(</span><span class="n">task</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">serializedTask</span><span class="p">.</span><span class="na">limit</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">maxRpcMessageSize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  
@@ -1523,7 +1523,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">executorData</span><span class="p">.</span><span class="na">executorEndpoint</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">LaunchTask</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SerializableBuffer</span><span class="p">(</span><span class="n">serializedTask</span><span class="p">)))</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里将task编码后, 发送到每个executor上.</p>
@@ -1556,7 +1556,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">taskResources</span><span class="p">(</span><span class="n">taskDesc</span><span class="p">.</span><span class="na">taskId</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskDesc</span><span class="p">.</span><span class="na">resources</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">executor</span><span class="p">.</span><span class="na">launchTask</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">taskDesc</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>反序列化化Task信息, 然后交到线程池中执行.
@@ -1572,7 +1572,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">def</span><span class="w"> </span><span class="nf">handleSuccessfulTask</span><span class="p">(</span><span class="n">tid</span><span class="p">:</span><span class="w"> </span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="n">DirectTaskResult</span><span class="o">[</span><span class="n">_</span><span class="o">]</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">sched</span><span class="p">.</span><span class="na">dagScheduler</span><span class="p">.</span><span class="na">taskEnded</span><span class="p">(</span><span class="n">tasks</span><span class="p">(</span><span class="n">index</span><span class="p">),</span><span class="w"> </span><span class="n">Success</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">value</span><span class="p">(),</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">accumUpdates</span><span class="p">,</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">result</span><span class="p">.</span><span class="na">metricPeaks</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>在<code>DAGScheduler</code>中,</p>
@@ -1633,11 +1633,11 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">taskInfo</span><span class="p">:</span><span class="w"> </span><span class="n">TaskInfo</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">eventProcessLoop</span><span class="p">.</span><span class="na">post</span><span class="p">(</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">CompletionEvent</span><span class="p">(</span><span class="n">task</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">accumUpdates</span><span class="p">,</span><span class="w"> </span><span class="n">metricPeaks</span><span class="p">,</span><span class="w"> </span><span class="n">taskInfo</span><span class="p">))</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="o">[</span><span class="n">scheduler</span><span class="o">]</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">handleTaskCompletion</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="n">CompletionEvent</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">event</span><span class="p">.</span><span class="na">reason</span><span class="w"> </span><span class="n">match</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="o">[</span><span class="n">scheduler</span><span class="o">]</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">handleTaskCompletion</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="n">CompletionEvent</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">event</span><span class="p">.</span><span class="na">reason</span><span class="w"> </span><span class="n">match</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="n">Success</span><span class="w"> </span><span class="o">=&gt;</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">...</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">task</span><span class="w"> </span><span class="n">match</span><span class="w"> </span><span class="p">{</span><span class="w">  
@@ -1667,7 +1667,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里有一句<code>processShuffleMapStageCompletion(shuffleStage)</code>, 当有上游依赖时<code>ResultStage</code>会被放到<code>waitingStages</code>, 还未被执行.</p>
@@ -1733,10 +1733,10 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">markMapStageJobsAsFinished</span><span class="p">(</span><span class="n">shuffleStage</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">submitWaitingChildStages</span><span class="p">(</span><span class="n">shuffleStage</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">submitWaitingChildStages</span><span class="p">(</span><span class="n">parent</span><span class="p">:</span><span class="w"> </span><span class="n">Stage</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="nf">submitWaitingChildStages</span><span class="p">(</span><span class="n">parent</span><span class="p">:</span><span class="w"> </span><span class="n">Stage</span><span class="p">):</span><span class="w"> </span><span class="n">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">logTrace</span><span class="p">(</span><span class="n">s</span><span class="s">&#34;Checking if any dependencies of $parent are now runnable&#34;</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">logTrace</span><span class="p">(</span><span class="s">&#34;running: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">runningStages</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">logTrace</span><span class="p">(</span><span class="s">&#34;waiting: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">waitingStages</span><span class="p">)</span><span class="w">  
@@ -1746,7 +1746,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nf">for</span><span class="w"> </span><span class="p">(</span><span class="n">stage</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">childStages</span><span class="p">.</span><span class="na">sortBy</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="na">firstJobId</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">submitStage</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span><span class="w">  
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这里会将Stage从<code>waitingStages</code>中拿出来, 然后重新提交.</p>
@@ -1807,7 +1807,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

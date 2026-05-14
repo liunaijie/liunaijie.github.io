@@ -156,7 +156,8 @@
 注意:
 单词列表words 的长度不会超过 100。
 每个单词 <code>words[i]</code>的长度范围为 [1, 12]。
-每个单词 <code>words[i]</code>只包含小写字母。</p></blockquote>
+每个单词 <code>words[i]</code>只包含小写字母。</p>
+</blockquote>
 <h1 id="解题思路">解题思路：</h1>
 <p>我们首先要根据给出的单词转换成摩尔斯密码</p>
 <p>利用一个数组按照字母顺序存储对应的密码值</p>
@@ -195,7 +196,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="cm"> * @param words
 </span></span></span><span class="line"><span class="cl"><span class="cm"> * @return
 </span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">uniqueMorseRepresentations</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">uniqueMorseRepresentations</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#34;.-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-...&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-..&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;..-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;....&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;..&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.---&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.-..&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;---&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.--.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--.-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.-.&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;...&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;..-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;...-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;.--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-..-&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-.--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;--..&#34;</span><span class="p">};</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -206,7 +207,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">set</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">pwd</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">set</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -266,7 +267,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

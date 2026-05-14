@@ -235,7 +235,7 @@
          .build();
 </code></pre><p>为了避免这种无效状态的存在, 我们就需要使用构造函数一次性初始化好所有的成员变量. 如果构造函数参数过多, 我们就需要考虑使用建造者模式, 先设置建造者的变量, 然后再一次性的创建对象, 让对象一直处于有效状态.</p>
 <p>使用建造者模式创建对象, 还能避免对象存在无效状态. 假如我们定义了一个长方形, 如果不使用建造者模式, 而是使用set的方式, 那么在调用第一个set之后和调用第二个set之前, 这个对象是处于无效状态的.</p>
-<h1 id="与blog-postscodingdesign工厂模式的区别"><strong>与[[Blog-Posts/coding/design/工厂模式]]的区别</strong></h1>
+<h1 id="与"><strong>与[[Blog-Posts/coding/design/工厂模式]]的区别</strong></h1>
 <p>建造者模式创建的是同一种类型的复杂对象, 通过设置不同的可选参数, 来定制化的创建不同的对象</p>
 <p>而工厂模式则是创建不同但是相关类型的对象(继承同一父类或者接口的一组子类), 通过给定的参数来决定创建哪种类型的对象.</p>
 
@@ -295,7 +295,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

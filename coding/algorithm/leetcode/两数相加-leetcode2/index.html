@@ -144,7 +144,8 @@
 <p>示例：</p>
 <p>输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
 输出：7 -&gt; 0 -&gt; 8
-原因：342 + 465 = 807</p></blockquote>
+原因：342 + 465 = 807</p>
+</blockquote>
 <h1 id="题目解析">题目解析</h1>
 <p>给了两个链表，每个链表中的节点是数字中的一位数，将这两个链表的数相加后再返回一个链表。</p>
 <p>刚开始的思路是： 将第一个链表转换成数字1，第二个链表转换成数字2，两者相加得到数字3。最后将数字3转换为链表进行返回。</p>
@@ -223,7 +224,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">// 返回的时候要返回初始化节点的下一个节点开始</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="na">next</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这样其实最终得到的链表结构最开始会有一个值为<code>0</code>的节点，然后由于返回的是从第二个节点开始，所以对整体运行结果没关系。</p>
@@ -297,7 +298,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="n">carry</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这两个程序都跑了一下：第一个程序耗时：10ms，内存消耗：47.9MB。第二个程序耗时：5ms，内存消耗43.8MB。</p>
@@ -357,7 +358,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

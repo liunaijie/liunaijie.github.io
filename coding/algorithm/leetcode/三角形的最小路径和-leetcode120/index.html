@@ -150,7 +150,8 @@
 ]
 自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。</p>
 <p>说明：</p>
-<p>如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。</p></blockquote>
+<p>如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。</p>
+</blockquote>
 <p>题目中有一句话，每一步只能移动到下一行中相邻的结点中，所以在m行n列时，下一步的落地只能在m+1行n列或者m+1行n+1列中。</p>
 <h1 id="解题思路">解题思路</h1>
 <h2 id="二维数组从上向下">二维数组，从上向下</h2>
@@ -171,7 +172,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">[</span><span class="n">5</span><span class="p">,</span><span class="n">6</span><span class="o">]</span><span class="p">,</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">[</span><span class="n">11</span><span class="p">,</span><span class="n">10</span><span class="p">,</span><span class="n">13</span><span class="o">]</span><span class="p">,</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">[</span><span class="n">15</span><span class="p">,</span><span class="n">11</span><span class="p">,</span><span class="n">18</span><span class="p">,</span><span class="n">16</span><span class="o">]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">]</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>可以看出，第一层不变，每一行的最开始和结束两个位置的计算方法为当前元素加上上一行中的第一个或最后一个元素。即<code>sum[i][0]=a[i][0]+sum[i-1][0]</code>，<code>sum[i][last]=a[i][last]+sum[i-1][last]</code></p>
@@ -243,7 +244,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">min</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="自下向上一维数组">自下向上，一维数组</h2>
@@ -289,7 +290,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -349,7 +350,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

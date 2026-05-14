@@ -167,7 +167,7 @@ hash(字段)
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">table_all</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">CLUSTER</span><span class="w"> </span><span class="n">clusterName</span><span class="w"> </span><span class="p">(</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">UInt64</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Distributed</span><span class="p">(</span><span class="n">clusterName</span><span class="p">,</span><span class="w"> </span><span class="n">databaseName</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">[,</span><span class="w"> </span><span class="n">sharding_key</span><span class="p">])</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Distributed</span><span class="p">(</span><span class="n">clusterName</span><span class="p">,</span><span class="w"> </span><span class="n">databaseName</span><span class="p">,</span><span class="w"> </span><span class="n">tableName</span><span class="p">[,</span><span class="w"> </span><span class="n">sharding_key</span><span class="p">])</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>在定义时支持<code>sharding_key</code>的定义, 这样我们可以自定义数据的分布, 但是这个值必须是数值型, 可以自己是一个数值型字段, 也可以是某个函数的结果</p>
@@ -250,7 +250,7 @@ hash(字段)
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

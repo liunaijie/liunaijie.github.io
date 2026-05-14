@@ -171,7 +171,7 @@
 </span></span><span class="line"><span class="cl">    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">default_type</span>  <span class="s">application/octet-stream</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="c1"># 日志格式 名称为 main
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">log_format</span>  <span class="s">main</span>  <span class="s">&#39;</span><span class="nv">$remote_addr</span> <span class="s">-</span> <span class="nv">$remote_user</span> <span class="s">[</span><span class="nv">$time_local]</span> <span class="s">&#34;</span><span class="nv">$request&#34;</span> <span class="s">&#39;</span>
 </span></span><span class="line"><span class="cl">                      <span class="s">&#39;</span><span class="nv">$status</span> <span class="nv">$body_bytes_sent</span> <span class="s">&#34;</span><span class="nv">$http_referer&#34;</span> <span class="s">&#39;</span>
 </span></span><span class="line"><span class="cl">                      <span class="s">&#39;&#34;</span><span class="nv">$http_user_agent&#34;</span> <span class="s">&#34;</span><span class="nv">$http_x_forwarded_for&#34;&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
@@ -179,9 +179,9 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">#tcp_nopush     on;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">#keepalive_timeout  0;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="kn">gzip</span>  <span class="no">on</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">......省略</span>
@@ -286,9 +286,9 @@
 <pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">location</span> <span class="s">/report.html</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">alias</span> <span class="s">/usr/local/nginx/html/report.html</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">auth_basic</span> <span class="s">&#34;请输入用户名和密码！&#34;</span><span class="p">;</span> <span class="c1">#这里是验证时的提示信息 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">auth_basic_user_file</span> <span class="s">/usr/local/nginx/report_passwd</span><span class="p">;</span> <span class="c1">#这是你生成密码存放的文件
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span> <span class="c1"># 这三行是为了实现websocket
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kn">auth_basic_user_file</span> <span class="s">/usr/local/nginx/report_passwd</span><span class="p">;</span> <span class="c1">#这是你生成密码存放的文件
+</span></span></span><span class="line"><span class="cl">    <span class="kn">proxy_http_version</span> <span class="mi">1</span><span class="s">.1</span><span class="p">;</span> <span class="c1"># 这三行是为了实现websocket
+</span></span></span><span class="line"><span class="cl">    <span class="kn">proxy_set_header</span> <span class="s">Upgrade</span> <span class="nv">$http_upgrade</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="kn">proxy_set_header</span> <span class="s">Connection</span> <span class="s">&#34;upgrade&#34;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
@@ -353,7 +353,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

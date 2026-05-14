@@ -25,6 +25,7 @@ status (保存当前的状态) head/tail (保存队列) 主要的几个方法: a
     <meta property="article:published_time" content="2022-09-01T00:00:00+00:00">
     <meta property="article:modified_time" content="2022-09-01T00:00:00+00:00">
     <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="锁">
 
   
   <meta name="twitter:card" content="summary">
@@ -144,6 +145,9 @@ status (保存当前的状态) head/tail (保存队列) 主要的几个方法: a
       
       <a class="ml-1" href="/tags/Java">#Java</a>
       
+      
+      <a class="ml-1" href="/tags/%e9%94%81">#锁</a>
+      
     </div>
     
   </div>
@@ -165,7 +169,7 @@ status (保存当前的状态) head/tail (保存队列) 主要的几个方法: a
 <h1 id="lock">Lock</h1>
 <p>Lock底层是基于AQS(AbstractQueuedSynchronizer)的, AQS是用来构建锁或者其他同步组件的基础框架, 它使用来一个int成员变量表示同步状态, 通过内置的FIFO队列来完成资源获取线程的排队工作.</p>
 <p>使用时必须手动进行上锁, 解锁.</p>
-<p>Lock接口有多种实现, 比如ReentrantLock和ReadWriteLock.</p>
+<p>Lock接口有多种实现, 比如<code>ReentrantLock</code>和<code>ReadWriteLock</code>.</p>
 <p>Lock可以通过tryLock来获取是否可以获取锁的状态.</p>
 <ol>
 <li>可重入, 可以选择是否公平锁</li>
@@ -241,7 +245,7 @@ status (保存当前的状态) head/tail (保存队列) 主要的几个方法: a
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

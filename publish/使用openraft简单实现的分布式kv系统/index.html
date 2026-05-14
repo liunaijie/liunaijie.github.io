@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/publish/%E4%BD%BF%E7%94%A8openraft%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8Fkv%E7%B3%BB%E7%BB%9F/">
+  <meta property="og:site_name" content="Jarvis`s library">
+  <meta property="og:title" content="博客自动部署方案">
+  <meta property="og:description" content="TL&amp;DR 简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 OpenRaft。
+这个项目没有自己从零实现一套 Raft 协议，而是把更多精力放在工程落地上。
+从工程角度看，这个仓库的核心价值不在于“再讲一遍 Raft 原理”，而在于回答一个更实际的问题：
+如果我基于 OpenRaft 做一个真正能跑起来的分布式 KV，除了把库接进来之外，还需要补齐哪些能力？
+这篇文章就围绕这个问题展开，结合仓库 distribute_kv_openraft的实现，复盘一个最小可运行 Raft KV 系统该怎么实现，以及OpenRaft系统中的组件功能。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="publish">
+    <meta property="article:published_time" content="2026-05-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-12T00:00:00+00:00">
+    <meta property="article:tag" content="Blog">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="博客自动部署方案">
+  <meta name="twitter:description" content="TL&amp;DR 简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 OpenRaft。
+这个项目没有自己从零实现一套 Raft 协议，而是把更多精力放在工程落地上。
+从工程角度看，这个仓库的核心价值不在于“再讲一遍 Raft 原理”，而在于回答一个更实际的问题：
+如果我基于 OpenRaft 做一个真正能跑起来的分布式 KV，除了把库接进来之外，还需要补齐哪些能力？
+这篇文章就围绕这个问题展开，结合仓库 distribute_kv_openraft的实现，复盘一个最小可运行 Raft KV 系统该怎么实现，以及OpenRaft系统中的组件功能。">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - 博客自动部署方案
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.54cfcb44e10b4015b41a13771763013b79bdba6a92e49ea4a77bb44db465e761.css" integrity="sha256-VM/LROELQBW0GhN3F2MBO3m9umqS5J6kp3u0TbRl52E=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.b4da24217e147f536fc7dc225886a1ea20bedabe7aed49e546a5d97cc34e4555.js" integrity="sha256-tNokIX4Uf1Nvx9wiWIah6iC&#43;2r567UnlRqXZfMNORVU="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          
+          <a href='/'>首页</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/search">搜索</a>
+          
+        </li>
+        
+        <li class="ml-2 mr-2">
+          
+          <a href="/about">关于</a>
+          
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">博客自动部署方案</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2026 年 05 月 12 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/blog">#blog</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="tldr">TL&amp;DR</h1>
+<p>简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 <a href="https://github.com/databendlabs/openraft">OpenRaft</a>。<br>
+这个项目没有自己从零实现一套 Raft 协议，而是把更多精力放在工程落地上。</p>
+<p>从工程角度看，这个仓库的核心价值不在于“再讲一遍 Raft 原理”，而在于回答一个更实际的问题：</p>
+<blockquote>
+<p>如果我基于 OpenRaft 做一个真正能跑起来的分布式 KV，除了把库接进来之外，还需要补齐哪些能力？</p>
+</blockquote>
+<p>这篇文章就围绕这个问题展开，结合仓库 <a href="https://github.com/liunaijie/distribute_kv_openraft">distribute_kv_openraft</a>的实现，复盘一个最小可运行 Raft KV 系统该怎么实现，以及OpenRaft系统中的组件功能。</p>
+<h1 id="openraft-是什么">OpenRaft 是什么</h1>
+<p>OpenRaft 可以理解为一个 Rust 生态里的 Raft 实现框架。它负责处理 Raft 协议中的核心一致性逻辑，比如：</p>
+<ul>
+<li>leader election</li>
+<li>log replication</li>
+<li>membership 变更</li>
+<li>snapshot 协议</li>
+<li>线性一致性读相关机制</li>
+</ul>
+<p>但 OpenRaft 并不会替你做完一个分布式系统的所有事情。它更像是把 Raft 的“协议内核”实现好了，而把和具体业务强相关的部分留给你自己补：</p>
+<ul>
+<li>节点之间如何通信</li>
+<li>日志如何持久化</li>
+<li>状态机如何应用日志</li>
+<li>快照如何生成与安装</li>
+<li>业务请求如何编码成 Raft log</li>
+<li>集群中节点的动态扩缩容</li>
+</ul>
+<p>这也是为什么在工程实践里，接入 OpenRaft 只是开始，不是结束。真正的工作，是围绕它补齐一套完整的分布式存储运行时。</p>
+<h1 id="这个仓库实现了什么">这个仓库实现了什么</h1>
+<p>这个仓库是一个学习性质的分布式 KV 项目，技术栈比较清晰：</p>
+<ul>
+<li>使用 Rust 作为实现语言</li>
+<li>使用 OpenRaft 作为 Raft 协议实现</li>
+<li>使用 RocksDB 作为持久化存储后端</li>
+<li>使用 Axum 提供 HTTP 接口</li>
+</ul>
+<h2 id="相关命令">相关命令</h2>
+<p>使用如下命令，启动3个节点的集群。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cargo run -- <span class="se">\
+</span></span></span><span class="line"><span class="cl">--node-id <span class="m">1</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">--port <span class="m">9901</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">--storage-path /tmp/kv-node-1 <span class="se">\
+</span></span></span><span class="line"><span class="cl">--member-list <span class="s2">&#34;1@127.0.0.1:9901,2@127.0.0.1:9902,3@127.0.0.1:9903&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cargo run -- <span class="se">\
+</span></span></span><span class="line"><span class="cl">--node-id <span class="m">2</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">--port <span class="m">9902</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">--storage-path /tmp/kv-node-2 <span class="se">\
+</span></span></span><span class="line"><span class="cl">--member-list <span class="s2">&#34;1@127.0.0.1:9901,2@127.0.0.1:9902,3@127.0.0.1:9903&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">cargo run -- <span class="se">\
+</span></span></span><span class="line"><span class="cl">--node-id <span class="m">3</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">--port <span class="m">9903</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl">--storage-path /tmp/kv-node-3 <span class="se">\
+</span></span></span><span class="line"><span class="cl">--member-list <span class="s2">&#34;1@127.0.0.1:9901,2@127.0.0.1:9902,3@127.0.0.1:9903&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后可以直接通过 <code>curl</code> 调用业务接口。下面假设当前 leader 监听在 <code>127.0.0.1:9901</code>。</p>
+<p>写入一个 KV：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl <span class="s2">&#34;http://127.0.0.1:9901/api/v1/set?key=name&amp;value=raft&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>读取一个 KV：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl <span class="s2">&#34;http://127.0.0.1:9901/api/v1/get/name&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果希望走线性一致性读，可以显式带上 <code>linearize=true</code>（仅能在leader节点读，follower节点会报错）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl <span class="s2">&#34;http://127.0.0.1:9901/api/v1/get/name?linearize=true&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>删除一个 KV：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">curl <span class="s2">&#34;http://127.0.0.1:9901/api/v1/del/name&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果请求打到了 follower，写请求会返回类似“请访问 leader 节点”的错误信息，需要根据返回信息中的leader信息，向leader节点进行请求。</p>
+<h1 id="做一个-raft-kv-系统到底需要补哪些内容">做一个 Raft KV 系统，到底需要补哪些内容</h1>
+<p>如果只从算法论文角度理解 Raft，很容易觉得事情很简单：选主、复制日志、提交日志、应用状态机。<br>
+但一旦进入工程实现，就会发现中间还有很多空白层需要自己补。</p>
+<p>结合这个仓库，我认为一个最小可运行的 Raft KV，至少要补齐下面 5 件事。</p>
+<h2 id="1-定义业务请求如何进入-raft">1. 定义业务请求如何进入 Raft</h2>
+<p>Raft 只关心“复制日志”，并不理解你的业务语义。<br>
+因此第一件事，就是把业务操作编码成 Raft 可以复制的日志命令。
+我们定义OpenRaft节点通信的请求与响应结构体</p>
+<ul>
+<li>
+<p><code>RaftRpcRequest</code></p>
+</li>
+<li>
+<p><code>RaftRpcResponse</code>
+在<code>RaftRpcRequest</code>中包含两个字段，一个是<code>RaftRpcRequestType</code>，暂时仅支持两种类型</p>
+</li>
+<li>
+<p><code>KvSet</code></p>
+</li>
+<li>
+<p><code>KvDelete</code>
+另外一个字段是<code>Vec&lt;u8&gt;</code>类型的<code>value</code>字段，这个将不同类型的实际消息序列化之后的内容，在节点通信时，接收到request后，需要再根据不同type将值反序列化为不同的消息体进行处理。
+当接收到请求后，对于这两类消息，我们需要将其写入raft中，这是通过<code>raft_node.client_write(...)</code>来把业务操作写入 Raft。<br>
+这里有一个很典型的工程分层：</p>
+</li>
+<li>
+<p>业务层只关心“我要写一个 key/value”</p>
+</li>
+<li>
+<p>Raft 层负责把它复制成一致日志</p>
+</li>
+<li>
+<p>状态机层在日志提交后再真正落地到 RocksDB</p>
+</li>
+</ul>
+<p>这个分层很重要，因为它明确区分了“收到请求”和“状态真正生效”不是同一件事。</p>
+<h2 id="2-实现节点之间的-raft-通信">2. 实现节点之间的 Raft 通信</h2>
+<p>在集群中，Raft协议需要与其他节点进行通信，来进行选举，消息推送等。
+在OpenRaft中，通信层交给了用户自己来实现，在这个示例中，我直接使用了<code>Axum + reqwest + HTTP JSON</code>这样的方式来实现。
+在网络层，需要实现：</p>
+<ol>
+<li>当OpenRaft需要与其他节点通信时，消息如何发送？</li>
+<li>节点如何接收其他节点发送过来的信息，接收后又该如何处理？</li>
+</ol>
+<h3 id="出站请求">出站请求</h3>
+<p>在OpenRaft的Network实现中，它必须实现三个方法</p>
+<ul>
+<li><code>append_entries()</code></li>
+<li><code>vote()</code></li>
+<li><code>full_snapshot()</code>
+在本次的实例中，我使用<code>reqwest</code>直接将这些信息通过HTTP POST发送到其他节点上。</li>
+</ul>
+<h3 id="入站请求">入站请求</h3>
+<p>对应地，在 <code>axum</code> 中，也需要实现响应的路由接口，来接收其他节点发送过来的消息。
+收到请求后，处理逻辑也很直接：把请求继续交给 <code>raft_node.append_entries()</code>、<code>raft_node.vote()</code> 或 <code>raft_node.install_full_snapshot()</code>。</p>
+<p>这一步的关键在于，OpenRaft 负责协议语义，而业务工程只负责把协议请求可靠地送达本地 Raft 实例。</p>
+<h2 id="3-实现日志存储">3. 实现日志存储</h2>
+<p>Raft的日志，需要存储Raft节点交互的信息记录，将每一次通信都记录下来。
+其中包含了我们的业务请求<code>RaftRpcRequest</code>，以及内部的MemberShip等消息。
+这是消息体，除此之外还会有LogId，表示这条日志的编号。</p>
+<p>Raft 的日志不是普通缓存，而是整个一致性系统的基础事实来源。<br>
+只要你想让节点重启后还能恢复，日志就必须持久化。</p>
+<p>这个仓库在 <code>src/raft/store/log_store.rs</code> 中实现了 <code>RaftLogReader</code> 和 <code>RaftLogStorage</code>，底层使用 RocksDB 存储。</p>
+<p>它实际持久化了几类关键数据：</p>
+<ul>
+<li>raft log entries （也就是节点之间发送的消息，包括业务消息与内部消息）</li>
+<li>当前 vote  （当前节点投票给了哪个节点）</li>
+<li><code>last_purged_log_id</code> （上一次commit的日志id，从这个id向后表示未commit的日志）</li>
+</ul>
+<h2 id="4-实现状态机应用">4. 实现状态机应用</h2>
+<p>这个部分是真正的状态存储，日志最终会被提交，保存到状态机中。</p>
+<p>日志复制成功，并不代表系统状态已经更新。<br>
+只有当日志被提交并应用到状态机之后，KV 数据才算真正生效。</p>
+<p>这个仓库在 <code>src/raft/store/state_machine.rs</code> 里实现了 <code>RaftStateMachine&lt;TypeConfig&gt;</code>。<br>
+这里是真正把 Raft 日志变成业务状态的地方。</p>
+<h3 id="写请求如何应用">写请求如何应用</h3>
+<p>在 <code>apply()</code> 里，代码会遍历已经提交的 entry：</p>
+<ul>
+<li>遇到 <code>KvSet</code>，就把 <code>DataEntity</code> 写入 <code>sm_data</code></li>
+<li>遇到 <code>KvDelete</code>，就从 <code>sm_data</code> 中删除对应 key</li>
+<li>遇到 membership entry，则更新 <code>last_membership</code></li>
+</ul>
+<p>这里状态机不仅保存业务数据，还保存两类状态机元信息：</p>
+<ul>
+<li><code>last_applied_log</code></li>
+<li><code>last_membership</code></li>
+</ul>
+<p>这两者都放在 <code>sm_meta</code> column family 中。</p>
+<h3 id="为什么这里要做原子写">为什么这里要做原子写</h3>
+<p>这个实现里一个非常关键的工程点，是使用 RocksDB <code>WriteBatch</code> 把下面几类数据一次性提交：</p>
+<ul>
+<li>业务数据变更</li>
+<li><code>last_applied_log</code></li>
+<li><code>last_membership</code></li>
+</ul>
+<p>这样做的意义是：状态机数据和它对应的进度元信息必须一致。<br>
+如果业务数据写成功了，但 <code>last_applied_log</code> 没写进去，重启恢复后就会出现状态不一致；反过来也一样。</p>
+<p>因此这里的“原子写”并不是性能优化，而是正确性要求。</p>
+<h2 id="5-实现快照构建与安装">5. 实现快照构建与安装</h2>
+<p>只靠日志无限增长不是长久方案。<br>
+当日志越来越多时，系统需要通过 snapshot 压缩状态，把“历史日志”折叠成一个新的状态基线。</p>
+<p>这个仓库在 <code>state_machine.rs</code> 中把 snapshot 的主流程补齐了：</p>
+<ul>
+<li><code>build_snapshot()</code></li>
+<li><code>begin_receiving_snapshot()</code></li>
+<li><code>install_snapshot()</code></li>
+<li><code>get_current_snapshot()</code></li>
+</ul>
+<h3 id="构建快照">构建快照</h3>
+<p><code>build_snapshot()</code> 会从 RocksDB 中遍历 <code>sm_data</code>，把当前状态机内容提取出来，和 snapshot metadata 一起序列化。<br>
+这里的 metadata 包括：</p>
+<ul>
+<li><code>last_log_id</code></li>
+<li><code>last_membership</code></li>
+<li><code>snapshot_id</code></li>
+</ul>
+<p>实现里还会把 snapshot 文件写入 <code>snapshots/</code> 目录，方便后续恢复当前最新快照。</p>
+<h3 id="安装快照">安装快照</h3>
+<p><code>install_snapshot()</code> 的核心逻辑是：</p>
+<ul>
+<li>反序列化快照数据</li>
+<li>清空当前 <code>sm_data</code></li>
+<li>重新写入快照中的所有 KV 数据</li>
+<li>恢复 <code>last_applied_log</code> 与 <code>last_membership</code></li>
+</ul>
+<p>同样，这里也使用了批量写，确保快照恢复过程在持久化层面尽量保持一致。</p>
+<h3 id="为什么快照不是可选功能">为什么快照不是“可选功能”</h3>
+<p>很多人在第一次做 Raft 工程实现时，会把 snapshot 看成后期优化项。<br>
+实际上不是。</p>
+<p>只要系统需要：</p>
+<ul>
+<li>降低日志回放成本</li>
+<li>支持慢节点追赶</li>
+<li>缩短重启恢复时间</li>
+</ul>
+<p>那么快照就是必做项。<br>
+这个仓库把 snapshot 整体链路补上，是它比“只会选主和复制日志”的 demo 更进一步的地方。</p>
+<h2 id="rust-里的几个实现细节">Rust 里的几个实现细节</h2>
+<p>由于使用的是Rust来进行编写，这个语言也是刚开始学习，所以也记录下一些使用心得。</p>
+<p>首先Rust是强类型，静态类型的语言。在编译期就确定了变量类型。
+Rust目前没法像<code>Spring</code>中那样直接调用<code>@Autowired</code>来获取一个bean单例，所以这里也采取了一些其他方法（使用OnceLock静态变量，来设置或获取）来使程序运行起来（但是感觉这个应该不是一个正确的使用方法）。</p>
+<h2 id="这个仓库当前的完成度与边界">这个仓库当前的完成度与边界</h2>
+<p>从实践角度看，这个项目已经具备一个最小可运行 Raft KV 的主路径：</p>
+<ul>
+<li>节点可通过命令行参数启动</li>
+<li>集群成员列表可在启动时初始化</li>
+<li>写请求能进入 Raft 日志复制</li>
+<li>状态机能把提交后的日志落到 RocksDB</li>
+<li>节点间支持 append/vote/snapshot RPC</li>
+<li>读请求支持可选的线性一致性读取</li>
+</ul>
+<p>但它同时也有很多功能没有实现。</p>
+<p>例如</p>
+<ul>
+<li>集群的扩缩容机制，新节点启动时如何自动加入集群，成员变更的流程。</li>
+<li>更完整的 leader redirect 机制</li>
+<li>更丰富的错误模型</li>
+<li>metrics 与观测能力</li>
+</ul>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

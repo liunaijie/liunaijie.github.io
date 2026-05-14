@@ -238,15 +238,15 @@ Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据 
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w"> 
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- sql hint
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">select</span><span class="w"> </span><span class="cm">/*+ broadcast(t2) */</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="k">key</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- sql hint
+</span></span></span><span class="line"><span class="cl"><span class="k">select</span><span class="w"> </span><span class="cm">/*+ broadcast(t2) */</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">t1</span><span class="p">.</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="p">.</span><span class="k">key</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- df hint
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">table1</span><span class="p">.</span><span class="k">join</span><span class="p">(</span><span class="n">table2</span><span class="p">.</span><span class="n">hint</span><span class="p">(</span><span class="s2">&#34;broadcast&#34;</span><span class="p">),</span><span class="w"> </span><span class="n">Seq</span><span class="p">(</span><span class="s2">&#34;key&#34;</span><span class="p">),</span><span class="w"> </span><span class="s2">&#34;inner&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- df hint
+</span></span></span><span class="line"><span class="cl"><span class="n">table1</span><span class="p">.</span><span class="k">join</span><span class="p">(</span><span class="n">table2</span><span class="p">.</span><span class="n">hint</span><span class="p">(</span><span class="s2">&#34;broadcast&#34;</span><span class="p">),</span><span class="w"> </span><span class="n">Seq</span><span class="p">(</span><span class="s2">&#34;key&#34;</span><span class="p">),</span><span class="w"> </span><span class="s2">&#34;inner&#34;</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- 函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">import</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">functions</span><span class="p">.</span><span class="n">broadcast</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">table1</span><span class="p">.</span><span class="k">join</span><span class="p">(</span><span class="n">broadcast</span><span class="p">(</span><span class="n">table2</span><span class="p">),</span><span class="w"> </span><span class="n">Seq</span><span class="p">(</span><span class="s2">&#34;key&#34;</span><span class="p">),</span><span class="w"> </span><span class="s2">&#34;inner&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- 函数
+</span></span></span><span class="line"><span class="cl"><span class="n">import</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">spark</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">functions</span><span class="p">.</span><span class="n">broadcast</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">table1</span><span class="p">.</span><span class="k">join</span><span class="p">(</span><span class="n">broadcast</span><span class="p">(</span><span class="n">table2</span><span class="p">),</span><span class="w"> </span><span class="n">Seq</span><span class="p">(</span><span class="s2">&#34;key&#34;</span><span class="p">),</span><span class="w"> </span><span class="s2">&#34;inner&#34;</span><span class="p">)</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>如果广播变量大小超过8GB, Spark会直接抛异常终端任务</strong></p>
@@ -308,7 +308,7 @@ Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据 
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.143.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>
