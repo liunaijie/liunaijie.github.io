@@ -113,232 +113,166 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97-leetcode232/">用栈实现队列-LeetCode232</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 24 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述 使用栈实现队列的下列操作：
-push(x) &ndash; 将一个元素放入队列的尾部。 pop() &ndash; 从队列首部移除元素。 peek() &ndash; 返回队列首部的元素。 empty() &ndash; 返回队列是否为空。 示例:
-MyQueue queue = new MyQueue();
-queue.push(1); queue.push(2);
-queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 false 说明:
-你只能使用标准的栈操作 &ndash; 也就是只有 push to top, peek/pop from top, size, 和 is empty 操作是合法的。 你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。 假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）
-解题思路 栈（先进后出）来实现队列（先进先出）。
-可以用两个栈来实现，第一个栈存储，当进行 peek 或 pop 操作时，将第一个栈内元素按照先进后出的原则拿出来放到第二个栈里面。这时第二个栈里面在取就是我们总的第一个元素。
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9-leetcode24/">两两交换链表中的节点—LeetCode24</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 21 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
-你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
-示例:
-给定 1-&gt;2-&gt;3-&gt;4, 你应该返回 2-&gt;1-&gt;4-&gt;3. 可以看出，链表每两个一组交换了前后位置，然后再跟其他元素按照原有顺序连接。
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/java/stringbuilder%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8/">StringBuilder为什么线程不安全?</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 17 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。
-之前问string 相关问题，只了解了 string 不可变，stringbuffer 线程安全，stringbuilder 线程不安全。但却没有搞清楚为什么是不安全的，今天就去看了一下 stringbuilder 的源码，来了解一下原因。
-首先来测试一下多线程下的不安全问题：
-1 2 3 4 5 6 7 8 9 10 public static void main(String[] args) { StringBuilder stringBuilder = new StringBuilder(); for (int i = 0; i &lt; 100000; i++) { new Thread(() -&gt; stringBuilder.append(&#34;a&#34;)).start(); } System.out.println(stringBuilder.length()); } 这个方法最终的理想结果应该是 100000，但是当我们多运行几次，发现他的结果出错了！结果变成了99999或者更小的数值。有时候甚至还抛出了数组越界异常（概率极小）。
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E6%95%B4%E6%95%B0%E5%8F%8D%E8%BD%AC-leetcode7/">整数反转—LeetCode7</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 15 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述 给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。
-示例 1:
-输入: 123 输出: 321 示例 2:
-输入: -123 输出: -321 示例 3:
-输入: 120 输出: 21 注意:
-假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−231, 231 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
-题目中给出了条件，我们只能存储32位有符号整数，如果溢出后则返回0，避免出现溢出错误
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/java/treemap%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">TreeMap源码学习</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 12 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    之前看过了HashMap,LinkedHashMap的源码，这次来看一下TreeMap的源码。
-从这个名字就能看出，TreeMap底层使用的是树来进行存储的。
-变量 1 2 3 4 5 6 7 8 9 //比较器，用于左右子树的判断。 //正常情况下，左子树为 1，父节点为 2，右子树为 3。如果比较器设置 3&lt;1&lt;2。则左子树为3，父节点为 1，右子树为 2。 private final Comparator&lt;? super K&gt; comparator; //根节点 private transient Entry&lt;K,V&gt; root; //容量 private transient int size = 0; //修改的次数，在迭代和序列化时用到 private transient int modCount = 0; 看一下 root 节点的数据结构:
-1 2 3 4 5 6 7 8 9 10 static final class Entry&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; { K key; V value; Entry&lt;K,V&gt; left; Entry&lt;K,V&gt; right; Entry&lt;K,V&gt; parent; boolean color = BLACK; ... } 由于有一个color=BLACK属性，所以底层数据结构应该是红黑树
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%9B%9E%E6%96%87%E6%95%B0-leetcode9/">回文数—LeetCode9</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 07 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
-示例 1:
-输入: 121 输出: true 示例 2:
-输入: -121 输出: false 解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:
-输入: 10 输出: false 解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶:
-你能不将整数转为字符串来解决这个问题吗？
-从示例2中可以看出，负数不是回文数，可以先对此进行判断。
-而提示中有一个提示，能否不使用字符串来解决这个问题，那么使用字符串肯定是可以解决这个问题的。
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E7%BF%BB%E8%BD%AC%E4%BA%8C%E5%8F%89%E6%A0%91-leetcode226/">翻转二叉树—LeetCode226</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 01 日</div>
-    
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E8%8C%83%E5%9B%B4%E5%92%8C-leetcode938/">二叉搜索树的范围和-LeetCode938</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 31 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述 给定二叉搜索树的根结点 root，返回 L 和 R（含）之间的所有结点的值的和。
-二叉搜索树保证具有唯一的值。
-示例 1：
-输入：root = [10,5,15,3,7,null,18], L = 7, R = 15 输出：32 示例 2：
-输入：root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10 输出：23
-提示：
-树中的结点数量最多为 10000 个。 最终的答案保证小于 2^31。
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C-leetcode15/">三数之和—LeetCode15</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 25 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    题目描述 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？
-请你找出所有满足条件且不重复的三元组。
-注意：答案中不可以包含重复的三元组。
-示例：
-给定数组 nums = [-1, 0, 1, 2, -1, -4]，
-满足要求的三元组集合为： [ [-1, 0, 1], [-1, -1, 2] ]
-这个题目中有一个条件，答案中不可以包含重复的三元组，即给定的数组中会有重复值，所以答案可能会存在重复答案，当答案存在时，不在添加到答案中
-
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
     <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">布隆过滤器</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E9%93%BE%E8%A1%A8/%E5%8F%8D%E8%BD%AC%E9%83%A8%E5%88%86%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8/">反转部分单向链表</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E9%93%BE%E8%A1%A8/%E9%93%BE%E8%A1%A8/">链表</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E9%93%BE%E8%A1%A8/%E4%B8%A4%E4%B8%AA%E5%8D%95%E9%93%BE%E8%A1%A8%E7%94%9F%E6%88%90%E7%9B%B8%E5%8A%A0%E9%93%BE%E8%A1%A8/">两个单链表生成相加链表</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E9%93%BE%E8%A1%A8/%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E9%93%BE%E8%A1%A8%E6%98%AF%E5%90%A6%E4%B8%BA%E5%9B%9E%E6%96%87%E7%BB%93%E6%9E%84/">判断一个链表是否为回文结构</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%88/%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E6%9C%89getmin%E5%8A%9F%E8%83%BD%E7%9A%84%E6%A0%88/">设计一个有getMin功能的栈</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E7%BB%84/">数组</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/algorithm/">算法与数据结构</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    最近在看极客时间覃超的《算法面试通关 40 讲》，也一起看了一些数据结构，正好在这里进行一下整理。
+主要分为数据结构和算法两大章节，每个章节里面都会先结合自己的理解对它的定义进行一下解释，然后会拿出例题来进行实战。
+数据结构 数组 链表 队列 先入先出（first in first out FIFO）
+习题：用栈实现队列
+普通队列 优先队列 堆栈 后入先出(last in first out LIFO)
+习题：用队列实现栈
+树 链表是一种特殊的树，当每个链表节点的链表变成多个时就变成了树
+二叉搜索树（binary search tree BST） 性质：
+左子树上所有节点的值均小于它的根节点的值 右子树上所有节点的值均大于它的根节点的值； 左，右子树也分别满足以上性质 AVL,红黑树学习
+红黑树 手写红黑树的简单实现
+B 树 B+树 MySQL 的 Innodb 中使用的索引就是采用的 B+树的数据结构进行存储的。
+
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E7%AE%97%E6%B3%95/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/%E7%A7%BB%E8%B0%83k%E4%BD%8D%E6%95%B0%E5%AD%97/">移调K位数字</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%88/%E7%94%A8%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E5%92%8C%E6%A0%88%E6%93%8D%E4%BD%9C%E9%80%86%E5%BA%8F%E4%B8%80%E4%B8%AA%E6%A0%88/">用递归函数和栈操作逆序一个栈</a>
     
     
     <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 15 日</div>
