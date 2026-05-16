@@ -3,6 +3,8 @@
 <div class="mt-6 flex justify-between font-semibold">
   {{ if $page.HasPrev }}
   <a href="{{ $page.Prev.URL }}">← {{ T "paginator.prev" }}</a>
+  {{ else }}
+  <span class="prev empty"></span>
   {{ end }}
 
   {{ if $page.HasNext }}

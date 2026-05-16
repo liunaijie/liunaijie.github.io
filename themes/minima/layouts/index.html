@@ -5,11 +5,6 @@
   {{ $pages := where .Site.RegularPages "Params.categories" "intersect" (slice $homeCategory) }}
   {{ $paginator := .Paginate $pages }}
 
-  {{ if eq $paginator.PageNumber 1 }}
-  <h3 class="text-center sm:text-left mt-6 mb-4 text-2xl font-bold">{{ T "recent" }}</h3>
-  {{ else }}
-  <h3 class="mt-6 mb-4 text-2xl font-bold">{{ T "older" }}</h3>
-  {{ end }}
   <div>
     {{ range $paginator.Pages }}
       {{ if ne .Page.Layout "search" }}
