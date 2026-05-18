@@ -137,9 +137,16 @@
   </div>
   
   <div class="post-summary">
-    主要记录一下对于二叉树，进行遍历的几种方式，包括：
-前序遍历 中序遍历 后序遍历 深度优先遍历 广度优先遍历 我们以下面的这个二叉树结构为例，分别描述一下这几种遍历的方式有什么不同，以及给出java实现的代码。
-
+    <p>主要记录一下对于二叉树，进行遍历的几种方式，包括：</p>
+<ul>
+<li>前序遍历</li>
+<li>中序遍历</li>
+<li>后序遍历</li>
+<li>深度优先遍历</li>
+<li>广度优先遍历</li>
+</ul>
+<p>我们以下面的这个二叉树结构为例，分别描述一下这几种遍历的方式有什么不同，以及给出java实现的代码。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200303155623.png" alt=""></p>
   </div>
   
 </div>
@@ -190,12 +197,64 @@
   </div>
   
   <div class="post-summary">
-    基于《算法》一书的红黑树的插入和删除。看过不同的教材，也有不同的实现方式，但是最终的结果也大致相同，感觉这个比较容易理解，就采用这种的方式来进行简单实现。
-定义树节点的实体类型 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 private static final boolean RED = true; private static final boolean BLACK = false; /** * 红黑树的节点结构 * 保存的值，左节点，右节点以及颜色(true为红色，false为黑色) * 默认添加一个红节点 * * @param &lt;E&gt; */ static final class RedBlackTreeNode&lt;E extends Comparable&lt;E&gt;&gt; { E val; RedBlackTreeNode&lt;E&gt; left; RedBlackTreeNode&lt;E&gt; right; boolean color = RED; RedBlackTreeNode(E val) { this.val = val; } } 这里简单的定义了一下红黑树，并且只有节点，并不是map这样的k-v结构。如果定义k-v结构到时比较的时候比较k即可。
-用了泛型，并且要支持比较(继承自Comparable)，不然无法比较大小进行插入。
-然后定义了一个值，左节点和右节点，然后颜色默认为红色。
-再增加一个构造函数即可
-
+    <p>基于《算法》一书的红黑树的插入和删除。看过不同的教材，也有不同的实现方式，但是最终的结果也大致相同，感觉这个比较容易理解，就采用这种的方式来进行简单实现。</p>
+<h1 id="定义树节点的实体类型">定义树节点的实体类型</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">RED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">BLACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 红黑树的节点结构
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 保存的值，左节点，右节点以及颜色(true为红色，false为黑色)
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 默认添加一个红节点
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 *
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * @param &lt;E&gt;
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RedBlackTreeNode</span><span class="o">&lt;</span><span class="n">E</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Comparable</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">E</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">RedBlackTreeNode</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">RedBlackTreeNode</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kt">boolean</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RED</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">RedBlackTreeNode</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里简单的定义了一下红黑树，并且只有节点，并不是map这样的k-v结构。如果定义k-v结构到时比较的时候比较k即可。</p>
+<p>用了泛型，并且要支持比较(继承自Comparable)，不然无法比较大小进行插入。</p>
+<p>然后定义了一个值，左节点和右节点，然后颜色默认为红色。</p>
+<p>再增加一个构造函数即可</p>
   </div>
   
 </div>
@@ -213,13 +272,16 @@
   </div>
   
   <div class="post-summary">
-    题目来源 今天做了个题：
-将一个链表里的数据组装树形结构，链表里的数据已经满足树形结构要求
-这道题描述的很简单，但是有很多种情况。他只说了链表数据满足树形结构要求，并没有说明数据到底是什么样的，也就是题目参数具有多样性，这样其实我们给出一种解决方案就可以。而且也只要求将链表转换为树，并没有说是什么树。所以这道题说难也难，说简单也简单。
-解题思路 最近也将平衡二叉树的原理看了一下，正好借着这道题将代码手写一下。
-我写了一个平衡二叉树的插入方法。我们不管链表里面的数据是如何排序的，我们只要调用树的插入方法即可。在插入方法内部实现树的平衡。
-所以我们这道题也就转换成了手写平衡二叉树的插入过程。
-
+    <h1 id="题目来源">题目来源</h1>
+<p>今天做了个题：</p>
+<blockquote>
+<p>将一个链表里的数据组装树形结构，链表里的数据已经满足树形结构要求</p>
+</blockquote>
+<p>这道题描述的很简单，但是有很多种情况。他只说了链表数据满足树形结构要求，并没有说明数据到底是什么样的，也就是题目参数具有多样性，这样其实我们给出一种解决方案就可以。而且也只要求将链表转换为树，并没有说是什么树。所以这道题说难也难，说简单也简单。</p>
+<h1 id="解题思路">解题思路</h1>
+<p>最近也将平衡二叉树的原理看了一下，正好借着这道题将代码手写一下。</p>
+<p>我写了一个平衡二叉树的插入方法。我们不管链表里面的数据是如何排序的，我们只要调用树的插入方法即可。在插入方法内部实现树的平衡。</p>
+<p>所以我们这道题也就转换成了手写平衡二叉树的插入过程。</p>
   </div>
   
 </div>
@@ -237,13 +299,52 @@
   </div>
   
   <div class="post-summary">
-    二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
-1 2 3 4 5 6 7 8 class TreeNode { Object val; TreeNode leftNode; TreeNode rightNode; ... } 性质 在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0) 深度为 k 的二叉树至多有2^k+1^-1个节点(k&gt;=0) 有 n 个节点的完全二叉树的高度为 log2(n+1) 它主要有五种基本形态：
-满二叉树 定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。
-大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。
-完全二叉树 定义：设二叉树的深度为 k，除第 k 层外，其他各层(1~(k-1)层)的节点都都达到最大值，其第 k 层所有的节点都连续集中在最左边，这样的树就是完全二叉树
-这些是二叉树的一些基本定义以及变形，它对于数据的存储并没有要求，只是要求了结构。所以对于实际应用中还存在很多的不足，比如对于一个 n 个节点的树，判断一个节点是不是在树里面，它的复杂度还是 o(n)。所以我们下面介绍几种对于存储有要求的树。
-
+    <h1 id="二叉树">二叉树</h1>
+<h2 id="定义">定义</h2>
+<ul>
+<li>二叉树由节点的有限集合构成</li>
+<li>这个有限集合或者为空集</li>
+<li>或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合</li>
+</ul>
+<p>在 java 中用代码定义为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">TreeNode</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">leftNode</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">rightNode</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="性质">性质</h2>
+<ol>
+<li>在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0)</li>
+<li>深度为 k 的二叉树至多有2^k+1^-1个节点(k&gt;=0)</li>
+<li>有 n 个节点的完全二叉树的高度为 log<del>2</del>(n+1)</li>
+</ol>
+<p>它主要有五种基本形态：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E5%BD%A2%E6%80%81.png" alt="二叉树的五种基本形态"></p>
+<h2 id="满二叉树">满二叉树</h2>
+<p>定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。</p>
+<p>大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91.png" alt="满二叉树"></p>
+<h2 id="完全二叉树">完全二叉树</h2>
+<p>定义：设二叉树的深度为 k，除第 k 层外，其他各层(1~(k-1)层)的节点都都达到最大值，其第 k 层所有的节点都连续集中在最左边，这样的树就是完全二叉树</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91.png" alt="完全二叉树"></p>
+<p>这些是二叉树的一些基本定义以及变形，它对于数据的存储并没有要求，只是要求了结构。所以对于实际应用中还存在很多的不足，比如对于一个 n 个节点的树，判断一个节点是不是在树里面，它的复杂度还是 o(n)。所以我们下面介绍几种对于存储有要求的树。</p>
   </div>
   
 </div>

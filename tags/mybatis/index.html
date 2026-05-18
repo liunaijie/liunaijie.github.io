@@ -123,12 +123,12 @@
   </div>
   
   <div class="post-summary">
-    
-Mybatis这个框架在日常开发中用的很多，比如面试中经常有一个问题：$和#的区别，它们的区别是使用#可以防止SQL注入，今天就来看一下它是如何实现SQL注入的。
-什么是SQL注入 在讨论怎么实现之前，首先了解一下什么是SQL注入，我们有一个简单的查询操作：根据id查询一个用户信息。它的sql语句应该是这样：select * from user where id = 。我们根据传入条件填入id进行查询。
-如果正常操作，传入一个正常的id，比如说2，那么这条语句变成select * from user where id =2。这条语句是可以正常运行并且符合我们预期的。
-但是如果传入的参数变成 '' or 1=1，这时这条语句变成select * from user where id = '' or 1=1。让我们想一下这条语句的执行结果会是怎么？它会将我们用户表中所有的数据查询出来，显然这是一个大的错误。这就是SQL注入。
-
+    <p><img src="https://raw.githubusercontent.com/liunaijie/images/master/happy-new-year-4718894_640.png" alt=""></p>
+<p>Mybatis这个框架在日常开发中用的很多，比如面试中经常有一个问题：<code>$</code>和<code>#</code>的区别，它们的区别是使用<code>#</code>可以防止SQL注入，今天就来看一下它是如何实现SQL注入的。</p>
+<h1 id="什么是sql注入">什么是SQL注入</h1>
+<p>在讨论怎么实现之前，首先了解一下什么是SQL注入，我们有一个简单的查询操作：根据id查询一个用户信息。它的sql语句应该是这样：<code>select * from user where id = </code>。我们根据传入条件填入id进行查询。</p>
+<p>如果正常操作，传入一个正常的id，比如说2，那么这条语句变成<code>select * from user where id =2</code>。这条语句是可以正常运行并且符合我们预期的。</p>
+<p>但是如果传入的参数变成<code> '' or 1=1</code>，这时这条语句变成<code>select * from user where id = '' or 1=1</code>。让我们想一下这条语句的执行结果会是怎么？它会将我们用户表中所有的数据查询出来，显然这是一个大的错误。这就是SQL注入。</p>
   </div>
   
 </div>

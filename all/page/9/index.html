@@ -121,8 +121,7 @@
   </div>
   
   <div class="post-summary">
-    这篇文章记录下使用Git时的一些进阶操作, 命令.
-
+    <p>这篇文章记录下使用<code>Git</code>时的一些进阶操作, 命令.</p>
   </div>
   
 </div>
@@ -142,10 +141,46 @@
   </div>
   
   <div class="post-summary">
-    前言 这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程
-MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。
-先看一下要创建这个引擎的DDL语句：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 CREATE TABLE [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster] ( name1 [type1] [DEFAULT|MATERIALIZED|ALIAS expr1] [TTL expr1], name2 [type2] [DEFAULT|MATERIALIZED|ALIAS expr2] [TTL expr2], ... INDEX index_name1 expr1 TYPE type1(...) GRANULARITY value1, INDEX index_name2 expr2 TYPE type2(...) GRANULARITY value2 ) ENGINE = MergeTree() ORDER BY expr [PARTITION BY expr] [PRIMARY KEY expr] [SAMPLE BY expr] [TTL expr [DELETE|TO DISK &#39;xxx&#39;|TO VOLUME &#39;xxx&#39;], ...] [SETTINGS name=value, ...] 
+    <h1 id="前言">前言</h1>
+<p>这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程</p>
+<h1 id="mergetree">MergeTree</h1>
+<p>MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。</p>
+<p>先看一下要创建这个引擎的DDL语句：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">db</span><span class="p">.]</span><span class="k">table_name</span><span class="w"> </span><span class="p">[</span><span class="k">ON</span><span class="w"> </span><span class="k">CLUSTER</span><span class="w"> </span><span class="k">cluster</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name1</span><span class="w"> </span><span class="p">[</span><span class="n">type1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">DEFAULT</span><span class="o">|</span><span class="n">MATERIALIZED</span><span class="o">|</span><span class="k">ALIAS</span><span class="w"> </span><span class="n">expr1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">TTL</span><span class="w"> </span><span class="n">expr1</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name2</span><span class="w"> </span><span class="p">[</span><span class="n">type2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">DEFAULT</span><span class="o">|</span><span class="n">MATERIALIZED</span><span class="o">|</span><span class="k">ALIAS</span><span class="w"> </span><span class="n">expr2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">TTL</span><span class="w"> </span><span class="n">expr2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INDEX</span><span class="w"> </span><span class="n">index_name1</span><span class="w"> </span><span class="n">expr1</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">type1</span><span class="p">(...)</span><span class="w"> </span><span class="n">GRANULARITY</span><span class="w"> </span><span class="n">value1</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INDEX</span><span class="w"> </span><span class="n">index_name2</span><span class="w"> </span><span class="n">expr2</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">type2</span><span class="p">(...)</span><span class="w"> </span><span class="n">GRANULARITY</span><span class="w"> </span><span class="n">value2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MergeTree</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">expr</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">expr</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">expr</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">SAMPLE</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">expr</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">TTL</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="p">[</span><span class="k">DELETE</span><span class="o">|</span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="o">|</span><span class="k">TO</span><span class="w"> </span><span class="n">VOLUME</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">],</span><span class="w"> </span><span class="p">...]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">SETTINGS</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
   </div>
   
 </div>
@@ -197,8 +232,10 @@ MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这
   </div>
   
   <div class="post-summary">
-    题目描述 将IPV4的地址转换成int值，然后再将其转换回来
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>将IPV4的地址转换成int值，然后再将其转换回来</p>
+</blockquote>
   </div>
   
 </div>
@@ -218,14 +255,14 @@ MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这
   </div>
   
   <div class="post-summary">
-    kylin是什么 在进行数据分析时，随着数据量的提升，处理时间基本也是线性增长。kylin是一个预处理框架，它将一些预先定义的复杂分析预先完成并进行存储，预处理完成后，再次进行请求时，kylin可以进行亚秒级别的响应。
-它是一个分析型数据仓库（也是OLAP引擎），为Hadoop提供标准SQL支持大部分查询功能
-可以接入kafka等实时流处理数据，从而可以在妙极延迟下进行实时数据等多维分析。
-处理引擎可以选用MapReduce和Spark。
-于BI工具无缝整合，可以接入Tableau，PowerBI/Excel，SuperSet等可视化分析工具。
-我总结出来的观点呢就是：当我们的数据量非常大之后，每次查询都需要花费很多时间，这时我们将查询结果缓存起来，后面查询从这个缓存里面查询速度就会非常快。在kylin中，将结果缓存到hbase表中。
-这里需要预先设置一些维度和度量，所以说适合一些固定报表等一些维度固定的场景，如果说维度的组合太多或者变化很频繁，可能不是很适用。
-
+    <h1 id="kylin是什么">kylin是什么</h1>
+<p>在进行数据分析时，随着数据量的提升，处理时间基本也是线性增长。kylin是一个预处理框架，它将一些预先定义的复杂分析预先完成并进行存储，预处理完成后，再次进行请求时，kylin可以进行亚秒级别的响应。</p>
+<p>它是一个分析型数据仓库（也是OLAP引擎），为Hadoop提供标准SQL支持大部分查询功能</p>
+<p>可以接入kafka等实时流处理数据，从而可以在妙极延迟下进行实时数据等多维分析。</p>
+<p>处理引擎可以选用MapReduce和Spark。</p>
+<p>于BI工具无缝整合，可以接入Tableau，PowerBI/Excel，SuperSet等可视化分析工具。</p>
+<p>我总结出来的观点呢就是：当我们的数据量非常大之后，每次查询都需要花费很多时间，这时我们将查询结果缓存起来，后面查询从这个缓存里面查询速度就会非常快。在kylin中，将结果缓存到hbase表中。</p>
+<p>这里需要预先设置一些维度和度量，所以说适合一些固定报表等一些维度固定的场景，如果说维度的组合太多或者变化很频繁，可能不是很适用。</p>
   </div>
   
 </div>
@@ -245,14 +282,28 @@ MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这
   </div>
   
   <div class="post-summary">
-    题目描述 将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
-比如输入字符串为 &ldquo;LEETCODEISHIRING&rdquo; 行数为 3 时，排列如下：
-L C I R E T O E S I I G E D H N 之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如：&ldquo;LCIRETOESIIGEDHN&rdquo;。
-请你实现这个将字符串进行指定行数变换的函数：
-string convert(string s, int numRows); 示例 1:
-输入: s = &ldquo;LEETCODEISHIRING&rdquo;, numRows = 3 输出: &ldquo;LCIRETOESIIGEDHN&rdquo; 示例 2:
-输入: s = &ldquo;LEETCODEISHIRING&rdquo;, numRows = 4 输出: &ldquo;LDREOEIIECIHNTSG&rdquo; 解释:
-L D R E O E I I E C I H N T S G 
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。</p>
+<p>比如输入字符串为 &ldquo;LEETCODEISHIRING&rdquo; 行数为 3 时，排列如下：</p>
+<pre tabindex="0"><code>L   C   I   R
+E T O E S I I G
+E   D   H   N
+</code></pre><p>之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如：&ldquo;LCIRETOESIIGEDHN&rdquo;。</p>
+<p>请你实现这个将字符串进行指定行数变换的函数：</p>
+<p>string convert(string s, int numRows);
+示例 1:</p>
+<p>输入: s = &ldquo;LEETCODEISHIRING&rdquo;, numRows = 3
+输出: &ldquo;LCIRETOESIIGEDHN&rdquo;
+示例 2:</p>
+<p>输入: s = &ldquo;LEETCODEISHIRING&rdquo;, numRows = 4
+输出: &ldquo;LDREOEIIECIHNTSG&rdquo;
+解释:</p>
+<pre tabindex="0"><code>L     D     R
+E   O E   I I
+E C   I H   N
+T     S     G
+</code></pre></blockquote>
   </div>
   
 </div>
@@ -304,10 +355,9 @@ L D R E O E I I E C I H N T S G
   </div>
   
   <div class="post-summary">
-    好久没写博客了。。。
-记录一下我在现在公司的一个git工作流程。
-我之前使用git是不同用户在同一个git仓库下进行操作，而现在是使用fork出自己的仓库，通过提pr的方式来进行提交代码。
-
+    <p>好久没写博客了。。。</p>
+<p>记录一下我在现在公司的一个git工作流程。</p>
+<p>我之前使用git是不同用户在同一个git仓库下进行操作，而现在是使用fork出自己的仓库，通过提pr的方式来进行提交代码。</p>
   </div>
   
 </div>

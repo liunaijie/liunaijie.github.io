@@ -121,12 +121,96 @@
   </div>
   
   <div class="post-summary">
-    迭代器 在java中主要有两种迭代器，Iterator和ListIterator。这两个都是接口。先来看一下这两个接口有什么区别
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 public interface Iterator&lt;E&gt; { boolean hasNext(); E next(); default void remove() { throw new UnsupportedOperationException(&#34;remove&#34;); } default void forEachRemaining(Consumer&lt;? super E&gt; action) { Objects.requireNonNull(action); while (hasNext()) action.accept(next()); } } Iterator主要有四个方法。判断有没有下一个元素、获取下一个元素，删除元素和forEachRemaining方法。
-再来看一下ListIterator
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 public interface ListIterator&lt;E&gt; extends Iterator&lt;E&gt; { boolean hasNext(); E next(); boolean hasPrevious(); E previous(); int nextIndex(); int previousIndex(); void remove(); void set(E e); void add(E e); } 我们可以看到他是继承了Iterator。除了上面的两个方法还多了好几个方法。判断是否有上一个元素，获取上一个元素的值，获取上一个元素的索引，获取上一个元素的索引。除了移除还有添加和更新的方法。
-他们在不同的类里面都有自己的实现，之前看ArrayList，HashMap的时候把这一块给跳过了，现在来看一下他们是如何实现的。
-
+    <h1 id="迭代器">迭代器</h1>
+<p>在java中主要有两种迭代器，<code>Iterator</code>和<code>ListIterator</code>。这两个都是接口。先来看一下这两个接口有什么区别</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Iterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">hasNext</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">E</span><span class="w"> </span><span class="nf">next</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">remove</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&#34;remove&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">forEachRemaining</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">super</span><span class="w"> </span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Objects</span><span class="p">.</span><span class="na">requireNonNull</span><span class="p">(</span><span class="n">action</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">hasNext</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">action</span><span class="p">.</span><span class="na">accept</span><span class="p">(</span><span class="n">next</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Iterator</code>主要有四个方法。判断有没有下一个元素、获取下一个元素，删除元素和<code>forEachRemaining</code>方法。</p>
+<p>再来看一下<code>ListIterator</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">ListIterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">hasNext</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">E</span><span class="w"> </span><span class="nf">next</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">hasPrevious</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">E</span><span class="w"> </span><span class="nf">previous</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">nextIndex</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">previousIndex</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">remove</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们可以看到他是继承了<code>Iterator</code>。除了上面的两个方法还多了好几个方法。判断是否有上一个元素，获取上一个元素的值，获取上一个元素的索引，获取上一个元素的索引。除了移除还有添加和更新的方法。</p>
+<p>他们在不同的类里面都有自己的实现，之前看<code>ArrayList</code>，<code>HashMap</code>的时候把这一块给跳过了，现在来看一下他们是如何实现的。</p>
   </div>
   
 </div>
@@ -162,9 +246,192 @@
   </div>
   
   <div class="post-summary">
-    
-画了一张结构图，欢迎指正。
-变量 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 /** * The default initial capacity - MUST be a power of two. * 默认的容量，容量必须是2的幂 */ static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; // aka 16 /** * The maximum capacity, used if a higher value is implicitly specified * by either of the constructors with arguments. * MUST be a power of two &lt;= 1&lt;&lt;30. * 最大的容量值 2的30次幂 */ static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30; /** * The load factor used when none specified in constructor. * 默认的负载系数 */ static final float DEFAULT_LOAD_FACTOR = 0.75f; /** * The bin count threshold for using a tree rather than list for a * bin. Bins are converted to trees when adding an element to a * bin with at least this many nodes. The value must be greater * than 2 and should be at least 8 to mesh with assumptions in * tree removal about conversion back to plain bins upon * shrinkage. * 链表的长度到达8之后转换为红黑树 */ static final int TREEIFY_THRESHOLD = 8; /** * The bin count threshold for untreeifying a (split) bin during a * resize operation. Should be less than TREEIFY_THRESHOLD, and at * most 6 to mesh with shrinkage detection under removal. */ static final int UNTREEIFY_THRESHOLD = 6; /** * The smallest table capacity for which bins may be treeified. * (Otherwise the table is resized if too many nodes in a bin.) * Should be at least 4 * TREEIFY_THRESHOLD to avoid conflicts * between resizing and treeification thresholds. * */ static final int MIN_TREEIFY_CAPACITY = 64; // 存储的容器 transient Node&lt;K,V&gt;[] table; /** * Holds cached entrySet(). Note that AbstractMap fields are used * for keySet() and values(). */ transient Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet; /** * The number of key-value mappings contained in this map. */ transient int size; /** * The number of times this HashMap has been structurally modified * Structural modifications are those that change the number of mappings in * the HashMap or otherwise modify its internal structure (e.g., * rehash). This field is used to make iterators on Collection-views of * the HashMap fail-fast. (See ConcurrentModificationException). * 结构修改的次数，每次增加和删除都修改这个数值 */ transient int modCount; /** * The next size value at which to resize (capacity * load factor). * * @serial */ // (The javadoc description is true upon serialization. // Additionally, if the table array has not been allocated, this // field holds the initial array capacity, or zero signifying // DEFAULT_INITIAL_CAPACITY.) // 扩容的阈值，当键值对的数量超过这个值就会扩容 int threshold; /** * The load factor for the hash table. * 负载系数 */ final float loadFactor; 
+    <p><img src="https://raw.githubusercontent.com/liunaijie/images/master/HashMap.jpg" alt="HashMap结构"></p>
+<p>画了一张结构图，欢迎指正。</p>
+<h1 id="变量">变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The default initial capacity - MUST be a power of two.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 默认的容量，容量必须是2的幂
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">DEFAULT_INITIAL_CAPACITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">4</span><span class="p">;</span><span class="w"> </span><span class="c1">// aka 16</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The maximum capacity, used if a higher value is implicitly specified
+</span></span></span><span class="line"><span class="cl"><span class="cm">* by either of the constructors with arguments.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* MUST be a power of two &lt;= 1&lt;&lt;30.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 最大的容量值 2的30次幂
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MAXIMUM_CAPACITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">30</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The load factor used when none specified in constructor.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 默认的负载系数
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">DEFAULT_LOAD_FACTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">.</span><span class="na">75f</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The bin count threshold for using a tree rather than list for a
+</span></span></span><span class="line"><span class="cl"><span class="cm">* bin.  Bins are converted to trees when adding an element to a
+</span></span></span><span class="line"><span class="cl"><span class="cm">* bin with at least this many nodes. The value must be greater
+</span></span></span><span class="line"><span class="cl"><span class="cm">* than 2 and should be at least 8 to mesh with assumptions in
+</span></span></span><span class="line"><span class="cl"><span class="cm">* tree removal about conversion back to plain bins upon
+</span></span></span><span class="line"><span class="cl"><span class="cm">* shrinkage.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 链表的长度到达8之后转换为红黑树
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">TREEIFY_THRESHOLD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">8</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The bin count threshold for untreeifying a (split) bin during a
+</span></span></span><span class="line"><span class="cl"><span class="cm">* resize operation. Should be less than TREEIFY_THRESHOLD, and at
+</span></span></span><span class="line"><span class="cl"><span class="cm">* most 6 to mesh with shrinkage detection under removal.
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">UNTREEIFY_THRESHOLD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">6</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The smallest table capacity for which bins may be treeified.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* (Otherwise the table is resized if too many nodes in a bin.)
+</span></span></span><span class="line"><span class="cl"><span class="cm">* Should be at least 4 * TREEIFY_THRESHOLD to avoid conflicts
+</span></span></span><span class="line"><span class="cl"><span class="cm">* between resizing and treeification thresholds.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MIN_TREEIFY_CAPACITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">64</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 存储的容器</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;[]</span><span class="w"> </span><span class="n">table</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* Holds cached entrySet(). Note that AbstractMap fields are used
+</span></span></span><span class="line"><span class="cl"><span class="cm">* for keySet() and values().
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">entrySet</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The number of key-value mappings contained in this map.
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The number of times this HashMap has been structurally modified
+</span></span></span><span class="line"><span class="cl"><span class="cm">* Structural modifications are those that change the number of mappings in
+</span></span></span><span class="line"><span class="cl"><span class="cm">* the HashMap or otherwise modify its internal structure (e.g.,
+</span></span></span><span class="line"><span class="cl"><span class="cm">* rehash).  This field is used to make iterators on Collection-views of
+</span></span></span><span class="line"><span class="cl"><span class="cm">* the HashMap fail-fast.  (See ConcurrentModificationException).
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 结构修改的次数，每次增加和删除都修改这个数值
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">modCount</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The next size value at which to resize (capacity * load factor).
+</span></span></span><span class="line"><span class="cl"><span class="cm">*
+</span></span></span><span class="line"><span class="cl"><span class="cm">* @serial
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// (The javadoc description is true upon serialization.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Additionally, if the table array has not been allocated, this</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// field holds the initial array capacity, or zero signifying</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// DEFAULT_INITIAL_CAPACITY.)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 扩容的阈值，当键值对的数量超过这个值就会扩容</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kt">int</span><span class="w"> </span><span class="n">threshold</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">* The load factor for the hash table.
+</span></span></span><span class="line"><span class="cl"><span class="cm">* 负载系数
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">final</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">loadFactor</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
   </div>
   
 </div>
@@ -184,12 +451,29 @@
   </div>
   
   <div class="post-summary">
-    
-LinkedHashMap继承了HashMap类，实现了Map接口。
-他与HashMap的主要区别就是使用链表存储了每个节点的顺序。这样就能保证有序。
-来看一下他的节点情况：
-1 2 3 4 5 6 static class Entry&lt;K,V&gt; extends HashMap.Node&lt;K,V&gt; { Entry&lt;K,V&gt; before, after; Entry(int hash, K key, V value, Node&lt;K,V&gt; next) { super(hash, key, value, next); } } 从这里可以看出他使用了两个变量，before，after存储这个节点的前后顺序。
-
+    <p><img src="https://raw.githubusercontent.com/liunaijie/images/master/LinkedHashMap.jpg" alt="LinkedHashMap结构图"></p>
+<p><code>LinkedHashMap</code>继承了<code>HashMap</code>类，实现了<code>Map</code>接口。</p>
+<p>他与<code>HashMap</code>的主要区别就是使用链表存储了每个节点的顺序。这样就能保证有序。</p>
+<p>来看一下他的节点情况：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">HashMap</span><span class="p">.</span><span class="na">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="n">before</span><span class="p">,</span><span class="w"> </span><span class="n">after</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Entry</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="n">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">next</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>从这里可以看出他使用了两个变量，<code>before</code>，<code>after</code>存储这个节点的前后顺序。</p>
   </div>
   
 </div>
@@ -209,10 +493,57 @@ LinkedHashMap继承了HashMap类，实现了Map接口。
   </div>
   
   <div class="post-summary">
-    LinkedList使用了链表实现，相比ArrayList来说，插入更快，查看较慢。
-首先看一下使用的链表结构
-1 2 3 4 5 6 7 8 9 10 11 private static class Node&lt;E&gt; { E item; Node&lt;E&gt; next; Node&lt;E&gt; prev; Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) { this.item = element; this.next = next; this.prev = prev; } } 每个Node节点存储一个元素，item表示这个元素的值，prev表示上一个元素，如果已经的第一个了那么为null。同理，next表示的是下一个元素，当插入新元素时会改变上一个元素的next值指向自己，这样就把这个链表串起来了。
-变量 1 2 3 4 5 6 // 元素的数量 transient int size = 0; // 指向第一个元素 transient Node&lt;E&gt; first; // 指向最后一个元素 transient Node&lt;E&gt; last; 
+    <p><code>LinkedList</code>使用了链表实现，相比<code>ArrayList</code>来说，插入更快，查看较慢。</p>
+<p>首先看一下使用的链表结构</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">E</span><span class="w"> </span><span class="n">item</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">next</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">Node</span><span class="p">(</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">prev</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="n">element</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">this</span><span class="p">.</span><span class="na">item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">this</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">this</span><span class="p">.</span><span class="na">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>每个<code>Node</code>节点存储一个元素，<code>item</code>表示这个元素的值，<code>prev</code>表示上一个元素，如果已经的第一个了那么为<code>null</code>。同理，<code>next</code>表示的是下一个元素，当插入新元素时会改变上一个元素的<code>next</code>值指向自己，这样就把这个链表串起来了。</p>
+<h1 id="变量">变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 元素的数量</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 指向第一个元素</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">first</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 指向最后一个元素</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="n">Node</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">last</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
   </div>
   
 </div>
@@ -248,8 +579,47 @@ LinkedHashMap继承了HashMap类，实现了Map接口。
   </div>
   
   <div class="post-summary">
-    变量 1 2 3 4 5 private static final int DEFAULT_CAPACITY = 10; private static final Object[] EMPTY_ELEMENTDATA = {}; private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; transient Object[] elementData; private int size; DEFAULT_CAPACITY：默认的容量，当我们不指定容量时默认容量是10 EMPTY_ELEMENTDATA：空的数据集 DEFAULTCAPACITY_EMPTY_ELEMENTDATA：同上面的一样，都是空的数据集 elementData：保存的元素 size：元素长度，实际存储的元素数量 构造方法： 无参的构造方法 1 2 3 public ArrayList() { this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA; } 很简单的一句话，将保存元素的变量进行初始化。
-
+    <h1 id="变量">变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">DEFAULT_CAPACITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">10</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">EMPTY_ELEMENTDATA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">elementData</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>DEFAULT_CAPACITY</code>：默认的容量，当我们不指定容量时默认容量是10</li>
+<li><code>EMPTY_ELEMENTDATA</code>：空的数据集</li>
+<li><code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>：同上面的一样，都是空的数据集</li>
+<li><code>elementData</code>：保存的元素</li>
+<li><code>size</code>：元素长度，实际存储的元素数量</li>
+</ul>
+<h1 id="构造方法">构造方法：</h1>
+<ul>
+<li>无参的构造方法</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nf">ArrayList</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">elementData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>很简单的一句话，将保存元素的变量进行初始化。</p>
   </div>
   
 </div>
@@ -269,12 +639,16 @@ LinkedHashMap继承了HashMap类，实现了Map接口。
   </div>
   
   <div class="post-summary">
-    题目描述 给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
-如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
-您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
-示例：
-输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4) 输出：7 -&gt; 0 -&gt; 8 原因：342 + 465 = 807
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。</p>
+<p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p>
+<p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p>
+<p>示例：</p>
+<p>输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
+输出：7 -&gt; 0 -&gt; 8
+原因：342 + 465 = 807</p>
+</blockquote>
   </div>
   
 </div>
@@ -310,16 +684,25 @@ LinkedHashMap继承了HashMap类，实现了Map接口。
   </div>
   
   <div class="post-summary">
-    题目描述 在大小为 2N 的数组 A 中有 N+1 个不同的元素，其中有一个元素重复了 N 次。
-返回重复了 N 次的那个元素。
-示例 1：
-输入：[1,2,3,3] 输出：3 示例 2：
-输入：[2,1,2,5,3,2] 输出：2 示例 3：
-输入：[5,1,5,2,5,3,5,4] 输出：5
-提示：
-4 &lt;= A.length &lt;= 10000 0 &lt;= A[i] &lt; 10000 A.length 为偶数
-大小为2N的数字中有个N+1个元素，其中有个元素重复了N次，这也说明了除了这个元素其他元素都没有重复，也可以理解成查找重复的元素
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>在大小为 2N 的数组 A 中有 N+1 个不同的元素，其中有一个元素重复了 N 次。</p>
+<p>返回重复了 N 次的那个元素。</p>
+<p>示例 1：</p>
+<p>输入：[1,2,3,3]
+输出：3
+示例 2：</p>
+<p>输入：[2,1,2,5,3,2]
+输出：2
+示例 3：</p>
+<p>输入：[5,1,5,2,5,3,5,4]
+输出：5</p>
+<p>提示：</p>
+<p>4 &lt;= A.length &lt;= 10000
+0 &lt;= A[i] &lt; 10000
+A.length 为偶数</p>
+</blockquote>
+<p>大小为2N的数字中有个N+1个元素，其中有个元素重复了N次，这也说明了除了这个元素其他元素都没有重复，也可以理解成查找重复的元素</p>
   </div>
   
 </div>

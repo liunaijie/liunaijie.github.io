@@ -121,17 +121,36 @@
   </div>
   
   <div class="post-summary">
-    题目描述 使用队列实现栈的下列操作： push(x) &ndash; 元素 x 入栈 pop() &ndash; 移除栈顶元素 top() &ndash; 获取栈顶元素 empty() &ndash; 返回栈是否为空 注意:
-你只能使用队列的基本操作&ndash; 也就是 push to back, peek/pop from front, size, 和 is empty 这些操作是合法的。 你所使用的语言也许不支持队列。 你可以使用 list 或者 deque（双端队列）来模拟一个队列 , 只要是标准的队列操作即可。 你可以假设所有操作都是有效的（例如, 对一个空的栈不会调用 pop 或者 top 操作）。
-解题思路 使用两个队列
-将元素添加到第一个队列中。
-在获取元素时，将第一个队列中除了最后一个元素都添加到第二个队列中，剩下的这个就是要返回的元素。
-将两个队列进行交换，这样在添加元素时都能放到第一个队列中。
-使用一个变量来存储最后一个元素，这样在调用 top 方法时直接返回这个变量即可。
-使用一个队列
-添加元素时添加到队列中，然后将队列中的元素除了最后一个再重新放入一遍
-在获取元素和查看元素时都拿第一个即可
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>使用队列实现栈的下列操作：
+push(x) &ndash; 元素 x 入栈
+pop() &ndash; 移除栈顶元素
+top() &ndash; 获取栈顶元素
+empty() &ndash; 返回栈是否为空
+注意:</p>
+<p>你只能使用队列的基本操作&ndash; 也就是 push to back, peek/pop from front, size, 和 is empty 这些操作是合法的。
+你所使用的语言也许不支持队列。 你可以使用 list 或者 deque（双端队列）来模拟一个队列 , 只要是标准的队列操作即可。
+你可以假设所有操作都是有效的（例如, 对一个空的栈不会调用 pop 或者 top 操作）。</p>
+</blockquote>
+<!-- more -->
+<h1 id="解题思路">解题思路</h1>
+<ol>
+<li>
+<p>使用两个队列</p>
+<p>将元素添加到第一个队列中。</p>
+<p>在获取元素时，将第一个队列中除了最后一个元素都添加到第二个队列中，剩下的这个就是要返回的元素。</p>
+<p>将两个队列进行交换，这样在添加元素时都能放到第一个队列中。</p>
+<p>使用一个变量来存储最后一个元素，这样在调用 top 方法时直接返回这个变量即可。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E7%94%A8%E5%8F%8C%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E6%A0%88.png" alt="用双队列实现栈"></p>
+</li>
+<li>
+<p>使用一个队列</p>
+<p>添加元素时添加到队列中，然后将队列中的元素除了最后一个再重新放入一遍</p>
+<p>在获取元素和查看元素时都拿第一个即可</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E7%94%A8%E4%B8%80%E4%B8%AA%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E6%A0%88.png" alt="用一个队列实现栈"></p>
+</li>
+</ol>
   </div>
   
 </div>
@@ -151,15 +170,32 @@
   </div>
   
   <div class="post-summary">
-    题目描述 使用栈实现队列的下列操作：
-push(x) &ndash; 将一个元素放入队列的尾部。 pop() &ndash; 从队列首部移除元素。 peek() &ndash; 返回队列首部的元素。 empty() &ndash; 返回队列是否为空。 示例:
-MyQueue queue = new MyQueue();
-queue.push(1); queue.push(2);
-queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 false 说明:
-你只能使用标准的栈操作 &ndash; 也就是只有 push to top, peek/pop from top, size, 和 is empty 操作是合法的。 你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。 假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）
-解题思路 栈（先进后出）来实现队列（先进先出）。
-可以用两个栈来实现，第一个栈存储，当进行 peek 或 pop 操作时，将第一个栈内元素按照先进后出的原则拿出来放到第二个栈里面。这时第二个栈里面在取就是我们总的第一个元素。
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>使用栈实现队列的下列操作：</p>
+<p>push(x) &ndash; 将一个元素放入队列的尾部。
+pop() &ndash; 从队列首部移除元素。
+peek() &ndash; 返回队列首部的元素。
+empty() &ndash; 返回队列是否为空。
+示例:</p>
+</blockquote>
+<blockquote>
+<p>MyQueue queue = new MyQueue();</p>
+<p>queue.push(1);
+queue.push(2);<br>
+queue.peek();  // 返回 1
+queue.pop();   // 返回 1
+queue.empty(); // 返回 false
+说明:</p>
+<p>你只能使用标准的栈操作 &ndash; 也就是只有 push to top, peek/pop from top, size, 和 is empty 操作是合法的。
+你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。
+假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）</p>
+</blockquote>
+<!-- more -->
+<h1 id="解题思路">解题思路</h1>
+<p>栈（先进后出）来实现队列（先进先出）。</p>
+<p>可以用两个栈来实现，第一个栈存储，当进行 peek 或 pop 操作时，将第一个栈内元素按照先进后出的原则拿出来放到第二个栈里面。这时第二个栈里面在取就是我们总的第一个元素。</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97.png" alt="用栈实现队列"></p>
   </div>
   
 </div>
@@ -179,11 +215,14 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    题目描述 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
-你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
-示例:
-给定 1-&gt;2-&gt;3-&gt;4, 你应该返回 2-&gt;1-&gt;4-&gt;3. 可以看出，链表每两个一组交换了前后位置，然后再跟其他元素按照原有顺序连接。
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。</p>
+<p><strong>你不能只是单纯的改变节点内部的值</strong>，而是需要实际的进行节点交换。</p>
+<p><strong>示例:</strong></p>
+<pre tabindex="0"><code>给定 1-&gt;2-&gt;3-&gt;4, 你应该返回 2-&gt;1-&gt;4-&gt;3.
+</code></pre></blockquote>
+<p>可以看出，链表每两个一组交换了前后位置，然后再跟其他元素按照原有顺序连接。</p>
   </div>
   
 </div>
@@ -203,11 +242,36 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。
-之前问string 相关问题，只了解了 string 不可变，stringbuffer 线程安全，stringbuilder 线程不安全。但却没有搞清楚为什么是不安全的，今天就去看了一下 stringbuilder 的源码，来了解一下原因。
-首先来测试一下多线程下的不安全问题：
-1 2 3 4 5 6 7 8 9 10 public static void main(String[] args) { StringBuilder stringBuilder = new StringBuilder(); for (int i = 0; i &lt; 100000; i++) { new Thread(() -&gt; stringBuilder.append(&#34;a&#34;)).start(); } System.out.println(stringBuilder.length()); } 这个方法最终的理想结果应该是 100000，但是当我们多运行几次，发现他的结果出错了！结果变成了99999或者更小的数值。有时候甚至还抛出了数组越界异常（概率极小）。
-
+    <p>在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。</p>
+<p>之前问string 相关问题，只了解了 string 不可变，stringbuffer 线程安全，stringbuilder 线程不安全。但却没有搞清楚为什么是不安全的，今天就去看了一下 stringbuilder 的源码，来了解一下原因。</p>
+<p>首先来测试一下多线程下的不安全问题：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">stringBuilder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">100000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Thread</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">stringBuilder</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="s">&#34;a&#34;</span><span class="p">)).</span><span class="na">start</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">stringBuilder</span><span class="p">.</span><span class="na">length</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个方法最终的理想结果应该是 100000，但是当我们多运行几次，发现他的结果出错了！结果变成了99999或者更小的数值。有时候甚至还抛出了数组越界异常（概率极小）。</p>
   </div>
   
 </div>
@@ -227,14 +291,22 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    题目描述 给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。
-示例 1:
-输入: 123 输出: 321 示例 2:
-输入: -123 输出: -321 示例 3:
-输入: 120 输出: 21 注意:
-假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−231, 231 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
-题目中给出了条件，我们只能存储32位有符号整数，如果溢出后则返回0，避免出现溢出错误
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。</p>
+<p>示例 1:</p>
+<p>输入: 123
+输出: 321
+示例 2:</p>
+<p>输入: -123
+输出: -321
+示例 3:</p>
+<p>输入: 120
+输出: 21
+注意:</p>
+<p>假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−231,  231 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。</p>
+</blockquote>
+<p>题目中给出了条件，我们只能存储32位有符号整数，如果溢出后则返回0，避免出现溢出错误</p>
   </div>
   
 </div>
@@ -254,11 +326,61 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    之前看过了HashMap,LinkedHashMap的源码，这次来看一下TreeMap的源码。
-从这个名字就能看出，TreeMap底层使用的是树来进行存储的。
-变量 1 2 3 4 5 6 7 8 9 //比较器，用于左右子树的判断。 //正常情况下，左子树为 1，父节点为 2，右子树为 3。如果比较器设置 3&lt;1&lt;2。则左子树为3，父节点为 1，右子树为 2。 private final Comparator&lt;? super K&gt; comparator; //根节点 private transient Entry&lt;K,V&gt; root; //容量 private transient int size = 0; //修改的次数，在迭代和序列化时用到 private transient int modCount = 0; 看一下 root 节点的数据结构:
-1 2 3 4 5 6 7 8 9 10 static final class Entry&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; { K key; V value; Entry&lt;K,V&gt; left; Entry&lt;K,V&gt; right; Entry&lt;K,V&gt; parent; boolean color = BLACK; ... } 由于有一个color=BLACK属性，所以底层数据结构应该是红黑树
-
+    <p>之前看过了<code>HashMap</code>,<code>LinkedHashMap</code>的源码，这次来看一下<code>TreeMap</code>的源码。</p>
+<p>从这个名字就能看出，<code>TreeMap</code>底层使用的是树来进行存储的。</p>
+<h1 id="变量">变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//比较器，用于左右子树的判断。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//正常情况下，左子树为 1，父节点为 2，右子树为 3。如果比较器设置 3&lt;1&lt;2。则左子树为3，父节点为 1，右子树为 2。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Comparator</span><span class="o">&lt;?</span><span class="w"> </span><span class="kd">super</span><span class="w"> </span><span class="n">K</span><span class="o">&gt;</span><span class="w"> </span><span class="n">comparator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//根节点</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="n">root</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//容量</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//修改的次数，在迭代和序列化时用到</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">transient</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">modCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>看一下 root 节点的数据结构:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">V</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parent</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BLACK</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于有一个<code>color=BLACK</code>属性，所以底层数据结构应该是<strong>红黑树</strong></p>
   </div>
   
 </div>
@@ -278,15 +400,25 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    题目描述 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
-示例 1:
-输入: 121 输出: true 示例 2:
-输入: -121 输出: false 解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。 示例 3:
-输入: 10 输出: false 解释: 从右向左读, 为 01 。因此它不是一个回文数。 进阶:
-你能不将整数转为字符串来解决这个问题吗？
-从示例2中可以看出，负数不是回文数，可以先对此进行判断。
-而提示中有一个提示，能否不使用字符串来解决这个问题，那么使用字符串肯定是可以解决这个问题的。
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。</p>
+<p>示例 1:</p>
+<p>输入: 121
+输出: true
+示例 2:</p>
+<p>输入: -121
+输出: false
+解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。
+示例 3:</p>
+<p>输入: 10
+输出: false
+解释: 从右向左读, 为 01 。因此它不是一个回文数。
+进阶:</p>
+<p>你能不将整数转为字符串来解决这个问题吗？</p>
+</blockquote>
+<p>从示例2中可以看出，负数不是回文数，可以先对此进行判断。</p>
+<p>而提示中有一个提示，能否不使用字符串来解决这个问题，那么使用字符串肯定是可以解决这个问题的。</p>
   </div>
   
 </div>
@@ -322,14 +454,20 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    题目描述 给定二叉搜索树的根结点 root，返回 L 和 R（含）之间的所有结点的值的和。
-二叉搜索树保证具有唯一的值。
-示例 1：
-输入：root = [10,5,15,3,7,null,18], L = 7, R = 15 输出：32 示例 2：
-输入：root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10 输出：23
-提示：
-树中的结点数量最多为 10000 个。 最终的答案保证小于 2^31。
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给定二叉搜索树的根结点 root，返回 L 和 R（含）之间的所有结点的值的和。</p>
+<p>二叉搜索树保证具有唯一的值。</p>
+<p>示例 1：</p>
+<p>输入：root = [10,5,15,3,7,null,18], L = 7, R = 15
+输出：32
+示例 2：</p>
+<p>输入：root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10
+输出：23</p>
+<p>提示：</p>
+<p>树中的结点数量最多为 10000 个。
+最终的答案保证小于 2^31。</p>
+</blockquote>
   </div>
   
 </div>
@@ -349,14 +487,20 @@ queue.peek(); // 返回 1 queue.pop(); // 返回 1 queue.empty(); // 返回 fals
   </div>
   
   <div class="post-summary">
-    题目描述 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？
-请你找出所有满足条件且不重复的三元组。
-注意：答案中不可以包含重复的三元组。
-示例：
-给定数组 nums = [-1, 0, 1, 2, -1, -4]，
-满足要求的三元组集合为： [ [-1, 0, 1], [-1, -1, 2] ]
-这个题目中有一个条件，答案中不可以包含重复的三元组，即给定的数组中会有重复值，所以答案可能会存在重复答案，当答案存在时，不在添加到答案中
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？</p>
+<p>请你找出所有满足条件且不重复的三元组。</p>
+<p>注意：<strong>答案中不可以包含重复的三元组</strong>。</p>
+<p>示例：</p>
+<p>给定数组 nums = [-1, 0, 1, 2, -1, -4]，</p>
+<p>满足要求的三元组集合为：
+[
+[-1, 0, 1],
+[-1, -1, 2]
+]</p>
+</blockquote>
+<p>这个题目中有一个条件，答案中不可以包含重复的三元组，即给定的数组中会有重复值，所以答案可能会存在重复答案，当答案存在时，不在添加到答案中</p>
   </div>
   
 </div>

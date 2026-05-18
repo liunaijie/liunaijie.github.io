@@ -153,12 +153,14 @@
   </div>
   
   <div class="post-summary">
-    建立基础项目 建立一个maven项目，然后建立一个api模块，作为这个项目的总的调用接口
-learn-dubbo-demo/ ├── simple-api https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo
-https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
-然后在api项目中创建接口，提供给生产者和消费者调用。
-我这里定义一个了sayhello()方法
-
+    <h2 id="建立基础项目">建立基础项目</h2>
+<p>建立一个<code>maven</code>项目，然后建立一个<code>api</code>模块，作为这个项目的总的调用接口</p>
+<pre tabindex="0"><code>learn-dubbo-demo/
+├── simple-api
+</code></pre><p><a href="https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo">https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo</a></p>
+<p><a href="https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api">https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api</a></p>
+<p>然后在api项目中创建接口，提供给生产者和消费者调用。</p>
+<p>我这里定义一个了<code>sayhello()</code>方法</p>
   </div>
   
 </div>
@@ -178,10 +180,39 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   </div>
   
   <div class="post-summary">
-    题目描述： 有效括号字符串为空 (&quot;&quot;)、&quot;(&quot; + A + &ldquo;)&rdquo; 或 A + B，其中 A 和 B 都是有效的括号字符串，+ 代表字符串的连接。 例如，&quot;&quot;，&quot;()&quot;，&quot;(())()&quot; 和 &ldquo;(()(()))&rdquo; 都是有效的括号字符串。 如果有效字符串 S 非空，且不存在将其拆分为 S = A+B 的方法，我们称其为原语（primitive），其中 A 和 B 都是非空有效括号字符串。 给出一个非空有效字符串 S，考虑将其进行原语化分解，使得：S = P_1 + P_2 + &hellip; + P_k，其中 P_i 是有效括号字符串原语。 对 S 进行原语化分解，删除分解中每个原语字符串的最外层括号，返回 S 。 示例 1： 输入：&quot;(()())(())&quot; 输出：&quot;()()()&quot; 解释： 输入字符串为 &ldquo;(()())(())&quot;，原语化分解得到 &ldquo;(()())&rdquo; + &ldquo;(())&quot;， 删除每个部分中的最外层括号后得到 &ldquo;()()&rdquo; + &ldquo;()&rdquo; = &ldquo;()()()&quot;。 示例 2： 输入：&rdquo;(()())(())(()(()))&rdquo; 输出：&rdquo;()()()()(())&quot; 解释： 输入字符串为 &ldquo;(()())(())(()(()))&quot;，原语化分解得到 &ldquo;(()())&rdquo; + &ldquo;(())&rdquo; + &ldquo;(()(()))&quot;， 删除每隔部分中的最外层括号后得到 &ldquo;()()&rdquo; + &ldquo;()&rdquo; + &ldquo;()(())&rdquo; = &ldquo;()()()()(())&quot;。 示例 3： 输入：&rdquo;()()&rdquo; 输出：&rdquo;&quot; 解释： 输入字符串为 &ldquo;()()&quot;，原语化分解得到 &ldquo;()&rdquo; + &ldquo;()&quot;， 删除每个部分中的最外层括号后得到 &quot;&rdquo; + &quot;&rdquo; = &ldquo;&quot;。 提示： S.length &lt;= 10000 S[i] 为 &ldquo;(&rdquo; 或 &ldquo;)&rdquo; S 是一个有效括号字符串
-解题思路： 字符串S是一个有效括号字符串，那么我们可以先进行原语化分解，然后再对每个原语进行去除最外层括号。
-进行原语分解的时候我们可以定义一个值和一个字符串，遇到左括号这个值加一并将左括号添加到这个字符串上，遇到右括号这个值减一并且将右括号添加到字符串上，当这个值变成0并且字符串的长度为2的倍数时就可以认为这个字符串是一个原语。
-
+    <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>有效括号字符串为空 (&quot;&quot;)、&quot;(&quot; + A + &ldquo;)&rdquo; 或 A + B，其中 A 和 B 都是有效的括号字符串，+ 代表字符串的连接。
+例如，&quot;&quot;，&quot;()&quot;，&quot;(())()&quot; 和 &ldquo;(()(()))&rdquo; 都是有效的括号字符串。
+如果有效字符串 S 非空，且不存在将其拆分为 S = A+B 的方法，我们称其为原语（primitive），其中 A 和 B 都是非空有效括号字符串。
+给出一个非空有效字符串 S，考虑将其进行原语化分解，使得：S = P_1 + P_2 + &hellip; + P_k，其中 P_i 是有效括号字符串原语。
+对 S 进行原语化分解，删除分解中每个原语字符串的最外层括号，返回 S 。
+示例 1：
+输入：&quot;(()())(())&quot;
+输出：&quot;()()()&quot;
+解释：
+输入字符串为 &ldquo;(()())(())&quot;，原语化分解得到 &ldquo;(()())&rdquo; + &ldquo;(())&quot;，
+删除每个部分中的最外层括号后得到 &ldquo;()()&rdquo; + &ldquo;()&rdquo; = &ldquo;()()()&quot;。
+示例 2：
+输入：&rdquo;(()())(())(()(()))&rdquo;
+输出：&rdquo;()()()()(())&quot;
+解释：
+输入字符串为 &ldquo;(()())(())(()(()))&quot;，原语化分解得到 &ldquo;(()())&rdquo; + &ldquo;(())&rdquo; + &ldquo;(()(()))&quot;，
+删除每隔部分中的最外层括号后得到 &ldquo;()()&rdquo; + &ldquo;()&rdquo; + &ldquo;()(())&rdquo; = &ldquo;()()()()(())&quot;。
+示例 3：
+输入：&rdquo;()()&rdquo;
+输出：&rdquo;&quot;
+解释：
+输入字符串为 &ldquo;()()&quot;，原语化分解得到 &ldquo;()&rdquo; + &ldquo;()&quot;，
+删除每个部分中的最外层括号后得到 &quot;&rdquo; + &quot;&rdquo; = &ldquo;&quot;。
+提示：
+S.length &lt;= 10000
+S[i] 为 &ldquo;(&rdquo; 或 &ldquo;)&rdquo;
+S 是一个有效括号字符串</p>
+</blockquote>
+<h1 id="解题思路">解题思路：</h1>
+<p>字符串S是一个有效括号字符串，那么我们可以先进行原语化分解，然后再对每个原语进行去除最外层括号。</p>
+<p>进行原语分解的时候我们可以定义一个值和一个字符串，遇到左括号这个值加一并将左括号添加到这个字符串上，遇到右括号这个值减一并且将右括号添加到字符串上，当这个值变成0并且字符串的长度为2的倍数时就可以认为这个字符串是一个原语。</p>
   </div>
   
 </div>
@@ -217,8 +248,19 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   </div>
   
   <div class="post-summary">
-    题目描述： 学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。 请你返回至少有多少个学生没有站在正确位置数量。该人数指的是：能让所有学生以 非递减 高度排列的必要移动人数。 示例： 输入：[1,1,4,2,1,3] 输出：3 解释： 高度为 4、3 和最后一个 1 的学生，没有站在正确的位置。 提示： 1 &lt;= heights.length &lt;= 100 1 &lt;= heights[i] &lt;= 100
-
+    <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。
+请你返回至少有多少个学生没有站在正确位置数量。该人数指的是：能让所有学生以 非递减 高度排列的必要移动人数。
+示例：
+输入：[1,1,4,2,1,3]
+输出：3
+解释：
+高度为 4、3 和最后一个 1 的学生，没有站在正确的位置。
+提示：
+1 &lt;= heights.length &lt;= 100
+1 &lt;= heights[i] &lt;= 100</p>
+</blockquote>
   </div>
   
 </div>
@@ -238,13 +280,21 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   </div>
   
   <div class="post-summary">
-    题目描述 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
-例如，给定三角形：
-[ [2], [3,4], [6,5,7], [4,1,8,3] ] 自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。
-说明：
-如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。
-题目中有一句话，每一步只能移动到下一行中相邻的结点中，所以在m行n列时，下一步的落地只能在m+1行n列或者m+1行n+1列中。
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。</p>
+<p>例如，给定三角形：</p>
+<p>[
+[2],
+[3,4],
+[6,5,7],
+[4,1,8,3]
+]
+自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。</p>
+<p>说明：</p>
+<p>如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。</p>
+</blockquote>
+<p>题目中有一句话，每一步只能移动到下一行中相邻的结点中，所以在m行n列时，下一步的落地只能在m+1行n列或者m+1行n+1列中。</p>
   </div>
   
 </div>
@@ -264,9 +314,18 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   </div>
   
   <div class="post-summary">
-    题目描述： 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。 示例: 输入：&ldquo;23&rdquo; 输出：[&ldquo;ad&rdquo;, &ldquo;ae&rdquo;, &ldquo;af&rdquo;, &ldquo;bd&rdquo;, &ldquo;be&rdquo;, &ldquo;bf&rdquo;, &ldquo;cd&rdquo;, &ldquo;ce&rdquo;, &ldquo;cf&rdquo;]. 说明: 尽管上面的答案是按字典序排列的，但是你可以任意选择答案输出的顺序。
-题目解读： 这个问题的场景就是我们的手机9宫格按键，当我们按下按键时计算出所有的字母组合，当我们按下第一个按键时，现在的组合次数为该按键对应的字母个数(m)。当我们再一次按下一个按键时，现在的次数变成了这一次按键对应的字母个数与上一次的次数相乘(m*n)
-
+    <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+示例:
+输入：&ldquo;23&rdquo;
+输出：[&ldquo;ad&rdquo;, &ldquo;ae&rdquo;, &ldquo;af&rdquo;, &ldquo;bd&rdquo;, &ldquo;be&rdquo;, &ldquo;bf&rdquo;, &ldquo;cd&rdquo;, &ldquo;ce&rdquo;, &ldquo;cf&rdquo;].
+说明:
+尽管上面的答案是按字典序排列的，但是你可以任意选择答案输出的顺序。</p>
+</blockquote>
+<h1 id="题目解读">题目解读：</h1>
+<p>这个问题的场景就是我们的手机9宫格按键，当我们按下按键时计算出所有的字母组合，当我们按下第一个按键时，现在的组合次数为该按键对应的字母个数(m)。当我们再一次按下一个按键时，现在的次数变成了这一次按键对应的字母个数与上一次的次数相乘(m*n)</p>
   </div>
   
 </div>
@@ -286,9 +345,25 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   </div>
   
   <div class="post-summary">
-    题目描述： 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。 示例 1: 输入: [[1,1,0],[1,0,1],[0,0,0]] 输出:[[1,0,0],[0,1,0],[1,1,1]] 解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]； 然后反转图片: [[1,0,0],[0,1,0],[1,1,1]] 示例 2: 输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]] 输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]] 说明: 1 &lt;= A.length = A[0].length &lt;= 20 0 &lt;= A[i][j] &lt;= 1
-解题思路： 将每一行进行翻转就是顺序转换，然后再进行反转图片就是将0转换为1，1转换为0，我们可以用 x=1-x来实现
-
+    <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。
+水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。
+反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。
+示例 1:
+输入: [[1,1,0],[1,0,1],[0,0,0]]
+输出:[[1,0,0],[0,1,0],[1,1,1]]
+解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]；
+然后反转图片: [[1,0,0],[0,1,0],[1,1,1]]
+示例 2:
+输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]]
+输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]]
+说明:
+1 &lt;= A.length = A[0].length &lt;= 20
+0 &lt;= A[i][j] &lt;= 1</p>
+</blockquote>
+<h1 id="解题思路">解题思路：</h1>
+<p>将每一行进行翻转就是顺序转换，然后再进行反转图片就是将0转换为1，1转换为0，我们可以用 <code>x=1-x</code>来实现</p>
   </div>
   
 </div>
@@ -308,9 +383,19 @@ https://github.com/liunaijie/learn-demo/tree/master/learn-dubbo-demo/sample-api
   </div>
   
   <div class="post-summary">
-    题目描述： 自除数 是指可以被它包含的每一位数除尽的数。 例如，128 是一个自除数，因为 128 % 1 == 0，128 % 2 == 0，128 % 8 == 0。 还有，自除数不允许包含 0 。 给定上边界和下边界数字，输出一个列表，列表的元素是边界（含边界）内所有的自除数。 示例 1： 输入： 上边界left = 1, 下边界right = 22 输出： [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22] 注意： 每个输入参数的边界满足 1 &lt;= left &lt;= right &lt;= 10000。
-解读： 判断一个数能不能被他的每一位除尽，那就要取出每一位数，进行计算，并且自除数不允许包含0，所以如果有0则直接判断不是自除数
-
+    <h1 id="题目描述">题目描述：</h1>
+<p>自除数 是指可以被它包含的每一位数除尽的数。
+例如，128 是一个自除数，因为 128 % 1 == 0，128 % 2 == 0，128 % 8 == 0。
+还有，自除数不允许包含 0 。
+给定上边界和下边界数字，输出一个列表，列表的元素是边界（含边界）内所有的自除数。
+示例 1：
+输入：
+上边界left = 1, 下边界right = 22
+输出： [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+注意：
+每个输入参数的边界满足 1 &lt;= left &lt;= right &lt;= 10000。</p>
+<h1 id="解读">解读：</h1>
+<p>判断一个数能不能被他的每一位除尽，那就要取出每一位数，进行计算，并且自除数不允许包含0，所以如果有0则直接判断不是自除数</p>
   </div>
   
 </div>

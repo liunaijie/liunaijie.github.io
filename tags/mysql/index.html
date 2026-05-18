@@ -123,10 +123,12 @@
   </div>
   
   <div class="post-summary">
-    1. 前言 之前的程序架构可能是这样的一种形式：
-当程序体量扩大后，我们进行扩展，可能会扩展多个后台服务实例，但数据库还是只有一个，所以系统的瓶颈还是在数据库上面，所以这次的主要任务就是对数据库进行扩展，主要形式为：扩展多台数据库实例，实现读写分离，对于一些写的任务分配到主数据库，对于读的任务使用子数据库进行读取。从而提高系统性能。
-修改后的架构如下所示：
-
+    <h1 id="1-前言">1. 前言</h1>
+<p>之前的程序架构可能是这样的一种形式：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200130131404.png" alt=""></p>
+<p>当程序体量扩大后，我们进行扩展，可能会扩展多个后台服务实例，但数据库还是只有一个，所以系统的瓶颈还是在数据库上面，所以这次的主要任务就是对数据库进行扩展，主要形式为：扩展多台数据库实例，实现读写分离，对于一些写的任务分配到主数据库，对于读的任务使用子数据库进行读取。从而提高系统性能。</p>
+<p>修改后的架构如下所示：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/%E6%88%AA%E5%B1%8F2020-01-3017.03.05.png" alt=""></p>
   </div>
   
 </div>
@@ -149,9 +151,10 @@
   </div>
   
   <div class="post-summary">
-    推荐看一下极客时间上面的一篇教程，《MySQL实战 45 讲》。
-基本架构 引擎层采用插件式。
-
+    <p>推荐看一下极客时间上面的一篇教程，《<a href="https://time.geekbang.org/column/intro/100020801">MySQL实战 45 讲</a>》。</p>
+<h1 id="基本架构">基本架构</h1>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191110151145.png" alt="MySQL基本架构"></p>
+<p>引擎层采用插件式。</p>
   </div>
   
 </div>

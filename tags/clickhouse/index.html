@@ -212,10 +212,46 @@
   </div>
   
   <div class="post-summary">
-    前言 这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程
-MergeTree MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。
-先看一下要创建这个引擎的DDL语句：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 CREATE TABLE [IF NOT EXISTS] [db.]table_name [ON CLUSTER cluster] ( name1 [type1] [DEFAULT|MATERIALIZED|ALIAS expr1] [TTL expr1], name2 [type2] [DEFAULT|MATERIALIZED|ALIAS expr2] [TTL expr2], ... INDEX index_name1 expr1 TYPE type1(...) GRANULARITY value1, INDEX index_name2 expr2 TYPE type2(...) GRANULARITY value2 ) ENGINE = MergeTree() ORDER BY expr [PARTITION BY expr] [PRIMARY KEY expr] [SAMPLE BY expr] [TTL expr [DELETE|TO DISK &#39;xxx&#39;|TO VOLUME &#39;xxx&#39;], ...] [SETTINGS name=value, ...] 
+    <h1 id="前言">前言</h1>
+<p>这篇文章记录一下ClickHouse的几种原生引擎的数据写入过程</p>
+<h1 id="mergetree">MergeTree</h1>
+<p>MergeTree是ClickHouse的最基础引擎，其它引擎都是基于这个引擎来进行扩展的，所以先来看一下这个引擎的写入过程。</p>
+<p>先看一下要创建这个引擎的DDL语句：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="p">[</span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">db</span><span class="p">.]</span><span class="k">table_name</span><span class="w"> </span><span class="p">[</span><span class="k">ON</span><span class="w"> </span><span class="k">CLUSTER</span><span class="w"> </span><span class="k">cluster</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name1</span><span class="w"> </span><span class="p">[</span><span class="n">type1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">DEFAULT</span><span class="o">|</span><span class="n">MATERIALIZED</span><span class="o">|</span><span class="k">ALIAS</span><span class="w"> </span><span class="n">expr1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">TTL</span><span class="w"> </span><span class="n">expr1</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">name2</span><span class="w"> </span><span class="p">[</span><span class="n">type2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">DEFAULT</span><span class="o">|</span><span class="n">MATERIALIZED</span><span class="o">|</span><span class="k">ALIAS</span><span class="w"> </span><span class="n">expr2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">TTL</span><span class="w"> </span><span class="n">expr2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INDEX</span><span class="w"> </span><span class="n">index_name1</span><span class="w"> </span><span class="n">expr1</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">type1</span><span class="p">(...)</span><span class="w"> </span><span class="n">GRANULARITY</span><span class="w"> </span><span class="n">value1</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INDEX</span><span class="w"> </span><span class="n">index_name2</span><span class="w"> </span><span class="n">expr2</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">type2</span><span class="p">(...)</span><span class="w"> </span><span class="n">GRANULARITY</span><span class="w"> </span><span class="n">value2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MergeTree</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">expr</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">expr</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">expr</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">SAMPLE</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">expr</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">TTL</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="p">[</span><span class="k">DELETE</span><span class="o">|</span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="o">|</span><span class="k">TO</span><span class="w"> </span><span class="n">VOLUME</span><span class="w"> </span><span class="s1">&#39;xxx&#39;</span><span class="p">],</span><span class="w"> </span><span class="p">...]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">SETTINGS</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="p">...]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
   </div>
   
 </div>

@@ -121,8 +121,20 @@
   </div>
   
   <div class="post-summary">
-    题目描述： 在二维平面上，有一个机器人从原点 (0, 0) 开始。给出它的移动顺序，判断这个机器人在完成移动后是否在 (0, 0) 处结束。 移动顺序由字符串表示。字符 move[i] 表示其第 i 次移动。机器人的有效动作有 R（右），L（左），U（上）和 D（下）。如果机器人在完成所有动作后返回原点，则返回 true。否则，返回 false。 注意：机器人“面朝”的方向无关紧要。 “R” 将始终使机器人向右移动一次，“L” 将始终向左移动等。此外，假设每次移动机器人的移动幅度相同。 示例 1: 输入: &ldquo;UD&rdquo; 输出: true 解释：机器人向上移动一次，然后向下移动一次。所有动作都具有相同的幅度，因此它最终回到它开始的原点。因此，我们返回 true。 示例 2: 输入: &ldquo;LL&rdquo; 输出: false 解释：机器人向左移动两次。它最终位于原点的左侧，距原点有两次 “移动” 的距离。我们返回 false，因为它在移动结束时没有返回原点。
-
+    <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>在二维平面上，有一个机器人从原点 (0, 0) 开始。给出它的移动顺序，判断这个机器人在完成移动后是否在 (0, 0) 处结束。
+移动顺序由字符串表示。字符 move[i] 表示其第 i 次移动。机器人的有效动作有 R（右），L（左），U（上）和 D（下）。如果机器人在完成所有动作后返回原点，则返回 true。否则，返回 false。
+注意：机器人“面朝”的方向无关紧要。 “R” 将始终使机器人向右移动一次，“L” 将始终向左移动等。此外，假设每次移动机器人的移动幅度相同。
+示例 1:
+输入: &ldquo;UD&rdquo;
+输出: true
+解释：机器人向上移动一次，然后向下移动一次。所有动作都具有相同的幅度，因此它最终回到它开始的原点。因此，我们返回 true。
+示例 2:
+输入: &ldquo;LL&rdquo;
+输出: false
+解释：机器人向左移动两次。它最终位于原点的左侧，距原点有两次 “移动” 的距离。我们返回 false，因为它在移动结束时没有返回原点。</p>
+</blockquote>
   </div>
   
 </div>
@@ -142,12 +154,33 @@
   </div>
   
   <div class="post-summary">
-    题目描述： 国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: &ldquo;a&rdquo; 对应 &ldquo;.-&rdquo;, &ldquo;b&rdquo; 对应 &ldquo;-&hellip;&rdquo;, &ldquo;c&rdquo; 对应 &ldquo;-.-.&rdquo;, 等等。 为了方便，所有26个英文字母对应摩尔斯密码表如下： [&quot;.-&quot;,&quot;-&hellip;&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;&ndash;.&quot;,&quot;&hellip;.&quot;,&quot;..&quot;,&quot;.&mdash;&quot;,&quot;-.-&quot;,&quot;.-..&quot;,&quot;&ndash;&quot;,&quot;-.&quot;,&quot;&mdash;&quot;,&quot;.&ndash;.&quot;,&quot;&ndash;.-&quot;,&quot;.-.&quot;,&quot;&hellip;&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;&hellip;-&quot;,&quot;.&ndash;&quot;,&quot;-..-&quot;,&quot;-.&ndash;&quot;,&quot;&ndash;..&quot;] 给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，&ldquo;cab&rdquo; 可以写成 &ldquo;-.-..&ndash;&hellip;&quot;，(即 &ldquo;-.-.&rdquo; + &ldquo;-&hellip;&rdquo; + &ldquo;.-&ldquo;字符串的结合)。我们将这样一个连接过程称作单词翻译。 返回我们可以获得所有词不同单词翻译的数量。 例如: 输入: words = [&ldquo;gin&rdquo;, &ldquo;zen&rdquo;, &ldquo;gig&rdquo;, &ldquo;msg&rdquo;] 输出: 2 解释: 各单词翻译如下: &ldquo;gin&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo; &ldquo;zen&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo; &ldquo;gig&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo; &ldquo;msg&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo; 共有 2 种不同翻译, &ldquo;&ndash;&hellip;-.&rdquo; 和 &ldquo;&ndash;&hellip;&ndash;.&rdquo;. 注意: 单词列表words 的长度不会超过 100。 每个单词 words[i]的长度范围为 [1, 12]。 每个单词 words[i]只包含小写字母。
-解题思路： 我们首先要根据给出的单词转换成摩尔斯密码
-利用一个数组按照字母顺序存储对应的密码值
-将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接
-这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。
-
+    <h1 id="题目描述">题目描述：</h1>
+<blockquote>
+<p>国际摩尔斯密码定义一种标准编码方式，将每个字母对应于一个由一系列点和短线组成的字符串， 比如: &ldquo;a&rdquo; 对应 &ldquo;.-&rdquo;, &ldquo;b&rdquo; 对应 &ldquo;-&hellip;&rdquo;, &ldquo;c&rdquo; 对应 &ldquo;-.-.&rdquo;, 等等。
+为了方便，所有26个英文字母对应摩尔斯密码表如下：
+[&quot;.-&quot;,&quot;-&hellip;&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;&ndash;.&quot;,&quot;&hellip;.&quot;,&quot;..&quot;,&quot;.&mdash;&quot;,&quot;-.-&quot;,&quot;.-..&quot;,&quot;&ndash;&quot;,&quot;-.&quot;,&quot;&mdash;&quot;,&quot;.&ndash;.&quot;,&quot;&ndash;.-&quot;,&quot;.-.&quot;,&quot;&hellip;&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;&hellip;-&quot;,&quot;.&ndash;&quot;,&quot;-..-&quot;,&quot;-.&ndash;&quot;,&quot;&ndash;..&quot;]
+给定一个单词列表，每个单词可以写成每个字母对应摩尔斯密码的组合。例如，&ldquo;cab&rdquo; 可以写成 &ldquo;-.-..&ndash;&hellip;&quot;，(即 &ldquo;-.-.&rdquo; + &ldquo;-&hellip;&rdquo; + &ldquo;.-&ldquo;字符串的结合)。我们将这样一个连接过程称作单词翻译。
+返回我们可以获得所有词不同单词翻译的数量。
+例如:
+输入: words = [&ldquo;gin&rdquo;, &ldquo;zen&rdquo;, &ldquo;gig&rdquo;, &ldquo;msg&rdquo;]
+输出: 2
+解释:
+各单词翻译如下:
+&ldquo;gin&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo;
+&ldquo;zen&rdquo; -&gt; &ldquo;&ndash;&hellip;-.&rdquo;
+&ldquo;gig&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo;
+&ldquo;msg&rdquo; -&gt; &ldquo;&ndash;&hellip;&ndash;.&rdquo;
+共有 2 种不同翻译, &ldquo;&ndash;&hellip;-.&rdquo; 和 &ldquo;&ndash;&hellip;&ndash;.&rdquo;.
+注意:
+单词列表words 的长度不会超过 100。
+每个单词 <code>words[i]</code>的长度范围为 [1, 12]。
+每个单词 <code>words[i]</code>只包含小写字母。</p>
+</blockquote>
+<h1 id="解题思路">解题思路：</h1>
+<p>我们首先要根据给出的单词转换成摩尔斯密码</p>
+<p>利用一个数组按照字母顺序存储对应的密码值</p>
+<p>将一个单词的每一个字母根据对应位数的摩尔斯密码进行转换然后拼接</p>
+<p>这里利用set的不重复特性，将密码放入set集合中，如果有相同的密码则不会加入，最后获取set的长度即可。</p>
   </div>
   
 </div>
@@ -167,8 +200,16 @@
   </div>
   
   <div class="post-summary">
-    题目描述： 你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。 你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。 示例: 输入: 4 输出: false 解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛； 因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。 思路： 先考虑一下什么情况会输呢，就是最后的石头被对手拿走，那么只要保证最后剩余1-3块石头我们即可获胜。如何能确保最后一定剩余1-3块呢，就要我们在每一步的时候跟对手拿的块数总和等于4。所以我们这道题就可以判断总块数是不是4的倍数，如果不是我们就可以赢。
-
+    <h1 id="题目描述">题目描述：</h1>
+<pre tabindex="0"><code>你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。
+你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。
+示例:
+输入: 4
+输出: false
+解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛；
+因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。
+</code></pre><h1 id="思路">思路：</h1>
+<p>先考虑一下什么情况会输呢，就是最后的石头被对手拿走，那么只要保证最后剩余1-3块石头我们即可获胜。如何能确保最后一定剩余1-3块呢，就要我们在每一步的时候跟对手拿的块数总和等于4。所以我们这道题就可以判断总块数是不是4的倍数，如果不是我们就可以赢。</p>
   </div>
   
 </div>
@@ -220,11 +261,22 @@
   </div>
   
   <div class="post-summary">
-    题目描述 给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
-在杨辉三角中，每个数是它左上方和右上方的数的和。
-示例:
-输入: 5 输出: [ [1], [1,1], [1,2,1], [1,3,3,1], [1,4,6,4,1] ]
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif" alt=""></p>
+<p>在杨辉三角中，每个数是它左上方和右上方的数的和。</p>
+<p>示例:</p>
+<p>输入: 5
+输出:
+[
+[1],
+[1,1],
+[1,2,1],
+[1,3,3,1],
+[1,4,6,4,1]
+]</p>
+</blockquote>
   </div>
   
 </div>
@@ -276,13 +328,23 @@
   </div>
   
   <div class="post-summary">
-    题目描述 请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点，你将只被给定要求被删除的节点。
-示例 1:
-输入: head = [4,5,1,9], node = 5 输出: [4,1,9] 解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 1 -&gt; 9. 示例 2:
-输入: head = [4,5,1,9], node = 1 输出: [4,5,9] 解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 5 -&gt; 9.
-说明:
-链表至少包含两个节点。 链表中所有节点的值都是唯一的。 给定的节点为非末尾节点并且一定是链表中的一个有效节点。 不要从你的函数中返回任何结果。
-
+    <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点，你将只被给定要求被删除的节点。</p>
+<p>示例 1:</p>
+<p>输入: head = [4,5,1,9], node = 5
+输出: [4,1,9]
+解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 1 -&gt; 9.
+示例 2:</p>
+<p>输入: head = [4,5,1,9], node = 1
+输出: [4,5,9]
+解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -&gt; 5 -&gt; 9.</p>
+<p>说明:</p>
+<p>链表至少包含两个节点。
+链表中所有节点的值都是唯一的。
+给定的节点为非末尾节点并且一定是链表中的一个有效节点。
+不要从你的函数中返回任何结果。</p>
+</blockquote>
   </div>
   
 </div>
@@ -302,12 +364,17 @@
   </div>
   
   <div class="post-summary">
-    背景 随着现在小程序的流行，许多软件也将web页面转移到小程序之中。让用户更方便的使用。当我们做了微信和支付宝两个的小程序后，意味着我们要将两个二维码展示给用户扫码。所以当需要将微信、支付宝小程序二维码合一，或者对其做一些自定义操作时，就不能再使用官方提供的二维码生成接口。
-微信、支付宝官方也提供了自定义二维码的文档：
-微信：https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html
-支付宝：https://docs.alipay.com/mini/introduce/vzd5v0
-所以通过上面的设置就可以实现二维码合一的操作。
-原理解析 二维码存储的是一串信息，微信官网二维码里面可能存储的为：https://weixin.com?appid=123。支付宝二维码存储的可能是：https://alipay.com?appid=abc。这种有一定规则的信息。 我们通过两个的自定义设置，将访问两者小程序的二维码信息进行合一。比如，定义：https://www.abc.com，让微信和支付宝扫描到这个信息后都跳转到我们的小程序中。那就可以实现二维码合一。 
+    <h1 id="背景">背景</h1>
+<p>随着现在小程序的流行，许多软件也将web页面转移到小程序之中。让用户更方便的使用。当我们做了微信和支付宝两个的小程序后，意味着我们要将两个二维码展示给用户扫码。所以当需要将微信、支付宝小程序二维码合一，或者对其做一些自定义操作时，就不能再使用官方提供的二维码生成接口。</p>
+<p>微信、支付宝官方也提供了自定义二维码的文档：</p>
+<p>微信：<a href="https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html">https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html</a></p>
+<p>支付宝：<a href="https://docs.alipay.com/mini/introduce/vzd5v0">https://docs.alipay.com/mini/introduce/vzd5v0</a></p>
+<p>所以通过上面的设置就可以实现二维码合一的操作。</p>
+<h1 id="原理解析">原理解析</h1>
+<ol>
+<li>二维码存储的是一串信息，微信官网二维码里面可能存储的为：<code>https://weixin.com?appid=123</code>。支付宝二维码存储的可能是：<code>https://alipay.com?appid=abc</code>。这种有一定规则的信息。</li>
+<li>我们通过两个的自定义设置，将访问两者小程序的二维码信息进行合一。比如，定义：<code>https://www.abc.com</code>，让微信和支付宝扫描到这个信息后都跳转到我们的小程序中。那就可以实现二维码合一。</li>
+</ol>
   </div>
   
 </div>
