@@ -9,13 +9,6 @@
     <lastBuildDate>Tue, 12 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.liunaijie.top/categories/publish/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>使用OpenRaft简单实现的分布式KV系统</title>
-      <link>https://www.liunaijie.top/publish/%E4%BD%BF%E7%94%A8openraft%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8Fkv%E7%B3%BB%E7%BB%9F/</link>
-      <pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
-      <guid>https://www.liunaijie.top/publish/%E4%BD%BF%E7%94%A8openraft%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8Fkv%E7%B3%BB%E7%BB%9F/</guid>
-      <description>&lt;p&gt;简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 &lt;a href=&#34;https://github.com/databendlabs/openraft&#34;&gt;OpenRaft&lt;/a&gt;。&lt;br&gt;&#xA;这个项目没有自己从零实现一套 Raft 协议，而是把更多精力放在工程落地上。&lt;/p&gt;&#xA;&lt;p&gt;从工程角度看，这个仓库的核心价值不在于“再讲一遍 Raft 原理”，而在于回答一个更实际的问题：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;如果我基于 OpenRaft 做一个真正能跑起来的分布式 KV，除了把库接进来之外，还需要补齐哪些能力？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这篇文章就围绕这个问题展开，结合仓库 &lt;a href=&#34;https://github.com/liunaijie/distribute_kv_openraft&#34;&gt;distribute_kv_openraft&lt;/a&gt;的实现，复盘一个最小可运行 Raft KV 系统该怎么实现，以及OpenRaft系统中的组件功能。&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>使用Rust&#43;OpenRaft简单实现的分布式KV系统</title>
       <link>https://www.liunaijie.top/publish/%E4%BD%BF%E7%94%A8rust&#43;openraft%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8Fkv%E7%B3%BB%E7%BB%9F/</link>
       <pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>

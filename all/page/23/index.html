@@ -113,38 +113,6 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E8%87%AA%E9%99%A4%E6%95%B0leetcode728/">自除数—LeetCode728</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 06 月 04 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="题目描述">题目描述：</h1>
-<p>自除数 是指可以被它包含的每一位数除尽的数。
-例如，128 是一个自除数，因为 128 % 1 == 0，128 % 2 == 0，128 % 8 == 0。
-还有，自除数不允许包含 0 。
-给定上边界和下边界数字，输出一个列表，列表的元素是边界（含边界）内所有的自除数。
-示例 1：
-输入：
-上边界left = 1, 下边界right = 22
-输出： [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
-注意：
-每个输入参数的边界满足 1 &lt;= left &lt;= right &lt;= 10000。</p>
-<h1 id="解读">解读：</h1>
-<p>判断一个数能不能被他的每一位除尽，那就要取出每一位数，进行计算，并且自除数不允许包含0，所以如果有0则直接判断不是自除数</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
     <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%83%BD%E5%90%A6%E8%BF%94%E5%9B%9E%E7%BB%88%E7%82%B9leetcode657/">机器人能否返回终点—LeetCode657</a>
     
     
@@ -377,6 +345,36 @@
 给定的节点为非末尾节点并且一定是链表中的一个有效节点。
 不要从你的函数中返回任何结果。</p>
 </blockquote>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/project_notes/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E5%AE%9D%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E4%BA%8C%E7%A0%81%E5%90%88%E4%B8%80/">微信、支付宝小程序二码合一</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 04 月 07 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="背景">背景</h1>
+<p>随着现在小程序的流行，许多软件也将web页面转移到小程序之中。让用户更方便的使用。当我们做了微信和支付宝两个的小程序后，意味着我们要将两个二维码展示给用户扫码。所以当需要将微信、支付宝小程序二维码合一，或者对其做一些自定义操作时，就不能再使用官方提供的二维码生成接口。</p>
+<p>微信、支付宝官方也提供了自定义二维码的文档：</p>
+<p>微信：<a href="https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html">https://developers.weixin.qq.com/miniprogram/introduction/qrcode.html</a></p>
+<p>支付宝：<a href="https://docs.alipay.com/mini/introduce/vzd5v0">https://docs.alipay.com/mini/introduce/vzd5v0</a></p>
+<p>所以通过上面的设置就可以实现二维码合一的操作。</p>
+<h1 id="原理解析">原理解析</h1>
+<ol>
+<li>二维码存储的是一串信息，微信官网二维码里面可能存储的为：<code>https://weixin.com?appid=123</code>。支付宝二维码存储的可能是：<code>https://alipay.com?appid=abc</code>。这种有一定规则的信息。</li>
+<li>我们通过两个的自定义设置，将访问两者小程序的二维码信息进行合一。比如，定义：<code>https://www.abc.com</code>，让微信和支付宝扫描到这个信息后都跳转到我们的小程序中。那就可以实现二维码合一。</li>
+</ol>
   </div>
   
 </div>

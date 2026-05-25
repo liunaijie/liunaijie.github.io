@@ -131,30 +131,6 @@
 </div>
       </div>
       
-      <div class="post-item mb-8">
-        <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/publish/%E4%BD%BF%E7%94%A8openraft%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8Fkv%E7%B3%BB%E7%BB%9F/">使用OpenRaft简单实现的分布式KV系统</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2026 年 05 月 12 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <p>简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 <a href="https://github.com/databendlabs/openraft">OpenRaft</a>。<br>
-这个项目没有自己从零实现一套 Raft 协议，而是把更多精力放在工程落地上。</p>
-<p>从工程角度看，这个仓库的核心价值不在于“再讲一遍 Raft 原理”，而在于回答一个更实际的问题：</p>
-<blockquote>
-<p>如果我基于 OpenRaft 做一个真正能跑起来的分布式 KV，除了把库接进来之外，还需要补齐哪些能力？</p>
-</blockquote>
-<p>这篇文章就围绕这个问题展开，结合仓库 <a href="https://github.com/liunaijie/distribute_kv_openraft">distribute_kv_openraft</a>的实现，复盘一个最小可运行 Raft KV 系统该怎么实现，以及OpenRaft系统中的组件功能。</p>
-  </div>
-  
-</div>
-      </div>
-      
     
       <h3 class="text-3xl font-bold mb-4 mt-8">
         <a href="#2025">2025</a>
