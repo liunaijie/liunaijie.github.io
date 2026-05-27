@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/clickhouse/summingmergetree/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="ClickHouse-SummingMergeTree">
-  <meta property="og:description" content="假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="ClickHouse-SummingMergeTree">
+	<meta property="og:description" content="假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）
 对于这样的查询场景，在ClickHouse中最直接的方法就是使用MergeTree引擎存储数据，然后每次查询通过GROUP BY聚合查询，利用SUM聚合函数汇总结果。
 但是这样存在两个问题：
 存在额外的存储开销：用户不关心明细数据，只关系汇总结果，而我们会一直存储明细数据 额外的查询开销：对于相同的查询，每次都需要走一遍聚合计算 SummingMergeTree引擎可以解决这样的应用场景，它可以按照预先定义的维度进行聚合汇总数据，将同一分组下的多行数据汇总合并成一行，这样即可以减少数据量，也可以减少后期查询的运算量。
@@ -16,17 +16,17 @@
 1 2 ORDER BY(A, B, C, D) PRIMARY KEY(A) 如果同时声明PRIMARY KEY与ORDER BY，则需要PRIMARY KEY是ORDER BY的前缀
 定义： 1 ENGINE = SummingMergeTree((col1, col2, ...)) col1, col2为columnar的参数值，这是选填参数，用于设置除主键外其他数值类型字段，以指定被SUM汇总的列字段。如果参数为空，则会将所有非主键的数值类型字段进行SUM汇总。
 总结： 对ORDER BY中字段相同值的记录进行提前聚合。">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
-    <meta property="article:tag" content="ClickHouse">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
+		<meta property="article:tag" content="ClickHouse">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ClickHouse-SummingMergeTree">
-  <meta name="twitter:description" content="假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="ClickHouse-SummingMergeTree">
+	<meta name="twitter:description" content="假设有这样一种需求，用户只需要查询数据的汇总结果，不关心明细数据，并且数据汇总的维度都是明确的（GROUP BY条件明确，不会随意改变）
 对于这样的查询场景，在ClickHouse中最直接的方法就是使用MergeTree引擎存储数据，然后每次查询通过GROUP BY聚合查询，利用SUM聚合函数汇总结果。
 但是这样存在两个问题：
 存在额外的存储开销：用户不关心明细数据，只关系汇总结果，而我们会一直存储明细数据 额外的查询开销：对于相同的查询，每次都需要走一遍聚合计算 SummingMergeTree引擎可以解决这样的应用场景，它可以按照预先定义的维度进行聚合汇总数据，将同一分组下的多行数据汇总合并成一行，这样即可以减少数据量，也可以减少后期查询的运算量。
@@ -236,7 +236,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

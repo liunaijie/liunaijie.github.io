@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/leetcode/%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84-leetcode189/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="旋转数组—LeetCode189">
-  <meta property="og:description" content="题目描述 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="旋转数组—LeetCode189">
+	<meta property="og:description" content="题目描述 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
 示例 1:
 输入: [1,2,3,4,5,6,7] 和 k = 3 输出: [5,6,7,1,2,3,4] 解释: 向右旋转 1 步: [7,1,2,3,4,5,6] 向右旋转 2 步: [6,7,1,2,3,4,5] 向右旋转 3 步: [5,6,7,1,2,3,4] 示例 2:
 输入: [-1,-100,3,99] 和 k = 2 输出: [3,99,-1,-100] 解释: 向右旋转 1 步: [99,-1,-100,3] 向右旋转 2 步: [3,99,-1,-100] 说明:
@@ -15,17 +15,17 @@
 首先我们要明确一个问题，当k超过数组长度时，我们要将k对数组长度取余。 当k等于数组长度时，不用进行操作直接返回。
 解题思路 暴力 从上面的步骤可以看到我们可以移动k次，每一次向右移动一次。
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 public void rotate(int[] nums, int k) { int length = nums.length; //对k的处理 if(k==length){ return; }else if(k&gt;length){ k %= length; } //移动k次， for (int i = 0; i &lt;k ; i&#43;&#43;) { //将最后一个元素暂时存储，然后将数组从头开始向后挪动一位，移动元素长度-1个。然后再将第一个置为临时元素。 int temp = nums[length-1]; System.arraycopy(nums,0,nums,1,nums.length-1); nums[0]=temp; } } 复杂度分析：">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2018-08-29T00:00:00+00:00">
-    <meta property="article:modified_time" content="2018-08-29T00:00:00+00:00">
-    <meta property="article:tag" content="LeetCode">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2018-08-29T00:00:00+00:00">
+		<meta property="article:modified_time" content="2018-08-29T00:00:00+00:00">
+		<meta property="article:tag" content="LeetCode">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="旋转数组—LeetCode189">
-  <meta name="twitter:description" content="题目描述 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="旋转数组—LeetCode189">
+	<meta name="twitter:description" content="题目描述 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
 示例 1:
 输入: [1,2,3,4,5,6,7] 和 k = 3 输出: [5,6,7,1,2,3,4] 解释: 向右旋转 1 步: [7,1,2,3,4,5,6] 向右旋转 2 步: [6,7,1,2,3,4,5] 向右旋转 3 步: [5,6,7,1,2,3,4] 示例 2:
 输入: [-1,-100,3,99] 和 k = 2 输出: [3,99,-1,-100] 解释: 向右旋转 1 步: [99,-1,-100,3] 向右旋转 2 步: [3,99,-1,-100] 说明:
@@ -354,7 +354,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

@@ -5,24 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/publish/flink/flink%E5%AD%A6%E4%B9%A0%E4%B8%80/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Flink学习(一)">
-  <meta property="og:description" content="时间语义 Flink中的时间有三种:
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Flink学习(一)">
+	<meta property="og:description" content="时间语义 Flink中的时间有三种:
 事件时间 Event Time. 事件真实发生的时间. 摄入时间 Ingestion time. 事件接入到Flink系统的时间 处理时间 Processing Time. 事件到到当前算子的时间 举一个夸张点的例子: 有一条记录, 它与11:00:00这个时间点产生. 我们的Flink系统在12:00:00这个时间点接入并进入第一个算子. 在Flink系统中又有很多个算子, 到达最后一个算子的时间为13:00:00. 那么在这种情况下: 事件时间是11:00:00. 这个是不会变的. 对于第一个算子而言, 这时的摄入时间和处理时间都为12:00:00. 对于最后一个算子而言, 这时这条时间的摄入时间为12:00:00. 处理时间为13:00:00 设置时间语义 我们需要在Job中设置执行时采用哪种时间语义.
 1 2 3 4 5 env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime); env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime); env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime); Processing Time &amp; Ingestion Time 这两个时间都由Flink系统自己生成. Processing Time是由每个算子自己生成, 实现起来非常简单, 延迟也是最小的. 但是由于每个时间都是获取的当前算子的时钟, 时钟可能不一致, 并且由于集群中不同机器的执行性能不同, 每个算子也有一定的耗时, 对于第N个算子来说的相同Processing Time, 可能到第N&#43;1个算子上就会有改变. 因此Processing Time在时间窗口下的计算会有不确定性. Ingestion Time是指事件到底Flink Source的时间. 一个事件在整个处理过程中都使用这个时间. 但是Ingestion Time也还是无法解决事件乱序问题.
 这两个时间语义如果对事件进行重新消费, 也不能保证幂等性.
 Event Time 事件时间是这个事件真实产生的时间, 发生时伴随其他信息一起写入到时间中. 但是由于在网络中的传输或其他问题, 可能导致事件到底Flink系统时发生乱序、迟到等现象. 真实情况中的数据大概如上图所示, 我们可以知道在Flink中进行处理的时间必然是大于等于事件发生的时间, 也就是事件都应该在这条红色虚线以下. 对于红色虚线上的点, 如上图的红色事件, 在12:10收到了12:20的事件, 这是一条未来的事件, 必须要对这条事件进行处理, 比如忽略或者对事件时间进行修改等, 不然会造成后续计算上的错误. 而对于蓝色的事件, 在12:10收到了11:50的事件, 这个事件是历史事件, 如果使用Flink作为批处理系统或者重置Offset后重刷历史, 这个都属于正常事件. 再来看一下事件时间发生在12:10的一系列事件, 它可以在12:10之后的任一时间到达Flink系统">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="publish">
-    <meta property="article:published_time" content="2022-12-04T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-12-04T00:00:00+00:00">
-    <meta property="article:tag" content="Flink">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2022-12-04T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-12-04T00:00:00+00:00">
+		<meta property="article:tag" content="Flink">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Flink学习(一)">
-  <meta name="twitter:description" content="时间语义 Flink中的时间有三种:
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Flink学习(一)">
+	<meta name="twitter:description" content="时间语义 Flink中的时间有三种:
 事件时间 Event Time. 事件真实发生的时间. 摄入时间 Ingestion time. 事件接入到Flink系统的时间 处理时间 Processing Time. 事件到到当前算子的时间 举一个夸张点的例子: 有一条记录, 它与11:00:00这个时间点产生. 我们的Flink系统在12:00:00这个时间点接入并进入第一个算子. 在Flink系统中又有很多个算子, 到达最后一个算子的时间为13:00:00. 那么在这种情况下: 事件时间是11:00:00. 这个是不会变的. 对于第一个算子而言, 这时的摄入时间和处理时间都为12:00:00. 对于最后一个算子而言, 这时这条时间的摄入时间为12:00:00. 处理时间为13:00:00 设置时间语义 我们需要在Job中设置执行时采用哪种时间语义.
 1 2 3 4 5 env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime); env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime); env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime); Processing Time &amp; Ingestion Time 这两个时间都由Flink系统自己生成. Processing Time是由每个算子自己生成, 实现起来非常简单, 延迟也是最小的. 但是由于每个时间都是获取的当前算子的时钟, 时钟可能不一致, 并且由于集群中不同机器的执行性能不同, 每个算子也有一定的耗时, 对于第N个算子来说的相同Processing Time, 可能到第N&#43;1个算子上就会有改变. 因此Processing Time在时间窗口下的计算会有不确定性. Ingestion Time是指事件到底Flink Source的时间. 一个事件在整个处理过程中都使用这个时间. 但是Ingestion Time也还是无法解决事件乱序问题.
 这两个时间语义如果对事件进行重新消费, 也不能保证幂等性.
@@ -1081,7 +1081,7 @@ watermark是一条特殊的记录, 从代码中可以看到它继承自<code>Str
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

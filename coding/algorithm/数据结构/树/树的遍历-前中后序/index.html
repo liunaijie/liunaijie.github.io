@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86-%E5%89%8D%E4%B8%AD%E5%90%8E%E5%BA%8F/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="树的几种遍历方式">
-  <meta property="og:description" content="对于一个二叉树, 有根节点、左节点、右节点.
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="树的几种遍历方式">
+	<meta property="og:description" content="对于一个二叉树, 有根节点、左节点、右节点.
 前序遍历为: 根节点, 左节点, 右节点
 中序遍历为: 左节点, 根节点, 右节点 — 二叉搜索树的遍历结果为升序
 后序遍历为: 左节点, 右节点, 根节点
 使用栈模拟递归 后序遍历时, 由于弹出根节点时还需要判断右节点是否访问过, 如果没有访问过, 则需要将根节点再次访问栈中, 同时访问右节点.
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 /** * 前序遍历 */ public List&lt;Integer&gt; preOrderStack(TreeNode root) { List&lt;Integer&gt; res = new LinkedList&lt;&gt;(); Stack&lt;TreeNode&gt; stack = new Stack&lt;&gt;(); while (root != null || !stack.isEmpty()) { // 将根节点添加到结果集中，并将根节点添加到栈中 while (root != null) { stack.push(root); res.add(root.val); root = root.left; } root = stack.pop(); root = root.right; } return res; } /** * 中序遍历 */ public List&lt;Integer&gt; inOrderStack(TreeNode root) { List&lt;Integer&gt; res = new LinkedList&lt;&gt;(); Stack&lt;TreeNode&gt; stack = new Stack&lt;&gt;(); while (root != null || !stack.isEmpty()) { //将左节点放入栈中，直至没有左节点为止，此时root为null while (root != null) { stack.push(root); root = root.left; } //最左节点 root = stack.pop(); res.add(root.val); // 从最左节点向上遍历右节点 root = root.right; } return res; } /** * 后序遍历 */ public static List&lt;Integer&gt; postOrderStack(TreeNode root) { List&lt;Integer&gt; res = new LinkedList&lt;&gt;(); Stack&lt;TreeNode&gt; stack = new Stack&lt;&gt;(); //保存上一次访问右子树的值，这样就可以判断右子树是否访问过 TreeNode prev = null; while (root != null || !stack.isEmpty()) { //将左子树添加到栈中 while (root != null) { stack.push(root); root = root.left; } root = stack.pop(); // 这时需要判断右子树是否被访问过 if (root.right == null || prev == root.right) { //没有右子树，或者已经访问过 res.add(root.val); prev = root; root = null; } else { //未访问过 stack.push(root); root = root.right; } } return res; } 递归 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 /** * 前序遍历，遍历顺序为：根节点，左节点，右节点 */ public List&lt;Integer&gt; preOrder(TreeNode root) { List&lt;Integer&gt; res = new LinkedList&lt;&gt;(); preOrderHelp(root, res); return res; } public void preOrderHelp(TreeNode node, List&lt;Integer&gt; res) { if (node == null) { return; } res.add(node.val); preOrderHelp(node.left, res); preOrderHelp(node.right, res); } /** * 中序遍历，遍历顺序为：左节点，根节点, 右节点 */ public List&lt;Integer&gt; inOrder(TreeNode root) { List&lt;Integer&gt; res = new LinkedList&lt;&gt;(); inOrderHelp(root, res); return res; } public void inOrderHelp(TreeNode node, List&lt;Integer&gt; res) { if (node == null) { return; } inOrderHelp(node.left, res); res.add(node.val); inOrderHelp(node.right, res); } /** * 后序遍历，遍历顺序为：左节点，右节点，根节点 * * @param root * @return */ public List&lt;Integer&gt; postOrder(TreeNode root) { List&lt;Integer&gt; res = new LinkedList&lt;&gt;(); postOrderHelp(root, res); return res; } public void postOrderHelp(TreeNode node, List&lt;Integer&gt; res) { if (node == null) { return; } postOrderHelp(node.left, res); postOrderHelp(node.right, res); res.add(node.val); }">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2020-03-03T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-03-03T00:00:00+00:00">
-    <meta property="article:tag" content="树">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2020-03-03T00:00:00+00:00">
+		<meta property="article:modified_time" content="2020-03-03T00:00:00+00:00">
+		<meta property="article:tag" content="树">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="树的几种遍历方式">
-  <meta name="twitter:description" content="对于一个二叉树, 有根节点、左节点、右节点.
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="树的几种遍历方式">
+	<meta name="twitter:description" content="对于一个二叉树, 有根节点、左节点、右节点.
 前序遍历为: 根节点, 左节点, 右节点
 中序遍历为: 左节点, 根节点, 右节点 — 二叉搜索树的遍历结果为升序
 后序遍历为: 左节点, 右节点, 根节点
@@ -472,7 +472,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

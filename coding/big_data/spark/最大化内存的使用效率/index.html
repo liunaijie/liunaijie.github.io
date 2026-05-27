@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E6%9C%80%E5%A4%A7%E5%8C%96%E5%86%85%E5%AD%98%E7%9A%84%E4%BD%BF%E7%94%A8%E6%95%88%E7%8E%87/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark-最大化内存的使用效率">
-  <meta property="og:description" content="Reserved Memory 堆内内存可以划分为
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark-最大化内存的使用效率">
+	<meta property="og:description" content="Reserved Memory 堆内内存可以划分为
 Reserved Memory, User Memory Storage Memory Execution Memory 其中Reserved Memory固定为300MB.
 User Memory 再看一下之前在广播变量里提到的一段代码
 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这里的dict变量, 会被分发到每个Executor上, 每个Executor上会同时存在N份(N为当前Executor上并行执行的task数量). 这些数据被存储到了堆内内存的User Memory区域
@@ -22,17 +22,17 @@ Shuffle中间文件 RDD缓存 广播变量 它们都由Executor上的BlockManage
 广播变量消耗的就是 Storage Memory 内存区域
 估算公式
 Storage Memory = ( 所有broadcast变量的大小 &#43; 数据缓存大小 ) / Executor数量">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark-最大化内存的使用效率">
-  <meta name="twitter:description" content="Reserved Memory 堆内内存可以划分为
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark-最大化内存的使用效率">
+	<meta name="twitter:description" content="Reserved Memory 堆内内存可以划分为
 Reserved Memory, User Memory Storage Memory Execution Memory 其中Reserved Memory固定为300MB.
 User Memory 再看一下之前在广播变量里提到的一段代码
 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这里的dict变量, 会被分发到每个Executor上, 每个Executor上会同时存在N份(N为当前Executor上并行执行的task数量). 这些数据被存储到了堆内内存的User Memory区域
@@ -263,7 +263,7 @@ Storage Memory = ( 所有broadcast变量的大小 &#43; 数据缓存大小 ) / E
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

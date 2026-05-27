@@ -5,24 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AArpc%E6%A1%86%E6%9E%B6%E5%9B%9B/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="自己动手实现一个RPC框架(四)">
-  <meta property="og:description" content="rpc-register 注册中心，这里使用zookeeper来实现。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="自己动手实现一个RPC框架(四)">
+	<meta property="og:description" content="rpc-register 注册中心，这里使用zookeeper来实现。
 生产者在启动服务时，将自己实现的服务注册到注册中心。
 消费者调用服务时，来注册中心查找，返回调用服务实例的地址信息。
 并且为了适应不同的注册实现，我们将功能定义为接口，在替换实现时在配置文件中进行替换即可。
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 public interface RpcRegister { /** * 注册服务 * @param serviceDescriptor * @param responseServiceDescription */ void register(ServiceDescriptor serviceDescriptor, ResponseServiceDescription responseServiceDescription); /** * 根据服务名称查询实例地址 * @param serviceDescriptor * @return */ ResponseServiceDescription lookup(ServiceDescriptor serviceDescriptor); }">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2020-03-25T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-03-25T00:00:00+00:00">
-    <meta property="article:tag" content="RPC">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2020-03-25T00:00:00+00:00">
+		<meta property="article:modified_time" content="2020-03-25T00:00:00+00:00">
+		<meta property="article:tag" content="RPC">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="自己动手实现一个RPC框架(四)">
-  <meta name="twitter:description" content="rpc-register 注册中心，这里使用zookeeper来实现。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="自己动手实现一个RPC框架(四)">
+	<meta name="twitter:description" content="rpc-register 注册中心，这里使用zookeeper来实现。
 生产者在启动服务时，将自己实现的服务注册到注册中心。
 消费者调用服务时，来注册中心查找，返回调用服务实例的地址信息。
 并且为了适应不同的注册实现，我们将功能定义为接口，在替换实现时在配置文件中进行替换即可。
@@ -620,7 +620,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

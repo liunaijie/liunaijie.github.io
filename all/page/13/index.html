@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/all/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="All">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="website">
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="All">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="website">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="All">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="All">
 
   
   
@@ -294,64 +294,64 @@ answer的元素取值为 {1, 2, 3} 之一。</p>
 <p>首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。</p>
 <p>先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：</p>
 <table>
-  <thead>
-      <tr>
-          <th>类型</th>
-          <th>字节数</th>
-          <th>位数</th>
-          <th>大小范围</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>byte</td>
-          <td>1</td>
-          <td>8</td>
-          <td>-2^8^~2^8^-1</td>
-      </tr>
-      <tr>
-          <td>short</td>
-          <td>2</td>
-          <td>16</td>
-          <td>-2^16^~2^16^-1</td>
-      </tr>
-      <tr>
-          <td>int</td>
-          <td>4</td>
-          <td>32</td>
-          <td>-2^32^~2^32^-1</td>
-      </tr>
-      <tr>
-          <td>long</td>
-          <td>8</td>
-          <td>64</td>
-          <td>-2^64^~2^64^-1</td>
-      </tr>
-      <tr>
-          <td>float</td>
-          <td>4</td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>double</td>
-          <td>8</td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>char</td>
-          <td>2</td>
-          <td>16</td>
-          <td>一个char类型可以存储一个汉字</td>
-      </tr>
-      <tr>
-          <td>boolean</td>
-          <td>1</td>
-          <td></td>
-          <td>true or false</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>类型</th>
+					<th>字节数</th>
+					<th>位数</th>
+					<th>大小范围</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>byte</td>
+					<td>1</td>
+					<td>8</td>
+					<td>-2^8^~2^8^-1</td>
+			</tr>
+			<tr>
+					<td>short</td>
+					<td>2</td>
+					<td>16</td>
+					<td>-2^16^~2^16^-1</td>
+			</tr>
+			<tr>
+					<td>int</td>
+					<td>4</td>
+					<td>32</td>
+					<td>-2^32^~2^32^-1</td>
+			</tr>
+			<tr>
+					<td>long</td>
+					<td>8</td>
+					<td>64</td>
+					<td>-2^64^~2^64^-1</td>
+			</tr>
+			<tr>
+					<td>float</td>
+					<td>4</td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>double</td>
+					<td>8</td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>char</td>
+					<td>2</td>
+					<td>16</td>
+					<td>一个char类型可以存储一个汉字</td>
+			</tr>
+			<tr>
+					<td>boolean</td>
+					<td>1</td>
+					<td></td>
+					<td>true or false</td>
+			</tr>
+	</tbody>
 </table>
 <p>移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：<code>&lt;&lt;</code>左移运算符，<code>&gt;&gt;</code>带符号右移运算符，<code>&gt;&gt;&gt;</code>无符号右移运算符。这三种操作符都只能作用于<code>long</code>,<code>int</code>,<code>short</code>,<code>byte</code>这四种基本整形类型上和<code>char</code>类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。</p>
 <p>在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：<code>0000 0000</code>表示0，<code>0111 1111</code>这个表示最大值(2^8^-1)，再进行加一后就变成了<code>1000 0000</code>这时就变成了最小值(-2^8^)。再加一后变成<code>1000 0001</code>这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。</p>
@@ -531,7 +531,7 @@ answer的元素取值为 {1, 2, 3} 之一。</p>
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

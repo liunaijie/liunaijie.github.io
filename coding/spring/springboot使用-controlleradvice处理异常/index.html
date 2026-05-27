@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/spring/springboot%E4%BD%BF%E7%94%A8-controlleradvice%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="SpringBoot使用@ControllerAdvice处理异常">
-  <meta property="og:description" content="背景 我们知道，当前端请求的后端程序抛出异常时，此时的 http 状态码变成了 500，并有一大串错误信息。今天要做的是整合后台返回信息，不管后台程序有异常，都能返回一个统一格式的信息，前端根据里面的信息来判断是否请求失败。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="SpringBoot使用@ControllerAdvice处理异常">
+	<meta property="og:description" content="背景 我们知道，当前端请求的后端程序抛出异常时，此时的 http 状态码变成了 500，并有一大串错误信息。今天要做的是整合后台返回信息，不管后台程序有异常，都能返回一个统一格式的信息，前端根据里面的信息来判断是否请求失败。
 定义一下正常返回的信息如下：
 1 2 3 4 5 6 7 { code:1, msg:&#34;请求成功&#34;, //或其他自定义信息 data:{ //这里存储这个接口的返回信息 } } 错误的信息如下：
 1 2 3 4 5 { code:-1, //可以根据不同的情况返回不同的状态码 msg:&#34;请求失败&#34;, //或其他自定义信息 data:{} } 实现 在 spring 框架下，这个要求我们可以利用 aop 去实现它，比如对我们所有的接口进行一个横切，对返回信息遇到异常后进行处理。
 在 springboot 框架下，已经有现成的东西让我们可以直接去使用了。那就直接上代码了。
 定义返回信息实体类：
 1 2 3 4 5 6 7 8 @Data public class ResultBean&lt;T&gt; { private String code; private String msg; private T data; } 然后定义一个自定义异常，必须继承自RuntimeException。如果直接继承Exception则事务不一定回滚">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-11-24T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-11-24T00:00:00+00:00">
-    <meta property="article:tag" content="Spring">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-11-24T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-11-24T00:00:00+00:00">
+		<meta property="article:tag" content="Spring">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SpringBoot使用@ControllerAdvice处理异常">
-  <meta name="twitter:description" content="背景 我们知道，当前端请求的后端程序抛出异常时，此时的 http 状态码变成了 500，并有一大串错误信息。今天要做的是整合后台返回信息，不管后台程序有异常，都能返回一个统一格式的信息，前端根据里面的信息来判断是否请求失败。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="SpringBoot使用@ControllerAdvice处理异常">
+	<meta name="twitter:description" content="背景 我们知道，当前端请求的后端程序抛出异常时，此时的 http 状态码变成了 500，并有一大串错误信息。今天要做的是整合后台返回信息，不管后台程序有异常，都能返回一个统一格式的信息，前端根据里面的信息来判断是否请求失败。
 定义一下正常返回的信息如下：
 1 2 3 4 5 6 7 { code:1, msg:&#34;请求成功&#34;, //或其他自定义信息 data:{ //这里存储这个接口的返回信息 } } 错误的信息如下：
 1 2 3 4 5 { code:-1, //可以根据不同的情况返回不同的状态码 msg:&#34;请求失败&#34;, //或其他自定义信息 data:{} } 实现 在 spring 框架下，这个要求我们可以利用 aop 去实现它，比如对我们所有的接口进行一个横切，对返回信息遇到异常后进行处理。
@@ -623,7 +623,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/clickhouse/replicatedmergetree/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="ClickHouse-ReplicatedMergeTree">
-  <meta property="og:description" content="ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="ClickHouse-ReplicatedMergeTree">
+	<meta property="og:description" content="ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。
 副本是表级别的，不是整个服务器级别的，所以在相同的服务器(cluster)上可以同时存在备份表和非备份表。
 副本不依赖与分片，每个分片都有它自己的独立副本。
 修改配置 如果要使用副本，需要在配置文件中设置zookeeper集群的地址。例如：
@@ -15,17 +15,17 @@
 1 2 3 4 5 &lt;macros&gt; &lt;layer&gt;05&lt;/layer&gt; &lt;shard&gt;02&lt;/shard&gt; &lt;replica&gt;example05-02-1.yandex.ru&lt;/replica&gt; &lt;/macros&gt; 如果配置文件中没有设置zk，则无法创建复制表，并且任何现有的复制表都将变为只读。
 在zk中存储元数据的路径是在创建表时指定的。
 DDL 1 2 3 4 5 6 7 8 9 CREATE TABLE test_table ( EventDate DateTime, CounterID UInt32, UserID UInt32, ver UInt16 ) ENGINE = ReplicatedReplacingMergeTree(&#39;/clickhouse/tables/{layer}-{shard}/test_table&#39;, &#39;{replica}&#39;, ver) PARTITION BY toYYYYMM(EventDate) ORDER BY (CounterID, EventDate, intHash32(UserID)) Replicated*MergeTree的参数">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
-    <meta property="article:tag" content="ClickHouse">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2022-10-09T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-10-09T00:00:00+00:00">
+		<meta property="article:tag" content="ClickHouse">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ClickHouse-ReplicatedMergeTree">
-  <meta name="twitter:description" content="ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="ClickHouse-ReplicatedMergeTree">
+	<meta name="twitter:description" content="ClickHouse的备份机制依赖于zookeeper来实现，并且只有MergeTree系列的表可以支持副本。
 副本是表级别的，不是整个服务器级别的，所以在相同的服务器(cluster)上可以同时存在备份表和非备份表。
 副本不依赖与分片，每个分片都有它自己的独立副本。
 修改配置 如果要使用副本，需要在配置文件中设置zookeeper集群的地址。例如：
@@ -304,7 +304,7 @@ DDL 1 2 3 4 5 6 7 8 9 CREATE TABLE test_table ( EventDate DateTime, CounterID UI
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/publish/spark/spark%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E4%B8%80%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark源码解析-(一)提交流程">
-  <meta property="og:description" content="本文以Spark3.4版本，提交任务方式为Yarn Cluster，以JavaWordCount这个应用程序为例来分析一下一个Spark任务的提交过程。 过程中会对代码做一些删减，主要目的是了解从用户提交任务开始到一个任务如何开始运行. 本文主要记录两种提交任务的方式，spark-submit.sh与SparkLauncher.
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark源码解析-(一)提交流程">
+	<meta property="og:description" content="本文以Spark3.4版本，提交任务方式为Yarn Cluster，以JavaWordCount这个应用程序为例来分析一下一个Spark任务的提交过程。 过程中会对代码做一些删减，主要目的是了解从用户提交任务开始到一个任务如何开始运行. 本文主要记录两种提交任务的方式，spark-submit.sh与SparkLauncher.
 Spark-submit.sh 以需要执行JavaWordCount为例，启动命令为：
 1 2 3 4 5 6 ./bin/spark-submit \ --master yarn \ --deploy-mode cluster \ --class org.apache.spark.examples.JavaWordCount \ /path/to/examples.jar \ /tmp/file1.txt 我们指定了在yarn上以cluster模式启动JavaWordCount程序， 指定了jar包位置，以及要读取的文件
 spark-submit 1 2 3 ...... exec &#34;${SPARK_HOME}&#34;/bin/spark-class org.apache.spark.deploy.SparkSubmit &#34;$@&#34; 这个脚本最后调用了spark-class脚本，第一个参数为SparkSubmit的全类名，再加上我们本来的参数
 spark-class 这个脚本做了这几件事：
 查找spark的jar包 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 # Find Spark jars. if [ -d &#34;${SPARK_HOME}/jars&#34; ]; then SPARK_JARS_DIR=&#34;${SPARK_HOME}/jars&#34; else SPARK_JARS_DIR=&#34;${SPARK_HOME}/assembly/target/scala-$SPARK_SCALA_VERSION/jars&#34; fi if [ ! -d &#34;$SPARK_JARS_DIR&#34; ] &amp;&amp; [ -z &#34;$SPARK_TESTING$SPARK_SQL_TESTING&#34; ]; then echo &#34;Failed to find Spark jars directory ($SPARK_JARS_DIR).&#34; 1&gt;&amp;2 echo &#34;You need to build Spark with the target \&#34;package\&#34; before running this program.&#34; 1&gt;&amp;2 exit 1 else LAUNCH_CLASSPATH=&#34;$SPARK_JARS_DIR/*&#34; fi # Add the launcher build dir to the classpath if requested. if [ -n &#34;$SPARK_PREPEND_CLASSES&#34; ]; then LAUNCH_CLASSPATH=&#34;${SPARK_HOME}/launcher/target/scala-$SPARK_SCALA_VERSION/classes:$LAUNCH_CLASSPATH&#34; fi 调用SparkLauncher里面的Main进行参数注入 1 2 3 4 build_command() { &#34;$RUNNER&#34; -Xmx128m $SPARK_LAUNCHER_OPTS -cp &#34;$LAUNCH_CLASSPATH&#34; org.apache.spark.launcher.Main &#34;$@&#34; printf &#34;%d\0&#34; $? } 执行被修改过的命令 1 2 CMD=(&#34;${CMD[@]:0:$LAST}&#34;) exec &#34;${CMD[@]}&#34; 经过修改后最终的命令为：">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="publish">
-    <meta property="article:published_time" content="2023-07-22T00:00:00+00:00">
-    <meta property="article:modified_time" content="2023-07-22T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2023-07-22T00:00:00+00:00">
+		<meta property="article:modified_time" content="2023-07-22T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark源码解析-(一)提交流程">
-  <meta name="twitter:description" content="本文以Spark3.4版本，提交任务方式为Yarn Cluster，以JavaWordCount这个应用程序为例来分析一下一个Spark任务的提交过程。 过程中会对代码做一些删减，主要目的是了解从用户提交任务开始到一个任务如何开始运行. 本文主要记录两种提交任务的方式，spark-submit.sh与SparkLauncher.
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark源码解析-(一)提交流程">
+	<meta name="twitter:description" content="本文以Spark3.4版本，提交任务方式为Yarn Cluster，以JavaWordCount这个应用程序为例来分析一下一个Spark任务的提交过程。 过程中会对代码做一些删减，主要目的是了解从用户提交任务开始到一个任务如何开始运行. 本文主要记录两种提交任务的方式，spark-submit.sh与SparkLauncher.
 Spark-submit.sh 以需要执行JavaWordCount为例，启动命令为：
 1 2 3 4 5 6 ./bin/spark-submit \ --master yarn \ --deploy-mode cluster \ --class org.apache.spark.examples.JavaWordCount \ /path/to/examples.jar \ /tmp/file1.txt 我们指定了在yarn上以cluster模式启动JavaWordCount程序， 指定了jar包位置，以及要读取的文件
 spark-submit 1 2 3 ...... exec &#34;${SPARK_HOME}&#34;/bin/spark-class org.apache.spark.deploy.SparkSubmit &#34;$@&#34; 这个脚本最后调用了spark-class脚本，第一个参数为SparkSubmit的全类名，再加上我们本来的参数
@@ -2142,7 +2142,7 @@ amClass 启动类，在cluster模式下，为<code>ApplicationMaster</code>. 在
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

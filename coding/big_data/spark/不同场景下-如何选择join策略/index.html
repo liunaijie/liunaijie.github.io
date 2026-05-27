@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E4%B8%8D%E5%90%8C%E5%9C%BA%E6%99%AF%E4%B8%8B-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9join%E7%AD%96%E7%95%A5/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark-如何选择Join策略">
-  <meta property="og:description" content="Spark支持多种Join形式:
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark-如何选择Join策略">
+	<meta property="og:description" content="Spark支持多种Join形式:
 Inner Join 内连接, 取相同的部分 Left Join 左连接, 左表为主 Right Join 右连接 Anti Join 剔除可以和右表Join上的左表部分. 相当于not in. Semi Join 相当于In 到目前为止, 数据关联总共有3中Join的实现方式, 分别是:
 嵌套循环连接(NLJ, Nested Loop Join) 排序归并连接(SMJ, Shuffle Sort Merge Join) 哈希连接(HJ, Hash Join) NLJ的工作原理: 使用两层循环, 将体量较大的表做外层循环, 体量较小的表做内层循环
 NLJ的计算复杂度为O(M*N).
@@ -20,17 +20,17 @@ HJ的工作原理 将内表扫描的复杂度降至O(1).
 在Spark的分布式计算环境中, 数据在网络中的分发主要有两种形式, 分别是Shuffle和广播.
 如果使用Shuffle的方式来完成分发, 那么外表和内表都需要按照Join Key在集群中做全量的数据分发.
 如果采用广播机制的话, Spark只需要将内表封装到广播变量, 然后在全网进行分发. 结合Shuffle、广播这两种网络分发形式和NLJ, SMJ, HJ这三种计算方式, 对于分布式环境下的数据关联, 组合起来可以有6种Join策略, 分别是:">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark-如何选择Join策略">
-  <meta name="twitter:description" content="Spark支持多种Join形式:
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark-如何选择Join策略">
+	<meta name="twitter:description" content="Spark支持多种Join形式:
 Inner Join 内连接, 取相同的部分 Left Join 左连接, 左表为主 Right Join 右连接 Anti Join 剔除可以和右表Join上的左表部分. 相当于not in. Semi Join 相当于In 到目前为止, 数据关联总共有3中Join的实现方式, 分别是:
 嵌套循环连接(NLJ, Nested Loop Join) 排序归并连接(SMJ, Shuffle Sort Merge Join) 哈希连接(HJ, Hash Join) NLJ的工作原理: 使用两层循环, 将体量较大的表做外层循环, 体量较小的表做内层循环
 NLJ的计算复杂度为O(M*N).
@@ -287,7 +287,7 @@ HJ的工作原理 将内表扫描的复杂度降至O(1).
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

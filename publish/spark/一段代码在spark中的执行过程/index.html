@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/publish/spark/%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E5%9C%A8spark%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="一段代码在Spark中的执行过程">
-  <meta property="og:description" content="一段代码在Spark中的执行过程 假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="一段代码在Spark中的执行过程">
+	<meta property="og:description" content="一段代码在Spark中的执行过程 假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 select name, age, sum(price * volume) revenue from ( select * from tx ) tx inner join ( select name, age, userId from user where age &lt; 30 and gender in (&#39;M&#39;) ) user on tx.userId = user.userId group by 1,2 ; 提交任务 这里的提交一般有两种方式, 一种是client模式, 一种是cluster模式">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="publish">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="一段代码在Spark中的执行过程">
-  <meta name="twitter:description" content="一段代码在Spark中的执行过程 假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="一段代码在Spark中的执行过程">
+	<meta name="twitter:description" content="一段代码在Spark中的执行过程 假如我们的Spark的资源调度是基于Yarn的, 并且有这样一段代码, 我们来分析一下它从提交开始到返回结果的执行过程
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 select name, age, sum(price * volume) revenue from ( select * from tx ) tx inner join ( select name, age, userId from user where age &lt; 30 and gender in (&#39;M&#39;) ) user on tx.userId = user.userId group by 1,2 ; 提交任务 这里的提交一般有两种方式, 一种是client模式, 一种是cluster模式">
 
   
@@ -291,7 +291,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

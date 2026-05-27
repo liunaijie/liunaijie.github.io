@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/leetcode/nim%E6%B8%B8%E6%88%8Fleetcode292/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Nim游戏—LeetCode292">
-  <meta property="og:description" content="题目描述： 你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。 你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。 示例: 输入: 4 输出: false 解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛； 因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。 思路： 先考虑一下什么情况会输呢，就是最后的石头被对手拿走，那么只要保证最后剩余1-3块石头我们即可获胜。如何能确保最后一定剩余1-3块呢，就要我们在每一步的时候跟对手拿的块数总和等于4。所以我们这道题就可以判断总块数是不是4的倍数，如果不是我们就可以赢。">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-06-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-06-01T00:00:00+00:00">
-    <meta property="article:tag" content="算法与数据结构">
-    <meta property="article:tag" content="LeetCode">
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Nim游戏—LeetCode292">
+	<meta property="og:description" content="题目描述： 你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。 你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。 示例: 输入: 4 输出: false 解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛； 因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。 思路： 先考虑一下什么情况会输呢，就是最后的石头被对手拿走，那么只要保证最后剩余1-3块石头我们即可获胜。如何能确保最后一定剩余1-3块呢，就要我们在每一步的时候跟对手拿的块数总和等于4。所以我们这道题就可以判断总块数是不是4的倍数，如果不是我们就可以赢。">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-06-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-06-01T00:00:00+00:00">
+		<meta property="article:tag" content="算法与数据结构">
+		<meta property="article:tag" content="LeetCode">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Nim游戏—LeetCode292">
-  <meta name="twitter:description" content="题目描述： 你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。 你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。 示例: 输入: 4 输出: false 解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛； 因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。 思路： 先考虑一下什么情况会输呢，就是最后的石头被对手拿走，那么只要保证最后剩余1-3块石头我们即可获胜。如何能确保最后一定剩余1-3块呢，就要我们在每一步的时候跟对手拿的块数总和等于4。所以我们这道题就可以判断总块数是不是4的倍数，如果不是我们就可以赢。">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Nim游戏—LeetCode292">
+	<meta name="twitter:description" content="题目描述： 你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。 你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。 示例: 输入: 4 输出: false 解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛； 因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。 思路： 先考虑一下什么情况会输呢，就是最后的石头被对手拿走，那么只要保证最后剩余1-3块石头我们即可获胜。如何能确保最后一定剩余1-3块呢，就要我们在每一步的时候跟对手拿的块数总和等于4。所以我们这道题就可以判断总块数是不是4的倍数，如果不是我们就可以赢。">
 
   
   
@@ -221,7 +221,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

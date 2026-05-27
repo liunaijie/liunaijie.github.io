@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/leetcode/%E5%8F%8D%E8%BD%AC%E5%9B%BE%E5%83%8Fleetcode832/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="反转图像—LeetCode832">
-  <meta property="og:description" content="题目描述： 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。 示例 1: 输入: [[1,1,0],[1,0,1],[0,0,0]] 输出:[[1,0,0],[0,1,0],[1,1,1]] 解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]； 然后反转图片: [[1,0,0],[0,1,0],[1,1,1]] 示例 2: 输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]] 输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]] 说明: 1 &lt;= A.length = A[0].length &lt;= 20 0 &lt;= A[i][j] &lt;= 1
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="反转图像—LeetCode832">
+	<meta property="og:description" content="题目描述： 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。 示例 1: 输入: [[1,1,0],[1,0,1],[0,0,0]] 输出:[[1,0,0],[0,1,0],[1,1,1]] 解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]； 然后反转图片: [[1,0,0],[0,1,0],[1,1,1]] 示例 2: 输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]] 输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]] 说明: 1 &lt;= A.length = A[0].length &lt;= 20 0 &lt;= A[i][j] &lt;= 1
 解题思路： 将每一行进行翻转就是顺序转换，然后再进行反转图片就是将0转换为1，1转换为0，我们可以用 x=1-x来实现">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-06-10T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-06-10T00:00:00+00:00">
-    <meta property="article:tag" content="LeetCode">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-06-10T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-06-10T00:00:00+00:00">
+		<meta property="article:tag" content="LeetCode">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="反转图像—LeetCode832">
-  <meta name="twitter:description" content="题目描述： 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。 示例 1: 输入: [[1,1,0],[1,0,1],[0,0,0]] 输出:[[1,0,0],[0,1,0],[1,1,1]] 解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]； 然后反转图片: [[1,0,0],[0,1,0],[1,1,1]] 示例 2: 输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]] 输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]] 说明: 1 &lt;= A.length = A[0].length &lt;= 20 0 &lt;= A[i][j] &lt;= 1
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="反转图像—LeetCode832">
+	<meta name="twitter:description" content="题目描述： 给定一个二进制矩阵 A，我们想先水平翻转图像，然后反转图像并返回结果。 水平翻转图片就是将图片的每一行都进行翻转，即逆序。例如，水平翻转 [1, 1, 0] 的结果是 [0, 1, 1]。 反转图片的意思是图片中的 0 全部被 1 替换， 1 全部被 0 替换。例如，反转 [0, 1, 1] 的结果是 [1, 0, 0]。 示例 1: 输入: [[1,1,0],[1,0,1],[0,0,0]] 输出:[[1,0,0],[0,1,0],[1,1,1]] 解释: 首先翻转每一行: [[0,1,1],[1,0,1],[0,0,0]]； 然后反转图片: [[1,0,0],[0,1,0],[1,1,1]] 示例 2: 输入: [[1,1,0,0],[1,0,0,1],[0,1,1,1],[1,0,1,0]] 输出: [[1,1,0,0],[0,1,1,0],[0,0,0,1],[1,0,1,0]] 说明: 1 &lt;= A.length = A[0].length &lt;= 20 0 &lt;= A[i][j] &lt;= 1
 解题思路： 将每一行进行翻转就是顺序转换，然后再进行反转图片就是将0转换为1，1转换为0，我们可以用 x=1-x来实现">
 
   
@@ -257,7 +257,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

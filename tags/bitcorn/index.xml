@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Bitcorn on Jarvis`s library</title>
-    <link>https://www.liunaijie.top/tags/bitcorn/</link>
-    <description>Recent content in Bitcorn on Jarvis`s library</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Sun, 06 Aug 2023 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://www.liunaijie.top/tags/bitcorn/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>比特币与区块链</title>
-      <link>https://www.liunaijie.top/publish/%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
-      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.liunaijie.top/publish/%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE/</guid>
-      <description>&lt;p&gt;前段时间看了一个web3的视频, 对区块链有了兴趣, 想了解一下这是什么内容, 底层原理等.&#xA;看了一段时间的材料, 用这篇文章总结一下目前的看法.&#xA;推荐课程:  &lt;a href=&#34;https://www.bilibili.com/video/BV1Vt411X7JF/&#34;&gt;北京大学肖臻老师《区块链技术与应用》公开课&lt;/a&gt;, 这个课程感觉是目前对比特币技术原理讲的最清楚的一门课了.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Bitcorn on Jarvis`s library</title>
+		<link>https://www.liunaijie.top/tags/bitcorn/</link>
+		<description>Recent content in Bitcorn on Jarvis`s library</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Sun, 06 Aug 2023 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://www.liunaijie.top/tags/bitcorn/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>比特币与区块链</title>
+				<link>https://www.liunaijie.top/publish/%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
+				<pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/publish/%E6%AF%94%E7%89%B9%E5%B8%81%E4%B8%8E%E5%8C%BA%E5%9D%97%E9%93%BE/</guid>
+				<description>&lt;p&gt;前段时间看了一个web3的视频, 对区块链有了兴趣, 想了解一下这是什么内容, 底层原理等.&#xA;看了一段时间的材料, 用这篇文章总结一下目前的看法.&#xA;推荐课程:  &lt;a href=&#34;https://www.bilibili.com/video/BV1Vt411X7JF/&#34;&gt;北京大学肖臻老师《区块链技术与应用》公开课&lt;/a&gt;, 这个课程感觉是目前对比特币技术原理讲的最清楚的一门课了.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

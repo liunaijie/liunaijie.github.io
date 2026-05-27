@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AArpc%E6%A1%86%E6%9E%B6%E4%BA%8C/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="自己动手实现一个RPC框架（二）">
-  <meta property="og:description" content="自己动手实现一个RPC框架
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="自己动手实现一个RPC框架（二）">
+	<meta property="og:description" content="自己动手实现一个RPC框架
 使用fastjson，netty，反射，动态代理，zookeeper实现一个RPC框架。
 代码链接：https://github.com/liunaijie/self-rpc-framwork`
 各模块说明： rpc-commons 通用设置模块，包括网络传输的数据格式，请求编号工具类，反射工具类等一些底层协议，工具相关的内容
 rpc-register
 服务注册模块，主要包括服务的注册与发现功能。这里使用zookeeper来进行实现。
 在这里，服务端注册时，使用通用模块中的ServiceDescriptor,ResponseServiceDescription类来进行注册 ResponseServiceDescription类是ServiceDescription的子类，添加了实现类，实例地址等属性。 消费者查找服务时，发送ServiceDescription得到ResponseServiceDescription，一个类可能有多个实现类，多个实例，在返回时进行随机返回。 对于同一个实现的不同版本实现，或多个服务实例这种情况随机返回没有问题。对于不同实现类，采用随机返回可能有些问题，但是在spring中对于多实现类也需要指定实现类，所以后面再考虑更改。">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2020-03-25T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-03-25T00:00:00+00:00">
-    <meta property="article:tag" content="RPC">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2020-03-25T00:00:00+00:00">
+		<meta property="article:modified_time" content="2020-03-25T00:00:00+00:00">
+		<meta property="article:tag" content="RPC">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="自己动手实现一个RPC框架（二）">
-  <meta name="twitter:description" content="自己动手实现一个RPC框架
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="自己动手实现一个RPC框架（二）">
+	<meta name="twitter:description" content="自己动手实现一个RPC框架
 使用fastjson，netty，反射，动态代理，zookeeper实现一个RPC框架。
 代码链接：https://github.com/liunaijie/self-rpc-framwork`
 各模块说明： rpc-commons 通用设置模块，包括网络传输的数据格式，请求编号工具类，反射工具类等一些底层协议，工具相关的内容
@@ -340,7 +340,7 @@ rpc-register
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

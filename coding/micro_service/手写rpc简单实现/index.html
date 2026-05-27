@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/micro_service/%E6%89%8B%E5%86%99rpc%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="手写rpc简单实现">
-  <meta property="og:description" content="背景 当单体项目逐渐扩大后，一个项目编译，发布可能需要很久的时间，如果其中一个文件出现 bug，那么需要对整个项目进行打包发布。微服务就是对项目进行拆分，拆分成多个小项目，由这些小项目组成大项目。并且拆分成小项目后，其他单体项目中需要相同功能的地方就不用再次编写，直接用这个就可以了。有种分治的思想。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="手写rpc简单实现">
+	<meta property="og:description" content="背景 当单体项目逐渐扩大后，一个项目编译，发布可能需要很久的时间，如果其中一个文件出现 bug，那么需要对整个项目进行打包发布。微服务就是对项目进行拆分，拆分成多个小项目，由这些小项目组成大项目。并且拆分成小项目后，其他单体项目中需要相同功能的地方就不用再次编写，直接用这个就可以了。有种分治的思想。
 那么原来单体项目拆分后，随之而来就会出现一些问题。原来一个项目中直接调用即可，现在请求的类被拆分到其他项目中，如何进行请求，是采用 http 这种请求还是rpc？多个模块如果进行管理等等一系列问题。这里主要写一下 rpc 的理解。
 在微服务中rpc又是重要的一环，现在主流的rpc框架有很多，比如阿里的dubbo，微博的Motan,谷歌的gRpc，还有Thrift，现在主流的应该就这几种吧。按照文档学习了一下dubbo如何使用后，发现并没有了解rpc是如何具体实现的。所以这篇文章记录了自己对rpc的一些理解与实战代码。
 代码链接
 HTTP 与 RPC 的对比 其实就像一些技术一样，没有绝对好的技术，不然大家都去使用它了。都只是在不同场景下有各自的优势。
 rpc一般是自带负载均衡策略，而 http 一般是通过 nginx 这种来实现负载均衡 rpc可以使用 tcp 协议也可以使用 http 协议，而 http 就只能使用 http 协议 rpc可以自定义传输信息和序列化方法，减少传输报文大小。 所以RPC主要用于公司内部的服务调用。HTTP主要用于对外的环境，浏览器接口调用，APP接口调用，第三方接口调用等。
 RPC的主要实现步骤">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-07-26T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-07-26T00:00:00+00:00">
-    <meta property="article:tag" content="RPC">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-07-26T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-07-26T00:00:00+00:00">
+		<meta property="article:tag" content="RPC">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="手写rpc简单实现">
-  <meta name="twitter:description" content="背景 当单体项目逐渐扩大后，一个项目编译，发布可能需要很久的时间，如果其中一个文件出现 bug，那么需要对整个项目进行打包发布。微服务就是对项目进行拆分，拆分成多个小项目，由这些小项目组成大项目。并且拆分成小项目后，其他单体项目中需要相同功能的地方就不用再次编写，直接用这个就可以了。有种分治的思想。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="手写rpc简单实现">
+	<meta name="twitter:description" content="背景 当单体项目逐渐扩大后，一个项目编译，发布可能需要很久的时间，如果其中一个文件出现 bug，那么需要对整个项目进行打包发布。微服务就是对项目进行拆分，拆分成多个小项目，由这些小项目组成大项目。并且拆分成小项目后，其他单体项目中需要相同功能的地方就不用再次编写，直接用这个就可以了。有种分治的思想。
 那么原来单体项目拆分后，随之而来就会出现一些问题。原来一个项目中直接调用即可，现在请求的类被拆分到其他项目中，如何进行请求，是采用 http 这种请求还是rpc？多个模块如果进行管理等等一系列问题。这里主要写一下 rpc 的理解。
 在微服务中rpc又是重要的一环，现在主流的rpc框架有很多，比如阿里的dubbo，微博的Motan,谷歌的gRpc，还有Thrift，现在主流的应该就这几种吧。按照文档学习了一下dubbo如何使用后，发现并没有了解rpc是如何具体实现的。所以这篇文章记录了自己对rpc的一些理解与实战代码。
 代码链接
@@ -1790,7 +1790,7 @@ RPC的主要实现步骤">
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

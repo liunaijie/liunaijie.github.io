@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/publish/spark/%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%88%A9%E7%94%A8cpu/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark-如何高效利用CPU">
-  <meta property="og:description" content="执行内存抢占规则， 在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark-如何高效利用CPU">
+	<meta property="og:description" content="执行内存抢占规则， 在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则
 执行内存总大小（记为 M）为两部分之和，一部分是 Execution Memory 初始大小，另一部分是 Storage Memory 剩余空间 每个线程分到的可用内存有一定的上下限，下限是 M/N/2，上限是 M/N，也就是均值 并行度、并发度与执行内存的关系 并行度 明确了数据的划分粒度, 并行度越高, 数据的粒度越细, 数据分片越多, 数据越分散.
 并行度可以通过两个参数来设置: 分别是 spark.default.parallelism 和 spark.sql.shuffle.partitions. 前者用于设置 RDD 的默认并行度, 后者在 Spark SQL 开发框架下, 指定了 Shuffle Reduce 阶段默认的并行度.
 并发度 ****一个Executor内部可以同时运行的最大任务数量.
@@ -17,17 +17,17 @@
 执行内存 堆内执行内存的初始值:
 spark.executor.memory * spark.memory.fraction * (1- spark.memory.storageFraction)
 executor的内存 * 执行内存和缓存内存占总内存系数 * (1-缓存内存系数)">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="publish">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark-如何高效利用CPU">
-  <meta name="twitter:description" content="执行内存抢占规则， 在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark-如何高效利用CPU">
+	<meta name="twitter:description" content="执行内存抢占规则， 在同一个 Executor 中，当有多个（记为 N）线程尝试抢占执行内存时，需要遵循 2 条基本原则
 执行内存总大小（记为 M）为两部分之和，一部分是 Execution Memory 初始大小，另一部分是 Storage Memory 剩余空间 每个线程分到的可用内存有一定的上下限，下限是 M/N/2，上限是 M/N，也就是均值 并行度、并发度与执行内存的关系 并行度 明确了数据的划分粒度, 并行度越高, 数据的粒度越细, 数据分片越多, 数据越分散.
 并行度可以通过两个参数来设置: 分别是 spark.default.parallelism 和 spark.sql.shuffle.partitions. 前者用于设置 RDD 的默认并行度, 后者在 Spark SQL 开发框架下, 指定了 Shuffle Reduce 阶段默认的并行度.
 并发度 ****一个Executor内部可以同时运行的最大任务数量.
@@ -249,7 +249,7 @@ executor的内存 * 执行内存和缓存内存占总内存系数 * (1-缓存内
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

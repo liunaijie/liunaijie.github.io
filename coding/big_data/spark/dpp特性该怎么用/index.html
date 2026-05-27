@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/dpp%E7%89%B9%E6%80%A7%E8%AF%A5%E6%80%8E%E4%B9%88%E7%94%A8/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark-DPP特性">
-  <meta property="og:description" content="DPP(Dynamic Partition Pruning, 动态分区剪裁)是Spark 3.0版本中第二个引人瞩目的特性, 它指的是在星型数仓的数据关联场景中, 可以充分利用过滤之后的维度表, 大幅削减事实表的数据扫描量, 从整体上提升关联计算的执行性能.
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark-DPP特性">
+	<meta property="og:description" content="DPP(Dynamic Partition Pruning, 动态分区剪裁)是Spark 3.0版本中第二个引人瞩目的特性, 它指的是在星型数仓的数据关联场景中, 可以充分利用过滤之后的维度表, 大幅削减事实表的数据扫描量, 从整体上提升关联计算的执行性能.
 分区剪裁 对partition字段的过滤条件会只扫描符合条件的一类文件夹. 不会扫描全部的文件.
 动态分区剪裁 将维度表中的结果发送到事实表中, 事实表根据这个子集做过滤, 从而减少数据扫描量, 提升I/O效率.
 需要满足这三个条件才会触发动态分区剪裁
 事实表必须是分区表, 而且分区字段(可以是多个)必须包含Join Key 仅支持等值Join, 对于不等值Join是不支持的. 维度表过滤之后的数据集要小于广播阈值 在对维度表过滤完之后, 会把这份数据封装为广播变量, 然后
 发送给事实表中, 来减少事实表的数据扫描量. 发送给后续的Reduce Task来进行关联操作. 小结 没啥用, 因为需要限制Join Key为分区字段.">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark-DPP特性">
-  <meta name="twitter:description" content="DPP(Dynamic Partition Pruning, 动态分区剪裁)是Spark 3.0版本中第二个引人瞩目的特性, 它指的是在星型数仓的数据关联场景中, 可以充分利用过滤之后的维度表, 大幅削减事实表的数据扫描量, 从整体上提升关联计算的执行性能.
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark-DPP特性">
+	<meta name="twitter:description" content="DPP(Dynamic Partition Pruning, 动态分区剪裁)是Spark 3.0版本中第二个引人瞩目的特性, 它指的是在星型数仓的数据关联场景中, 可以充分利用过滤之后的维度表, 大幅削减事实表的数据扫描量, 从整体上提升关联计算的执行性能.
 分区剪裁 对partition字段的过滤条件会只扫描符合条件的一类文件夹. 不会扫描全部的文件.
 动态分区剪裁 将维度表中的结果发送到事实表中, 事实表根据这个子集做过滤, 从而减少数据扫描量, 提升I/O效率.
 需要满足这三个条件才会触发动态分区剪裁
@@ -213,7 +213,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

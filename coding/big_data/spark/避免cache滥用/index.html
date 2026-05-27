@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/big_data/spark/%E9%81%BF%E5%85%8Dcache%E6%BB%A5%E7%94%A8/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark-避免Cache滥用">
-  <meta property="og:description" content="不同的缓存级别 Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark-避免Cache滥用">
+	<meta property="og:description" content="不同的缓存级别 Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:
 存储介质: 内存还是磁盘, 还是两者都有 存储形式: 存储对象值还是序列化的字节数组, 带SER字样的表示以序列化方式存储, 不带SER表示采用对象值 副本数量: 拷贝数量, 没有数字默认为1份副本 Spark对RDD.cache函数默认使用MEMORY_ONLY, 对DataFrame.cache默认使用MEMORY_AND_DISK.
 缓存的计算过程 在MEMORY_AND_DISK模式下, Spark会优先尝试把数据集全部缓存到内存, 内存不足的情况下, 再把剩余的数据落盘到本地.
 MEMORY_ONLY则不管内存是否充足, 一股脑的把数据缓存到内存. 无论是RDD还是DataFrame, 它们的数据分片都是以迭代器Iterator的形式存储的. 因此, 要把数据缓存下来, 就要把迭代器展开成实实在在的数据值, 这一步叫做Unroll. 展开的对象暂存在一个叫做ValuesHolder的数据结构里, 然后转化为MemoryEntry. 这里转化的实现方式是toArray, 因此它不产生额外的内存开销, 这一步叫做Transfer. 最终, MemoryEntry和与之对应的BlockID, 以K, V的形式存储到哈希字典(LinkedHashMap)中 当分布式数据集所有的数据分片都从Unroll到Transfer, 再到注册哈希字典后, 数据在内存的缓存过程就结束了
@@ -17,17 +17,17 @@ Spark当试图缓存一个数据分片, 却发现可用内存不足时, 会对Li
 在缓存清除的过程中, Spark遵循两个基本原则
 LRU, 按照元素的访问顺序, 优先清除那些“最近最少访问”的MemoryEntry 同属一个RDD的MemoryEntry不会被清除 数据丢失 在Memory_Only的模式下, 尽管有缓存销毁这个环境, 但是总会“驱无可驱”, 这个时候, Memory_Only就会放弃剩余的数据分片, 造成数据丢失.
 Cache的注意事项 cache是惰性操作, 在调用cache只会, 需要用Action算子触发缓存的物化过程.">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark-避免Cache滥用">
-  <meta name="twitter:description" content="不同的缓存级别 Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark-避免Cache滥用">
+	<meta name="twitter:description" content="不同的缓存级别 Spark的cache支持多种缓存级别, 比如MEMORY_AND_DISC_SER_2、MEMORY_ONLY等等. 这些值是这几部分构成的:
 存储介质: 内存还是磁盘, 还是两者都有 存储形式: 存储对象值还是序列化的字节数组, 带SER字样的表示以序列化方式存储, 不带SER表示采用对象值 副本数量: 拷贝数量, 没有数字默认为1份副本 Spark对RDD.cache函数默认使用MEMORY_ONLY, 对DataFrame.cache默认使用MEMORY_AND_DISK.
 缓存的计算过程 在MEMORY_AND_DISK模式下, Spark会优先尝试把数据集全部缓存到内存, 内存不足的情况下, 再把剩余的数据落盘到本地.
 MEMORY_ONLY则不管内存是否充足, 一股脑的把数据缓存到内存. 无论是RDD还是DataFrame, 它们的数据分片都是以迭代器Iterator的形式存储的. 因此, 要把数据缓存下来, 就要把迭代器展开成实实在在的数据值, 这一步叫做Unroll. 展开的对象暂存在一个叫做ValuesHolder的数据结构里, 然后转化为MemoryEntry. 这里转化的实现方式是toArray, 因此它不产生额外的内存开销, 这一步叫做Transfer. 最终, MemoryEntry和与之对应的BlockID, 以K, V的形式存储到哈希字典(LinkedHashMap)中 当分布式数据集所有的数据分片都从Unroll到Transfer, 再到注册哈希字典后, 数据在内存的缓存过程就结束了
@@ -245,7 +245,7 @@ Cache的注意事项 cache是惰性操作, 在调用cache只会, 需要用Action
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/java/java%E7%BA%BF%E7%A8%8B/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="JAVA线程">
-  <meta property="og:description" content="基础概念 线程的所有状态：
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="JAVA线程">
+	<meta property="og:description" content="基础概念 线程的所有状态：
 这些状态都在 Thread中的State枚举中定义：
 1 2 3 4 5 6 7 8 9 10 11 12 13 public enum State { //表示刚刚创建的线程，这种线程还没开始执行 NEW, //在 start() 方法调用后，线程开始执行，此时状态处于 RUNABLE RUNNABLE, //如果线程在执行过程中遇到 synchronized 同步块，就会进入 BLOCKED 阻塞状态，直到获取请求的锁 BLOCKED, //等待状态，WAITING 会无时间限制的等待，TIMED_WAITING 会有时间限制 WAITING, TIMED_WAITING, //线程执行完毕，表示结束 TERMINATED; } 初始线程 Thread类
 Runable接口
 Thread类中调用start()方法之后会让线程执行run()方法，而run()方法中又是对Runable实例的调用
 1 2 3 4 5 6 7 8 9 /* What will be run. */ private Runnable target; @Override public void run() { if (target != null) { target.run(); } }">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-09-22T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-09-22T00:00:00+00:00">
-    <meta property="article:tag" content="Java">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-09-22T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-09-22T00:00:00+00:00">
+		<meta property="article:tag" content="Java">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="JAVA线程">
-  <meta name="twitter:description" content="基础概念 线程的所有状态：
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="JAVA线程">
+	<meta name="twitter:description" content="基础概念 线程的所有状态：
 这些状态都在 Thread中的State枚举中定义：
 1 2 3 4 5 6 7 8 9 10 11 12 13 public enum State { //表示刚刚创建的线程，这种线程还没开始执行 NEW, //在 start() 方法调用后，线程开始执行，此时状态处于 RUNABLE RUNNABLE, //如果线程在执行过程中遇到 synchronized 同步块，就会进入 BLOCKED 阻塞状态，直到获取请求的锁 BLOCKED, //等待状态，WAITING 会无时间限制的等待，TIMED_WAITING 会有时间限制 WAITING, TIMED_WAITING, //线程执行完毕，表示结束 TERMINATED; } 初始线程 Thread类
 Runable接口
@@ -1717,7 +1717,7 @@ Thread类中调用start()方法之后会让线程执行run()方法，而run()方
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

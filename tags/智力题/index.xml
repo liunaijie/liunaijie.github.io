@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>智力题 on Jarvis`s library</title>
-    <link>https://www.liunaijie.top/tags/%E6%99%BA%E5%8A%9B%E9%A2%98/</link>
-    <description>Recent content in 智力题 on Jarvis`s library</description>
-    <generator>Hugo</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://www.liunaijie.top/tags/%E6%99%BA%E5%8A%9B%E9%A2%98/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>一道智力题, 25匹马, 5条赛道, 选出跑的最快的5匹马, 至少需要跑几次</title>
-      <link>https://www.liunaijie.top/publish/%E4%B8%80%E9%81%93%E6%99%BA%E5%8A%9B%E9%A2%98-25%E5%8C%B9%E9%A9%AC-5%E6%9D%A1%E8%B5%9B%E9%81%93-%E9%80%89%E5%87%BA%E8%B7%91%E7%9A%84%E6%9C%80%E5%BF%AB%E7%9A%845%E5%8C%B9%E9%A9%AC-%E8%87%B3%E5%B0%91%E9%9C%80%E8%A6%81%E8%B7%91%E5%87%A0%E6%AC%A1/</link>
-      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://www.liunaijie.top/publish/%E4%B8%80%E9%81%93%E6%99%BA%E5%8A%9B%E9%A2%98-25%E5%8C%B9%E9%A9%AC-5%E6%9D%A1%E8%B5%9B%E9%81%93-%E9%80%89%E5%87%BA%E8%B7%91%E7%9A%84%E6%9C%80%E5%BF%AB%E7%9A%845%E5%8C%B9%E9%A9%AC-%E8%87%B3%E5%B0%91%E9%9C%80%E8%A6%81%E8%B7%91%E5%87%A0%E6%AC%A1/</guid>
-      <description>&lt;p&gt;最近在网上冲浪的刷博客的时候, 看到一个题目.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;总共有25匹马, 一共有5个赛道, 现在要选出跑的最快的5匹马, 至少需要比赛几次?&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这个问题刚看到的时候, 看了一眼下面的答案就略过去了, 但是后面突然回想到这道题, 然后没有想通为什么是这样, 特此记录一下.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>智力题 on Jarvis`s library</title>
+		<link>https://www.liunaijie.top/tags/%E6%99%BA%E5%8A%9B%E9%A2%98/</link>
+		<description>Recent content in 智力题 on Jarvis`s library</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://www.liunaijie.top/tags/%E6%99%BA%E5%8A%9B%E9%A2%98/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>一道智力题, 25匹马, 5条赛道, 选出跑的最快的5匹马, 至少需要跑几次</title>
+				<link>https://www.liunaijie.top/publish/%E4%B8%80%E9%81%93%E6%99%BA%E5%8A%9B%E9%A2%98-25%E5%8C%B9%E9%A9%AC-5%E6%9D%A1%E8%B5%9B%E9%81%93-%E9%80%89%E5%87%BA%E8%B7%91%E7%9A%84%E6%9C%80%E5%BF%AB%E7%9A%845%E5%8C%B9%E9%A9%AC-%E8%87%B3%E5%B0%91%E9%9C%80%E8%A6%81%E8%B7%91%E5%87%A0%E6%AC%A1/</link>
+				<pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/publish/%E4%B8%80%E9%81%93%E6%99%BA%E5%8A%9B%E9%A2%98-25%E5%8C%B9%E9%A9%AC-5%E6%9D%A1%E8%B5%9B%E9%81%93-%E9%80%89%E5%87%BA%E8%B7%91%E7%9A%84%E6%9C%80%E5%BF%AB%E7%9A%845%E5%8C%B9%E9%A9%AC-%E8%87%B3%E5%B0%91%E9%9C%80%E8%A6%81%E8%B7%91%E5%87%A0%E6%AC%A1/</guid>
+				<description>&lt;p&gt;最近在网上冲浪的刷博客的时候, 看到一个题目.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;总共有25匹马, 一共有5个赛道, 现在要选出跑的最快的5匹马, 至少需要比赛几次?&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这个问题刚看到的时候, 看了一眼下面的答案就略过去了, 但是后面突然回想到这道题, 然后没有想通为什么是这样, 特此记录一下.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/design/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="设计模式-原形模式">
-  <meta property="og:description" content="原型模式的原理与应用 如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式.
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="设计模式-原形模式">
+	<meta property="og:description" content="原型模式的原理与应用 如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式.
 何为&#34;对象的创建成本比较大&#34; 创建对象包含的申请内存, 变量赋值这一过程, 本身并不会花费太多时间, 对于大部分业务系统来说, 这点时间是可以忽略的.
 如果对象中的数据需要复杂的计算才能得到(比如排序, 计算哈希值), 或者需要从RPC, 网络, 数据库, 文件系统等非常慢速的IO中读取, 这种情况下, 我们就可以利用原型模式, 从其他已有对象中直接拷贝得到, 而不用每次在创建新对象时, 都重复执行这些耗时的操作.
 原型模式的实现方式: 深拷贝与浅拷贝 深拷贝与浅拷贝的区别在于: 浅拷贝只会复制对象的索引(内存地址), 而不会复制对象本身. 深拷贝不仅会复制索引还好复制对象本身.
@@ -17,17 +17,17 @@ Java中的clone方法执行的就是浅拷贝.
 进行深拷贝有两种方法:
 递归拷贝对象, 对象的引用对象以及饮用对象的引用对象, 直到要拷贝的对象只包含基本数据类型, 没有饮用对象为止.
 public class Demo { private HashMap&lt;String, SearchWord&gt; currentKeywords=new HashMap&lt;&gt;(); private long lastUpdateTime = -1; public void refresh() { // Deep copy HashMap&lt;String, SearchWord&gt; newKeywords = new HashMap&lt;&gt;(); for (HashMap.Entry&lt;String, SearchWord&gt; e : currentKeywords.entrySet()) { SearchWord searchWord = e.getValue(); SearchWord newSearchWord = new SearchWord( searchWord.getKeyword(), searchWord.getCount(), searchWord.getLastUpdateTime()); newKeywords.put(e.getKey(), newSearchWord); } // 从数据库中取出更新时间&gt;lastUpdateTime的数据，放入到newKeywords中 List&lt;SearchWord&gt; toBeUpdatedSearchWords = getSearchWords(lastUpdateTime); long maxNewUpdatedTime = lastUpdateTime; for (SearchWord searchWord : toBeUpdatedSearchWords) { if (searchWord.getLastUpdateTime() &gt; maxNewUpdatedTime) { maxNewUpdatedTime = searchWord.getLastUpdateTime(); } if (newKeywords.containsKey(searchWord.getKeyword())) { SearchWord oldSearchWord = newKeywords.get(searchWord.getKeyword()); oldSearchWord.setCount(searchWord.getCount()); oldSearchWord.setLastUpdateTime(searchWord.getLastUpdateTime()); } else { newKeywords.put(searchWord.getKeyword(), searchWord); } } lastUpdateTime = maxNewUpdatedTime; currentKeywords = newKeywords; } private List&lt;SearchWord&gt; getSearchWords(long lastUpdateTime) { // TODO: 从数据库中取出更新时间&gt;lastUpdateTime的数据 return null; } } 先将对象序列化, 然后再反序列化成新的对象">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-10-14T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-10-14T00:00:00+00:00">
-    <meta property="article:tag" content="Design">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-10-14T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-10-14T00:00:00+00:00">
+		<meta property="article:tag" content="Design">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="设计模式-原形模式">
-  <meta name="twitter:description" content="原型模式的原理与应用 如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式.
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="设计模式-原形模式">
+	<meta name="twitter:description" content="原型模式的原理与应用 如果对象的创建成本比较大, 而同一个类的不同对象之间差别不大(大部分字段都相同), 在这种情况下, 我们可以利用对已有对象(原型)进行复制(或者叫拷贝)的方式来创建新对象, 以达到节省创建时间的目的, 这种基于原型来创建对象的方式就叫做原型设计模式.
 何为&#34;对象的创建成本比较大&#34; 创建对象包含的申请内存, 变量赋值这一过程, 本身并不会花费太多时间, 对于大部分业务系统来说, 这点时间是可以忽略的.
 如果对象中的数据需要复杂的计算才能得到(比如排序, 计算哈希值), 或者需要从RPC, 网络, 数据库, 文件系统等非常慢速的IO中读取, 这种情况下, 我们就可以利用原型模式, 从其他已有对象中直接拷贝得到, 而不用每次在创建新对象时, 都重复执行这些耗时的操作.
 原型模式的实现方式: 深拷贝与浅拷贝 深拷贝与浅拷贝的区别在于: 浅拷贝只会复制对象的索引(内存地址), 而不会复制对象本身. 深拷贝不仅会复制索引还好复制对象本身.
@@ -274,7 +274,7 @@ public class Demo { private HashMap&lt;String, SearchWord&gt; currentKeywords=ne
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

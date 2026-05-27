@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/avl%E7%BA%A2%E9%BB%91%E6%A0%91%E5%AD%A6%E4%B9%A0/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="AVL，红黑树学习">
-  <meta property="og:description" content="二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="AVL，红黑树学习">
+	<meta property="og:description" content="二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
 1 2 3 4 5 6 7 8 class TreeNode { Object val; TreeNode leftNode; TreeNode rightNode; ... } 性质 在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0) 深度为 k 的二叉树至多有2^k&#43;1^-1个节点(k&gt;=0) 有 n 个节点的完全二叉树的高度为 log2(n&#43;1) 它主要有五种基本形态：
 满二叉树 定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。
 大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。
 完全二叉树 定义：设二叉树的深度为 k，除第 k 层外，其他各层(1~(k-1)层)的节点都都达到最大值，其第 k 层所有的节点都连续集中在最左边，这样的树就是完全二叉树
 这些是二叉树的一些基本定义以及变形，它对于数据的存储并没有要求，只是要求了结构。所以对于实际应用中还存在很多的不足，比如对于一个 n 个节点的树，判断一个节点是不是在树里面，它的复杂度还是 o(n)。所以我们下面介绍几种对于存储有要求的树。">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-12-09T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-12-09T00:00:00+00:00">
-    <meta property="article:tag" content="树">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-12-09T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-12-09T00:00:00+00:00">
+		<meta property="article:tag" content="树">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="AVL，红黑树学习">
-  <meta name="twitter:description" content="二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="AVL，红黑树学习">
+	<meta name="twitter:description" content="二叉树 定义 二叉树由节点的有限集合构成 这个有限集合或者为空集 或者为由一个根节点(root)及两棵互不相交、分别称为这个根的左子树和右子树的二叉树组成的集合 在 java 中用代码定义为：
 1 2 3 4 5 6 7 8 class TreeNode { Object val; TreeNode leftNode; TreeNode rightNode; ... } 性质 在二叉树中，第 i 层上最多有2^i^ 个节点(i&gt;=0) 深度为 k 的二叉树至多有2^k&#43;1^-1个节点(k&gt;=0) 有 n 个节点的完全二叉树的高度为 log2(n&#43;1) 它主要有五种基本形态：
 满二叉树 定义：除最后一层无任何子节点外，每一层上的所有节点都有两个子节点的二叉树。
 大体的意思就是：一颗二叉树的节点要么是叶子节点（也就是最后一层），要么它就要有两个子节点。如果这个二叉树的层数为 k，且节点总数是(2^k^-1)，则它就是满二叉树。
@@ -629,7 +629,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

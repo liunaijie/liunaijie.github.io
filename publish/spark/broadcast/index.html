@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/publish/spark/broadcast/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark-Broadcast">
-  <meta property="og:description" content="广播变量 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这段代码中的dict变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark-Broadcast">
+	<meta property="og:description" content="广播变量 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这段代码中的dict变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.
 我们可以将这个dict变量作为广播变量, 分发到每个executor上, 每个task都从executor上获取数据.
 1 2 3 4 5 val dict = List(“spark”, “tune”) val bc = spark.sparkContext.broadcast(dict) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; bc.value.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 在广播变量的运行机制下，封装成广播变量的数据，由 Driver 端以 Executors 为粒度分发，每一个 Executors 接收到广播变量之后，将其交给 BlockManager 管理
 广播分布式数据集 在创建广播变量时, 由于变量的创建本来就在Driver上, 所以Driver直接把数据分发到各个Executor就可以了, 但是由于分布式数据集并不在Driver上, 它需要从各个Executor上拉取数据.
 步骤为:
 Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据 — 目前spark有个pr是关于将Driver获取到数据分布, 然后通知各个Executor进行拉取, 避免只有Drvier组装以后再一个个发送效率过低 Driver把汇总好的全量数据分发给各个Executor, Executors 将接收到的全量数据缓存到存储系统的 BlockManager 中 相比于广播变量的创建, 广播分布式数据集的代价更大, 一是广播分布式数据需要Driver从各个Executor上拉取数据, 多了一步网络开销. 二是分布式数据的体量通常比广播变量大.
 如何让Spark SQL选择Broadcast Joins 配置项 spark.sql.autoBroadcastJoinThreshold 默认值为10MB.">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="publish">
-    <meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2022-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark-Broadcast">
-  <meta name="twitter:description" content="广播变量 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这段代码中的dict变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark-Broadcast">
+	<meta name="twitter:description" content="广播变量 1 2 3 4 val dict = List(“spark”, “tune”) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; dict.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 这段代码中的dict变量会被分发到每个task中, 由于每个executor上会运行多个task, 这样就造成了在每个executor上的数据冗余, 并且网络分发也会有消耗, 影响性能.
 我们可以将这个dict变量作为广播变量, 分发到每个executor上, 每个task都从executor上获取数据.
 1 2 3 4 5 val dict = List(“spark”, “tune”) val bc = spark.sparkContext.broadcast(dict) val words = spark.sparkContext.textFile(“~/words.csv”) val keywords = words.filter(word =&gt; bc.value.contains(word)) keywords.map((_, 1)).reduceByKey(_ &#43; _).collect 在广播变量的运行机制下，封装成广播变量的数据，由 Driver 端以 Executors 为粒度分发，每一个 Executors 接收到广播变量之后，将其交给 BlockManager 管理
 广播分布式数据集 在创建广播变量时, 由于变量的创建本来就在Driver上, 所以Driver直接把数据分发到各个Executor就可以了, 但是由于分布式数据集并不在Driver上, 它需要从各个Executor上拉取数据.
@@ -308,7 +308,7 @@ Driver从所有的Executor拉取这些数据分区, 在本地构建全量数据 
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

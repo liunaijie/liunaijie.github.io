@@ -5,22 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/publish/spark/spark%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E4%BA%8Csparkcontext/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Spark源码解析-(二)SparkContext">
-  <meta property="og:description" content="继上一篇分析完Spark的提交流程之后, 这次继续分析下SparkContext的源码.
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Spark源码解析-(二)SparkContext">
+	<meta property="og:description" content="继上一篇分析完Spark的提交流程之后, 这次继续分析下SparkContext的源码.
 创建 当Spark通过反射调用用户提交类的主函数时, 用户的主函数内会完成SparkContext的创建. 还是以JavaWordCount为例
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 public static void main(String[] args) throws Exception { ... SparkSession spark = SparkSession .builder() .appName(&#34;JavaWordCount&#34;) .getOrCreate(); JavaRDD&lt;String&gt; lines = spark.read().textFile(args[0]).javaRDD(); ... List&lt;Tuple2&lt;String, Integer&gt;&gt; output = counts.collect(); for (Tuple2&lt;?,?&gt; tuple : output) { System.out.println(tuple._1() &#43; &#34;: &#34; &#43; tuple._2()); } spark.stop(); } 在这里是手动创建了SparkSession, SparkContext由SparkSession间接完成创建.">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="publish">
-    <meta property="article:published_time" content="2023-07-30T00:00:00+00:00">
-    <meta property="article:modified_time" content="2023-07-30T00:00:00+00:00">
-    <meta property="article:tag" content="Spark">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2023-07-30T00:00:00+00:00">
+		<meta property="article:modified_time" content="2023-07-30T00:00:00+00:00">
+		<meta property="article:tag" content="Spark">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Spark源码解析-(二)SparkContext">
-  <meta name="twitter:description" content="继上一篇分析完Spark的提交流程之后, 这次继续分析下SparkContext的源码.
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Spark源码解析-(二)SparkContext">
+	<meta name="twitter:description" content="继上一篇分析完Spark的提交流程之后, 这次继续分析下SparkContext的源码.
 创建 当Spark通过反射调用用户提交类的主函数时, 用户的主函数内会完成SparkContext的创建. 还是以JavaWordCount为例
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 public static void main(String[] args) throws Exception { ... SparkSession spark = SparkSession .builder() .appName(&#34;JavaWordCount&#34;) .getOrCreate(); JavaRDD&lt;String&gt; lines = spark.read().textFile(args[0]).javaRDD(); ... List&lt;Tuple2&lt;String, Integer&gt;&gt; output = counts.collect(); for (Tuple2&lt;?,?&gt; tuple : output) { System.out.println(tuple._1() &#43; &#34;: &#34; &#43; tuple._2()); } spark.stop(); } 在这里是手动创建了SparkSession, SparkContext由SparkSession间接完成创建.">
 
@@ -1807,7 +1807,7 @@ SparkContext初始化时, 相当于完成了基础的准备工作.</p>
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

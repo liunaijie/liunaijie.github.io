@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/database/mysql%E7%9A%84ibtmp1%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="Mysql的ibtmp1文件过大">
-  <meta property="og:description" content="今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Mysql的ibtmp1文件过大">
+	<meta property="og:description" content="今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。
 查看磁盘占用 使用命令
 1 du -h --max-depth=1 查看磁盘占用情况，我是在根目录下执行的命令，后面的max-depth=1指定深入目录的层数，为1就指定1层。然后经过排查后发现了这个文件是Mysql的ibtmp1文件。
 ibtmp1是什么 我们使用的Mysql版本是5.7.24。ibtmp1文件是 MySQL5.7的新特性,MySQL5.7使用了独立的临时表空间来存储临时表数据，但不能是压缩表。临时表空间在实例启动的时候进行创建，shutdown的时候进行删除。即为所有非压缩的innodb临时表提供一个独立的表空间，默认的临时表空间文件为ibtmp1。
@@ -23,17 +23,17 @@ GROUP BY 无索引字段或GROUP BY&#43; ORDER BY 的子句字段不一样时 or
 参考文章 http://mysql.taobao.org/monthly/2019/04/01/
 https://cloud.tencent.com/developer/article/1491411
 https://zhuanlan.zhihu.com/p/66847189">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-08-21T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-08-21T00:00:00+00:00">
-    <meta property="article:tag" content="MySQL">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-08-21T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-08-21T00:00:00+00:00">
+		<meta property="article:tag" content="MySQL">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Mysql的ibtmp1文件过大">
-  <meta name="twitter:description" content="今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Mysql的ibtmp1文件过大">
+	<meta name="twitter:description" content="今天早上接到一个任务，说服务器磁盘容量告警让我去排查一下原因。磁盘容量在一天内突然暴涨了好几十个G。
 查看磁盘占用 使用命令
 1 du -h --max-depth=1 查看磁盘占用情况，我是在根目录下执行的命令，后面的max-depth=1指定深入目录的层数，为1就指定1层。然后经过排查后发现了这个文件是Mysql的ibtmp1文件。
 ibtmp1是什么 我们使用的Mysql版本是5.7.24。ibtmp1文件是 MySQL5.7的新特性,MySQL5.7使用了独立的临时表空间来存储临时表数据，但不能是压缩表。临时表空间在实例启动的时候进行创建，shutdown的时候进行删除。即为所有非压缩的innodb临时表提供一个独立的表空间，默认的临时表空间文件为ibtmp1。
@@ -256,7 +256,7 @@ https://zhuanlan.zhihu.com/p/66847189">
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

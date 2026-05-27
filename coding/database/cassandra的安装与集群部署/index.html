@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/database/cassandra%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="cassandra的安装与集群部署">
-  <meta property="og:description" content="前提 安装jdk1.8以上，python2.7
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="cassandra的安装与集群部署">
+	<meta property="og:description" content="前提 安装jdk1.8以上，python2.7
 安装Cassandra Cassandra的下载地址：http://cassandra.apache.org/download/ 下载后将文件解压到某目录下， 然后配置环境变量 CASSANDRA_HOME为你解压的目录， path为%CASSANDRA_HOME%\bin 然后用管理员身份运行cmd（不然可能提示权限不够） 进入Cassandra目录下的bin， 执行cassandra 然后如果成功会出一大堆东西，并且不能再输入命令；
 查询状态 再打开一个cmd窗口，原来的不要关闭 进入bin文件夹 执行nodetool status 这是成功状态， 然后输入cqlsh进入编写sql 如果执行cqlsh时出现Can&#39;t detect python version需要到pylib目录下执行python setup.py install
 出现cqlsh&gt;开头就表示你现在正在编写sql；
 查询命令 查看表空间 describe keyspaces； 查看已有表：describe tables; 查看表结构：describe table table_name;
 多节点部署 以上是单个几点的安装，下面是多个节点的集群部署： 修改配置文件：cassandra.yaml cluster_name：集群名称。 如果启动过数据库再修改集群名称需要先执行命令: 进入cqlsh执行 UPDATE system.local SET cluster_name = &#39;你修改后的名称&#39; where key=&#39;local&#39;; 退出cqlsh状态，执行nodetool flush system seeds节点，将每个节点的ip加进去，&#34;x.x.x.x,xx.xx.xx.xx&#34;不用加尖括号！ listen_address改为自己的ip地址 rpc_address改为自己的ip地址 重启数据库。 再次执行cqlsh命令，后面需要加自己的ip">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2017-11-22T00:00:00+00:00">
-    <meta property="article:modified_time" content="2017-11-22T00:00:00+00:00">
-    <meta property="article:tag" content="Cassandra">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2017-11-22T00:00:00+00:00">
+		<meta property="article:modified_time" content="2017-11-22T00:00:00+00:00">
+		<meta property="article:tag" content="Cassandra">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="cassandra的安装与集群部署">
-  <meta name="twitter:description" content="前提 安装jdk1.8以上，python2.7
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="cassandra的安装与集群部署">
+	<meta name="twitter:description" content="前提 安装jdk1.8以上，python2.7
 安装Cassandra Cassandra的下载地址：http://cassandra.apache.org/download/ 下载后将文件解压到某目录下， 然后配置环境变量 CASSANDRA_HOME为你解压的目录， path为%CASSANDRA_HOME%\bin 然后用管理员身份运行cmd（不然可能提示权限不够） 进入Cassandra目录下的bin， 执行cassandra 然后如果成功会出一大堆东西，并且不能再输入命令；
 查询状态 再打开一个cmd窗口，原来的不要关闭 进入bin文件夹 执行nodetool status 这是成功状态， 然后输入cqlsh进入编写sql 如果执行cqlsh时出现Can&#39;t detect python version需要到pylib目录下执行python setup.py install
 出现cqlsh&gt;开头就表示你现在正在编写sql；
@@ -236,7 +236,7 @@ path为<code>%CASSANDRA_HOME%\bin</code>
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

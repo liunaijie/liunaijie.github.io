@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/design/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="设计模式-单例模式">
-  <meta property="og:description" content="概念 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="设计模式-单例模式">
+	<meta property="og:description" content="概念 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
 为什么要使用单例 有些数据在系统中只应该保存一份，当使用多个对象时会造成一些错误。有一些资源访问冲突时也可以使用单例模式来解决。
 实现方式 由于对象只能有一个，所以构造函数的权限必须是private私有的，这样外部就无法通过new来创建实例
 还有一些需要关注的点
 创建对象的线程安全问题 是否支持延迟加载 获取实例方法的性能是否高 饿汉式 优点：写法简单。在类装载时就完成了实例化。线程安全
 缺点：由于在类装载时就完成了实例化，如果从始至终都没有用到这个实例，会造成内存浪费
 class Single { /** * 设置成私有的，保证无法在其它类中使用 new 关键字进行实例化 */ private Single() {} private final static Single INSTANCE = new Single(); /** * 从外界获取实例的唯一方法，从这个方法拿到的实例肯定是全局唯一的 * @return */ public static Single getInstance() { return INSTANCE; } } /** * 与上面的类似，用了静态代码块，不同的代码写法其他完全一样 */ class SingleTest2 { private SingleTest2() {} private static SingleTest2 SINGLE_TEST_2; static { SINGLE_TEST_2 = new SingleTest2(); } public static SingleTest2 getInstance() { return SINGLE_TEST_2; } } 懒汉式 在需要用到实例时才进行初始化，所以不会造成内存浪费，但多线程情况下会出现多个实例的情况">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2019-10-14T00:00:00+00:00">
-    <meta property="article:modified_time" content="2019-10-14T00:00:00+00:00">
-    <meta property="article:tag" content="Design">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2019-10-14T00:00:00+00:00">
+		<meta property="article:modified_time" content="2019-10-14T00:00:00+00:00">
+		<meta property="article:tag" content="Design">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="设计模式-单例模式">
-  <meta name="twitter:description" content="概念 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="设计模式-单例模式">
+	<meta name="twitter:description" content="概念 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
 为什么要使用单例 有些数据在系统中只应该保存一份，当使用多个对象时会造成一些错误。有一些资源访问冲突时也可以使用单例模式来解决。
 实现方式 由于对象只能有一个，所以构造函数的权限必须是private私有的，这样外部就无法通过new来创建实例
 还有一些需要关注的点
@@ -411,7 +411,7 @@ class Single { /** * 设置成私有的，保证无法在其它类中使用 new 
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

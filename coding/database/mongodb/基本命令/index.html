@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/database/mongodb/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="mongo-基本命令">
-  <meta property="og:description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="mongo-基本命令">
+	<meta property="og:description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo
 基本操作命令：
 插入操作insert 格式：
 - db.&lt;集合&gt;.insertOne(&lt;JSON对象&gt;) - db.&lt;集合&gt;.insertMany&lt;[&lt;JSON 1&gt;,&lt;JSON 2&gt;, ...&lt;JSON N&gt;]&gt; 示例： - `db.fruit.insertOne({name:&#34;apple&#34;})` - `db.fruit.insertMany([{name:&#34;apple&#34;},{name:&#34;pear&#34;}, {name:&#34;orange&#34;}])` 查询文档find find是MongoDB中查询数据的基本指令，相当于SQL中的SELECT find返回的是游标 示例：
 db.movies.find({“year”:1975}) 单条件查询 db.movies.find({“year”:1989,“title”:“Batman”}) 多条件and查询 db.movies.find({$and:[{“title”:“Batman”},{“category”:“action”}]}) and的另一种形式 db.movies.find($or:[{“year”:1989},{“title”:“Batman”}]) 多条件or查询 db.movies.find({“title”:&#34;/^B/&#34;}) 按正则表达式查找 查询条件对照表:
 SQL | MQL ---|--- a = 1 | {a : 1} a &lt;&gt; 1 (a!=1) | {a: {$ne: 1}} a &gt; 1 | {a: {$gt: 1}} a &gt;= 1 | {a: {$gte: 1}} a &lt; 1 | {a: {$lt: 1}} a &lt;= 1 | {a: {$lte: 1}} 查询逻辑对照表:">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2020-04-14T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-04-14T00:00:00+00:00">
-    <meta property="article:tag" content="Mongo">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2020-04-14T00:00:00+00:00">
+		<meta property="article:modified_time" content="2020-04-14T00:00:00+00:00">
+		<meta property="article:tag" content="Mongo">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="mongo-基本命令">
-  <meta name="twitter:description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="mongo-基本命令">
+	<meta name="twitter:description" content="docker下载：docker pull mongo 运行：docker run -itd --name mongo -p 27017:27017 mongo 进入容器并运行mongo命令：docker exec -it mongo mongo
 基本操作命令：
 插入操作insert 格式：
 - db.&lt;集合&gt;.insertOne(&lt;JSON对象&gt;) - db.&lt;集合&gt;.insertMany&lt;[&lt;JSON 1&gt;,&lt;JSON 2&gt;, ...&lt;JSON N&gt;]&gt; 示例： - `db.fruit.insertOne({name:&#34;apple&#34;})` - `db.fruit.insertMany([{name:&#34;apple&#34;},{name:&#34;pear&#34;}, {name:&#34;orange&#34;}])` 查询文档find find是MongoDB中查询数据的基本指令，相当于SQL中的SELECT find返回的是游标 示例：
@@ -347,7 +347,7 @@ db.dropDatabase()
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

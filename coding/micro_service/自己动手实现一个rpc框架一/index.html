@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta property="og:url" content="https://www.liunaijie.top/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AArpc%E6%A1%86%E6%9E%B6%E4%B8%80/">
-  <meta property="og:site_name" content="Jarvis`s library">
-  <meta property="og:title" content="自己动手实现一个RPC框架（一）">
-  <meta property="og:description" content="前言 现在微服务体系流行，而RPC框架作为微服务中重要的一环，为了弄明白RPC的整体过程，决定要自己动手实现一个RPC框架。
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="自己动手实现一个RPC框架（一）">
+	<meta property="og:description" content="前言 现在微服务体系流行，而RPC框架作为微服务中重要的一环，为了弄明白RPC的整体过程，决定要自己动手实现一个RPC框架。
 我们先了解一下什么是RPC，RPC全程是Remote Procedure Call，翻译过来就是远程过程调用，我们先思考一下没有使用rpc的项目的调用流程：
 通过@Autoware注解注入另外的类 在需要调用的地方直接调用即可 当需要调用其他功能的接口时，比如调用其他公司的接口，或者调用自己公司内部的其他业务或功能接口。这时一般需要使用http来进行网络调用。
 那么使用http调用其他的功能接口算不算是rpc调用呢？我感觉也是算的，因为这也是一种通过网络从计算机程序上请求服务的过程。
@@ -16,17 +16,17 @@ RPC是原来一个程序分为多个不同的程序，分别运行在不同的jv
 rpc的流程图如下所示，
 牵扯到网络请求，那么就可以使用之前的http请求，但是由于http请求需要封装一些对于我们而言无用的信息，所以使用http的方式可以采用，比如springcloud就采用了http来进行通信的方式，而这次我准备使用其他的网络通信方式，这一篇中先使用bio来实现网络通信。
 还有一个序列化过程，它主要是将信息进行编解码，然后通过网络传输，因为网络传输中都是传输的二进制字节码文件，所以我们需要定义规则，将信息进行转换，消费者发送出去的信息生产者能明白其调用的内容，消费者也能明白生产者返回的信息。这一篇文章中也不去使用复杂的序列化方式，直接实现java中的Serializable接口。">
-  <meta property="og:locale" content="zh_cn">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="coding">
-    <meta property="article:published_time" content="2020-03-12T00:00:00+00:00">
-    <meta property="article:modified_time" content="2020-03-12T00:00:00+00:00">
-    <meta property="article:tag" content="RPC">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="coding">
+		<meta property="article:published_time" content="2020-03-12T00:00:00+00:00">
+		<meta property="article:modified_time" content="2020-03-12T00:00:00+00:00">
+		<meta property="article:tag" content="RPC">
 
   
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="自己动手实现一个RPC框架（一）">
-  <meta name="twitter:description" content="前言 现在微服务体系流行，而RPC框架作为微服务中重要的一环，为了弄明白RPC的整体过程，决定要自己动手实现一个RPC框架。
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="自己动手实现一个RPC框架（一）">
+	<meta name="twitter:description" content="前言 现在微服务体系流行，而RPC框架作为微服务中重要的一环，为了弄明白RPC的整体过程，决定要自己动手实现一个RPC框架。
 我们先了解一下什么是RPC，RPC全程是Remote Procedure Call，翻译过来就是远程过程调用，我们先思考一下没有使用rpc的项目的调用流程：
 通过@Autoware注解注入另外的类 在需要调用的地方直接调用即可 当需要调用其他功能的接口时，比如调用其他公司的接口，或者调用自己公司内部的其他业务或功能接口。这时一般需要使用http来进行网络调用。
 那么使用http调用其他的功能接口算不算是rpc调用呢？我感觉也是算的，因为这也是一种通过网络从计算机程序上请求服务的过程。
@@ -733,7 +733,7 @@ rpc的流程图如下所示，
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.161.1
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>
