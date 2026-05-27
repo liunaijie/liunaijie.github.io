@@ -16,7 +16,7 @@ related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 
 **快速失败（fail—fast）**是java集合中的一种机制， 在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出Concurrent Modification Exception。
 
-**安全失败（fail-sage）**保存了该集合对象的一个快照副本。你可以并发读取，不会抛出异常，但是不保证你遍历读取的值和当前集合对象的状态是一致的！
+**安全失败（fail-safe）**保存了该集合对象的一个快照副本。你可以并发读取，不会抛出异常，但是不保证你遍历读取的值和当前集合对象的状态是一致的！
 
 # fail-fast
 
