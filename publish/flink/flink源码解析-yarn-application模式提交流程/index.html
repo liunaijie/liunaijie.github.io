@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta property="og:url" content="https://www.liunaijie.top/publish/flink/flink%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-yarn-application%E6%A8%A1%E5%BC%8F%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B/">
+	<meta property="og:site_name" content="Jarvis`s library">
+	<meta property="og:title" content="Flink源码解析-Yarn-Application模式提交流程">
+	<meta property="og:description" content="TL;DR 本文基于 Flink 1.20 源码，梳理 yarn-application 模式下一个任务从提交到运行起来的完整过程。
+重点会放在这几件事上：
+命令是怎么启动的 Client 侧到底做了什么 Yarn 上的 ApplicationMaster / JobManager 是怎么启动的 TaskManager 是怎么向 Yarn 申请并拉起的 用户 main()、JobGraph 生成、submitJob() 分别发生在哪个角色里 为了避免范围过大，本文只聚焦 run-application -t yarn-application 这条主链路，不展开 Web 提交、Session 模式以及 SQL Gateway。
+以一个最常见的启动命令为例：
+1 2 3 4 5 6 7 ./bin/flink run-application \ -t yarn-application \ -Djobmanager.memory.process.size=2048m \ -Dtaskmanager.memory.process.size=4096m \ -c com.example.WordCount \ /path/to/job.jar \ arg1 arg2">
+	<meta property="og:locale" content="zh_cn">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="publish">
+		<meta property="article:published_time" content="2026-05-26T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-05-26T00:00:00+00:00">
+		<meta property="article:tag" content="Flink">
+		<meta property="article:tag" content="Yarn">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Flink源码解析-Yarn-Application模式提交流程">
+	<meta name="twitter:description" content="TL;DR 本文基于 Flink 1.20 源码，梳理 yarn-application 模式下一个任务从提交到运行起来的完整过程。
+重点会放在这几件事上：
+命令是怎么启动的 Client 侧到底做了什么 Yarn 上的 ApplicationMaster / JobManager 是怎么启动的 TaskManager 是怎么向 Yarn 申请并拉起的 用户 main()、JobGraph 生成、submitJob() 分别发生在哪个角色里 为了避免范围过大，本文只聚焦 run-application -t yarn-application 这条主链路，不展开 Web 提交、Session 模式以及 SQL Gateway。
+以一个最常见的启动命令为例：
+1 2 3 4 5 6 7 ./bin/flink run-application \ -t yarn-application \ -Djobmanager.memory.process.size=2048m \ -Dtaskmanager.memory.process.size=4096m \ -c com.example.WordCount \ /path/to/job.jar \ arg1 arg2">
+
+  
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818">
+  <title>
+    
+    Jarvis`s library - Flink源码解析-Yarn-Application模式提交流程
+    
+  </title>
+  
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.1b6413fe51eb67cdaa53f332ceccde456b597ee0f7989f361139a3b5134553f2.css" integrity="sha256-G2QT/lHrZ82qU/MyzszeRWtZfuD3mJ82ETmjtRNFU/I=">
+  
+  
+  
+  <script defer type="text/javascript" src="/minima.d4f3288dc16236e2bb2b7a6e53f8f5e0c59b5aed645dc2c32b76fd3ae85f7f00.js" integrity="sha256-1PMojcFiNuK7K3puU/j14MWbWu1kXcLDK3b9OuhffwA="></script>
+  
+  
+  
+</head>
+<script>
+  const theme_config = 'system'
+  const theme_light = theme_config === 'system' ? 'light' : theme_config;
+  let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : theme_light;
+  console.debug(theme);
+
+  try {
+    localStorage.setItem('theme', theme);
+    window.minima_theme = theme;
+    document.querySelector('html').classList.add(theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-8">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-2xl cursor-pointer"></div>
+      </div>
+      <ul class="flex items-center text-base font-semibold
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-2 mr-2">
+          <a href="/">
+            Posts
+          </a>
+        </li>
+        
+        <li class="ml-2 mr-2">
+          <a href="/all/">
+            全部
+          </a>
+        </li>
+        
+        <li class="ml-2 mr-2">
+          <a href="/tags/">
+            标签
+          </a>
+        </li>
+        
+        <li class="ml-2 mr-2">
+          <a href="/about/">
+            关于
+          </a>
+        </li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-semibold">
+        
+        <li class="ml-2"><a href="https://www.liunaijie.top/"></a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Flink源码解析-Yarn-Application模式提交流程</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      发布于 &mdash; 2026 年 05 月 26 日
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/Flink">#Flink</a>
+      
+      
+      <a class="ml-1" href="/tags/Yarn">#Yarn</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <h1 id="tldr">TL;DR</h1>
+<p>本文基于 <code>Flink 1.20</code> 源码，梳理 <code>yarn-application</code> 模式下一个任务从提交到运行起来的完整过程。</p>
+<p>重点会放在这几件事上：</p>
+<ul>
+<li>命令是怎么启动的</li>
+<li>Client 侧到底做了什么</li>
+<li>Yarn 上的 ApplicationMaster / JobManager 是怎么启动的</li>
+<li>TaskManager 是怎么向 Yarn 申请并拉起的</li>
+<li>用户 <code>main()</code>、<code>JobGraph</code> 生成、<code>submitJob()</code> 分别发生在哪个角色里</li>
+</ul>
+<p>为了避免范围过大，本文只聚焦 <code>run-application -t yarn-application</code> 这条主链路，不展开 Web 提交、Session 模式以及 SQL Gateway。</p>
+<p>以一个最常见的启动命令为例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">./bin/flink run-application <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -t yarn-application <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -Djobmanager.memory.process.size<span class="o">=</span>2048m <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -Dtaskmanager.memory.process.size<span class="o">=</span>4096m <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -c com.example.WordCount <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /path/to/job.jar <span class="se">\
+</span></span></span><span class="line"><span class="cl">  arg1 arg2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="application-模式下的职责划分">Application 模式下的职责划分</h1>
+<p>在 <code>yarn-application</code> 模式下：</p>
+<ul>
+<li>Client 不是 Driver</li>
+<li>Yarn 上的 ApplicationMaster 同时也是 Flink 集群入口</li>
+<li>用户 Jar 会被先上传到 Yarn 可见的位置，然后在集群内执行</li>
+</ul>
+<hr>
+<h1 id="一启动入口binflink-到-clifrontend">一、启动入口：<code>bin/flink</code> 到 <code>CliFrontend</code></h1>
+<h2 id="11-shell-脚本入口">1.1 Shell 脚本入口</h2>
+<p>命令最终先进入脚本 <code>bin/flink</code>。</p>
+<p>这个脚本本身做的事情并不复杂，核心就两步：</p>
+<ul>
+<li>读取 <code>config.sh</code>，组装 Flink Client 启动所需的 classpath</li>
+<li>用 Java 进程启动 <code>org.apache.flink.client.cli.CliFrontend</code></li>
+</ul>
+<p>所以从 Java 代码角度看，真正的入口类就是：</p>
+<ul>
+<li><code>org.apache.flink.client.cli.CliFrontend</code></li>
+</ul>
+<h2 id="12-clifrontendmaininternal">1.2 <code>CliFrontend#mainInternal</code></h2>
+<p>在 <code>CliFrontend#mainInternal()</code> 中，主要做了 3 件事：</p>
+<ul>
+<li>读取 <code>FLINK_CONF_DIR</code></li>
+<li>加载全局配置 <code>GlobalConfiguration.loadConfiguration(...)</code></li>
+<li>通过 <code>loadCustomCommandLines(...)</code> 加载不同部署模式对应的 CLI</li>
+</ul>
+<p>这里会加载几个关键的 <code>CustomCommandLine</code>：</p>
+<ul>
+<li><code>GenericCLI</code></li>
+<li><code>FlinkYarnSessionCli</code></li>
+<li><code>DefaultCLI</code></li>
+</ul>
+<h2 id="13-为什么--t-yarn-application-会走到-yarn">1.3 为什么 <code>-t yarn-application</code> 会走到 Yarn</h2>
+<p><code>run-application -t yarn-application</code> 这条命令，激活的通常不是 <code>FlinkYarnSessionCli</code>，而是 <code>GenericCLI</code>。</p>
+<p>原因是：</p>
+<ul>
+<li><code>GenericCLI#isActive()</code> 只要发现命令里显式传了 <code>-t</code> / <code>--target</code>，就会生效</li>
+<li><code>GenericCLI#toConfiguration()</code> 会把 <code>-t yarn-application</code> 写入配置项 <code>DeploymentOptions.TARGET</code></li>
+</ul>
+<p>对应关系如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">-t yarn-application
+</span></span><span class="line"><span class="cl">      ↓
+</span></span><span class="line"><span class="cl">DeploymentOptions.TARGET = yarn-application
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>后续根据这个 target 选择具体提交实现的是 <code>ClusterClientFactory</code>。</p>
+<h2 id="14-parseandrun-进入-runapplication">1.4 <code>parseAndRun()</code> 进入 <code>runApplication()</code></h2>
+<p><code>CliFrontend#parseAndRun()</code> 会根据 action 分发：</p>
+<ul>
+<li><code>run</code></li>
+<li><code>run-application</code></li>
+<li><code>list</code></li>
+<li><code>cancel</code></li>
+<li>&hellip;</li>
+</ul>
+<p>本文场景会走：</p>
+<ul>
+<li><code>CliFrontend#runApplication()</code></li>
+</ul>
+<p>这个方法里主要有几步：</p>
+<ul>
+<li>解析参数，生成 <code>ProgramOptions</code></li>
+<li>构造 <code>ApplicationConfiguration</code></li>
+<li>创建 <code>ApplicationClusterDeployer</code></li>
+<li>调用 <code>deployer.run(effectiveConfiguration, applicationConfiguration)</code></li>
+</ul>
+<p>到这里，Client 已经进入 application cluster 部署阶段。</p>
+<hr>
+<h1 id="二client-角色创建-yarn-集群并启动-applicationmaster">二、Client 角色：创建 Yarn 集群并启动 ApplicationMaster</h1>
+<h2 id="21-applicationclusterdeployerrun">2.1 <code>ApplicationClusterDeployer#run</code></h2>
+<p><code>ApplicationClusterDeployer</code> 的逻辑很直白：</p>
+<ol>
+<li>通过 <code>ClusterClientServiceLoader</code> 找到匹配当前 target 的 <code>ClusterClientFactory</code></li>
+<li>由 factory 创建 <code>ClusterDescriptor</code></li>
+<li>调用 <code>clusterDescriptor.deployApplicationCluster(...)</code></li>
+</ol>
+<p>这一步里，最关键的分发点是：</p>
+<ul>
+<li><code>ClusterClientServiceLoader#getClusterClientFactory(configuration)</code></li>
+</ul>
+<p>对于 <code>DeploymentOptions.TARGET = yarn-application</code>，最终会选中：</p>
+<ul>
+<li><code>org.apache.flink.yarn.YarnClusterClientFactory</code></li>
+</ul>
+<h2 id="22-yarnclusterclientfactory">2.2 <code>YarnClusterClientFactory</code></h2>
+<p>这个类相当于 Yarn 部署入口工厂。</p>
+<p>它做两件关键事：</p>
+<ul>
+<li><code>isCompatibleWith(configuration)</code>：判断 target 是否是合法的 Yarn target</li>
+<li><code>createClusterDescriptor(configuration)</code>：创建 <code>YarnClusterDescriptor</code></li>
+</ul>
+<p>其中 <code>createClusterDescriptor()</code> 内部会：</p>
+<ul>
+<li>创建 <code>YarnClient</code></li>
+<li>初始化 Hadoop/Yarn 配置</li>
+<li>构造 <code>YarnClusterDescriptor</code></li>
+</ul>
+<p>所以后面所有真正和 Yarn RM 打交道的逻辑，基本都在：</p>
+<ul>
+<li><code>org.apache.flink.yarn.YarnClusterDescriptor</code></li>
+</ul>
+<h2 id="23-yarnclusterdescriptordeployapplicationcluster">2.3 <code>YarnClusterDescriptor#deployApplicationCluster</code></h2>
+<p><code>deployApplicationCluster(...)</code> 是 application 模式提交的正式入口。</p>
+<p>它主要做了几件事：</p>
+<ul>
+<li>检查 <code>deployment.target</code> 必须是 <code>yarn-application</code></li>
+<li><code>applicationConfiguration.applyToConfiguration(flinkConfiguration)</code>，把应用主类和参数写回配置</li>
+<li>校验普通 Java/Scala 作业只有一个主 Jar</li>
+<li>调用 <code>deployInternal(...)</code></li>
+</ul>
+<p>这里传给 <code>deployInternal(...)</code> 的几个重要参数是：</p>
+<ul>
+<li>application name: <code>Flink Application Cluster</code></li>
+<li>Yarn entrypoint class: <code>YarnApplicationClusterEntryPoint.class.getName()</code></li>
+<li><code>jobGraph = null</code></li>
+</ul>
+<p>关键点：</p>
+<blockquote>
+<p>Application 模式下，Client 此时还没有生成 <code>JobGraph</code>。</p>
+</blockquote>
+<p>这和 <code>run / per-job</code> 模式非常不一样。</p>
+<h2 id="24-yarnclusterdescriptordeployinternal">2.4 <code>YarnClusterDescriptor#deployInternal</code></h2>
+<p>这个方法是整个 Client 提交流程的核心。</p>
+<p>它大致分成四段。</p>
+<h3 id="第一段部署前检查">第一段：部署前检查</h3>
+<p>主要包括：</p>
+<ul>
+<li>Kerberos 凭证检查</li>
+<li>Yarn queue 检查</li>
+<li>向 Yarn RM 申请一个新的 <code>ApplicationId</code></li>
+<li>检查集群剩余资源、最大容器资源、最小分配单位</li>
+<li>根据资源规则校验并修正 <code>ClusterSpecification</code></li>
+</ul>
+<p>这里和 Yarn 的第一轮交互是：</p>
+<ul>
+<li><code>yarnClient.createApplication()</code></li>
+<li><code>yarnClient.getNodeReports(...)</code></li>
+</ul>
+<h3 id="第二段确定集群执行模式">第二段：确定集群执行模式</h3>
+<p>这里会设置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">ClusterEntrypoint</span><span class="p">.</span><span class="na">INTERNAL_CLUSTER_EXECUTION_MODE</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果是 detached 就是 <code>DETACHED</code>，否则是 <code>NORMAL</code>。</p>
+<h3 id="第三段真正启动-am">第三段：真正启动 AM</h3>
+<p>接下来调用：</p>
+<ul>
+<li><code>startAppMaster(...)</code></li>
+</ul>
+<p>后续的 Yarn 资源上传、AM 启动和 application 提交都在这个方法链里完成。</p>
+<h3 id="第四段回填集群访问信息">第四段：回填集群访问信息</h3>
+<p>AM 启动成功以后，会通过 <code>ApplicationReport</code> 把这些信息写回 Flink 配置：</p>
+<ul>
+<li><code>JobManagerOptions.ADDRESS</code></li>
+<li><code>JobManagerOptions.PORT</code></li>
+<li><code>RestOptions.ADDRESS</code></li>
+<li><code>RestOptions.PORT</code></li>
+<li><code>YarnConfigOptions.APPLICATION_ID</code></li>
+</ul>
+<p>最后返回：</p>
+<ul>
+<li><code>RestClusterClient</code></li>
+</ul>
+<p>这意味着 Client 后续和集群的交互，会通过 REST Client 进行。</p>
+<hr>
+<h1 id="三client-与-yarn-的关键交互startappmaster">三、Client 与 Yarn 的关键交互：<code>startAppMaster()</code></h1>
+<h2 id="31-这个方法干了什么">3.1 这个方法干了什么</h2>
+<p><code>YarnClusterDescriptor#startAppMaster(...)</code> 的职责是：</p>
+<blockquote>
+<p>为 Yarn ApplicationMaster 组装一个完整的 <code>ApplicationSubmissionContext</code> 和 <code>ContainerLaunchContext</code>，把 Flink 运行所需的 jar、配置、环境变量、命令行全部准备好，然后提交给 Yarn RM。</p>
+</blockquote>
+<h2 id="32-上传和注册本次应用需要的资源">3.2 上传和注册本次应用需要的资源</h2>
+<p>这个方法里先创建：</p>
+<ul>
+<li><code>YarnApplicationFileUploader</code></li>
+</ul>
+<p>然后把下面这些内容注册成 Yarn LocalResource：</p>
+<ul>
+<li>Flink lib 目录</li>
+<li>用户 Jar</li>
+<li><code>flink-conf.yaml</code></li>
+<li>可选的 plugin、archive、log 配置</li>
+<li>Kerberos 相关文件</li>
+</ul>
+<p>Application 模式下还有一个很重要的处理：</p>
+<ul>
+<li>会从 <code>PipelineOptions.JARS</code> 中取出用户 Jar</li>
+<li>把用户 Jar 也加入本次 Application 的资源集合里</li>
+</ul>
+<p>这一阶段提交到 Yarn 的内容不是 <code>JobGraph</code>，而是执行应用所需的运行时资源和配置。</p>
+<h2 id="33-applicationmaster-的启动命令从哪来">3.3 ApplicationMaster 的启动命令从哪来</h2>
+<p>AM 容器的启动命令来自：</p>
+<ul>
+<li><code>setupApplicationMasterContainer(...)</code></li>
+</ul>
+<p>这个方法会组装一条 Yarn 容器启动命令，核心变量包括：</p>
+<ul>
+<li><code>java</code></li>
+<li><code>jvmmem</code></li>
+<li><code>jvmopts</code></li>
+<li><code>logging</code></li>
+<li><code>class</code></li>
+<li><code>args</code></li>
+<li><code>redirects</code></li>
+</ul>
+<p>启动命令中的关键配置是：</p>
+<ul>
+<li><code>class = YarnApplicationClusterEntryPoint</code></li>
+</ul>
+<p>Yarn AM 容器拉起后执行的主类是：</p>
+<ul>
+<li><code>org.apache.flink.yarn.entrypoint.YarnApplicationClusterEntryPoint</code></li>
+</ul>
+<h2 id="34-am-容器环境变量">3.4 AM 容器环境变量</h2>
+<p>AM 的环境变量由：</p>
+<ul>
+<li><code>generateApplicationMasterEnv(...)</code></li>
+</ul>
+<p>这个方法负责注入几类关键变量：</p>
+<ul>
+<li><code>ENV_FLINK_CLASSPATH</code></li>
+<li><code>FLINK_DIST_JAR</code></li>
+<li><code>ENV_APP_ID</code></li>
+<li><code>ENV_CLIENT_HOME_DIR</code></li>
+<li><code>ENV_CLIENT_SHIP_FILES</code></li>
+<li><code>FLINK_YARN_FILES</code></li>
+<li><code>HADOOP_USER_NAME</code></li>
+</ul>
+<p>这些环境变量后面会被：</p>
+<ul>
+<li><code>YarnApplicationClusterEntryPoint</code></li>
+<li><code>YarnResourceManagerDriver</code></li>
+<li><code>Utils.createTaskExecutorContext(...)</code></li>
+</ul>
+<p>继续消费。</p>
+<h2 id="35-提交到-yarn-rm">3.5 提交到 Yarn RM</h2>
+<p>一切准备好以后，Client 会调用：</p>
+<ul>
+<li><code>yarnClient.submitApplication(appContext)</code></li>
+</ul>
+<p>然后不断轮询：</p>
+<ul>
+<li><code>yarnClient.getApplicationReport(appId)</code></li>
+</ul>
+<p>直到 Yarn Application 状态变成：</p>
+<ul>
+<li><code>RUNNING</code></li>
+</ul>
+<p>这一阶段完成后：</p>
+<blockquote>
+<p>Flink 集群已经作为一个 Yarn Application 被拉起来了。</p>
+</blockquote>
+<hr>
+<h1 id="四jmam-角色yarnapplicationclusterentrypoint-如何把集群跑起来">四、JM/AM 角色：<code>YarnApplicationClusterEntryPoint</code> 如何把集群跑起来</h1>
+<h2 id="41-入口类yarnapplicationclusterentrypoint">4.1 入口类：<code>YarnApplicationClusterEntryPoint</code></h2>
+<p>Yarn AM 容器启动后，会进入：</p>
+<ul>
+<li><code>YarnApplicationClusterEntryPoint#main</code></li>
+</ul>
+<p>这个 <code>main()</code> 做的事情很标准：</p>
+<ul>
+<li>打印环境信息</li>
+<li>注册信号处理和 shutdown hook</li>
+<li>读取当前工作目录</li>
+<li>从动态参数、环境变量、工作目录中加载最终配置</li>
+<li>构造 <code>PackagedProgram</code></li>
+<li>调用 <code>configureExecution(configuration, program)</code></li>
+<li>创建 <code>YarnApplicationClusterEntryPoint</code></li>
+<li>执行 <code>ClusterEntrypoint.runClusterEntrypoint(...)</code></li>
+</ul>
+<p>其中与 application 模式直接相关的是前两步：</p>
+<ul>
+<li><code>getPackagedProgram(configuration)</code></li>
+<li><code>configureExecution(configuration, program)</code></li>
+</ul>
+<h2 id="42-getpackagedprogram在集群内恢复用户程序">4.2 <code>getPackagedProgram()</code>：在集群内恢复用户程序</h2>
+<p><code>getPackagedProgram()</code> 会从配置中拿到：</p>
+<ul>
+<li>应用主类</li>
+<li>应用参数</li>
+<li>用户 Jar</li>
+</ul>
+<p>然后通过：</p>
+<ul>
+<li><code>DefaultPackagedProgramRetriever.create(...)</code></li>
+</ul>
+<p>构造出一个 <code>PackagedProgram</code>。</p>
+<p>这一步完成后，用户程序被恢复为 <code>PackagedProgram</code>。</p>
+<h2 id="43-configureexecution把执行目标切成-embedded">4.3 <code>configureExecution()</code>：把执行目标切成 <code>embedded</code></h2>
+<p><code>ApplicationClusterEntryPoint#configureExecution(...)</code> 会把：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">DeploymentOptions.TARGET = embedded
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同时把：</p>
+<ul>
+<li><code>PipelineOptions.JARS</code></li>
+<li><code>PipelineOptions.CLASSPATHS</code></li>
+</ul>
+<p>重新编码进配置。</p>
+<p>关键点：</p>
+<blockquote>
+<p>后续在集群内部执行用户 <code>main()</code> 时，不再走外部提交逻辑，而是直接使用嵌入式执行器，把生成出来的 Job 提交给当前集群内的 Dispatcher。</p>
+</blockquote>
+<p>后续对应的执行器是：</p>
+<ul>
+<li><code>EmbeddedExecutor</code></li>
+</ul>
+<h2 id="44-clusterentrypoint拉起-flink-master-组件">4.4 <code>ClusterEntrypoint</code>：拉起 Flink Master 组件</h2>
+<p><code>ClusterEntrypoint#startCluster()</code> / <code>runCluster()</code> 是所有集群入口的公共骨架。</p>
+<p>它主要做这些事情：</p>
+<ul>
+<li>安装安全上下文</li>
+<li>初始化文件系统</li>
+<li>初始化 RPC、HA、BlobServer、Heartbeat、Metrics 等基础服务</li>
+<li>把当前 RPC 地址写回配置</li>
+<li>创建 <code>DispatcherResourceManagerComponent</code></li>
+</ul>
+<p>这一阶段会完成 Flink Master 侧基础组件初始化：</p>
+<ul>
+<li>Dispatcher</li>
+<li>ResourceManager</li>
+<li>REST endpoint</li>
+<li>HA services</li>
+</ul>
+<h2 id="45-application-模式下为什么创建出来的是带应用语义的-dispatcher">4.5 Application 模式下，为什么创建出来的是“带应用语义”的 Dispatcher</h2>
+<p>这是由 <code>ApplicationClusterEntryPoint#createDispatcherResourceManagerComponentFactory(...)</code> 决定的。</p>
+<p>它没有使用普通的 session 入口，而是构造了：</p>
+<ul>
+<li><code>DefaultDispatcherResourceManagerComponentFactory</code></li>
+<li><code>ApplicationDispatcherLeaderProcessFactoryFactory.create(...)</code></li>
+</ul>
+<p>底层仍然是 Dispatcher + ResourceManager 结构，只是 Dispatcher 的引导逻辑切换成了 application 模式实现。</p>
+<hr>
+<h1 id="五执行用户-main-的入口applicationdispatcherbootstrap">五、执行用户 <code>main()</code> 的入口：<code>ApplicationDispatcherBootstrap</code></h1>
+<h2 id="51-为什么会走到它">5.1 为什么会走到它</h2>
+<p><code>ApplicationDispatcherLeaderProcessFactoryFactory</code> 会创建：</p>
+<ul>
+<li><code>ApplicationDispatcherGatewayServiceFactory</code></li>
+</ul>
+<p>继续往下，最终会用：</p>
+<ul>
+<li><code>ApplicationDispatcherBootstrap</code></li>
+</ul>
+<p>来引导这个 Application Cluster。</p>
+<p>在 <code>yarn-application</code> 模式下，用户 <code>main()</code> 由这个类触发执行。</p>
+<h2 id="52-applicationdispatcherbootstrap-的职责">5.2 <code>ApplicationDispatcherBootstrap</code> 的职责</h2>
+<p>它负责：</p>
+<ul>
+<li>异步执行用户程序入口</li>
+<li>收集本次 application 提交出来的 <code>JobID</code></li>
+<li>等待 application 的 job 执行完成</li>
+<li>根据结果决定是否关闭整个集群</li>
+</ul>
+<p>核心入口是：</p>
+<ul>
+<li><code>fixJobIdAndRunApplicationAsync(...)</code></li>
+<li><code>runApplicationAsync(...)</code></li>
+<li><code>runApplicationEntryPoint(...)</code></li>
+</ul>
+<h2 id="53-runapplicationentrypoint用户代码开始执行">5.3 <code>runApplicationEntryPoint()</code>：用户代码开始执行</h2>
+<p>在 <code>runApplicationEntryPoint(...)</code> 中，会创建：</p>
+<ul>
+<li><code>EmbeddedExecutorServiceLoader</code></li>
+</ul>
+<p>然后调用：</p>
+<ul>
+<li><code>ClientUtils.executeProgram(...)</code></li>
+</ul>
+<p>这个方法会：</p>
+<ul>
+<li>把执行上下文切换成 Flink 的 Context Environment</li>
+<li>调用 <code>program.invokeInteractiveModeForExecution()</code></li>
+</ul>
+<p>用户自己的：</p>
+<ul>
+<li><code>public static void main(String[] args)</code></li>
+</ul>
+<p>是在这里执行的。</p>
+<blockquote>
+<p>用户 <code>main()</code> 不是在最初的 Client 进程里执行，而是在 Yarn 上的 ApplicationMaster/JobManager 进程里执行。</p>
+</blockquote>
+<h2 id="54-embeddedexecutor在集群内部提交-jobgraph">5.4 <code>EmbeddedExecutor</code>：在集群内部提交 JobGraph</h2>
+<p>用户代码里一旦调用：</p>
+<ul>
+<li><code>env.execute()</code></li>
+<li><code>tableEnv.executeSql(...)</code></li>
+</ul>
+<p>最终会走到 <code>EmbeddedExecutor#execute(...)</code>。</p>
+<p>这个类做了几件关键事：</p>
+<ul>
+<li>把 <code>Pipeline</code> 转成 <code>JobGraph</code></li>
+<li>调用 <code>ClientUtils.extractAndUploadJobGraphFiles(...)</code></li>
+<li>通过 <code>DispatcherGateway.submitJob(jobGraph, timeout)</code> 提交作业</li>
+</ul>
+<p>这一阶段的角色划分如下：</p>
+<ul>
+<li><code>JobGraph</code> 的生成发生在 JM/AM 进程内</li>
+<li><code>submitJob()</code> 也是直接通过 Dispatcher RPC 完成</li>
+<li>不再依赖外部 Client 远程生成再上传</li>
+</ul>
+<hr>
+<h1 id="六resourcemanager-角色flink-如何和-yarn-rm--nm-打交道">六、ResourceManager 角色：Flink 如何和 Yarn RM / NM 打交道</h1>
+<h2 id="61-yarnresourcemanagerfactory">6.1 <code>YarnResourceManagerFactory</code></h2>
+<p>在 <code>YarnApplicationClusterEntryPoint</code> 里，传给父类的 ResourceManagerFactory 是：</p>
+<ul>
+<li><code>YarnResourceManagerFactory.getInstance()</code></li>
+</ul>
+<p>这个工厂会创建：</p>
+<ul>
+<li><code>YarnResourceManagerDriver</code></li>
+</ul>
+<p>它就是 Flink ResourceManager 在 Yarn 场景下的“适配器”。</p>
+<h2 id="62-yarnresourcemanagerdriverinitializeinternal">6.2 <code>YarnResourceManagerDriver#initializeInternal</code></h2>
+<p>初始化时主要做两件事：</p>
+<ol>
+<li>创建并启动和 Yarn RM 通信的客户端
+<ul>
+<li><code>AMRMClientAsync</code></li>
+</ul>
+</li>
+<li>创建并启动和 Yarn NM 通信的客户端
+<ul>
+<li><code>NMClientAsync</code></li>
+</ul>
+</li>
+</ol>
+<p>然后会调用：</p>
+<ul>
+<li><code>registerApplicationMaster()</code></li>
+</ul>
+<p>这里对应的是 Flink AM 向 Yarn RM 注册：</p>
+<ul>
+<li>我是谁</li>
+<li>我的 RPC 地址是什么</li>
+<li>Web UI 地址是什么</li>
+</ul>
+<p>这一步之后，Yarn 才真正知道这个 ApplicationMaster 已经上线了。</p>
+<h2 id="63-flink-什么时候向-yarn-申请-taskmanager-容器">6.3 Flink 什么时候向 Yarn 申请 TaskManager 容器</h2>
+<p>当 Dispatcher 开始调度作业，Flink ResourceManager 感知到需要更多 slot / worker 时，最终会调用到：</p>
+<ul>
+<li><code>YarnResourceManagerDriver#requestResource(...)</code></li>
+</ul>
+<p>这个方法会：</p>
+<ul>
+<li>根据 <code>TaskExecutorProcessSpec</code> 计算 YARN <code>Resource</code></li>
+<li>生成不同优先级的 <code>ContainerRequest</code></li>
+<li>调用 <code>resourceManagerClient.addContainerRequest(...)</code></li>
+</ul>
+<p>这就是 Flink 向 Yarn RM 申请 TM 容器的核心动作。</p>
+<h2 id="64-yarn-rm-分配到容器后会发生什么">6.4 Yarn RM 分配到容器后会发生什么</h2>
+<p>当 Yarn RM 分配容器后，回调会进入：</p>
+<ul>
+<li><code>YarnContainerEventHandler#onContainersAllocated(...)</code></li>
+</ul>
+<p>接着会调用：</p>
+<ul>
+<li><code>onContainersOfPriorityAllocated(...)</code></li>
+</ul>
+<p>这个方法会做几件事：</p>
+<ul>
+<li>把 Yarn 返回的 <code>Container</code> 与 Flink 的待申请请求对上</li>
+<li>为容器生成 <code>ResourceID</code></li>
+<li>调用 <code>startTaskExecutorInContainerAsync(...)</code></li>
+</ul>
+<p>后续进入 TM 启动链路。</p>
+<hr>
+<h1 id="七tm-角色taskmanager-容器如何被拉起来">七、TM 角色：TaskManager 容器如何被拉起来</h1>
+<h2 id="71-starttaskexecutorincontainerasync">7.1 <code>startTaskExecutorInContainerAsync()</code></h2>
+<p>这个方法异步构造 TM 的 <code>ContainerLaunchContext</code>，核心调用是：</p>
+<ul>
+<li><code>createTaskExecutorLaunchContext(...)</code></li>
+</ul>
+<h2 id="72-createtaskexecutorlaunchcontext">7.2 <code>createTaskExecutorLaunchContext()</code></h2>
+<p>这个方法会：</p>
+<ul>
+<li>按 <code>TaskExecutorProcessSpec</code> 计算 TM 启动参数</li>
+<li>克隆并修正 Flink 配置</li>
+<li>生成 TM 动态参数字符串</li>
+<li>调用 <code>Utils.createTaskExecutorContext(...)</code></li>
+</ul>
+<p>同时还会把 Yarn 分配到的节点 host 写入环境变量：</p>
+<ul>
+<li><code>_FLINK_NODE_ID</code></li>
+</ul>
+<p>这个值后面会被 TM 进程读取，用来设置自己的 hostname。</p>
+<h2 id="73-utilscreatetaskexecutorcontext">7.3 <code>Utils.createTaskExecutorContext()</code></h2>
+<p>这个方法负责组装 TM 容器启动上下文：</p>
+<ul>
+<li>注册本地资源</li>
+<li>填充环境变量</li>
+<li>注入安全凭证</li>
+<li>生成最终启动命令</li>
+</ul>
+<p>最终的启动主类是：</p>
+<ul>
+<li><code>org.apache.flink.yarn.YarnTaskExecutorRunner</code></li>
+</ul>
+<p>TM 启动命令由：</p>
+<ul>
+<li><code>Utils.getTaskManagerShellCommand(...)</code></li>
+</ul>
+<p>生成，里面同样会填充：</p>
+<ul>
+<li><code>java</code></li>
+<li><code>jvmmem</code></li>
+<li><code>jvmopts</code></li>
+<li><code>logging</code></li>
+<li><code>class</code></li>
+<li><code>args</code></li>
+<li><code>redirects</code></li>
+</ul>
+<h2 id="74-yarntaskexecutorrunner">7.4 <code>YarnTaskExecutorRunner</code></h2>
+<p>Yarn NM 真正拉起容器后，TM 进程入口就是：</p>
+<ul>
+<li><code>YarnTaskExecutorRunner#main</code></li>
+</ul>
+<p>它会先：</p>
+<ul>
+<li>读取工作目录</li>
+<li><code>TaskManagerRunner.loadConfiguration(args)</code></li>
+<li><code>setupAndModifyConfiguration(...)</code></li>
+</ul>
+<p>其中 <code>setupAndModifyConfiguration(...)</code> 会做几件很 Yarn 化的事情：</p>
+<ul>
+<li>根据 <code>LOCAL_DIRS</code> 更新 tmp 目录</li>
+<li>从环境变量读取 Kerberos 信息</li>
+<li>从 <code>_FLINK_NODE_ID</code> 设置 <code>TaskManagerOptions.HOST</code></li>
+</ul>
+<p>TM 进程会在这里把 Yarn 容器环境转换成 Flink TaskExecutor 所需配置。</p>
+<h2 id="75-taskmanagerrunner">7.5 <code>TaskManagerRunner</code></h2>
+<p>之后进入：</p>
+<ul>
+<li><code>TaskManagerRunner.runTaskManagerProcessSecurely(configuration)</code></li>
+</ul>
+<p>再继续：</p>
+<ul>
+<li><code>runTaskManager(...)</code></li>
+<li><code>new TaskManagerRunner(...).start()</code></li>
+</ul>
+<p>在 <code>startTaskManagerRunnerServices()</code> 中会初始化：</p>
+<ul>
+<li>RPC</li>
+<li>HA</li>
+<li>Heartbeat</li>
+<li>BlobCache</li>
+<li>Metrics</li>
+<li><code>TaskExecutorService</code></li>
+</ul>
+<p>最终真正启动：</p>
+<ul>
+<li><code>taskExecutorService.start()</code></li>
+</ul>
+<p>后续 TaskManager 会向 ResourceManager / JobMaster 完成注册，并接收任务部署。</p>
+<hr>
+<h1 id="八把四个角色串起来看">八、把四个角色串起来看</h1>
+<h2 id="81-client">8.1 Client</h2>
+<p>Client 的职责非常明确：</p>
+<ul>
+<li>解析命令</li>
+<li>识别 target = <code>yarn-application</code></li>
+<li>创建 <code>YarnClusterDescriptor</code></li>
+<li>上传依赖和配置</li>
+<li>组装 AM 启动命令</li>
+<li>向 Yarn RM 提交 Application</li>
+</ul>
+<p>Client 关键类/方法：</p>
+<ul>
+<li><code>CliFrontend#runApplication</code></li>
+<li><code>ApplicationClusterDeployer#run</code></li>
+<li><code>YarnClusterClientFactory#createClusterDescriptor</code></li>
+<li><code>YarnClusterDescriptor#deployApplicationCluster</code></li>
+<li><code>YarnClusterDescriptor#deployInternal</code></li>
+<li><code>YarnClusterDescriptor#startAppMaster</code></li>
+</ul>
+<h2 id="82-jm--am">8.2 JM / AM</h2>
+<p>ApplicationMaster 容器起来以后，同时承担了 Flink 集群入口角色。</p>
+<p>它负责：</p>
+<ul>
+<li>恢复 <code>PackagedProgram</code></li>
+<li>把执行目标切成 <code>embedded</code></li>
+<li>启动 Dispatcher / ResourceManager / REST</li>
+<li>在集群内执行用户 <code>main()</code></li>
+<li>生成并提交 <code>JobGraph</code></li>
+</ul>
+<p>关键类/方法：</p>
+<ul>
+<li><code>YarnApplicationClusterEntryPoint#main</code></li>
+<li><code>ApplicationClusterEntryPoint#configureExecution</code></li>
+<li><code>ClusterEntrypoint#startCluster</code></li>
+<li><code>ApplicationDispatcherLeaderProcessFactoryFactory#createFactory</code></li>
+<li><code>ApplicationDispatcherBootstrap#runApplicationEntryPoint</code></li>
+<li><code>EmbeddedExecutor#execute</code></li>
+<li><code>DispatcherGateway#submitJob</code></li>
+</ul>
+<h2 id="83-tm">8.3 TM</h2>
+<p>TaskManager 的职责是：</p>
+<ul>
+<li>作为 Yarn 容器被 Flink RM 申请出来</li>
+<li>在 Yarn NodeManager 上启动 JVM</li>
+<li>初始化 TaskExecutor 运行时</li>
+<li>注册到 Flink 集群并执行 task</li>
+</ul>
+<p>关键类/方法：</p>
+<ul>
+<li><code>YarnResourceManagerDriver#requestResource</code></li>
+<li><code>YarnContainerEventHandler#onContainersAllocated</code></li>
+<li><code>YarnResourceManagerDriver#createTaskExecutorLaunchContext</code></li>
+<li><code>Utils#createTaskExecutorContext</code></li>
+<li><code>YarnTaskExecutorRunner#main</code></li>
+<li><code>TaskManagerRunner#start</code></li>
+</ul>
+<h2 id="84-yarn-集群">8.4 Yarn 集群</h2>
+<p>Yarn 在整个过程中主要扮演资源与容器管理者：</p>
+<ul>
+<li>RM 负责接收 application、分配 AM / TM 容器</li>
+<li>NM 负责在节点上真正启动容器进程</li>
+</ul>
+<p>Flink 与 Yarn 的主要交互点：</p>
+<ul>
+<li>Client -&gt; Yarn RM：<code>createApplication</code>、<code>submitApplication</code></li>
+<li>AM -&gt; Yarn RM：<code>registerApplicationMaster</code>、<code>addContainerRequest</code></li>
+<li>Yarn RM -&gt; AM：<code>onContainersAllocated</code></li>
+<li>AM -&gt; Yarn NM：<code>startContainerAsync</code></li>
+<li>Yarn NM -&gt; TM JVM：拉起 <code>YarnTaskExecutorRunner</code></li>
+</ul>
+<hr>
+<h1 id="九用一张图总结整条链路">九、用一张图总结整条链路</h1>
+<p><img src="Pasted%20image%2020260531141940.png" alt=""></p>
+<hr>
+<h1 id="十最后总结">十、最后总结</h1>
+<p>如果只记 4 个点，我觉得最值得记住的是：</p>
+<ol>
+<li><code>yarn-application</code> 模式下，Client 主要负责“建集群”，不是“执行用户 main”</li>
+<li>用户 <code>main()</code> 真正执行的位置，在 Yarn 上的 <code>ApplicationDispatcherBootstrap</code></li>
+<li><code>JobGraph</code> 的生成和 <code>DispatcherGateway.submitJob(...)</code> 的调用，都发生在集群内部</li>
+<li>TaskManager 不是 Client 直接拉起的，而是 Flink ResourceManager 通过 <code>YarnResourceManagerDriver</code> 向 Yarn RM 申请，再由 Yarn NM 启动</li>
+</ol>
+<p>所以从源码视角看，<code>yarn-application</code> 更像是：</p>
+<blockquote>
+<p>Client 先把一个“可执行应用”投递成 Yarn Application，再由 Yarn 上的 Flink Master 自己完成应用执行与作业提交。</p>
+</blockquote>
+<p>这也是它和传统 client 提交模式最本质的区别。</p>
+    </article>
+  </main>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+    integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+    integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp"
+    crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+    integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            
+            
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            
+            throwOnError: false
+        });
+    });
+</script>
+
+
+
+
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  crossorigin="anonymous">
+</script>
+<script>
+  mermaid.init(undefined, 'code.language-mermaid')
+</script>
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex flex-col-reverse sm:flex-row sm:justify-between items-center">
+      <div class="text-center sm:text-left">
+        <p class="mt-0 text-sm"></p>
+        <p class="mt-0 text-xs">
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.1
+          and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+        </p>
+      </div>
+      
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="mailto:jarvis@apache.org" title="email">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/liunaijie" title="github">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="/index.xml" title="rss">
+          
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

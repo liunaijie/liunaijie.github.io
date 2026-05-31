@@ -113,6 +113,152 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/%E6%89%8B%E5%86%99%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">手写红黑树的简单实现</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 12 月 24 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <p>基于《算法》一书的红黑树的插入和删除。看过不同的教材，也有不同的实现方式，但是最终的结果也大致相同，感觉这个比较容易理解，就采用这种的方式来进行简单实现。</p>
+<h1 id="定义树节点的实体类型">定义树节点的实体类型</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">RED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">BLACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 红黑树的节点结构
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 保存的值，左节点，右节点以及颜色(true为红色，false为黑色)
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * 默认添加一个红节点
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 *
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * @param &lt;E&gt;
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RedBlackTreeNode</span><span class="o">&lt;</span><span class="n">E</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Comparable</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">E</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">RedBlackTreeNode</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">RedBlackTreeNode</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kt">boolean</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RED</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">RedBlackTreeNode</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里简单的定义了一下红黑树，并且只有节点，并不是map这样的k-v结构。如果定义k-v结构到时比较的时候比较k即可。</p>
+<p>用了泛型，并且要支持比较(继承自Comparable)，不然无法比较大小进行插入。</p>
+<p>然后定义了一个值，左节点和右节点，然后颜色默认为红色。</p>
+<p>再增加一个构造函数即可</p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/java/java%E5%8F%A4%E8%80%81%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E4%B9%8Bvector/">Java古老的集合类之Vector</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 12 月 23 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <p>今天继续来看一下Java中古老的集合类-Vector</p>
+<h1 id="变量">变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//容器存储实体的底层数据结构，Vector也是使用数组来进行存储的</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">protected</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">elementData</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//实体的数量</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">protected</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">elementCount</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//每次扩容时增加的长度，当为0是扩容原数组长度的两倍</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">protected</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">capacityIncrement</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>从上面的变量可以得知，Vector也是使用数组来进行底层的数据存储，并且还设置了扩容容量。</p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/java/java%E5%85%B3%E9%94%AE%E5%AD%97-transient/">Java关键字-transient</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 12 月 22 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <p>最近在看源码的时候看到一个关键字<code>transient</code>，之前对这个字没有印象，所以就去看了一下它的作用。</p>
+<h1 id="transient的作用">transient的作用</h1>
+<p>首先放上来着维基百科的解释：</p>
+<blockquote>
+<p>Java 提供自动序列化，需要以<code>java.io.Serializable</code>接口的实例来标明对象。实现接口将类别标明为“可序列化”，然后Java在内部处理序列化。在<code>Serializable</code>接口上并没有预先定义序列化的方法，但可序列化类别可任意定义某些特定名称和签署的方法，如果这些方法有定义了，可被调用运行序列化/反序列化部分过程。该语言允许开发人员以另一个<code>Externalizable</code>接口，更彻底地实现并覆盖序列化过程，这个接口包括了保存和恢复对象状态的两种特殊方法。</p>
+<p>在默认情况下有三个主要原因使对象无法被序列化。其一，在序列化状态下并不是所有的对象都能获取到有用的语义。例如，<code>Thread</code>对象绑定到当前Java虚拟机的状态，对<code>Thread</code>对象状态的反序列化环境来说，没有意义。其二，对象的序列化状态构成其类别兼容性缔结（compatibility contract）的某一部分。在维护可序列化类别之间的兼容性时，需要额外的精力和考量。所以，使类别可序列化需要慎重的设计决策而非默认情况。其三，序列化允许访问类别的永久私有成员，包含敏感信息（例如，密码）的类别不应该是可序列化的，也不能外部化。上述三种情形，必须实现<code>Serializable</code>接口来访问Java内部的序列化机制。标准的编码方法将字段简单转换为字节流。</p>
+<p>原生类型以及永久和非静态的对象引用，会被编码到字节流之中。序列化对象引用的每个对象，若其中未标明为<code>transient</code>的字段，也必须被序列化；如果整个过程中，引用到的任何永久对象不能序列化，则这个过程会失败。开发人员可将对象标记为暂时的，或针对对象重新定义的序列化，来影响序列化的处理过程，以截断引用图的某些部分而不序列化。Java并不使用构造函数来序列化对象。</p>
+</blockquote>
+<p>从上面的最后一段可以了解，如果没有添加<code>transient</code>关键字，则会被进行序列化。也就是说添加了这个关键字后就不会被序列化。</p>
+<p>接下来我们将用一个例子来测试一下</p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-leetcode141/">环形链表—LeetCode141</a>
     
     
@@ -535,84 +681,6 @@ print(nums[i]);
         </div>
       
     
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/k%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8-leetcode25/">K个一组翻转链表-LeetCode25</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 27 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="题目描述">题目描述</h1>
-<blockquote>
-<p>给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
-k 是一个正整数，它的值小于或等于链表的长度。
-如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
-示例 :
-给定这个链表：1-&gt;2-&gt;3-&gt;4-&gt;5
-当 k = 2 时，应当返回: 2-&gt;1-&gt;4-&gt;3-&gt;5
-当 k = 3 时，应当返回: 3-&gt;2-&gt;1-&gt;4-&gt;5
-说明 :
-你的算法只能使用常数的额外空间。
-你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换</p>
-</blockquote>
-<h1 id="解题思路">解题思路</h1>
-<p>首先根据 k，分隔每一组。将这一组反转，将下面的一组递归调用函数，然后将这一组的最后一个节点（就是参数中的头结点）与下一组反转后的头结点相连接。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/spring/springboot%E4%BD%BF%E7%94%A8-controlleradvice%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8/">SpringBoot使用@ControllerAdvice处理异常</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 24 日</div>
-    
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%8F%8D%E8%BD%AC%E4%B8%80%E4%B8%AA%E5%8D%95%E9%93%BE%E8%A1%A8-leetcode206/">反转一个单链表-LeetCode206</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 11 月 24 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="题目描述">题目描述</h1>
-<blockquote>
-<p>反转一个单链表。</p>
-<p><strong>示例:</strong></p>
-<pre tabindex="0"><code>输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL
-输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL
-</code></pre><p><strong>进阶:</strong>
-你可以迭代或递归地反转链表。你能否用两种方法解决这道题？</p>
-</blockquote>
-  </div>
-  
-</div>
-        </div>
-      
-    
 
     
 
@@ -637,7 +705,7 @@ k 是一个正整数，它的值小于或等于链表的长度。
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

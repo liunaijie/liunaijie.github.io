@@ -113,6 +113,60 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/devops/gradle/">gradle笔记</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2020 年 06 月 20 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/cloud_native/helm%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Helm常用命令</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2020 年 06 月 20 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/devops/git/%E6%88%91%E7%9B%AE%E5%89%8D%E7%9A%84git%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/">我目前的git工作流程</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2020 年 06 月 20 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <p>好久没写博客了。。。</p>
+<p>记录一下我在现在公司的一个git工作流程。</p>
+<p>我之前使用git是不同用户在同一个git仓库下进行操作，而现在是使用fork出自己的仓库，通过提pr的方式来进行提交代码。</p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/devops/git/git-fork%E5%90%8E%E5%A6%82%E4%BD%95%E4%B8%8E%E5%8E%9F%E4%BB%93%E5%BA%93%E5%90%8C%E6%AD%A5/">git fork后如何与原仓库同步</a>
     
     
@@ -240,178 +294,6 @@
         </div>
       
     
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-leetcodem40/">最小的k个数-LeetCodeM40</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 04 月 13 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="题目描述">题目描述</h1>
-<blockquote>
-<p>输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。</p>
-<p>示例 1：</p>
-<p>输入：arr = [3,2,1], k = 2
-输出：[1,2] 或者 [2,1]
-示例 2：</p>
-<p>输入：arr = [0,1,2,1], k = 1
-输出：[0]</p>
-<p>限制：</p>
-<p>0 &lt;= k &lt;= arr.length &lt;= 10000
-0 &lt;= <code>arr[i]</code> &lt;= 10000</p>
-</blockquote>
-<p>给定一个数组，找出最小的k个数，对这k个数的大小顺序没有要求。</p>
-<h1 id="解题思路">解题思路</h1>
-<p>这个题目我最开始的想法是用堆来解决的，但我解答完成看题解的时候发现了一种做法：</p>
-<p>排序后取前k个元素</p>
-<p>在评论区中有很多人在讨论这一种解法，虽然的他复杂度比较高，实现方式很简单，有一些专业人士在鄙视这种做法，也有一些人说这个题目的难度是简单，所以用这个也没什么问题。我的看法是支持这种做法，并不因为他的难度级别，而是解决问题的思路。在解决问题的时候每一种思路都是可取的。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/">堆以及堆排序</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 04 月 12 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="什么是堆">什么是堆</h1>
-<p>堆是一种特殊的树，它满足以下两点：</p>
-<ul>
-<li>
-<p>堆是一个完全二叉树</p>
-<p>完全二叉树要求，除最后一层，其他层的节点个数都是满的，最后一次的节点都靠左排列。</p>
-</li>
-<li>
-<p>堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值</p>
-<p>当前节点的值是子树中的最大或最小值。</p>
-</li>
-</ul>
-<p>我们将每个节点的值都大于等于子树中每个节点值的堆，叫做“大顶堆”。对于每个节点的值都小于等于子树中每个节点值的堆，我们叫做“小顶堆”</p>
-<p>我们来看一下例子：</p>
-<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20200413141220.png" alt=""></p>
-<p>在上面的四个实例中，我们根据以上两条规则，可以判断出：</p>
-<p>第一个、第二个是大顶堆，第三个是小顶堆，第四个由于不是完全二叉树所以不是堆。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/java/%E4%BB%80%E4%B9%88%E6%98%AFfail-fast%E4%B8%8Efail-safe/">什么是fail-fast与fail-safe</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 04 月 01 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="fail-fast与fail-safe">fail-fast与fail-safe</h1>
-<p>在Collection集合的各个类中，有线程安全和线程不安全这2大类的版本。</p>
-<p>对于线程不安全的类，并发情况下可能会出现fail-fast情况；而线程安全的类，可能出现fail-safe的情况。</p>
-<p>**快速失败（fail—fast）**是java集合中的一种机制， 在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出Concurrent Modification Exception。</p>
-<p>**安全失败（fail-safe）**保存了该集合对象的一个快照副本。你可以并发读取，不会抛出异常，但是不保证你遍历读取的值和当前集合对象的状态是一致的！</p>
-<h1 id="fail-fast">fail-fast</h1>
-<p>来看一下线程不安全的类<code>ArrayList</code>，它实现<code>fail-fast</code>主要靠一个字段<code>modCount</code>。来从头认识一下它。</p>
-<p>首先找到引用它的地方：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">E</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">ensureCapacityInternal</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">1</span><span class="p">);</span><span class="w">  </span><span class="c1">// Increments modCount!!</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">elementData</span><span class="o">[</span><span class="n">size</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">ensureCapacityInternal</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">minCapacity</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">ensureExplicitCapacity</span><span class="p">(</span><span class="n">calculateCapacity</span><span class="p">(</span><span class="n">elementData</span><span class="p">,</span><span class="w"> </span><span class="n">minCapacity</span><span class="p">));</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">ensureExplicitCapacity</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">minCapacity</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">modCount</span><span class="o">++</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c1">// overflow-conscious code</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">minCapacity</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">elementData</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">grow</span><span class="p">(</span><span class="n">minCapacity</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">rangeCheck</span><span class="p">(</span><span class="n">index</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">modCount</span><span class="o">++</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">E</span><span class="w"> </span><span class="n">oldValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elementData</span><span class="p">(</span><span class="n">index</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">numMoved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">1</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">numMoved</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">arraycopy</span><span class="p">(</span><span class="n">elementData</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="o">+</span><span class="n">1</span><span class="p">,</span><span class="w"> </span><span class="n">elementData</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">                     </span><span class="n">numMoved</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">elementData</span><span class="o">[--</span><span class="n">size</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="c1">// clear to let GC do its work</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">oldValue</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>可以看出，在增加元素，删除元素时都会对<code>modCount</code>值加一。当我们查看更新，查找的代码时并没有找到对<code>modCount</code>的修改。</p>
-<p><code>modCount</code>字段翻译过来就是<code>修改次数</code>，再结合上面的代码可以了解到只有在结构发生变化，数量增减的时候才会修改。查找不会对结构发生变化也不用修改，至于更新操作，虽然它修改了值，但是在结构上总体的数量没有改变，结构上指的是：是谁不重要，有就行。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
 
     
 
@@ -436,7 +318,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

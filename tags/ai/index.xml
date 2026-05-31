@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AI on Jarvis`s library</title>
+		<link>https://www.liunaijie.top/tags/ai/</link>
+		<description>Recent content in AI on Jarvis`s library</description>
+		<generator>Hugo</generator>
+		<language>zh-cn</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 25 May 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://www.liunaijie.top/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI中的一些基础概念，名词解释</title>
+				<link>https://www.liunaijie.top/publish/ai/ai%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/</link>
+				<pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/publish/ai/ai%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/</guid>
+				<description>&lt;h1 id=&#34;tldr&#34;&gt;TL;DR&lt;/h1&gt;&#xA;&lt;p&gt;这篇文章不讲模型训练，不讲太底层的技术细节，只整理 AI 应用层最常见的一批名词。目标不是把每个词讲得非常学术，而是用尽量通俗的方式，把它们之间的关系讲清楚。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

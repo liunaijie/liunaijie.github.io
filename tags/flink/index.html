@@ -103,9 +103,96 @@
   
 <main class="container mx-auto">
   
-  <h2 class="text-4xl mt-8 mb-8">Tag - "flink"</h2>
+  <h2 class="text-4xl mt-8 mb-8">Tag - "Flink"</h2>
   
   <div class="mt-8">
+    
+      <h3 class="text-3xl font-bold mb-4 mt-8">
+        <a href="#2026">2026</a>
+      </h3>
+      
+      <div class="post-item mb-8">
+        <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/publish/flink/flink%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-yarn-application%E6%A8%A1%E5%BC%8F%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B/">Flink源码解析-Yarn-Application模式提交流程</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2026 年 05 月 26 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="tldr">TL;DR</h1>
+<p>本文基于 <code>Flink 1.20</code> 源码，梳理 <code>yarn-application</code> 模式下一个任务从提交到运行起来的完整过程。</p>
+<p>重点会放在这几件事上：</p>
+<ul>
+<li>命令是怎么启动的</li>
+<li>Client 侧到底做了什么</li>
+<li>Yarn 上的 ApplicationMaster / JobManager 是怎么启动的</li>
+<li>TaskManager 是怎么向 Yarn 申请并拉起的</li>
+<li>用户 <code>main()</code>、<code>JobGraph</code> 生成、<code>submitJob()</code> 分别发生在哪个角色里</li>
+</ul>
+<p>为了避免范围过大，本文只聚焦 <code>run-application -t yarn-application</code> 这条主链路，不展开 Web 提交、Session 模式以及 SQL Gateway。</p>
+<p>以一个最常见的启动命令为例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">./bin/flink run-application <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -t yarn-application <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -Djobmanager.memory.process.size<span class="o">=</span>2048m <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -Dtaskmanager.memory.process.size<span class="o">=</span>4096m <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -c com.example.WordCount <span class="se">\
+</span></span></span><span class="line"><span class="cl">  /path/to/job.jar <span class="se">\
+</span></span></span><span class="line"><span class="cl">  arg1 arg2
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+  </div>
+  
+</div>
+      </div>
+      
+      <div class="post-item mb-8">
+        <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/publish/flink/flink%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E6%B5%81%E5%BC%8F%E8%AE%A1%E7%AE%97%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6/">Flink源码解析-流式计算核心机制</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2026 年 05 月 25 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="tldr">TL;DR</h1>
+<p>本文基于 <code>Flink 1.20</code> 源码，不再泛泛讨论“什么是流式计算”，而是聚焦两个问题：</p>
+<ol>
+<li>为什么 Flink 会成为主流流式处理引擎？</li>
+<li>Flink 到底靠哪些关键机制，把无界数据流变成可按时间计算、可故障恢复、可做到 <code>exactly-once</code> 的系统？</li>
+</ol>
+<p>如果把答案压缩成一句话，那就是：</p>
+<blockquote>
+<p>Flink 真正领先的地方，不是单独提出了 window 或 watermark，而是把 <code>事件时间</code>、<code>watermark</code>、<code>window</code>、<code>trigger</code>、<code>state</code>、<code>checkpoint</code> 这些能力拼成了一套完整且能落地的运行时体系。</p>
+</blockquote>
+<p>本文重点看两条主线：</p>
+<ul>
+<li>Flink 如何处理时间：<code>event time</code>、<code>watermark</code>、<code>window</code>、<code>trigger</code></li>
+<li>Flink 如何保证精准一次：<code>state</code>、<code>checkpoint barrier</code>、<code>snapshot</code>、<code>恢复</code></li>
+</ul>
+  </div>
+  
+</div>
+      </div>
+      
     
       <h3 class="text-3xl font-bold mb-4 mt-8">
         <a href="#2022">2022</a>
@@ -136,7 +223,7 @@
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

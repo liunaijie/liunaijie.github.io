@@ -113,6 +113,90 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/java/java-oom%E5%BC%82%E5%B8%B8%E5%88%86%E6%9E%90/">Java OOM异常分析</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2021 年 09 月 10 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="java-oom异常分析">Java OOM异常分析</h1>
+<h1 id="oom异常分析">OOM异常分析</h1>
+<h2 id="java堆溢出">Java堆溢出</h2>
+<p>Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况. 出现Java堆内存溢出时, 异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“<code>Java heap space</code>“</p>
+<p>可能的原因有:</p>
+<ol>
+<li>
+<p>内存泄漏</p>
+</li>
+<li>
+<p>内存溢出</p>
+<p>需要从代码上检查是否存在某些对象生命周期过长、持有状态时间过长、存储结构设计不合理的情况, 尽量减少程序运行期的内存消耗</p>
+</li>
+</ol>
+<p>要处理这个内存区域的异常, 常规的处理方法是通过内存映像分析工具对Dump出来的堆转储快照进行分析.</p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/java/jvm%E4%B8%ADjava%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D/">JVM中Java对象的创建、内存布局、访问定位</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2021 年 09 月 01 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="java对象创建">Java对象创建</h1>
+<p>当Java虚拟机遇到一条字节码new指令时, 首先将去检查这个指令的参数能否在常量池中定位到一个类的符号引用, 并且检查这个符号引用代表的类是否被加载, 解析和初始化. 如果没有则会先执行相应的类加载过程.</p>
+<p>对象的创建过程大致分为以下四步:</p>
+<ol>
+<li>为新生对象分配内存</li>
+<li>虚拟机将分配到的内存空间(不包括对象头)都初始化为零值</li>
+<li>对对象进行必要的设置, 例如这个对象是哪个类的实例, 如果找到这个类的元数据信息, 对象的GC分代年龄等, 这些信息存放在对象的对象头之上</li>
+<li>执行Class文件额init方法</li>
+</ol>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/java/jvm%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/">JVM运行时数据区域</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2021 年 08 月 28 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="jvm运行时数据区域">JVM运行时数据区域</h1>
+<p>Java虚拟机所管理的内存包括以下几个运行时数据区域：</p>
+<p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20211121102013.png" alt=""></p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/publish/git%E7%9A%84%E4%B8%80%E4%BA%9B%E8%BF%9B%E9%98%B6%E6%93%8D%E4%BD%9C/">如何将多个git commit合并成一个</a>
     
     
@@ -310,60 +394,6 @@ T     S     G
         </div>
       
     
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/devops/gradle/">gradle笔记</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 06 月 20 日</div>
-    
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/cloud_native/helm%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Helm常用命令</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 06 月 20 日</div>
-    
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/devops/git/%E6%88%91%E7%9B%AE%E5%89%8D%E7%9A%84git%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B/">我目前的git工作流程</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 06 月 20 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <p>好久没写博客了。。。</p>
-<p>记录一下我在现在公司的一个git工作流程。</p>
-<p>我之前使用git是不同用户在同一个git仓库下进行操作，而现在是使用fork出自己的仓库，通过提pr的方式来进行提交代码。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
 
     
 
@@ -388,7 +418,7 @@ T     S     G
       <div class="text-center sm:text-left">
         <p class="mt-0 text-sm"></p>
         <p class="mt-0 text-xs">
-          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.0
+          Built with <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> v0.162.1
           and <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
         </p>
       </div>

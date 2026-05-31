@@ -10,9 +10,37 @@
 		
 		
 		
-			<lastBuildDate>Tue, 12 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Tue, 26 May 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="https://www.liunaijie.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Flink</title>
+				<link>https://www.liunaijie.top/tags/flink/</link>
+				<pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/flink/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Yarn</title>
+				<link>https://www.liunaijie.top/tags/yarn/</link>
+				<pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/yarn/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI</title>
+				<link>https://www.liunaijie.top/tags/ai/</link>
+				<pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/ai/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Streaming</title>
+				<link>https://www.liunaijie.top/tags/streaming/</link>
+				<pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/streaming/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>Blog</title>
 				<link>https://www.liunaijie.top/tags/blog/</link>
@@ -81,13 +109,6 @@
 				<link>https://www.liunaijie.top/tags/bitcorn/</link>
 				<pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
 				<guid>https://www.liunaijie.top/tags/bitcorn/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Flink</title>
-				<link>https://www.liunaijie.top/tags/flink/</link>
-				<pubDate>Sun, 04 Dec 2022 00:00:00 +0000</pubDate>
-				<guid>https://www.liunaijie.top/tags/flink/</guid>
 				<description></description>
 			</item>
 			<item>
