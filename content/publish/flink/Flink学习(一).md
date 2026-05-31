@@ -4,7 +4,7 @@ date: 2022-12-04
 categories:
   - publish
 tags:
-  - flink
+  - Flink
 ---
 # 时间语义
 Flink中的时间有三种:
