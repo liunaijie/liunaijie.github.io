@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Tue, 26 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Fri, 29 May 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="https://www.liunaijie.top/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI</title>
+				<link>https://www.liunaijie.top/tags/ai/</link>
+				<pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/ai/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>Flink</title>
 				<link>https://www.liunaijie.top/tags/flink/</link>
@@ -28,13 +35,6 @@
 				<description></description>
 			</item>
 			<item>
-				<title>AI</title>
-				<link>https://www.liunaijie.top/tags/ai/</link>
-				<pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate>
-				<guid>https://www.liunaijie.top/tags/ai/</guid>
-				<description></description>
-			</item>
-			<item>
 				<title>Streaming</title>
 				<link>https://www.liunaijie.top/tags/streaming/</link>
 				<pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate>
@@ -42,10 +42,17 @@
 				<description></description>
 			</item>
 			<item>
-				<title>Blog</title>
-				<link>https://www.liunaijie.top/tags/blog/</link>
+				<title>Raft</title>
+				<link>https://www.liunaijie.top/tags/raft/</link>
 				<pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
-				<guid>https://www.liunaijie.top/tags/blog/</guid>
+				<guid>https://www.liunaijie.top/tags/raft/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Rust</title>
+				<link>https://www.liunaijie.top/tags/rust/</link>
+				<pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/rust/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -60,6 +67,13 @@
 				<link>https://www.liunaijie.top/tags/seatunnel/</link>
 				<pubDate>Tue, 24 Dec 2024 00:00:00 +0000</pubDate>
 				<guid>https://www.liunaijie.top/tags/seatunnel/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Blog</title>
+				<link>https://www.liunaijie.top/tags/blog/</link>
+				<pubDate>Thu, 19 Dec 2024 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/tags/blog/</guid>
 				<description></description>
 			</item>
 			<item>

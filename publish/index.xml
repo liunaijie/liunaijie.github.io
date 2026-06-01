@@ -10,22 +10,22 @@
 		
 		
 		
-			<lastBuildDate>Tue, 26 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Fri, 29 May 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="https://www.liunaijie.top/publish/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AI中的一些基础概念，名词解释</title>
+				<link>https://www.liunaijie.top/publish/ai/ai%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/</link>
+				<pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://www.liunaijie.top/publish/ai/ai%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/</guid>
+				<description>&lt;h1 id=&#34;tldr&#34;&gt;TL;DR&lt;/h1&gt;&#xA;&lt;p&gt;这篇文章不讲模型训练，不讲太底层的技术细节，只整理 AI 应用层最常见的一批名词。目标不是把每个词讲得非常学术，而是用尽量通俗的方式，把它们之间的关系讲清楚。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Flink源码解析-Yarn-Application模式提交流程</title>
 				<link>https://www.liunaijie.top/publish/flink/flink%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-yarn-application%E6%A8%A1%E5%BC%8F%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B/</link>
 				<pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate>
 				<guid>https://www.liunaijie.top/publish/flink/flink%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-yarn-application%E6%A8%A1%E5%BC%8F%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B/</guid>
 				<description>&lt;h1 id=&#34;tldr&#34;&gt;TL;DR&lt;/h1&gt;&#xA;&lt;p&gt;本文基于 &lt;code&gt;Flink 1.20&lt;/code&gt; 源码，梳理 &lt;code&gt;yarn-application&lt;/code&gt; 模式下一个任务从提交到运行起来的完整过程。&lt;/p&gt;&#xA;&lt;p&gt;重点会放在这几件事上：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;命令是怎么启动的&lt;/li&gt;&#xA;&lt;li&gt;Client 侧到底做了什么&lt;/li&gt;&#xA;&lt;li&gt;Yarn 上的 ApplicationMaster / JobManager 是怎么启动的&lt;/li&gt;&#xA;&lt;li&gt;TaskManager 是怎么向 Yarn 申请并拉起的&lt;/li&gt;&#xA;&lt;li&gt;用户 &lt;code&gt;main()&lt;/code&gt;、&lt;code&gt;JobGraph&lt;/code&gt; 生成、&lt;code&gt;submitJob()&lt;/code&gt; 分别发生在哪个角色里&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;为了避免范围过大，本文只聚焦 &lt;code&gt;run-application -t yarn-application&lt;/code&gt; 这条主链路，不展开 Web 提交、Session 模式以及 SQL Gateway。&lt;/p&gt;&#xA;&lt;p&gt;以一个最常见的启动命令为例：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./bin/flink run-application &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -t yarn-application &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -Djobmanager.memory.process.size&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;2048m &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -Dtaskmanager.memory.process.size&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;4096m &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -c com.example.WordCount &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  /path/to/job.jar &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  arg1 arg2&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;</description>
-			</item>
-			<item>
-				<title>AI中的一些基础概念，名词解释</title>
-				<link>https://www.liunaijie.top/publish/ai/ai%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/</link>
-				<pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate>
-				<guid>https://www.liunaijie.top/publish/ai/ai%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/</guid>
-				<description>&lt;h1 id=&#34;tldr&#34;&gt;TL;DR&lt;/h1&gt;&#xA;&lt;p&gt;这篇文章不讲模型训练，不讲太底层的技术细节，只整理 AI 应用层最常见的一批名词。目标不是把每个词讲得非常学术，而是用尽量通俗的方式，把它们之间的关系讲清楚。&lt;/p&gt;</description>
 			</item>
 			<item>
 				<title>Flink源码解析-流式计算核心机制</title>
