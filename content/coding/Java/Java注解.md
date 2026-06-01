@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 注解，这个经常在开发中使用到的东西，它的使用语法是怎么样的？如何去自定义一个注解呢？

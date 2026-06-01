@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - class_loader
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 # Class Loader

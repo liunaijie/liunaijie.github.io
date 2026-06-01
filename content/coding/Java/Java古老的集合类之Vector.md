@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 今天继续来看一下Java中古老的集合类-Vector

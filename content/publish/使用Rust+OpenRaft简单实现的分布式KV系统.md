@@ -4,7 +4,8 @@ date: 2026-05-12
 categories:
   - publish
 tags:
-  - blog
+  - Raft
+  - Rust
 ---
 # TL;DR
 简单实现了一个基于 Rust 实现的分布式 KV 系统，底层共识算法使用 Raft，具体实现依赖 [OpenRaft](https://github.com/databendlabs/openraft)。  

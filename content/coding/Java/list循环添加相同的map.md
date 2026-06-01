@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 list里面嵌套map，如果map相同，后面的map信息会替代前面的map信息，所以要将map的new放在循环里

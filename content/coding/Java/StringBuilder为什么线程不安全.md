@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 在脉脉上看到一篇文章，StringBulider 为什么线程不安全，然后想了一下，确实不知道。

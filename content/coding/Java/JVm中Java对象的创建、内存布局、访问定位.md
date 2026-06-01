@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - JVM
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 # Java对象创建

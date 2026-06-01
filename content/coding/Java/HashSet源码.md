@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 # 变量

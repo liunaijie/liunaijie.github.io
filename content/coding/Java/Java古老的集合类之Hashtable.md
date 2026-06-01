@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 Hashtable虽然现在不经常被用到，但是它作为Java最早的集合类，今天来看一下它的源码。

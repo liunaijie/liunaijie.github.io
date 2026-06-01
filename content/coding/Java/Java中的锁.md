@@ -6,7 +6,6 @@ categories:
 tags:
   - Java
   - 锁
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 Java中的锁机制主要分为`Synchronized`和`Lock`
 

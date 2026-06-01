@@ -1,6 +1,6 @@
 ---
 title: AI中的一些基础概念，名词解释
-date: 2026-05-25
+date: 2026-05-29
 categories:
   - publish
 tags:

@@ -5,7 +5,6 @@ categories:
   - notes
 tags:
   - Java
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 `LinkedList`使用了链表实现，相比`ArrayList`来说，插入更快，查看较慢。   

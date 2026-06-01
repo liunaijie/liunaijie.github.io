@@ -6,7 +6,6 @@ categories:
 tags:
   - JVM
   - GC
-related-project: "[[Blog Posts/coding/Java/Java|Java]]"
 ---
 
 
