@@ -113,6 +113,22 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/design/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/">设计模式-享元模式</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 14 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/design/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">设计模式-原形模式</a>
     
     
@@ -162,6 +178,22 @@
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
     <a class="text-lg font-bold" href="/coding/design/%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式-装饰器模式</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 14 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/design/%CC%AC%C4%A3%CA%BD/">设计模式-状态模式</a>
     
     
     <div class="text-sm font-bold whitespace-nowrap">2019 年 10 月 14 日</div>
@@ -309,105 +341,6 @@
 <h1 id="基本架构">基本架构</h1>
 <p><img src="https://raw.githubusercontent.com/liunaijie/images/master/20191110151145.png" alt="MySQL基本架构"></p>
 <p>引擎层采用插件式。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/java/java%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/">JAVA知识整理</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 09 月 10 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="java基础">JAVA基础</h1>
-<h2 id="类的初始化顺序">类的初始化顺序</h2>
-<p>静态变量和静态语句块会优先于实例变量和普通语句块</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;静态变量&#34;</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="kd">static</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;静态语句块&#34;</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;实例变量&#34;</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;普通语句块&#34;</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nf">InitClass</span><span class="p">(){</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;构造函数&#34;</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>父类（静态变量，静态语句块）</li>
-<li>子类（静态变量，静态语句块）</li>
-<li>父类（实例变量，普通语句块）</li>
-<li>父类（构造函数）</li>
-<li>子类（实例变量，普通语句块）</li>
-<li>子类（构造函数）</li>
-</ul>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%AE%9E%E7%8E%B0strstr-leetcode28/">实现strStr()—LeetCode28</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 09 月 06 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="题目描述">题目描述</h1>
-<blockquote>
-<p>实现 strStr() 函数。</p>
-<p>给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。</p>
-<p>示例 1:</p>
-<p>输入: haystack = &ldquo;hello&rdquo;, needle = &ldquo;ll&rdquo;
-输出: 2
-示例 2:</p>
-<p>输入: haystack = &ldquo;aaaaa&rdquo;, needle = &ldquo;bba&rdquo;
-输出: -1
-说明:</p>
-<p>当 needle 是空字符串时，我们应当返回什么值呢？这是一个在面试中很好的问题。</p>
-<p>对于本题而言，当 needle 是空字符串时我们应当返回 0 。这与C语言的 strstr() 以及 Java的 indexOf() 定义相符。</p>
-</blockquote>
   </div>
   
 </div>

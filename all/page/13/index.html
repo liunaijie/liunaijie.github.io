@@ -113,6 +113,22 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86-%E5%89%8D%E4%B8%AD%E5%90%8E%E5%BA%8F/">树的几种遍历方式</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2020 年 03 月 03 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/algorithm/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E9%93%BE%E8%A1%A8/%E7%94%A8%E5%8D%95%E9%93%BE%E8%A1%A8%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0lru%E7%AE%97%E6%B3%95/">用单链表简单实现LRU算法</a>
     
     
@@ -371,91 +387,6 @@ answer的元素取值为 {1, 2, 3} 之一。</p>
 <p>在讨论怎么实现之前，首先了解一下什么是SQL注入，我们有一个简单的查询操作：根据id查询一个用户信息。它的sql语句应该是这样：<code>select * from user where id = </code>。我们根据传入条件填入id进行查询。</p>
 <p>如果正常操作，传入一个正常的id，比如说2，那么这条语句变成<code>select * from user where id =2</code>。这条语句是可以正常运行并且符合我们预期的。</p>
 <p>但是如果传入的参数变成<code> '' or 1=1</code>，这时这条语句变成<code>select * from user where id = '' or 1=1</code>。让我们想一下这条语句的执行结果会是怎么？它会将我们用户表中所有的数据查询出来，显然这是一个大的错误。这就是SQL注入。</p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/java/java%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6%E8%AF%A6%E8%A7%A3/">Java位运算符详解</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 12 月 24 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="前言">前言</h1>
-<p>之前了解过位运算符，左移<code>&lt;&lt;</code>等于乘以2，右移<code>&gt;&gt;</code>等于除以2。但是我在看jdk源码的时候发现了一个<code>&gt;&gt;&gt;</code>三个符号的，不明白这是什么意思，就去搜了一下，发现还挺多的知识点的，就整理了一下。</p>
-<p>首先我们知道，我们编写的程序最终都是在计算机底层进行的，计算机底层也仅支持0、1两种符号。所以当时网上有个键盘只有0、1两个键，那才是大佬用的键盘。扯远了。。。</p>
-<p>先来复习一下java的基本类型都占多少字节，占多少位（1字节等于8位）：</p>
-<table>
-	<thead>
-			<tr>
-					<th>类型</th>
-					<th>字节数</th>
-					<th>位数</th>
-					<th>大小范围</th>
-			</tr>
-	</thead>
-	<tbody>
-			<tr>
-					<td>byte</td>
-					<td>1</td>
-					<td>8</td>
-					<td>-2^8^~2^8^-1</td>
-			</tr>
-			<tr>
-					<td>short</td>
-					<td>2</td>
-					<td>16</td>
-					<td>-2^16^~2^16^-1</td>
-			</tr>
-			<tr>
-					<td>int</td>
-					<td>4</td>
-					<td>32</td>
-					<td>-2^32^~2^32^-1</td>
-			</tr>
-			<tr>
-					<td>long</td>
-					<td>8</td>
-					<td>64</td>
-					<td>-2^64^~2^64^-1</td>
-			</tr>
-			<tr>
-					<td>float</td>
-					<td>4</td>
-					<td></td>
-					<td></td>
-			</tr>
-			<tr>
-					<td>double</td>
-					<td>8</td>
-					<td></td>
-					<td></td>
-			</tr>
-			<tr>
-					<td>char</td>
-					<td>2</td>
-					<td>16</td>
-					<td>一个char类型可以存储一个汉字</td>
-			</tr>
-			<tr>
-					<td>boolean</td>
-					<td>1</td>
-					<td></td>
-					<td>true or false</td>
-			</tr>
-	</tbody>
-</table>
-<p>移位操作是把数据看作二进制数，然后将其向左或向右移动若干位的运算。在Java中，移位操作符包含三种：<code>&lt;&lt;</code>左移运算符，<code>&gt;&gt;</code>带符号右移运算符，<code>&gt;&gt;&gt;</code>无符号右移运算符。这三种操作符都只能作用于<code>long</code>,<code>int</code>,<code>short</code>,<code>byte</code>这四种基本整形类型上和<code>char</code>类型上。其他类型如double都无法使用位运算符，大家可以在ide中自行试验一下。</p>
-<p>在java中，第一位用来表示数字的正负，第一位为零时表示正数，第一位为1时表示负数。我们拿最简单的8位byte类型举例：<code>0000 0000</code>表示0，<code>0111 1111</code>这个表示最大值(2^8^-1)，再进行加一后就变成了<code>1000 0000</code>这时就变成了最小值(-2^8^)。再加一后变成<code>1000 0001</code>这时的值为-127。也就是从0到最大值然后转为最小值，然后再从最小值向零靠近。</p>
   </div>
   
 </div>

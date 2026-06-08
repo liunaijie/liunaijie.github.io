@@ -113,6 +113,82 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/database/mysql%E7%9A%84ibtmp1%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7/">Mysql的ibtmp1文件过大</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 08 月 21 日</div>
+    
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
+    <a class="text-lg font-bold" href="/coding/java/arraylist%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/">ArrayList源码学习</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2019 年 08 月 20 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="变量">变量</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">DEFAULT_CAPACITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">10</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">EMPTY_ELEMENTDATA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">transient</span><span class="w"> </span><span class="n">Object</span><span class="o">[]</span><span class="w"> </span><span class="n">elementData</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>DEFAULT_CAPACITY</code>：默认的容量，当我们不指定容量时默认容量是10</li>
+<li><code>EMPTY_ELEMENTDATA</code>：空的数据集</li>
+<li><code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>：同上面的一样，都是空的数据集</li>
+<li><code>elementData</code>：保存的元素</li>
+<li><code>size</code>：元素长度，实际存储的元素数量</li>
+</ul>
+<h1 id="构造方法">构造方法：</h1>
+<ul>
+<li>无参的构造方法</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nf">ArrayList</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">elementData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>很简单的一句话，将保存元素的变量进行初始化。</p>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0-leetcode2/">两数相加-LeetCode2</a>
     
     
@@ -384,59 +460,6 @@ The grid is:
 <p>所以RPC主要用于公司内部的服务调用。HTTP主要用于对外的环境，浏览器接口调用，APP接口调用，第三方接口调用等。</p>
 <h1 id="rpc的主要实现步骤">RPC的主要实现步骤</h1>
 <p><img src="https://raw.githubusercontent.com/liunaijie/images/master/RPC%E8%B0%83%E7%94%A8.png" alt="RPC调用流程"></p>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/spring/%E5%88%A9%E7%94%A8aop%E5%92%8C%E6%B3%A8%E8%A7%A3%E5%AE%9E%E7%8E%B0redis%E5%AF%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%BC%93%E5%AD%98/">利用aop和注解实现redis对数据库的缓存</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 07 月 24 日</div>
-    
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E5%B1%B1%E8%84%89%E6%95%B0%E7%BB%84%E7%9A%84%E5%B3%B0%E9%A1%B6%E7%B4%A2%E5%BC%95-leetcode852/">山脉数组的峰顶索引-LeetCode852</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2019 年 07 月 18 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="题目描述">题目描述</h1>
-<blockquote>
-<p>我们把符合下列属性的数组 A 称作山脉：</p>
-<p>A.length &gt;= 3
-存在 0 &lt; i &lt; A.length - 1 使得A[0] &lt; A[1] &lt; &hellip; A[i-1] &lt; A[i] &gt; A[i+1] &gt; &hellip; &gt; A[A.length - 1]
-给定一个确定为山脉的数组，返回任何满足 A[0] &lt; A[1] &lt; &hellip; A[i-1] &lt; A[i] &gt; A[i+1] &gt; &hellip; &gt; A[A.length - 1] 的 i 的值。</p>
-<p>示例 1：</p>
-<p>输入：[0,1,0]
-输出：1
-示例 2：</p>
-<p>输入：[0,2,1,0]
-输出：1</p>
-<p>提示：</p>
-<p>3 &lt;= A.length &lt;= 10000
-0 &lt;= A[i] &lt;= 10^6
-A 是如上定义的山脉</p>
-</blockquote>
-<p>其实这就是一个寻找数组最大值的问题</p>
   </div>
   
 </div>

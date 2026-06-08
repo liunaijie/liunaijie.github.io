@@ -113,6 +113,34 @@
           <div>
   <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
     
+    <a class="text-lg font-bold" href="/coding/database/redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a>
+    
+    
+    <div class="text-sm font-bold whitespace-nowrap">2020 年 04 月 14 日</div>
+    
+  </div>
+  
+  <div class="post-summary">
+    <h1 id="为什么要持久化数据">为什么要持久化数据</h1>
+<p>由于Redis是在内存中进行存储的，当机器重启后内存里面的数据就会丢失。我们不希望这些数据是临时数据，希望它能在重启之后仍然存在，或者我们能将数据导出在其他机器上直接进行导入。这时候都需要进行持久化，将数据落盘。</p>
+<h1 id="持久化的方式">持久化的方式</h1>
+<p><strong>持久化的方式在<code>Redis 4.x</code>版本后有了一些区别！</strong></p>
+<p>持久化方式主要有两种：</p>
+<ul>
+<li>RDB</li>
+<li>AOF</li>
+</ul>
+  </div>
+  
+</div>
+        </div>
+      
+    
+      
+        <div class="mb-8">
+          <div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
+    
     <a class="text-lg font-bold" href="/coding/algorithm/leetcode/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0-leetcodem40/">最小的k个数-LeetCodeM40</a>
     
     
@@ -530,27 +558,6 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div>
-  </div>
-  
-</div>
-        </div>
-      
-    
-      
-        <div class="mb-8">
-          <div>
-  <div class="flex flex-col-reverse sm:flex-row sm:justify-between">
-    
-    <a class="text-lg font-bold" href="/coding/micro_service/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AArpc%E6%A1%86%E6%9E%B6%E4%B8%89/">自己动手实现一个RPC框架（三）</a>
-    
-    
-    <div class="text-sm font-bold whitespace-nowrap">2020 年 03 月 25 日</div>
-    
-  </div>
-  
-  <div class="post-summary">
-    <h1 id="rpc-commons">rpc-commons</h1>
-<p>这个模块主要是定义一些通信协议类，工具类。</p>
   </div>
   
 </div>
