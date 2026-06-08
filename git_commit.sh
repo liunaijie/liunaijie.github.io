@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /volume3/self_data_backup/Blog
+cd /volume3/个人资料备份/Blog
 
 now=$(date +%Y-%m-%d)
 if [ -n "git status -s" ];then
