@@ -209,7 +209,7 @@ sh bin/seatunnel-cluster.sh -d -r &amp;lt;node role type&amp;gt;
 但是这篇文档并不会聊它使用层面的事情, 而是去聊一下这个工具/框架的设计, 任务的执行等.对于某个连接器(数据库)的实现不会深入的了解.
 基于的源码版本: &lt;code&gt;2.3.6-release&lt;/code&gt;&lt;/p&gt;
 &lt;h1 id=&#34;任务是如何被执行的&#34;&gt;任务是如何被执行的&lt;/h1&gt;
-&lt;p&gt;在我的另外一篇文章&lt;a href=&#34;../../../personal/area/SeaTunnel/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E6%96%87%E7%AB%A0/2.Zeta%E5%BC%95%E6%93%8E%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3.md&#34;&gt;2.Zeta引擎源码讲解&lt;/a&gt;中有一些关于Zeta引擎的分析, 聊了一下Zeta引擎的客户端, 服务端都会做一些什么事情, 也笼统的带了一点任务执行的内容, 想了解相关内容的朋友可以去看一下.
+&lt;p&gt;在我的另外一篇文章&lt;a href=&#34;../../../wiki/SeaTunnel/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E6%96%87%E7%AB%A0/2.Zeta%E5%BC%95%E6%93%8E%E6%BA%90%E7%A0%81%E8%AE%B2%E8%A7%A3.md&#34;&gt;2.Zeta引擎源码讲解&lt;/a&gt;中有一些关于Zeta引擎的分析, 聊了一下Zeta引擎的客户端, 服务端都会做一些什么事情, 也笼统的带了一点任务执行的内容, 想了解相关内容的朋友可以去看一下.
 在下面的内容, 则主要是记录一下在SeaTunnel中, 一个任务是如何与连接器中的各种类进行关联的.&lt;/p&gt;
 &lt;p&gt;要聊任务与连接器的关联, 就要回到物理计划生成的这一部分(&lt;code&gt;PhysicalPlanGenerator#generate()&lt;/code&gt;).&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
